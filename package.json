@@ -1,9 +1,9 @@
 {
-  "name": "pixi-ui",
+  "name": "@pixijs/ui",
   "version": "0.0.1",
   "description": "Pixi UI will is a library that contains commonly used UI components, that are extensible to allow them to be used in any project",
-  "homepage": "https://github.com/play-co/pixi-ui",
-  "bugs": "https://github.com/play-co/pixi-ui/issues",
+  "homepage": "https://github.com/pixijs/ui",
+  "bugs": "https://github.com/pixijs/ui/issues",
   "license": "MIT",
   "author": "Goodboy Digital",
   "sideEffects": false,
@@ -42,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/play-co/pixi-ui.git"
+    "url": "git+https://github.com/pixijs/ui.git"
   },
   "dependencies": {
     "@storybook/addon-storysource": "^6.5.14",
