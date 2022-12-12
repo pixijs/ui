@@ -76,12 +76,12 @@ export class RadioGroup extends Container {
             const unchecked =
                 typeof options.style.bg === 'string'
                     ? new Sprite(Texture.from(options.style.bg))
-                    : this.getGraphics(options.style.bg as GraphicsType);
+                    : this.getGraphics(options.style.bg);
 
             const checked =
                 typeof options.style.checked === 'string'
                     ? new Sprite(Texture.from(options.style.checked))
-                    : this.getGraphics(options.style.checked as GraphicsType);
+                    : this.getGraphics(options.style.checked);
 
             const checkBox = new CheckBox({
                 checked: options.selectedItem === id,
@@ -123,7 +123,7 @@ export class RadioGroup extends Container {
             ? graphics.drawCircle(width / 2, width / 2, width / 2)
             : graphics.drawRoundedRect(0, 0, width, height, radius);
 
-        if (fillColor) {
+        if (fillColor !== undefined) {
             graphics.beginFill(fillColor);
 
             const center = width / 2;
