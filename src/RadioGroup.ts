@@ -13,17 +13,17 @@ export type GraphicsType = {
     padding?: number;
 };
 
-export type CheckBoxStyle = {
+export type RadioBoxStyle = {
     bg: string | GraphicsType;
     checked: string | GraphicsType;
     textStyle?: TextStyle | Partial<ITextStyle>;
 };
 
-export type CheckBoxOptions = {
+export type RadioBoxOptions = {
     items: string[];
     type: LayoutType;
     elementsMargin: number;
-    style: CheckBoxStyle;
+    style: RadioBoxStyle;
     selectedItem?: number;
 };
 
@@ -60,7 +60,7 @@ export class RadioGroup extends Container {
 
     public view: Layout;
 
-    constructor(private readonly options: CheckBoxOptions) {
+    constructor(private readonly options: RadioBoxOptions) {
         super();
 
         this.value = options.items[options.selectedItem];
