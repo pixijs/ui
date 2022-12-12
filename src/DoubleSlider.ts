@@ -134,16 +134,6 @@ export class DoubleSlider extends Container {
         this.slider1 = new Container();
         this.slider1.addChild(slider1);
         this.slider1.y = this.bg.height / 2;
-
-        if (options.showValue) {
-            this.slider1Text = new Text(
-                '',
-                options.valueTextStyle || { fill: 0xffffff },
-            );
-            this.slider1Text.anchor.set(0.5);
-            this.addChild(this.slider1Text);
-        }
-
         const slider2 =
             typeof options.slider2 === 'string'
                 ? new Sprite(Texture.from(options.slider2))
@@ -159,6 +149,17 @@ export class DoubleSlider extends Container {
         this.slider2.addChild(slider2);
         this.slider2.y = this.bg.height / 2;
 
+        this.addChild(this.slider2, this.slider1);
+
+        if (options.showValue) {
+            this.slider1Text = new Text(
+                '',
+                options.valueTextStyle || { fill: 0xffffff },
+            );
+            this.slider1Text.anchor.set(0.5);
+            this.addChild(this.slider1Text);
+        }
+
         if (options.showValue) {
             this.slider2Text = new Text(
                 '',
@@ -167,8 +168,6 @@ export class DoubleSlider extends Container {
             this.slider2Text.anchor.set(0.5);
             this.addChild(this.slider2Text);
         }
-
-        this.addChild(this.slider2, this.slider1);
 
         this.validateSettings();
 
