@@ -133,8 +133,6 @@ export class Button extends Container {
         this.onUpOut = new Signal();
 
         this.accessible = accessible ?? true;
-
-        this.accessible = this.accessible;
         this.accessibleTitle = accessibleTitle ?? '';
         this.tabIndex = tabIndex ?? 0;
 
@@ -206,17 +204,14 @@ export class Button extends Container {
         this.enabled = true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public down(_e?: InteractionEvent): void {
         // override me!
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public up(_e?: InteractionEvent): void {
         // override me!
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public hover(_e?: InteractionEvent): void {
         // override me!
     }
