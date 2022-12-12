@@ -1,8 +1,8 @@
 import { Container, Sprite, Texture } from "pixi.js";
 import { MaskedFrame } from "../../MaskedFrame";
-import { argTypes, getDefaultArgs } from "../helpers/argTypes";
-import { preloadAssets } from './../helpers/loader';
-import { centerElement } from '../helpers/resize';
+import { argTypes, getDefaultArgs } from "../../utils/storybook/argTypes";
+import { preloadAssets } from '../../utils/storybook/loader';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     borderColor: '#FFFFFF',

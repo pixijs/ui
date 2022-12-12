@@ -1,11 +1,11 @@
 
 import { Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../helpers/loader';
-import { defaultTextStyle } from '../helpers/styles';
-import { centerElement } from '../helpers/resize';
+import { preloadAssets } from '../../utils/storybook/loader';
+import { defaultTextStyle } from '../../utils/storybook/styles';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     backgroundColor: '#F5E3A9',

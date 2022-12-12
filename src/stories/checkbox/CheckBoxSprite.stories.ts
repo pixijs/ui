@@ -1,16 +1,16 @@
 import { Sprite as PixiSprite, Texture } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
 import { Layout } from '../../Layout';
 import { CheckBox } from '../../CheckBox';
-import { defaultTextStyle } from './../helpers/styles';
-import { preloadAssets } from './../helpers/loader';
-import { centerElement } from '../helpers/resize';
+import { defaultTextStyle } from '../../utils/storybook/styles';
+import { preloadAssets } from '../../utils/storybook/loader';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     count: 3,
     text: "",
-    textColor: '#000000',
+    textColor: '#FFFFFF',
     checked: false,
     onChange: action('Checkbox changed'),
 }

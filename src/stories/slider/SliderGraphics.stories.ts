@@ -1,9 +1,9 @@
 import { Graphics as PixiGraphics } from "pixi.js";
 import { action } from '@storybook/addon-actions';
 import { Layout } from "../../Layout";
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
 import { Slider } from "../../Slider";
-import { centerElement } from '../helpers/resize';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     min: 0,

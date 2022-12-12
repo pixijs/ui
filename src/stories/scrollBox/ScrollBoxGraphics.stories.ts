@@ -1,11 +1,11 @@
 
 import { Graphics as PixiGraphics, Text, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
 import { ScrollBox } from '../../ScrollBox';
 import { Button } from '../../Button';
-import { defaultTextStyle } from '../helpers/styles';
+import { defaultTextStyle } from '../../utils/storybook/styles';
 import { action } from '@storybook/addon-actions';
-import { centerElement } from '../helpers/resize';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     type: [

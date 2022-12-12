@@ -1,8 +1,8 @@
 import { RadioGroup } from "../../RadioGroup";
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
-import { defaultTextStyle } from "../helpers/styles";
-import { centerElement } from '../helpers/resize';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
+import { defaultTextStyle } from "../../utils/storybook/styles";
+import { centerElement } from '../../utils/storybook/resize';
 import { Container } from 'pixi.js';
     
 const args = {

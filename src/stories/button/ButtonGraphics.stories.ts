@@ -2,9 +2,9 @@
 import { Graphics as PixiGraphics, Text } from 'pixi.js';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../helpers/argTypes';
-import { defaultTextStyle } from './../helpers/styles';
-import { centerElement } from '../helpers/resize';
+import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
+import { defaultTextStyle } from '../../utils/storybook/styles';
+import { centerElement } from '../../utils/storybook/resize';
 
 const args = {
     text: 'Click me!',
