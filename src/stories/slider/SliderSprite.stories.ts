@@ -10,7 +10,7 @@ const args = {
     max: 100,
     value: 50,
     fontSize: 20,
-    fontColor: '#000000',
+    fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
 }
@@ -41,9 +41,12 @@ export const Single = ({
             value,
             valueTextStyle: {
                 fill: fontColor,
-                fontSize: fontSize,
+                fontSize,
             },
             showValue,
+            valueTextOffset: {
+                y: -40,
+            }
         });
 
         singleSlider.onChange.connect((value) => {

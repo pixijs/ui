@@ -11,7 +11,7 @@ const args = {
     value1: 15,
     value2: 85,
     fontSize: 20,
-    fontColor: '#000000',
+    fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
 }
@@ -48,6 +48,9 @@ export const Double = ({
                 fontSize: fontSize,
             },
             showValue,
+            valueTextOffset: {
+                y: -40,
+            }
         });
 
         doubleSlider.onChange.connect((value1, value2) => {

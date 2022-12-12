@@ -13,7 +13,12 @@ export type SliderOptions = {
     value?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
     showValue?: boolean;
+    valueTextOffset?: {
+        x?: number,
+        y?: number,
+    };
 };
+
 /**
  * Creates a slider with range selection option
  * @example
@@ -116,15 +121,13 @@ export class Slider extends Container
         
         this.slider.y = this.bg.height / 2;
 
+        this.addChild(this.slider);
+
         if (options.showValue) {
             this.valueText = new Text('', options.valueTextStyle || { fill: 0xFFFFFF });
             this.valueText.anchor.set(0.5);
-            this.valueText.x = slider.width / 2;
-
-            this.slider.addChild(this.valueText);
+            this.addChild(this.valueText);
         }
-
-        this.addChild(this.slider);
 
         this.makeScrollable();
 
@@ -312,6 +315,12 @@ export class Slider extends Container
         if (this.options.showValue)
         {
             this.valueText.text = this.value;
+
+            const sliderPosX = this.slider.x + (this.slider.width / 2);
+            const sliderPosY = this.slider.y;
+
+            this.valueText.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.valueText.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onChange?.emit(this.value);

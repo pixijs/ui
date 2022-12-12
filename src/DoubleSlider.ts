@@ -15,6 +15,10 @@ export type DoubleSliderOptions = {
     value2?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
     showValue?: boolean;
+    valueTextOffset?: {
+        x?: number,
+        y?: number,
+    };
 };
 
 /**
@@ -135,9 +139,7 @@ export class DoubleSlider extends Container
         if (options.showValue) {
             this.slider1Text = new Text('', options.valueTextStyle || { fill: 0xFFFFFF });
             this.slider1Text.anchor.set(0.5);
-            this.slider1Text.x = slider1.width / 2;
-
-            this.slider1.addChild(this.slider1Text);
+            this.addChild(this.slider1Text);
         }
 
         const slider2
@@ -158,9 +160,7 @@ export class DoubleSlider extends Container
         if (options.showValue) {
             this.slider2Text = new Text('', options.valueTextStyle || { fill: 0xFFFFFF });
             this.slider2Text.anchor.set(0.5);
-            this.slider2Text.x = slider2.width / 2;
-
-            this.slider2.addChild(this.slider2Text);
+            this.addChild(this.slider2Text);
         }
 
         
@@ -476,6 +476,19 @@ export class DoubleSlider extends Container
         {
             this.slider1Text.text = this.value1;
             this.slider2Text.text = this.value2;
+
+            
+            const slider1PosX = this.slider1.x + (this.slider1.width / 2);
+            const slider1PosY = this.slider1.y;
+
+            this.slider1Text.x = slider1PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider1Text.y = slider1PosY + (this.options.valueTextOffset?.y ?? 0);
+
+            const slider2PosX = this.slider2.x + (this.slider2.width / 2);
+            const slider2PosY = this.slider2.y;
+
+            this.slider2Text.x = slider2PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider2Text.y = slider2PosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onChange?.emit(this.value1, this.value2);
