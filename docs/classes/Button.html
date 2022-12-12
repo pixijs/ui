@@ -72,7 +72,7 @@
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">spriteButton</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Button</span><span style="color: #000000">({ </span>
+						<dd><pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">spriteButton</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Button</span><span style="color: #000000">({</span>
 <span style="color: #000000">    </span><span style="color: #001080">view:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiSprite</span><span style="color: #000000">(</span><span style="color: #001080">Texture</span><span style="color: #000000">.</span><span style="color: #795E26">from</span><span style="color: #000000">(</span><span style="color: #A31515">`button.png`</span><span style="color: #000000">)),</span>
 <span style="color: #000000">    </span><span style="color: #001080">hoverView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiSprite</span><span style="color: #000000">(</span><span style="color: #001080">Texture</span><span style="color: #000000">.</span><span style="color: #795E26">from</span><span style="color: #000000">(</span><span style="color: #A31515">`button_hover.png`</span><span style="color: #000000">)),</span>
 <span style="color: #000000">    </span><span style="color: #001080">pressedView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiSprite</span><span style="color: #000000">(</span><span style="color: #001080">Texture</span><span style="color: #000000">.</span><span style="color: #795E26">from</span><span style="color: #000000">(</span><span style="color: #A31515">`button_pressed.png`</span><span style="color: #000000">)),</span>
@@ -80,12 +80,12 @@
 <span style="color: #000000">    </span><span style="color: #001080">textView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Text</span><span style="color: #000000">(</span><span style="color: #001080">text</span><span style="color: #000000">, { ...</span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">, </span><span style="color: #001080">fill:</span><span style="color: #000000"> </span><span style="color: #001080">textColor</span><span style="color: #000000"> || </span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">.</span><span style="color: #001080">fill</span><span style="color: #000000"> }),</span>
 <span style="color: #000000">});</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">graphicsButton</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Button</span><span style="color: #000000">({ </span>
-<span style="color: #000000">    </span><span style="color: #001080">view:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">color</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">), </span>
-<span style="color: #000000">    </span><span style="color: #001080">hoverView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">hoverColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">), </span>
-<span style="color: #000000">    </span><span style="color: #001080">pressedView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">pressedColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">), </span>
-<span style="color: #000000">    </span><span style="color: #001080">disabledView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">disabledColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">), </span>
-<span style="color: #000000">    </span><span style="color: #001080">textView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Text</span><span style="color: #000000">(</span><span style="color: #001080">text</span><span style="color: #000000">, { ...</span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">, </span><span style="color: #001080">fill:</span><span style="color: #000000"> </span><span style="color: #001080">textColor</span><span style="color: #000000"> || </span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">.</span><span style="color: #001080">fill</span><span style="color: #000000"> }), </span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">graphicsButton</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Button</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">view:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">color</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">hoverView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">hoverColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">pressedView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">pressedColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">disabledView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">PixiGraphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #001080">disabledColor</span><span style="color: #000000">).</span><span style="color: #795E26">drawRoundedRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">height</span><span style="color: #000000">, </span><span style="color: #001080">radius</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">textView:</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Text</span><span style="color: #000000">(</span><span style="color: #001080">text</span><span style="color: #000000">, { ...</span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">, </span><span style="color: #001080">fill:</span><span style="color: #000000"> </span><span style="color: #001080">textColor</span><span style="color: #000000"> || </span><span style="color: #001080">buttonTextStyle</span><span style="color: #000000">.</span><span style="color: #001080">fill</span><span style="color: #000000"> }),</span>
 <span style="color: #000000">    </span><span style="color: #001080">padding</span><span style="color: #000000">,</span>
 <span style="color: #000000">    </span><span style="color: #001080">textOffset:</span><span style="color: #000000"> { </span><span style="color: #001080">x:</span><span style="color: #000000"> </span><span style="color: #001080">textOffsetX</span><span style="color: #000000">, </span><span style="color: #001080">y:</span><span style="color: #000000"> </span><span style="color: #001080">textOffsetY</span><span style="color: #000000"> },</span>
 <span style="color: #000000">});</span>
@@ -167,7 +167,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Container.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L69">Button.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L67">Button.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -189,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L50">Button.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L48">Button.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">disabled<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L53">Button.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L51">Button.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">hover<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L51">Button.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L49">Button.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Down<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L57">Button.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L55">Button.ts:55</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Hover<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L59">Button.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L57">Button.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -239,7 +239,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Out<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L60">Button.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L58">Button.ts:58</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -249,7 +249,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Press<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L56">Button.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L54">Button.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -259,7 +259,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Up<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L58">Button.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L56">Button.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -269,7 +269,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>UpOut<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Signal</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>btn<span class="tsd-signature-symbol">?: </span><a href="Button.html" class="tsd-signature-type" data-tsd-kind="Class">Button</a>, e<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InteractionEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L61">Button.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L59">Button.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -279,7 +279,7 @@
 					<div class="tsd-signature tsd-kind-icon">pressed<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L52">Button.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L50">Button.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -289,7 +289,7 @@
 					<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Text_2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L54">Button.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L52">Button.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -307,7 +307,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L264">Button.ts:264</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L238">Button.ts:238</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -315,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L247">Button.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L223">Button.ts:223</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -338,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L242">Button.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L219">Button.ts:219</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -356,7 +356,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L278">Button.ts:278</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L250">Button.ts:250</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -364,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L269">Button.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L242">Button.ts:242</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -390,7 +390,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L225">Button.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L207">Button.ts:207</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -413,7 +413,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L321">Button.ts:321</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L285">Button.ts:285</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -430,7 +430,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L237">Button.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L215">Button.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -453,7 +453,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/Button.ts#L231">Button.ts:231</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/Button.ts#L211">Button.ts:211</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -475,7 +475,7 @@
 						<span>Getting <wbr>Started</span>
 					</li>
 					<li class=" pp-nav pp-page">
-						<a href="../pages/Getting Started/getting-started.html">Quick <wbr>Start</a>
+						<a href="../pages/Getting Started/README.html">Quick <wbr>Start</a>
 					</li>
 					<li class=" ">
 						<a href="../modules.html">Exports</a>

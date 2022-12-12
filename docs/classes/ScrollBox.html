@@ -64,6 +64,36 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>ScrollBox for arranging and scrolling pixi containers withing some area with scrolling</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>example</dt>
+						<dd><pre><code><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">ScrollBox</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">background:</span><span style="color: #000000"> </span><span style="color: #098658">0XFFFFFF</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">type:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;vertical&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">elementsMargin:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">width:</span><span style="color: #000000"> </span><span style="color: #098658">200</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">height:</span><span style="color: #000000"> </span><span style="color: #098658">300</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">radius:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">padding:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">items:</span><span style="color: #000000"> [</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Graphics</span><span style="color: #000000">().</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0x000000</span><span style="color: #000000">).</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #098658">50</span><span style="color: #000000">),</span>
+<span style="color: #000000">    ],</span>
+<span style="color: #000000">});</span>
+</code></pre>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -126,7 +156,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Container.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L78">ScrollBox.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L74">ScrollBox.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -152,7 +182,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L605">ScrollBox.ts:605</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L534">ScrollBox.ts:534</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -169,7 +199,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L215">ScrollBox.ts:215</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L198">ScrollBox.ts:198</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span></h4>
@@ -186,7 +216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L610">ScrollBox.ts:610</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L538">ScrollBox.ts:538</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -206,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L128">ScrollBox.ts:128</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L118">ScrollBox.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -235,7 +265,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L187">ScrollBox.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L171">ScrollBox.ts:171</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -259,7 +289,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Container.onChildrenChange</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L123">ScrollBox.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L114">ScrollBox.ts:114</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -276,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L172">ScrollBox.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L155">ScrollBox.ts:155</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -299,7 +329,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L554">ScrollBox.ts:554</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L483">ScrollBox.ts:483</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -310,21 +340,15 @@
 					<a name="scrollDown" class="tsd-anchor"></a>
 					<h3>scroll<wbr>Down</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">scroll<wbr>Down<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">scroll<wbr>Down<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L523">ScrollBox.ts:523</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L453">ScrollBox.ts:453</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>duration: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -333,22 +357,19 @@
 					<a name="scrollTo" class="tsd-anchor"></a>
 					<h3>scroll<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">scroll<wbr>To<span class="tsd-signature-symbol">(</span>elementID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, duration<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">scroll<wbr>To<span class="tsd-signature-symbol">(</span>elementID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L574">ScrollBox.ts:574</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L503">ScrollBox.ts:503</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>elementID: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>duration: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -359,21 +380,15 @@
 					<a name="scrollTop" class="tsd-anchor"></a>
 					<h3>scroll<wbr>Top</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">scroll<wbr>Top<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">scroll<wbr>Top<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L535">ScrollBox.ts:535</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L461">ScrollBox.ts:461</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>duration: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -388,7 +403,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L564">ScrollBox.ts:564</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L493">ScrollBox.ts:493</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -405,7 +420,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pixijs/ui/blob/11c6ba8/src/ScrollBox.ts#L429">ScrollBox.ts:429</a></li>
+									<li>Defined in <a href="https://github.com/pixijs/ui/blob/7243876/src/ScrollBox.ts#L354">ScrollBox.ts:354</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -421,7 +436,7 @@
 						<span>Getting <wbr>Started</span>
 					</li>
 					<li class=" pp-nav pp-page">
-						<a href="../pages/Getting Started/getting-started.html">Quick <wbr>Start</a>
+						<a href="../pages/Getting Started/README.html">Quick <wbr>Start</a>
 					</li>
 					<li class=" ">
 						<a href="../modules.html">Exports</a>
