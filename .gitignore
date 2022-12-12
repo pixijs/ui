@@ -1,0 +1,40 @@
+# sublime text files
+*.sublime*
+*.vscode*
+*.*~*.TMP
+test/lib
+
+
+# temp files
+.DS_Store
+Thumbs.db
+Desktop.ini
+npm-debug.log
+
+# project files
+.project
+
+# vim swap files
+*.sw*
+
+# emacs temp files
+*~
+\#*#
+
+# project ignores
+!.gitkeep
+*__temp
+node_modules
+# docs/
+bin/
+lib/
+dist/
+coverage/
+temp
+types
+yarn.lock
+pnpm-lock.yaml
+
+# jetBrains IDE ignores
+.idea
+.vs-code

@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "@goodboydigital/eslint-config",
+    "plugin:storybook/recommended"
+  ],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
+  "rules": {
+    "no-console": [
+      0,
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": 0
+  }
+}

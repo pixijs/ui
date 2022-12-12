@@ -1,0 +1,34 @@
+name: Documentation Upload
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    if: contains(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/docs'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+            node-version: "14.x"
+            registry-url: "https://npm.pkg.github.com/"
+            scope: "@play-co"
+      - run: npm install
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.PLAYCO_PACKAGES_TOKEN }}
+      - run: npm run docs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PLAYCO_PACKAGES_TOKEN }}
+      - run: npm run docs:media
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PLAYCO_PACKAGES_TOKEN }}
+      - name: upload docs
+        uses: gameclosure/mkdocs-publish-s3-action@timestep
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOC_WRITER_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_WRITER_AWS_SECRET_ACCESS_KEY }}
+          PROJECT_NAME: pixi-ui
