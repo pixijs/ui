@@ -1,4 +1,3 @@
-import { gsap } from 'gsap';
 import type { InteractionEvent } from 'pixi.js';
 import { Container, Graphics, Point, Sprite, Texture } from 'pixi.js';
 
@@ -317,67 +316,33 @@ export class ScrollBox extends Container {
         this.snap();
     }
 
-    private snap(): Promise<void> {
-        return new Promise((resolve) => {
-            if (this.options.type === 'horizontal') {
-                if (
-                    this.layout.x < 0 &&
-                    this.layout.x + this.layoutWidth < this.__width
-                ) {
-                    gsap.to(this.layout, {
-                        duration: DEFAULT_DURATION,
-                        x:
-                            this.__width -
-                            this.layoutWidth +
-                            (this.options.padding ?? 0),
-                        onComplete: () => {
-                            this.stopRenderHiddenItems();
-                            resolve();
-                        },
-                    });
-                } else if (this.layout.x > 0) {
-                    gsap.to(this.layout, {
-                        duration: DEFAULT_DURATION,
-                        x: this.options.padding ?? 0,
-                        onComplete: () => {
-                            this.stopRenderHiddenItems();
-                            resolve();
-                        },
-                    });
-                } else {
-                    this.stopRenderHiddenItems();
-                    resolve();
-                }
-            } else {
-                const layoutHeight = this.layoutHeight;
-
-                if (
-                    this.layout.y < 0 &&
-                    this.layout.y + layoutHeight < this.__height
-                ) {
-                    gsap.to(this.layout, {
-                        duration: DEFAULT_DURATION,
-                        y: this.__height - layoutHeight,
-                        onComplete: () => {
-                            this.stopRenderHiddenItems();
-                            resolve();
-                        },
-                    });
-                } else if (this.layout.y > 0) {
-                    gsap.to(this.layout, {
-                        duration: DEFAULT_DURATION,
-                        y: this.options.padding ?? 0,
-                        onComplete: () => {
-                            this.stopRenderHiddenItems();
-                            resolve();
-                        },
-                    });
-                } else {
-                    this.stopRenderHiddenItems();
-                    resolve();
-                }
+    private snap() {
+        if (this.options.type === 'horizontal') {
+            if (
+                this.layout.x < 0 &&
+                this.layout.x + this.layoutWidth < this.__width
+            ) {
+                this.layout.x =
+                    this.__width -
+                    this.layoutWidth +
+                    (this.options.padding ?? 0);
+            } else if (this.layout.x > 0) {
+                this.layout.x = this.options.padding ?? 0;
             }
-        });
+        } else {
+            const layoutHeight = this.layoutHeight;
+
+            if (
+                this.layout.y < 0 &&
+                this.layout.y + layoutHeight < this.__height
+            ) {
+                this.layout.y = this.__height - layoutHeight;
+            } else if (this.layout.y > 0) {
+                this.layout.y = this.options.padding ?? 0;
+            }
+        }
+
+        this.stopRenderHiddenItems();
     }
 
     private get layoutHeight(): number {
@@ -499,15 +464,21 @@ export class ScrollBox extends Container {
         return new Promise((resolve) => {
             this.renderAllItems();
 
-            gsap.to(this.layout, {
-                duration,
-                x: 0,
-                y: 0,
-                onComplete: () => {
-                    this.snap();
-                    resolve();
-                },
-            });
+            this.layout.x = 0;
+            this.layout.y = 0;
+
+            this.snap();
+            resolve();
+
+            // gsap.to(this.layout, {
+            //     duration,
+            //     x: 0,
+            //     y: 0,
+            //     onComplete: () => {
+            //         this.snap();
+            //         resolve();
+            //     },
+            // });
         });
     }
 
@@ -557,15 +528,22 @@ export class ScrollBox extends Container {
 
             this.renderAllItems();
 
-            gsap.to(this.layout, {
-                duration,
-                x,
-                y,
-                onComplete: async () => {
-                    await this.snap();
-                    resolve();
-                },
+            this.layout.x = x;
+            this.layout.y = y;
+
+            this.snap().then(() => {
+                resolve();
             });
+
+            // gsap.to(this.layout, {
+            //     duration,
+            //     x,
+            //     y,
+            //     onComplete: async () => {
+            //         await this.snap();
+            //         resolve();
+            //     },
+            // });
         });
     }
 
