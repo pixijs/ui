@@ -1,4 +1,3 @@
-
 import { Graphics as PixiGraphics, Text } from 'pixi.js';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
@@ -37,20 +36,31 @@ export const Graphics = ({
     textColor,
     textOffsetX,
     textOffsetY,
-    onPress
+    onPress,
 }: any) => {
     color = Number(color.replace('#', '0x'));
     hoverColor = Number(hoverColor.replace('#', '0x'));
     pressedColor = Number(pressedColor.replace('#', '0x'));
     disabledColor = Number(disabledColor.replace('#', '0x'));
-    
+
     // Component usage !!!
-    const view = new Button({ 
-        view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius), 
-        hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius), 
-        pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius), 
-        disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius), 
-        textView: new Text(text, { ...defaultTextStyle, fill: textColor || defaultTextStyle.fill }), 
+    const view = new Button({
+        view: new PixiGraphics()
+            .beginFill(color)
+            .drawRoundedRect(0, 0, width, height, radius),
+        hoverView: new PixiGraphics()
+            .beginFill(hoverColor)
+            .drawRoundedRect(0, 0, width, height, radius),
+        pressedView: new PixiGraphics()
+            .beginFill(pressedColor)
+            .drawRoundedRect(0, 0, width, height, radius),
+        disabledView: new PixiGraphics()
+            .beginFill(disabledColor)
+            .drawRoundedRect(0, 0, width, height, radius),
+        textView: new Text(text, {
+            ...defaultTextStyle,
+            fill: textColor || defaultTextStyle.fill,
+        }),
         padding,
         textOffset: { x: textOffsetX, y: textOffsetY },
     });
@@ -60,8 +70,8 @@ export const Graphics = ({
     }
 
     view.onPress.connect(onPress);
-    
-    return { view, resize: () => centerElement(view)};
+
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

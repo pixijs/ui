@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM", "ScriptHost"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "ScriptHost"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
@@ -21,7 +25,12 @@
     "skipLibCheck": true,
     "noImplicitOverride": true
   },
-  "include": ["./src", "./typings", "./test", "./docs-source"],
+  "include": [
+    "./src",
+    "./typings",
+    "./test",
+    "./docs-source"
+  ],
   "typedocOptions": {
     "entryPoints": [
       "./src/index.ts"
@@ -35,7 +44,9 @@
     "excludePrivate": true,
     "excludeProtected": false,
     "excludeInternal": false,
-    "plugin": ["@play-co/typedoc-plugin-timestep"],
+    "plugin": [
+      "@play-co/typedoc-plugin-timestep"
+    ],
     "theme": "pages-plugin",
     "pages": {
       "groups": [

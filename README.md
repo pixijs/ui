@@ -4,9 +4,10 @@
 </div>
 
 Here are some useful resources:
-- [Full docs](https://pixijs.io/ui/)
-- [Github Repo](https://github.com/pixijs/ui)
-- [Storybook](https://pixijs.io/ui/storybook/)
+
+-   [Full docs](https://pixijs.io/ui/)
+-   [Github Repo](https://github.com/pixijs/ui)
+-   [Storybook](https://pixijs.io/ui/storybook/)
 
 ## Install
 
@@ -17,5 +18,5 @@ npm install @play-co/pixi-ui
 There is no default export. The correct way to import pixi-ui is:
 
 ```js
-import { Button, Layout, ScrollBox } from '@play-co/pixi-ui'
+import { Button, Layout, ScrollBox } from '@play-co/pixi-ui';
 ```

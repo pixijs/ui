@@ -1,8 +1,8 @@
-import { Container } from "pixi.js";
+import { Container } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { DoubleSlider } from "../../DoubleSlider";
-import { centerElement } from "../../utils/helpers/resize";
+import { DoubleSlider } from '../../DoubleSlider';
+import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../../utils/helpers/loader';
 
 const args = {
@@ -14,7 +14,7 @@ const args = {
     fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
-}
+};
 
 export const Double = ({
     min,
@@ -28,10 +28,7 @@ export const Double = ({
 }: any) => {
     const view = new Container();
 
-    const assets = [
-        'slider_bg.png',
-        'slider.png',
-    ];
+    const assets = ['slider_bg.png', 'slider.png'];
 
     preloadAssets(assets).then(() => {
         // Component usage !!!
@@ -50,19 +47,19 @@ export const Double = ({
             showValue,
             valueTextOffset: {
                 y: -40,
-            }
+            },
         });
 
         doubleSlider.onChange.connect((value1, value2) => {
-            onChange(`Slider changed > ${value1} - ${value2}`)
+            onChange(`Slider changed > ${value1} - ${value2}`);
         });
 
         view.addChild(doubleSlider);
-        
+
         centerElement(view);
     });
-    
-    return { view, resize: () => centerElement(view)};
+
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

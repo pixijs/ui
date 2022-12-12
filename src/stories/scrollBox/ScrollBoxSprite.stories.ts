@@ -1,4 +1,3 @@
-
 import { Sprite as PixiSprite, Text, Texture, Container } from 'pixi.js';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { ScrollBox } from '../../ScrollBox';
@@ -9,18 +8,15 @@ import { preloadAssets } from '../../utils/helpers/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    type: [
-        'vertical',
-        'horizontal',
-    ],
+    type: ['vertical', 'horizontal'],
     fontColor: '#000000',
     radius: 20,
     elementsMargin: 10,
     elementsPadding: 10,
     itemsCount: 100,
     onPress: action('Button was pressed > '),
-}
-    
+};
+
 export const Sprite = ({
     type,
     fontColor,
@@ -31,7 +27,7 @@ export const Sprite = ({
     onPress,
 }: any) => {
     fontColor = Number(fontColor.replace('#', '0x'));
-    
+
     const view = new Container();
 
     const assets = [
@@ -58,27 +54,33 @@ export const Sprite = ({
             items,
         });
 
-        scrollBox.x = (window.width / 2 - scrollBox.width / 2) - 10;
-        scrollBox.y = (window.height / 2 - scrollBox.height / 2) + 12;
+        scrollBox.x = window.width / 2 - scrollBox.width / 2 - 10;
+        scrollBox.y = window.height / 2 - scrollBox.height / 2 + 12;
 
         window.addChild(scrollBox);
 
-        centerElement(view)
+        centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
-function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: number) => void): Button[] {
+function createItems(
+    itemsCount: number,
+    fontColor: number,
+    onPress: (buttonID: number) => void,
+): Button[] {
     const items = [];
 
-
     for (let i = 0; i < itemsCount; i++) {
-        const button = new Button({ 
+        const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
             hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
-            textView: new Text(`Item ${i + 1}`, { ...defaultTextStyle, fill: fontColor }),
-            textOffset: { x: 0, y: -7 }, 
+            textView: new Text(`Item ${i + 1}`, {
+                ...defaultTextStyle,
+                fill: fontColor,
+            }),
+            textOffset: { x: 0, y: -7 },
         });
 
         button.scale.set(0.5);

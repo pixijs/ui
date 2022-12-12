@@ -7,9 +7,7 @@ import { Device } from '../devices/Device';
  * However the trad of is performance can slow down.
  *
  */
-export function autoDetectAntialias(): boolean
-{
+export function autoDetectAntialias(): boolean {
     // TODO this can eventually be smarter..
     return Device.desktop;
 }
-

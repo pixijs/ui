@@ -5,13 +5,13 @@ import { CheckBox } from './CheckBox';
 import { Layout, LayoutType } from './Layout';
 
 export type GraphicsType = {
-    color: number,
-    fillColor?: number,
+    color: number;
+    fillColor?: number;
     width?: number;
     height?: number;
     radius?: number;
     padding?: number;
-}
+};
 
 export type CheckBoxStyle = {
     bg: string | GraphicsType;
@@ -21,8 +21,8 @@ export type CheckBoxStyle = {
 
 export type CheckBoxOptions = {
     items: string[];
-    type: LayoutType,
-    elementsMargin: number,
+    type: LayoutType;
+    elementsMargin: number;
     style: CheckBoxStyle;
     selectedItem?: number;
 };
@@ -45,22 +45,22 @@ export type CheckBoxOptions = {
  *         }
  *     },
  * });
- * 
+ *
  * ```
  */
-export class RadioGroup extends Container
-{
+export class RadioGroup extends Container {
     private items: CheckBox[] = [];
-    
+
     private value: string;
     private selected: number;
 
-    public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
+    public onChange: Signal<
+        (selectedItemID: number, selectedVal: string) => void
+    >;
 
     public view: Layout;
 
-    constructor(private readonly options: CheckBoxOptions)
-    {
+    constructor(private readonly options: CheckBoxOptions) {
         super();
 
         this.value = options.items[options.selectedItem];
@@ -73,14 +73,16 @@ export class RadioGroup extends Container
         });
 
         options.items.forEach((item, id) => {
-            const unchecked = typeof options.style.bg === 'string'
-                ? new Sprite(Texture.from(options.style.bg))
-                : this.getGraphics(options.style.bg as GraphicsType);
-            
-            const checked = typeof options.style.checked === 'string'
-                ? new Sprite(Texture.from(options.style.checked))
-                : this.getGraphics(options.style.checked as GraphicsType);
-            
+            const unchecked =
+                typeof options.style.bg === 'string'
+                    ? new Sprite(Texture.from(options.style.bg))
+                    : this.getGraphics(options.style.bg as GraphicsType);
+
+            const checked =
+                typeof options.style.checked === 'string'
+                    ? new Sprite(Texture.from(options.style.checked))
+                    : this.getGraphics(options.style.checked as GraphicsType);
+
             const checkBox = new CheckBox({
                 checked: options.selectedItem === id,
                 style: {
@@ -89,13 +91,13 @@ export class RadioGroup extends Container
                     text: {
                         text: item,
                         style: options.style.textStyle,
-                    }
+                    },
                 },
             });
 
             this.view.addChild(checkBox);
 
-            checkBox.onChange.connect(() => this.selectItem(id))
+            checkBox.onChange.connect(() => this.selectItem(id));
 
             this.items.push(checkBox);
 
@@ -120,15 +122,21 @@ export class RadioGroup extends Container
         isCircle
             ? graphics.drawCircle(width / 2, width / 2, width / 2)
             : graphics.drawRoundedRect(0, 0, width, height, radius);
-        
+
         if (fillColor) {
             graphics.beginFill(fillColor);
-            
+
             const center = width / 2;
 
             isCircle
                 ? graphics.drawCircle(center, center, center - padding)
-                : graphics.drawRoundedRect(padding, padding, width - padding * 2, height - padding * 2, radius);
+                : graphics.drawRoundedRect(
+                      padding,
+                      padding,
+                      width - padding * 2,
+                      height - padding * 2,
+                      radius,
+                  );
         }
 
         return graphics;
@@ -136,8 +144,8 @@ export class RadioGroup extends Container
 
     public selectItem(id: number) {
         this.selected = id;
-        
-        this.items.map((item) => item.checked = false);
+
+        this.items.map((item) => (item.checked = false));
 
         this.items[id].checked = true;
 

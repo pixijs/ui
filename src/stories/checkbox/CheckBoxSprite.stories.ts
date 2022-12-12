@@ -9,57 +9,48 @@ import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
     count: 3,
-    text: "",
+    text: '',
     textColor: '#FFFFFF',
     checked: false,
     onChange: action('Checkbox changed'),
-}
+};
 
-export const Sprite = ({ 
-    checked,
-    onChange, 
-    count,
-    textColor,
-    text,
-}: any) => {
+export const Sprite = ({ checked, onChange, count, textColor, text }: any) => {
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 5,
     });
-    
-    const assets = [
-        `switch_off.png`,
-        `switch_on.png`,
-    ];
+
+    const assets = [`switch_off.png`, `switch_on.png`];
 
     preloadAssets(assets).then(() => {
-        for(let i = 0; i < count; i++) {
+        for (let i = 0; i < count; i++) {
             // Component usage !!!
             const checkBox = new CheckBox({
                 checked,
                 style: {
                     unchecked: new PixiSprite(Texture.from(`switch_off.png`)),
-                    checked: new PixiSprite(Texture.from(`switch_on.png`)), 
+                    checked: new PixiSprite(Texture.from(`switch_on.png`)),
                     text: {
                         text: text ?? `${text} ${i + 1}`,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 22,
                             fill: textColor,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             });
-    
+
             checkBox.onChange.connect(() => onChange(`${checkBox.checked}`));
-    
+
             view.addChild(checkBox);
         }
-        
+
         centerElement(view);
     });
-    
-    return { view, resize: () => centerElement(view)};
+
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

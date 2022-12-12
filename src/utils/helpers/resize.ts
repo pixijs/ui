@@ -1,11 +1,15 @@
 import { Container } from 'pixi.js';
 
-export function centerElement(view: Container, horPos?: number, verPos?: number) {
-    const canvas = document.getElementById("storybook-root");
+export function centerElement(
+    view: Container,
+    horPos?: number,
+    verPos?: number,
+) {
+    const canvas = document.getElementById('storybook-root');
 
     if (horPos === 0) {
         view.x = 0;
-    } else if(horPos) {
+    } else if (horPos) {
         view.x = canvas.offsetWidth * horPos - view.width / 2;
     } else {
         view.x = canvas.offsetWidth / 2 - view.width / 2;

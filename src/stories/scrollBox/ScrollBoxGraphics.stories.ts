@@ -1,4 +1,3 @@
-
 import { Graphics as PixiGraphics, Text, Container } from 'pixi.js';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { ScrollBox } from '../../ScrollBox';
@@ -8,10 +7,7 @@ import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    type: [
-        'vertical',
-        'horizontal',
-    ],
+    type: ['vertical', 'horizontal'],
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
     width: 300,
@@ -23,8 +19,8 @@ const args = {
     elementsHeight: 80,
     itemsCount: 100,
     onPress: action('Button was pressed > '),
-}
-    
+};
+
 export const Graphics = ({
     type,
     fontColor,
@@ -48,9 +44,16 @@ export const Graphics = ({
 
     for (let i = 0; i < itemsCount; i++) {
         const button = new Button({
-            view: new PixiGraphics().beginFill(0xA5E24D).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius), 
-            hoverView: new PixiGraphics().beginFill(0xFEC230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius), 
-            textView: new Text(`Item ${i + 1}`, { ...defaultTextStyle, fill: fontColor || defaultTextStyle.fill }), 
+            view: new PixiGraphics()
+                .beginFill(0xa5e24d)
+                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            hoverView: new PixiGraphics()
+                .beginFill(0xfec230)
+                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            textView: new Text(`Item ${i + 1}`, {
+                ...defaultTextStyle,
+                fill: fontColor || defaultTextStyle.fill,
+            }),
         });
 
         button.onPress.connect(() => onPress(i + 1));
@@ -72,7 +75,7 @@ export const Graphics = ({
 
     view.addChild(scrollBox);
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

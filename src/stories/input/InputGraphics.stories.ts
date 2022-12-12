@@ -1,15 +1,15 @@
 import { Graphics as PixiGraphics } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
-import { Layout } from "../../Layout";
-import { Input } from "../../Input";
+import { Layout } from '../../Layout';
+import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-    
+
 const args = {
     count: 1,
-    text: "",
-    placeholder: "Enter text",
+    text: '',
+    placeholder: 'Enter text',
     maxLength: 100,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
@@ -22,7 +22,7 @@ const args = {
     radius: 11,
 
     onChange: action('Input: '),
-}
+};
 
 export const Graphics = ({
     text,
@@ -45,7 +45,7 @@ export const Graphics = ({
     backgroundColor = backgroundColor.replace('#', '0x');
     borderColor = Number(borderColor.replace('#', '0x'));
     textColor = Number(textColor.replace('#', '0x'));
-    
+
     for (let i = 0; i < count; i++) {
         // Component usage
         const input = new Input({
@@ -53,7 +53,13 @@ export const Graphics = ({
                 .beginFill(borderColor)
                 .drawRoundedRect(0, 0, width, height, radius + border)
                 .beginFill(backgroundColor)
-                .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
+                .drawRoundedRect(
+                    border,
+                    border,
+                    width - border * 2,
+                    height - border * 2,
+                    radius,
+                ),
             padding: border ? border + 3 : 0,
             textStyle: {
                 ...defaultTextStyle,
@@ -71,7 +77,7 @@ export const Graphics = ({
         view.addChild(input);
     }
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

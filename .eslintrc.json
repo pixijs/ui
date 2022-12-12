@@ -1,23 +1,27 @@
 {
-  "extends": [
-    "@goodboydigital/eslint-config",
-    "plugin:storybook/recommended"
-  ],
+  "root": true,
+  "extends": "eslint:recommended",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": [
-      "./tsconfig.json"
-    ]
+    "sourceType": "module",
+    "project": "./test/tsconfig.json"
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "globals": {
+    "process": true
   },
   "rules": {
-    "no-console": [
-      0,
-      {
-        "allow": [
-          "warn",
-          "error"
-        ]
-      }
-    ],
-    "@typescript-eslint/ban-ts-comment": 0
+    "no-constant-condition": "warn",
+    "no-dupe-class-members": "off",
+    "no-unused-vars": "off",
+    "no-var": "error",
+    "prefer-const": "off",
+    "require-atomic-updates": "warn",
+    "eqeqeq": ["error", "always", { "null": "ignore" }]
   }
 }

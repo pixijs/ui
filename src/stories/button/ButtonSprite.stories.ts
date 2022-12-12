@@ -1,4 +1,3 @@
-
 import { Sprite as PixiSprite, Text, Texture } from 'pixi.js';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
@@ -16,16 +15,16 @@ const args = {
     textOffsetX: 0,
     textOffsetY: -7,
     onPress: action('button was pressed! (tap or click!)'),
-}
+};
 
-export const Sprite = ({ 
-    text, 
-    textColor, 
-    disabled, 
-    onPress, 
+export const Sprite = ({
+    text,
+    textColor,
+    disabled,
+    onPress,
     padding,
     textOffsetX,
-    textOffsetY 
+    textOffsetY,
 }: any) => {
     const view = new Layout({
         type: 'vertical',
@@ -36,17 +35,20 @@ export const Sprite = ({
         `button.png`,
         `button_hover.png`,
         `button_pressed.png`,
-        `button_disabled.png`
+        `button_disabled.png`,
     ];
 
     preloadAssets(assets).then(() => {
         // Component usage !!!
-        const button = new Button({ 
+        const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
             hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
             pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
             disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
-            textView: new Text(text, { ...defaultTextStyle, fill: textColor || defaultTextStyle.fill }),
+            textView: new Text(text, {
+                ...defaultTextStyle,
+                fill: textColor || defaultTextStyle.fill,
+            }),
             padding,
             textOffset: { x: textOffsetX, y: textOffsetY },
         });
@@ -62,7 +64,7 @@ export const Sprite = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

@@ -1,8 +1,8 @@
 import { TextStyle } from 'pixi.js';
 
-export const defaultTextStyle = new TextStyle({ 
-    fill: 0xFFFFFF, 
-    fontSize: 42, 
+export const defaultTextStyle = new TextStyle({
+    fill: 0xffffff,
+    fontSize: 42,
     // fontFamily: 'Arial',
     fontWeight: 'bold',
     dropShadow: true,

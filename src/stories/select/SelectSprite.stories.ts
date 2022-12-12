@@ -1,4 +1,3 @@
-
 import { Container } from 'pixi.js';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { Select } from '../../Select';
@@ -14,8 +13,8 @@ const args = {
     fontSize: 28,
     itemsCount: 100,
     onSelect: action('Item selected'),
-}
-    
+};
+
 export const Sprite = ({
     fontColor,
     fontSize,
@@ -26,10 +25,7 @@ export const Sprite = ({
 }: any) => {
     const view = new Container();
 
-    const assets = [
-        `select_closed.png`,
-        `select_open.png`,
-    ];
+    const assets = [`select_closed.png`, `select_open.png`];
 
     preloadAssets(assets).then(() => {
         backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -38,12 +34,12 @@ export const Sprite = ({
         const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
         const items = getItems(itemsCount, 'Item');
-        
-        // Component usage !!!  
-        const select = new Select({ 
+
+        // Component usage !!!
+        const select = new Select({
             closedBG: `select_closed.png`,
             openBG: `select_open.png`,
-            textStyle, 
+            textStyle,
             items: {
                 items,
                 backgroundColor,
@@ -54,7 +50,7 @@ export const Sprite = ({
                 radius: 25,
             },
             selectedTextOffset: {
-                y: - 13,
+                y: -13,
             },
             scrollBox: {
                 width: 200,
@@ -63,10 +59,10 @@ export const Sprite = ({
                 offset: {
                     y: -16,
                     x: 24,
-                }
+                },
             },
         });
-        
+
         select.y = 10;
 
         select.onSelect.connect((_, text) => {
@@ -78,7 +74,7 @@ export const Sprite = ({
         centerElement(view, 0.5, 0);
     });
 
-    return { view, resize: () => centerElement(view, 0.5, 0)};
+    return { view, resize: () => centerElement(view, 0.5, 0) };
 };
 
 function getItems(itemsCount: number, text: string): string[] {

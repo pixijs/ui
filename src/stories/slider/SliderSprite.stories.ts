@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { Slider } from "../../Slider";
+import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../../utils/helpers/loader';
 import { Container } from 'pixi.js';
@@ -13,7 +13,7 @@ const args = {
     fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
-}
+};
 
 export const Single = ({
     min,
@@ -26,10 +26,7 @@ export const Single = ({
 }: any) => {
     const view = new Container();
 
-    const assets = [
-        'slider_bg.png',
-        'slider.png',
-    ];
+    const assets = ['slider_bg.png', 'slider.png'];
 
     preloadAssets(assets).then(() => {
         // Component usage !!!
@@ -46,11 +43,11 @@ export const Single = ({
             showValue,
             valueTextOffset: {
                 y: -40,
-            }
+            },
         });
 
         singleSlider.onChange.connect((value) => {
-            onChange(`Slider changed > ${value}`)
+            onChange(`Slider changed > ${value}`);
         });
 
         view.addChild(singleSlider);
@@ -58,7 +55,7 @@ export const Single = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

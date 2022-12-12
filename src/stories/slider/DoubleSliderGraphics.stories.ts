@@ -1,9 +1,9 @@
-import { Graphics as PixiGraphics } from "pixi.js";
+import { Graphics as PixiGraphics } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
-import { Layout } from "../../Layout";
+import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { DoubleSlider } from "../../DoubleSlider";
-import { centerElement } from "../../utils/helpers/resize";
+import { DoubleSlider } from '../../DoubleSlider';
+import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
     min: 0,
@@ -23,7 +23,7 @@ const args = {
     handleBorder: 3,
     showValue: true,
     onChange: action('Slider changed'),
-}
+};
 
 export const Double = ({
     min,
@@ -52,21 +52,41 @@ export const Double = ({
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
 
     const bg = new PixiGraphics()
-        .beginFill(borderColor).drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(backgroundColor).drawRoundedRect(border, border, width - border * 2, height - border * 2, radius);
+        .beginFill(borderColor)
+        .drawRoundedRect(0, 0, width, height, radius)
+        .beginFill(backgroundColor)
+        .drawRoundedRect(
+            border,
+            border,
+            width - border * 2,
+            height - border * 2,
+            radius,
+        );
 
     const fill = new PixiGraphics()
-        .beginFill(borderColor).drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(fillColor).drawRoundedRect(border, border, width - border * 2, height - border * 2, radius);
+        .beginFill(borderColor)
+        .drawRoundedRect(0, 0, width, height, radius)
+        .beginFill(fillColor)
+        .drawRoundedRect(
+            border,
+            border,
+            width - border * 2,
+            height - border * 2,
+            radius,
+        );
 
     const slider1 = new PixiGraphics()
-        .beginFill(borderColor).drawCircle(0, 0, 20 + handleBorder)
-        .beginFill(meshColor).drawCircle(0, 0, 20)
+        .beginFill(borderColor)
+        .drawCircle(0, 0, 20 + handleBorder)
+        .beginFill(meshColor)
+        .drawCircle(0, 0, 20)
         .endFill();
 
     const slider2 = new PixiGraphics()
-        .beginFill(borderColor).drawCircle(0, 0, 20 + handleBorder)
-        .beginFill(meshColor).drawCircle(0, 0, 20)
+        .beginFill(borderColor)
+        .drawCircle(0, 0, 20 + handleBorder)
+        .beginFill(meshColor)
+        .drawCircle(0, 0, 20)
         .endFill();
 
     const doubleSlider = new DoubleSlider({
@@ -86,12 +106,12 @@ export const Double = ({
     });
 
     doubleSlider.onChange.connect((value1, value2) => {
-        onChange(`Slider changed > ${value1} - ${value2}`)
+        onChange(`Slider changed > ${value1} - ${value2}`);
     });
 
     view.addChild(doubleSlider);
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

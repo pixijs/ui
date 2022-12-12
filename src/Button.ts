@@ -5,8 +5,7 @@ import { Signal } from 'typed-signals';
 
 import { Device } from './utils';
 
-export interface ButtonOptions
-{
+export interface ButtonOptions {
     view: Container;
     accessible?: boolean;
     accessibleTitle?: string;
@@ -16,37 +15,36 @@ export interface ButtonOptions
     disabledView?: Container;
     textView?: Text;
     padding?: number;
-    textOffset?: { x: number, y: number };
+    textOffset?: { x: number; y: number };
 }
 
 /**
- * Container based component that gives us a starting point for UI buttons. 
+ * Container based component that gives us a starting point for UI buttons.
  * It composes a view rather than extends one, this means we can easily make any pixi container a button!
  *
  * @example
  * ```
- * const spriteButton = new Button({ 
+ * const spriteButton = new Button({
  *     view: new PixiSprite(Texture.from(`button.png`)),
  *     hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
  *     pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
  *     disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
  *     textView: new Text(text, { ...buttonTextStyle, fill: textColor || buttonTextStyle.fill }),
  * });
- * 
- * const graphicsButton = new Button({ 
- *     view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius), 
- *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius), 
- *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius), 
- *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius), 
- *     textView: new Text(text, { ...buttonTextStyle, fill: textColor || buttonTextStyle.fill }), 
+ *
+ * const graphicsButton = new Button({
+ *     view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
+ *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
+ *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
+ *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
+ *     textView: new Text(text, { ...buttonTextStyle, fill: textColor || buttonTextStyle.fill }),
  *     padding,
  *     textOffset: { x: textOffsetX, y: textOffsetY },
  * });
  *
  * ```
  */
-export class Button extends Container
-{
+export class Button extends Container {
     public defaultView: Container;
     public hoverView: Container;
     public pressedView: Container;
@@ -63,22 +61,21 @@ export class Button extends Container
     private _isDown: boolean;
     private _enabled: boolean;
     private _shown: boolean;
-    
+
     private padding = 0;
 
-    constructor({ 
-        view, 
-        hoverView, 
-        pressedView, 
-        disabledView, 
-        accessible, 
-        accessibleTitle, 
-        tabIndex, 
+    constructor({
+        view,
+        hoverView,
+        pressedView,
+        disabledView,
+        accessible,
+        accessibleTitle,
+        tabIndex,
         textView,
         padding,
         textOffset,
-    }: ButtonOptions)
-    {
+    }: ButtonOptions) {
         super();
 
         if (padding) {
@@ -95,7 +92,7 @@ export class Button extends Container
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
-        
+
         if (pressedView) {
             this.pressedView = pressedView;
             this.pressedView.zIndex = 3;
@@ -114,7 +111,7 @@ export class Button extends Container
             this.text = textView;
             this.text.zIndex = 4;
             textView.anchor.set(0.5);
-            
+
             textView.x = this.width / 2 + (textOffset?.x ?? 0);
             textView.y = this.height / 2 + (textOffset?.y ?? 0);
 
@@ -141,66 +138,55 @@ export class Button extends Container
         this.accessibleTitle = accessibleTitle ?? '';
         this.tabIndex = tabIndex ?? 0;
 
-        this.on('pointerdown', (e: InteractionEvent) =>
-        {
+        this.on('pointerdown', (e: InteractionEvent) => {
             this._isDown = true;
             this.onDown.emit(this, e);
         });
 
-        this.on('pointerup', (e: InteractionEvent) =>
-        {
+        this.on('pointerup', (e: InteractionEvent) => {
             this._processUp(e);
         });
 
-        this.on('pointerupoutside', (e: InteractionEvent) =>
-        {
+        this.on('pointerupoutside', (e: InteractionEvent) => {
             this._processUpOut(e);
         });
 
-        this.on('pointertap', (e: InteractionEvent) =>
-        {
+        this.on('pointertap', (e: InteractionEvent) => {
             this._isDown = false;
             this.onPress.emit(this, e);
         });
 
-        this.on('pointerover', (e: InteractionEvent) =>
-        {
+        this.on('pointerover', (e: InteractionEvent) => {
             this.onHover.emit(this, e);
         });
 
-        this.on('pointerout', (e: InteractionEvent) =>
-        {
+        this.on('pointerout', (e: InteractionEvent) => {
             this._processOut(e);
         });
 
-        this.onDown.connect((_btn, e) =>
-        {
+        this.onDown.connect((_btn, e) => {
             this.down(e);
             if (this.pressedView) {
                 this.pressedView.visible = true;
             }
         });
 
-        this.onUp.connect((_btn, e) =>
-        {
+        this.onUp.connect((_btn, e) => {
             this.up(e);
             if (this.pressedView) {
                 this.pressedView.visible = false;
             }
         });
 
-        this.onUpOut.connect((_bth, e) =>
-        {
+        this.onUpOut.connect((_bth, e) => {
             this._upOut(e);
             if (this.pressedView) {
                 this.pressedView.visible = false;
             }
         });
 
-        if (Device.desktop)
-        {
-            this.onHover.connect((_bth, e) =>
-            {
+        if (Device.desktop) {
+            this.onHover.connect((_bth, e) => {
                 if (this.hoverView) {
                     this.hoverView.visible = true;
                 }
@@ -208,8 +194,7 @@ export class Button extends Container
             });
         }
 
-        this.onOut.connect((_bth, e) =>
-        {
+        this.onOut.connect((_bth, e) => {
             if (this.hoverView) {
                 this.hoverView.visible = false;
             }
@@ -222,52 +207,44 @@ export class Button extends Container
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public down(_e?: InteractionEvent): void
-    {
+    public down(_e?: InteractionEvent): void {
         // override me!
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public up(_e?: InteractionEvent): void
-    {
+    public up(_e?: InteractionEvent): void {
         // override me!
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public hover(_e?: InteractionEvent): void
-    {
+    public hover(_e?: InteractionEvent): void {
         // override me!
     }
 
-    get isDown(): boolean
-    {
+    get isDown(): boolean {
         return this._isDown;
     }
 
-    set enabled(value: boolean)
-    {
+    set enabled(value: boolean) {
         this._enabled = value;
         this.interactive = value;
         this.buttonMode = value;
-        this.accessible = (this.accessible && value);
+        this.accessible = this.accessible && value;
 
         if (this.disabledView) {
             this.disabledView.visible = !value;
         }
 
-        if (!value)
-        {
+        if (!value) {
             this._processUp();
         }
     }
 
-    get enabled(): boolean
-    {
+    get enabled(): boolean {
         return this._enabled;
     }
 
-    set shown(value: boolean)
-    {
+    set shown(value: boolean) {
         this._shown = value;
         this.enabled = value;
         if (this.defaultView) {
@@ -275,24 +252,19 @@ export class Button extends Container
         }
     }
 
-    get shown(): boolean
-    {
+    get shown(): boolean {
         return this._shown;
     }
 
-    private _processUp(e?: InteractionEvent): void
-    {
-        if (this._isDown)
-        {
+    private _processUp(e?: InteractionEvent): void {
+        if (this._isDown) {
             this.onUp.emit(this, e);
         }
         this._isDown = false;
     }
 
-    private _processUpOut(e?: InteractionEvent): void
-    {
-        if (this._isDown)
-        {
+    private _processUpOut(e?: InteractionEvent): void {
+        if (this._isDown) {
             this.onUpOut.emit(this, e);
         }
 
@@ -302,19 +274,16 @@ export class Button extends Container
         this._isDown = false;
     }
 
-    private _processOut(e?: InteractionEvent): void
-    {
+    private _processOut(e?: InteractionEvent): void {
         this.onOut.emit(this, e);
         this._isDown = false;
     }
 
-    private _upOut(e?: InteractionEvent): void
-    {
+    private _upOut(e?: InteractionEvent): void {
         this.up(e);
     }
 
-    private _out(e?: InteractionEvent): void
-    {
+    private _out(e?: InteractionEvent): void {
         this.up(e);
     }
 

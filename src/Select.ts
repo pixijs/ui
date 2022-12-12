@@ -1,41 +1,41 @@
-import { Button } from "./Button";
+import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
-import { Signal } from "typed-signals";
+import { Signal } from 'typed-signals';
 import { Container, TextStyle, Sprite, Texture, Text, Graphics } from 'pixi.js';
 
 type Offset = {
     y: number;
     x: number;
-}
+};
 
 export type SelectItemsOptions = {
-    items: string[],
-    backgroundColor: number,
-    hoverColor?: number,
-    width?: number,
-    height?: number,
+    items: string[];
+    backgroundColor: number;
+    hoverColor?: number;
+    width?: number;
+    height?: number;
     textStyle?: Partial<TextStyle>;
-    radius?: number,
-}
+    radius?: number;
+};
 
 export type SelectOptions = {
-    closedBG: string | Container,
-    openBG?: string | Container,
+    closedBG: string | Container;
+    openBG?: string | Container;
     textStyle?: Partial<TextStyle>;
-    selected?: number,
-    selectedTextOffset?: { x?: number, y?: number },
+    selected?: number;
+    selectedTextOffset?: { x?: number; y?: number };
 
-    items: SelectItemsOptions,
+    items: SelectItemsOptions;
 
-    scrollBoxOffset?: { x?: number, y?: number },
-    scrollBoxWidth?: number,
-    scrollBoxHeight?: number,
-    scrollBoxRadius?: number,
+    scrollBoxOffset?: { x?: number; y?: number };
+    scrollBoxWidth?: number;
+    scrollBoxHeight?: number;
+    scrollBoxRadius?: number;
 
     scrollBox?: ScrollBoxOptions & {
-        offset?: Offset,
-    },
-}
+        offset?: Offset;
+    };
+};
 
 export class Select extends Container {
     private readonly closedBG: Container;
@@ -46,12 +46,12 @@ export class Select extends Container {
 
     public onSelect: Signal<(value: number, text: string) => void>;
 
-    constructor ({ 
-        closedBG, 
-        textStyle, 
-        items, 
-        openBG, 
-        selected, 
+    constructor({
+        closedBG,
+        textStyle,
+        items,
+        openBG,
+        selected,
         selectedTextOffset,
         scrollBox,
     }: SelectOptions) {
@@ -71,12 +71,9 @@ export class Select extends Container {
 
         // this.addChild(this.closedBG);
 
-        this.addChild(
-            this.closedBG,
-            this.openBG,
-        );
+        this.addChild(this.closedBG, this.openBG);
 
-        const openButton = new Button({ 
+        const openButton = new Button({
             view: this.closedBG,
         });
 
@@ -84,8 +81,11 @@ export class Select extends Container {
 
         openButton.onPress.connect(() => this.toggle());
 
-        this.selectedText = new Text(items?.items ? items.items[0] : '', textStyle);
-        
+        this.selectedText = new Text(
+            items?.items ? items.items[0] : '',
+            textStyle,
+        );
+
         const selectedTextButton = new Button({
             view: this.selectedText,
         });
@@ -95,8 +95,10 @@ export class Select extends Container {
         this.addChild(selectedTextButton);
 
         this.selectedText.anchor.set(0.5);
-        this.selectedText.x = this.closedBG.width / 2 + (selectedTextOffset?.x || 0);
-        this.selectedText.y = this.closedBG.height / 2 + (selectedTextOffset?.y || 0);
+        this.selectedText.x =
+            this.closedBG.width / 2 + (selectedTextOffset?.x || 0);
+        this.selectedText.y =
+            this.closedBG.height / 2 + (selectedTextOffset?.y || 0);
 
         const scroll = new ScrollBox({
             type: 'vertical',
@@ -116,13 +118,13 @@ export class Select extends Container {
             scroll.x += scrollBox.offset.x ?? 0;
             scroll.y += scrollBox.offset.y ?? 0;
         }
-        
+
         this.onSelect = new Signal();
 
         this.convertItemsToButtons(items).forEach((button, id) => {
             const text = button.getText();
 
-            if(id === selected) {
+            if (id === selected) {
                 this.selectedText.text = text;
             }
 
@@ -137,17 +139,17 @@ export class Select extends Container {
         });
     }
 
-    public toggle () {
+    public toggle() {
         this.openBG.visible = !this.openBG.visible;
         this.closedBG.visible = !this.closedBG.visible;
     }
 
-    public open () {
+    public open() {
         this.openBG.visible = true;
         this.closedBG.visible = false;
     }
 
-    public close () {
+    public close() {
         this.openBG.visible = false;
         this.closedBG.visible = true;
     }
@@ -164,12 +166,16 @@ export class Select extends Container {
         const buttons: Button[] = [];
 
         items.forEach((item) => {
-            const view = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
-            const hoverView = new Graphics().beginFill(hoverColor ?? backgroundColor).drawRoundedRect(0, 0, width, height, radius);
+            const view = new Graphics()
+                .beginFill(backgroundColor)
+                .drawRoundedRect(0, 0, width, height, radius);
+            const hoverView = new Graphics()
+                .beginFill(hoverColor ?? backgroundColor)
+                .drawRoundedRect(0, 0, width, height, radius);
             const textView = new Text(item, textStyle);
 
             const button = new Button({ view, hoverView, textView });
-            
+
             buttons.push(button);
         });
 

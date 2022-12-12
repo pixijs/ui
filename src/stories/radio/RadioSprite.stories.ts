@@ -1,33 +1,25 @@
-import { RadioGroup } from "../../RadioGroup";
+import { RadioGroup } from '../../RadioGroup';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { Layout } from "../../Layout";
-import { preloadAssets } from "../../utils/helpers/loader";
-import { defaultTextStyle } from "../../utils/helpers/styles";
+import { Layout } from '../../Layout';
+import { preloadAssets } from '../../utils/helpers/loader';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-    
+
 const args = {
     count: 3,
-    text: "Radio",
+    text: 'Radio',
     textColor: '#FFFFFF',
     onChange: action('Radio changed'),
-}
+};
 
-export const Sprite = ({
-    count,
-    text,
-    textColor,
-    onChange,
-}: any) => {
+export const Sprite = ({ count, text, textColor, onChange }: any) => {
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 20,
     });
 
-    const assets = [
-        `radio.png`,
-        `radio_checked.png`,
-    ];
+    const assets = [`radio.png`, `radio_checked.png`];
 
     preloadAssets(assets).then(() => {
         const items = [];
@@ -49,18 +41,21 @@ export const Sprite = ({
                     ...defaultTextStyle,
                     fontSize: 22,
                     fill: textColor,
-                }
+                },
             },
         });
 
-        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) => onChange(selectedItemID, selectedVal));
+        radioGroup.onChange.connect(
+            (selectedItemID: number, selectedVal: string) =>
+                onChange(selectedItemID, selectedVal),
+        );
 
         view.addChild(radioGroup.view);
 
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

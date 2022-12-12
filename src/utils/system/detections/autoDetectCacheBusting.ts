@@ -5,7 +5,6 @@ import { Device } from '../devices/Device';
  *
  * @returns whether cache busting should apply
  */
-export function autoDetectCacheBusting(): boolean
-{
+export function autoDetectCacheBusting(): boolean {
     return Device.ie;
 }

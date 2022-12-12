@@ -2,17 +2,19 @@ import type { TierResult } from 'detect-gpu';
 import { getGPUTier } from 'detect-gpu';
 import { UAParser } from 'ua-parser-js';
 
-import { autoDetectStorage, StorageType } from '../detections/autoDetectStorage';
+import {
+    autoDetectStorage,
+    StorageType,
+} from '../detections/autoDetectStorage';
 import { DetectAVIF } from '../detections/images/detectAVIF';
 import { DetectWebp } from '../detections/images/detectWebP';
 import { isGalaxyS5, isIPhone6, isKindle } from './deviceQueries';
 
 export type DeviceParserType = 'browser' | 'os' | 'device' | 'gpu';
-export type ParsedDeviceQuery = {type: DeviceParserType; value: string};
+export type ParsedDeviceQuery = { type: DeviceParserType; value: string };
 export type DeviceQueryFunction = (query: ParsedDeviceQuery) => boolean;
 
-export enum GPU_TIER
-    {
+export enum GPU_TIER {
     NONE = 0,
     LOW = 1,
     MEDIUM = 2,
@@ -62,8 +64,7 @@ export enum GPU_TIER
  * - device:s5
  * You can add your own using `Device.addQuery(func)`
  */
-export class DeviceClass
-{
+export class DeviceClass {
     public allowGPUData = true;
     public gpuData: TierResult;
     public uaData: UAParser.IResult;
@@ -84,8 +85,7 @@ export class DeviceClass
         custom: {},
     };
 
-    constructor()
-    {
+    constructor() {
         this.uaData = new UAParser().getResult();
         this.isLocalStorageAllowed = autoDetectStorage(StorageType.LOCAL);
         this.isSessionStorageAllowed = autoDetectStorage(StorageType.SESSION);
@@ -93,51 +93,46 @@ export class DeviceClass
         this._checkIPadPro();
     }
 
-    get desktop(): boolean
-    {
-        return !(this.uaData.device.type === 'tablet' || this.uaData.device.type === 'mobile');
+    get desktop(): boolean {
+        return !(
+            this.uaData.device.type === 'tablet' ||
+            this.uaData.device.type === 'mobile'
+        );
     }
 
-    get mobile(): boolean
-    {
+    get mobile(): boolean {
         return this.isDevice('mobile');
     }
 
-    get phone(): boolean
-    {
+    get phone(): boolean {
         return this.isDevice('phone');
     }
 
-    get tablet(): boolean
-    {
+    get tablet(): boolean {
         return this.isDevice('tablet');
     }
 
-    get android(): boolean
-    {
+    get android(): boolean {
         return this.uaData.os.name === 'Android';
     }
 
-    get ios(): boolean
-    {
+    get ios(): boolean {
         return this.uaData.os.name === 'iOS';
     }
 
-    get kindle(): boolean
-    {
+    get kindle(): boolean {
         return this.isDevice('kindle');
     }
 
-    get ie(): boolean
-    {
+    get ie(): boolean {
         return this.uaData.browser.name === 'IE';
     }
 
-    get gpu(): number
-    {
-        if (!this.gpuData?.tier)
-        {
-            console.warn('[Device] GPU data has not been initialised, returning default tier value');
+    get gpu(): number {
+        if (!this.gpuData?.tier) {
+            console.warn(
+                '[Device] GPU data has not been initialised, returning default tier value',
+            );
 
             return 2;
         }
@@ -148,8 +143,7 @@ export class DeviceClass
     /**
      * Initialises async data about the device
      */
-    public async init(): Promise<void>
-    {
+    public async init(): Promise<void> {
         if (this.gpuData) return;
 
         this.supportedFileFormats.webp = await DetectWebp();
@@ -163,8 +157,7 @@ export class DeviceClass
      * Adds a set of functions to the list to check against
      * @param funcs - functions to check against
      */
-    public addQuery(...funcs: DeviceQueryFunction[]): void
-    {
+    public addQuery(...funcs: DeviceQueryFunction[]): void {
         this.customQueries.push(...funcs);
     }
 
@@ -172,8 +165,7 @@ export class DeviceClass
      * Returns whether or not the query is true for this device
      * @param query - query to be parsed
      */
-    public query(query: string): boolean
-    {
+    public query(query: string): boolean {
         const cachedRes = this.checkCache(query, 'query');
 
         if (cachedRes !== null) return cachedRes;
@@ -182,12 +174,10 @@ export class DeviceClass
 
         let matches = true;
 
-        for (let i = 0; i < splitMatches.length; i++)
-        {
+        for (let i = 0; i < splitMatches.length; i++) {
             const value = splitMatches[i];
 
-            switch (value.type)
-            {
+            switch (value.type) {
                 case 'browser':
                     matches = this.isBrowser(value.value);
                     break;
@@ -217,27 +207,29 @@ export class DeviceClass
      * Returns whether or not the specified browser is being used
      * @param value - value to test
      */
-    public isBrowser(value: string): boolean
-    {
+    public isBrowser(value: string): boolean {
         const cachedRes = this.checkCache(value, 'browser');
 
         if (cachedRes !== null) return cachedRes;
 
         const tests = [
             () => this.checkCustom({ type: 'browser', value }),
-            () =>
-            {
+            () => {
                 const isVersion = value.split(':');
 
-                if (isVersion.length > 1)
-                {
-                    return this.uaData.browser.version.split('.')[0] === isVersion[1];
+                if (isVersion.length > 1) {
+                    return (
+                        this.uaData.browser.version.split('.')[0] ===
+                        isVersion[1]
+                    );
                 }
 
                 return false;
             },
             () => this.supportedFileFormats[value as 'webp' | 'avif'] ?? false,
-            () => this.uaData.browser.name.toLowerCase().replace(' ', '-') === value,
+            () =>
+                this.uaData.browser.name.toLowerCase().replace(' ', '-') ===
+                value,
         ];
 
         return this.checkTests(tests, value, 'browser');
@@ -247,29 +239,26 @@ export class DeviceClass
      * Returns whether or not the specified OS is being used
      * @param value - value to test
      */
-    public isOS(value: string): boolean
-    {
+    public isOS(value: string): boolean {
         const cachedRes = this.checkCache(value, 'os');
 
         if (cachedRes !== null) return cachedRes;
 
         const tests = [
             () => this.checkCustom({ type: 'os', value }),
-            () =>
-            {
+            () => {
                 const isVersion = value.split(':');
 
-                if (isVersion.length > 1)
-                {
-                    return this.uaData.os.version.split('.')[0] === isVersion[1];
+                if (isVersion.length > 1) {
+                    return (
+                        this.uaData.os.version.split('.')[0] === isVersion[1]
+                    );
                 }
 
                 return false;
             },
-            () =>
-            {
-                if (value === 'mobile' || value === 'desktop')
-                {
+            () => {
+                if (value === 'mobile' || value === 'desktop') {
                     return value === 'mobile' ? !this.desktop : this.desktop;
                 }
 
@@ -285,30 +274,30 @@ export class DeviceClass
      * Returns whether or not the specified device is being used
      * @param value - value to test
      */
-    public isDevice(value: string): boolean
-    {
+    public isDevice(value: string): boolean {
         const cachedRes = this.checkCache(value, 'device');
 
         if (cachedRes !== null) return cachedRes;
 
         const tests = [
             () => this.checkCustom({ type: 'device', value }),
-            () =>
-            {
-                if (value === 'tablet') return this.uaData.device.type === 'tablet';
+            () => {
+                if (value === 'tablet')
+                    return this.uaData.device.type === 'tablet';
 
                 return false;
             },
-            () =>
-            {
-                if (value === 'mobile') return this.uaData.device.type === 'tablet' || this.uaData.device.type === 'mobile';
+            () => {
+                if (value === 'mobile')
+                    return (
+                        this.uaData.device.type === 'tablet' ||
+                        this.uaData.device.type === 'mobile'
+                    );
 
                 return false;
             },
-            () =>
-            {
-                if (value === 'phone')
-                {
+            () => {
+                if (value === 'phone') {
                     return this.uaData.device.type === 'mobile';
                 }
 
@@ -324,8 +313,7 @@ export class DeviceClass
      * Returns whether or not the devices GPU is the correct tier
      * @param value - value to test
      */
-    public isGPU(value: string | GPU_TIER): boolean
-    {
+    public isGPU(value: string | GPU_TIER): boolean {
         return this.gpu === Number(value);
     }
 
@@ -333,13 +321,14 @@ export class DeviceClass
      * Splits the query into its individual pieces ready to be processed
      * @param query - query to be parsed
      */
-    private parseQuery(query: string): ParsedDeviceQuery[]
-    {
-        return query.split('--').map((query): ParsedDeviceQuery =>
-        {
+    private parseQuery(query: string): ParsedDeviceQuery[] {
+        return query.split('--').map((query): ParsedDeviceQuery => {
             const split = query.split(':').filter((value) => value !== ':');
 
-            return { type: split.shift() as DeviceParserType, value: split.join(':') };
+            return {
+                type: split.shift() as DeviceParserType,
+                value: split.join(':'),
+            };
         });
     }
 
@@ -347,18 +336,15 @@ export class DeviceClass
      * Checks all the custom query functions to see if any of them match
      * @param value - value to be checked
      */
-    private checkCustom(value: ParsedDeviceQuery): boolean
-    {
+    private checkCustom(value: ParsedDeviceQuery): boolean {
         const cachedRes = this.checkCache(JSON.stringify(value), 'custom');
 
         if (cachedRes !== null) return cachedRes;
 
-        for (let i = 0; i < this.customQueries.length; i++)
-        {
+        for (let i = 0; i < this.customQueries.length; i++) {
             const queryTest = this.customQueries[i];
 
-            if (queryTest(value))
-            {
+            if (queryTest(value)) {
                 this.addToCache(JSON.stringify(value), true, 'custom');
 
                 return true;
@@ -369,22 +355,22 @@ export class DeviceClass
         return false;
     }
 
-    private checkCache(query: string, cacheType: string): boolean
-    {
-        if (this.caches[cacheType][query])
-        {
+    private checkCache(query: string, cacheType: string): boolean {
+        if (this.caches[cacheType][query]) {
             return this.caches[cacheType][query];
         }
 
         return null;
     }
 
-    private checkTests(tests: (() => boolean)[], value: string, type: string): boolean
-    {
+    private checkTests(
+        tests: (() => boolean)[],
+        value: string,
+        type: string,
+    ): boolean {
         let res = false;
 
-        for (let i = 0; i < tests.length; i++)
-        {
+        for (let i = 0; i < tests.length; i++) {
             res = tests[i]();
 
             if (res) break;
@@ -395,19 +381,21 @@ export class DeviceClass
         return res;
     }
 
-    private addToCache(query: string, result: boolean, cacheType: string): void
-    {
+    private addToCache(
+        query: string,
+        result: boolean,
+        cacheType: string,
+    ): void {
         this.caches[cacheType][query] = result;
     }
 
-    private _checkIPadPro(): void
-    {
+    private _checkIPadPro(): void {
         const userAgent = this.uaData.ua;
-        const isMacOS = (/Mac OS/).test(userAgent) && !((/like Mac OS/).test(userAgent));
+        const isMacOS =
+            /Mac OS/.test(userAgent) && !/like Mac OS/.test(userAgent);
         const touchCheck = 'ontouchstart' in window;
 
-        if (isMacOS && touchCheck)
-        {
+        if (isMacOS && touchCheck) {
             this.uaData.device.type = 'tablet';
             this.uaData.device.vendor = 'apple';
             this.uaData.device.model = 'ipad-pro';
@@ -420,6 +408,4 @@ const Device = new DeviceClass();
 
 Device.addQuery(isIPhone6, isGalaxyS5, isKindle);
 
-export {
-    Device,
-};
+export { Device };

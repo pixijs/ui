@@ -29,8 +29,7 @@ export type LayoutOptions = {
 
 // TODO: replace this with pixi-layout component
 
-export class Layout extends Container
-{
+export class Layout extends Container {
     public view: Container;
     public type: LayoutType;
 
@@ -39,32 +38,28 @@ export class Layout extends Container
 
     public override readonly children: Container[] = [];
 
-    constructor(private readonly options?: { type?: LayoutType } & LayoutOptions)
-    {
+    constructor(
+        private readonly options?: { type?: LayoutType } & LayoutOptions,
+    ) {
         super();
 
-        if (options?.type)
-        {
+        if (options?.type) {
             this.type = options.type;
         }
 
-        if (options?.children)
-        {
+        if (options?.children) {
             options.children.map((child) => this.addChild(child));
         }
     }
 
-    protected override onChildrenChange()
-    {
+    protected override onChildrenChange() {
         let x = this.options?.horPadding ?? 0;
         let y = this.options?.vertPadding ?? 0;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
 
-        this.children.forEach((child) =>
-        {
-            if (!this.type && x + child.width >= this.parent.width)
-            {
+        this.children.forEach((child) => {
+            if (!this.type && x + child.width >= this.parent.width) {
                 y += elementsMargin + child.height;
                 x = this.options?.horPadding ?? 0;
 
@@ -72,15 +67,12 @@ export class Layout extends Container
                 child.y = y;
 
                 this.h = y;
-            }
-            else
-            {
+            } else {
                 child.x = x;
                 child.y = y;
             }
 
-            switch (this.type)
-            {
+            switch (this.type) {
                 case 'horizontal':
                     x += elementsMargin + child.width;
                     this.w = x;
@@ -114,8 +106,7 @@ export class Layout extends Container
  * );
  * ```
  */
-export function row(elementsMargin: number, ...params: Container[]): Layout
-{
+export function row(elementsMargin: number, ...params: Container[]): Layout {
     const children: Container[] = [];
 
     params.forEach((param) => children.push(param));
@@ -139,8 +130,7 @@ export function row(elementsMargin: number, ...params: Container[]): Layout
  * );
  * ```
  */
-export function col(elementsMargin: number, ...params: Container[]): Layout
-{
+export function col(elementsMargin: number, ...params: Container[]): Layout {
     const children: Container[] = [];
 
     params.forEach((param) => children.push(param));

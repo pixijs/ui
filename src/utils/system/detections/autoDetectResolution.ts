@@ -6,7 +6,6 @@
  *
  * @returns resolution to use
  */
-export function autoDetectResolution(): number
-{
+export function autoDetectResolution(): number {
     return Math.min(window.devicePixelRatio, 2);
 }

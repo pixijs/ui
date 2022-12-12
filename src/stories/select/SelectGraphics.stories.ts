@@ -1,4 +1,3 @@
-
 import { Graphics as PixiGraphics, Sprite, Texture, Container } from 'pixi.js';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { Select } from '../../Select';
@@ -18,8 +17,8 @@ const args = {
     radius: 15,
     itemsCount: 100,
     onSelect: action('Item selected'),
-}
-    
+};
+
 export const Graphics = ({
     fontColor,
     fontSize,
@@ -36,17 +35,19 @@ export const Graphics = ({
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
     fontColor = Number(fontColor.replace('#', '0x'));
-    dropDownBackgroundColor = Number(dropDownBackgroundColor.replace('#', '0x'));
+    dropDownBackgroundColor = Number(
+        dropDownBackgroundColor.replace('#', '0x'),
+    );
     const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
     const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
     const items = getItems(itemsCount, 'Item');
-    
-    // Component usage !!!  
-    const select = new Select({ 
+
+    // Component usage !!!
+    const select = new Select({
         closedBG: getClosedBG(backgroundColor, width, height, radius),
         openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
-        textStyle, 
+        textStyle,
         items: {
             items,
             backgroundColor,
@@ -60,7 +61,7 @@ export const Graphics = ({
         scrollBox: {
             height: height * 5,
             radius,
-        }
+        },
     });
 
     select.y = 10;
@@ -71,15 +72,22 @@ export const Graphics = ({
 
     view.addChild(select);
 
-    return { view, resize: () => centerElement(view, 0.5, 0)};
+    return { view, resize: () => centerElement(view, 0.5, 0) };
 };
 
-function getClosedBG(backgroundColor: number, width: number, height: number, radius: number) {
-    const closedBG = new PixiGraphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
-    
+function getClosedBG(
+    backgroundColor: number,
+    width: number,
+    height: number,
+    radius: number,
+) {
+    const closedBG = new PixiGraphics()
+        .beginFill(backgroundColor)
+        .drawRoundedRect(0, 0, width, height, radius);
+
     preloadAssets(['arrow-down.png']).then(() => {
         const arrowDown = new Sprite(Texture.from('arrow-down.png'));
-        
+
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
         arrowDown.y = height / 2;
@@ -89,12 +97,19 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
     return closedBG;
 }
 
-function getOpenBG(backgroundColor: number, width: number, height: number, radius: number) {
-    const openBG = new PixiGraphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
-    
+function getOpenBG(
+    backgroundColor: number,
+    width: number,
+    height: number,
+    radius: number,
+) {
+    const openBG = new PixiGraphics()
+        .beginFill(backgroundColor)
+        .drawRoundedRect(0, 0, width, height * 6, radius);
+
     preloadAssets(['arrow-down.png']).then(() => {
         const arrowUp = new Sprite(Texture.from('arrow-down.png'));
-        
+
         arrowUp.angle = 180;
         arrowUp.anchor.set(0.5);
         arrowUp.x = width * 0.9;

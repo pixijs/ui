@@ -1,14 +1,14 @@
-import { Graphics as PixiGraphics } from "pixi.js";
-import { CheckBox } from "../../CheckBox";
+import { Graphics as PixiGraphics } from 'pixi.js';
+import { CheckBox } from '../../CheckBox';
 import { action } from '@storybook/addon-actions';
-import { Layout } from "../../Layout";
+import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { defaultTextStyle } from "../../utils/helpers/styles";
-import { centerElement } from "../../utils/helpers/resize";
-    
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { centerElement } from '../../utils/helpers/resize';
+
 const args = {
     count: 3,
-    text: "Checkbox",
+    text: 'Checkbox',
     textColor: '#FFFFFF',
     checked: false,
     color: '#F1D583',
@@ -19,7 +19,7 @@ const args = {
     height: 50,
     radius: 11,
     onPress: action('Checkbox: '),
-}
+};
 
 export const Graphics = ({
     text,
@@ -49,41 +49,39 @@ export const Graphics = ({
         const checkBox = new CheckBox({
             checked,
             style: {
-                unchecked:
-                    new PixiGraphics()
-                        .beginFill(borderColor)
-                        .drawRoundedRect(-2, -2, width+4, height+4, radius)
-                        .beginFill(color)
-                        .drawRoundedRect(0, 0, width, height, radius),
-                checked:
-                    new PixiGraphics()
-                        .beginFill(borderColor)
-                        .drawRoundedRect(-2, -2, width+4, height+4, radius)
-                        .beginFill(color)
-                        .drawRoundedRect(0, 0, width, height, radius)
-                        .beginFill(fillBorderColor)
-                        .drawRoundedRect(3, 3, width - 6, height - 6, radius)
-                        .beginFill(fillColor)
-                        .drawRoundedRect(5, 5, width - 10, height - 10, radius),
+                unchecked: new PixiGraphics()
+                    .beginFill(borderColor)
+                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
+                    .beginFill(color)
+                    .drawRoundedRect(0, 0, width, height, radius),
+                checked: new PixiGraphics()
+                    .beginFill(borderColor)
+                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
+                    .beginFill(color)
+                    .drawRoundedRect(0, 0, width, height, radius)
+                    .beginFill(fillBorderColor)
+                    .drawRoundedRect(3, 3, width - 6, height - 6, radius)
+                    .beginFill(fillColor)
+                    .drawRoundedRect(5, 5, width - 10, height - 10, radius),
                 text: {
                     text: `${text} ${i + 1}`,
                     style: {
                         ...defaultTextStyle,
                         fontSize: 22,
                         fill: textColor,
-                    }
-                }
+                    },
+                },
             },
         });
 
         checkBox.onChange.connect(() => {
-            onPress(`${checkBox.checked}`)
+            onPress(`${checkBox.checked}`);
         });
 
         view.addChild(checkBox);
     }
-    
-    return { view, resize: () => centerElement(view)};
+
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {

@@ -1,0 +1,10 @@
+.cache/*
+.vscode/*
+.history/*
+.github/*
+/docs/**
+build/*
+
+.eslintrc.js
+.prettierignore
+package-lock.json

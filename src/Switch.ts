@@ -8,25 +8,20 @@ import { Button } from './Button';
  *
  * @example
  * ```
- * const switch = new Switch([ 
+ * const switch = new Switch([
  *     new PixiSprite(Texture.from(`switch_off.png`)),
- *     new PixiSprite(Texture.from(`switch_on.png`)), 
+ *     new PixiSprite(Texture.from(`switch_on.png`)),
  * ]);
  *
  * ```
  */
-export class Switch extends Container
-{
+export class Switch extends Container {
     public view = new Container();
     private button: Button;
 
     public onChange: Signal<(state: number) => void>;
 
-    constructor(
-        public views: Container[], 
-        public activeViewID = 0
-    ) 
-    {
+    constructor(public views: Container[], public activeViewID = 0) {
         super();
 
         views.forEach((state, id) => {
@@ -36,7 +31,7 @@ export class Switch extends Container
         });
 
         this.button = new Button({ view: this.view });
-        
+
         this.addChild(this.button);
 
         this.onChange = new Signal();

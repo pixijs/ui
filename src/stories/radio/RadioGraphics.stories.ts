@@ -1,13 +1,13 @@
-import { RadioGroup } from "../../RadioGroup";
+import { RadioGroup } from '../../RadioGroup';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { defaultTextStyle } from "../../utils/helpers/styles";
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { Container } from 'pixi.js';
-    
+
 const args = {
     count: 3,
-    text: "Radio",
+    text: 'Radio',
     textColor: '#FFFFFF',
     bgColor: '#F1D583',
     fillColor: '#82C822',
@@ -17,7 +17,7 @@ const args = {
     radius: 25,
 
     onChange: action('Radio changed'),
-}
+};
 
 export const Graphics = ({
     count,
@@ -26,7 +26,7 @@ export const Graphics = ({
     textColor,
     fillColor,
     bgColor,
-    
+
     width,
     height,
     padding,
@@ -71,15 +71,17 @@ export const Graphics = ({
                 ...defaultTextStyle,
                 fontSize: 22,
                 fill: textColor,
-            }
+            },
         },
     });
 
-    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) => onChange(selectedItemID, selectedVal));
+    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+        onChange(selectedItemID, selectedVal),
+    );
 
     view.addChild(radioGroup.view);
 
-    return { view, resize: () => centerElement(view)};
+    return { view, resize: () => centerElement(view) };
 };
 
 export default {
