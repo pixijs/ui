@@ -17,7 +17,7 @@
     "prebuild": "npm run clean",
     "build": "npm run build:tsc",
     "build:tsc": "tsc -p tsconfig.build.json",
-    "clean": "rimraf \"{dist,lib,docs,types}\"",
+    "clean": "rimraf \"{dist,lib,types}\"",
     "predocs": "rimraf docs && mkdirp docs",
     "docs": "typedoc && npm run build:storybook",
     "docs:serve": "http-server ./docs/",
