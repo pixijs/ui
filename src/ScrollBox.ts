@@ -45,8 +45,6 @@ export type ScrollBoxOptions = {
  * ```
  */
 
-const DEFAULT_DURATION = 0.2;
-
 // TODO: make scroll inertion
 // TODO: fix snap on mouse scroll with high padding value
 
@@ -452,15 +450,15 @@ export class ScrollBox extends Container {
         this.snap();
     }
 
-    public async scrollDown(duration = DEFAULT_DURATION) {
+    public async scrollDown() {
         if (!this.isInteractive) {
             await this.scrollTop();
         } else {
-            await this.scrollTo(this.layout.children.length - 1, duration);
+            await this.scrollTo(this.layout.children.length - 1);
         }
     }
 
-    public async scrollTop(duration = DEFAULT_DURATION): Promise<void> {
+    public async scrollTop(): Promise<void> {
         return new Promise((resolve) => {
             this.renderAllItems();
 
@@ -502,10 +500,7 @@ export class ScrollBox extends Container {
         });
     }
 
-    public scrollTo(
-        elementID: number,
-        duration = DEFAULT_DURATION,
-    ): Promise<void> {
+    public scrollTo(elementID: number): Promise<void> {
         return new Promise((resolve) => {
             if (!this.isInteractive) {
                 resolve();
@@ -531,19 +526,8 @@ export class ScrollBox extends Container {
             this.layout.x = x;
             this.layout.y = y;
 
-            this.snap().then(() => {
-                resolve();
-            });
-
-            // gsap.to(this.layout, {
-            //     duration,
-            //     x,
-            //     y,
-            //     onComplete: async () => {
-            //         await this.snap();
-            //         resolve();
-            //     },
-            // });
+            this.snap();
+            resolve();
         });
     }
 
