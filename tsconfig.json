@@ -44,7 +44,7 @@
           "pages": [
             {
               "title": "Quick Start",
-              "source": "./docs-source/pages/getting-started.md"
+              "source": "./README.md"
             }
           ]
         }

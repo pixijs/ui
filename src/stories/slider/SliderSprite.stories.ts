@@ -1,8 +1,8 @@
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { Slider } from "../../Slider";
-import { centerElement } from '../../utils/storybook/resize';
-import { preloadAssets } from '../../utils/storybook/loader';
+import { centerElement } from '../../utils/helpers/resize';
+import { preloadAssets } from '../../utils/helpers/loader';
 import { Container } from 'pixi.js';
 
 const args = {

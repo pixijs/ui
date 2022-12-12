@@ -4,9 +4,9 @@
 </div>
 
 Here are some useful resources:
-- [Full docs](https://play-co.github.io/pixi-ui/)
-- [Github Repo](https://github.com/play-co/pixi-ui)
-- [Storybook](https://play-co.github.io/pixi-ui/storybook/)
+- [Full docs](https://pixijs.io/ui/)
+- [Github Repo](https://github.com/pixijs/ui)
+- [Storybook](https://pixijs.io/ui/storybook/)
 
 ## Install
 

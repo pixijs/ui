@@ -1,12 +1,12 @@
 
 import { Sprite as PixiSprite, Text, Texture, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { ScrollBox } from '../../ScrollBox';
 import { Button } from '../../Button';
-import { defaultTextStyle } from '../../utils/storybook/styles';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../../utils/storybook/loader';
-import { centerElement } from '../../utils/storybook/resize';
+import { preloadAssets } from '../../utils/helpers/loader';
+import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
     type: [

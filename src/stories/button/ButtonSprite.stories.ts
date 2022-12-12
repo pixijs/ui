@@ -2,11 +2,11 @@
 import { Sprite as PixiSprite, Text, Texture } from 'pixi.js';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/storybook/argTypes';
+import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
 import { Layout } from './../../Layout';
-import { defaultTextStyle } from '../../utils/storybook/styles';
-import { preloadAssets } from '../../utils/storybook/loader';
-import { centerElement } from '../../utils/storybook/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { preloadAssets } from '../../utils/helpers/loader';
+import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
     text: 'Click me!',
