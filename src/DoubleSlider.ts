@@ -19,6 +19,10 @@ export type DoubleSliderOptions = {
         x?: number;
         y?: number;
     };
+    fillOffset?: {
+        x?: number;
+        y?: number;
+    };
 };
 
 /**
@@ -110,8 +114,12 @@ export class DoubleSlider extends Container {
 
             this.fill = new Container();
             this.fill.addChild(fill);
-            this.fill.x = (this.bg.width - this.fill.width) / 2;
-            this.fill.y = (this.bg.height - this.fill.height) / 2;
+
+            const offsetX = options.fillOffset?.x ?? 0;
+            const offsetY = options.fillOffset?.y ?? 0;
+
+            this.fill.x = (this.bg.width - this.fill.width) / 2 + offsetX;
+            this.fill.y = (this.bg.height - this.fill.height) / 2 + offsetY;
 
             this.fillMask = new Graphics();
             this.fill.addChild(this.fillMask);
