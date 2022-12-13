@@ -121,8 +121,6 @@ export class ScrollBox extends Container {
     }
 
     public addItem<T extends Container[]>(...items: T): T[0] {
-        console.log(`!!!`, items);
-
         if (items.length > 1) {
             items.forEach((item) => this.addItem(item));
         } else {
