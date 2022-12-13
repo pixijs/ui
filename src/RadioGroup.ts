@@ -51,8 +51,8 @@ export type RadioBoxOptions = {
 export class RadioGroup extends Container {
     private items: CheckBox[] = [];
 
-    private value: string;
-    private selected: number;
+    public value: string;
+    public selected: number;
 
     public onChange: Signal<
         (selectedItemID: number, selectedVal: string) => void
