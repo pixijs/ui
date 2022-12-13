@@ -7,19 +7,19 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    count: 1,
     text: '',
     placeholder: 'Enter text',
-    maxLength: 100,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
-    fontSize: 24,
-    border: 5,
     backgroundColor: '#F1D583',
     borderColor: '#DCB000',
+    maxLength: 100,
+    fontSize: 24,
+    border: 5,
     width: 320,
     height: 70,
     radius: 11,
+    count: 1,
 
     onChange: action('Input: '),
 };

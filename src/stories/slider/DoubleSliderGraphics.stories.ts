@@ -6,15 +6,15 @@ import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    min: 0,
-    max: 100,
-    value1: 15,
-    value2: 85,
     meshColor: '#35b600',
     fillColor: '#ff4545',
     borderColor: '#FFFFFF',
     backgroundColor: '#F1D583',
     fontColor: '#FFFFFF',
+    min: 0,
+    max: 100,
+    value1: 15,
+    value2: 85,
     width: 450,
     height: 35,
     radius: 25,

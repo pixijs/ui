@@ -8,14 +8,14 @@ import { preloadAssets } from '../../utils/helpers/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    count: 1,
     text: '',
     placeholder: 'Enter text',
-    maxLength: 100,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
+    maxLength: 100,
     fontSize: 24,
     padding: 5,
+    count: 1,
     onChange: action('Input: '),
 };
 

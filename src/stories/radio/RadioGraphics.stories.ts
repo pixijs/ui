@@ -6,7 +6,6 @@ import { centerElement } from '../../utils/helpers/resize';
 import { Container } from 'pixi.js';
 
 const args = {
-    count: 3,
     text: 'Radio',
     textColor: '#FFFFFF',
     bgColor: '#F1D583',
@@ -15,6 +14,7 @@ const args = {
     height: 50,
     padding: 5,
     radius: 25,
+    count: 3,
 
     onChange: action('Radio changed'),
 };

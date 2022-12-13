@@ -51,8 +51,8 @@ export type RadioBoxOptions = {
 export class RadioGroup extends Container {
     private items: CheckBox[] = [];
 
-    private value: string;
-    private selected: number;
+    public value: string;
+    public selected: number;
 
     public onChange: Signal<
         (selectedItemID: number, selectedVal: string) => void
@@ -128,15 +128,17 @@ export class RadioGroup extends Container {
 
             const center = width / 2;
 
-            isCircle
-                ? graphics.drawCircle(center, center, center - padding)
-                : graphics.drawRoundedRect(
-                      padding,
-                      padding,
-                      width - padding * 2,
-                      height - padding * 2,
-                      radius,
-                  );
+            if (isCircle) {
+                graphics.drawCircle(center, center, center - padding);
+            } else {
+                graphics.drawRoundedRect(
+                    padding,
+                    padding,
+                    width - padding * 2,
+                    height - padding * 2,
+                    radius,
+                );
+            }
         }
 
         return graphics;

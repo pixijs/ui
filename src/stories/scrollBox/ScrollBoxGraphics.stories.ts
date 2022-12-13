@@ -10,7 +10,7 @@ const args = {
     type: ['vertical', 'horizontal'],
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
-    width: 300,
+    width: 320,
     height: 420,
     radius: 20,
     elementsMargin: 10,

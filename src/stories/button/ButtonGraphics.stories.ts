@@ -16,9 +16,9 @@ const args = {
     height: 137,
     padding: 11,
     radius: 50,
-    disabled: false,
     textOffsetX: 0,
     textOffsetY: 0,
+    disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
 };
 

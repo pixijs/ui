@@ -10,9 +10,7 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     type: ['vertical', 'horizontal'],
     fontColor: '#000000',
-    radius: 20,
-    elementsMargin: 10,
-    elementsPadding: 10,
+    elementsMargin: 6,
     itemsCount: 100,
     onPress: action('Button was pressed > '),
 };
@@ -21,8 +19,6 @@ export const Sprite = ({
     type,
     fontColor,
     elementsMargin,
-    elementsPadding,
-    radius,
     itemsCount,
     onPress,
 }: any) => {
@@ -48,14 +44,13 @@ export const Sprite = ({
             type,
             elementsMargin,
             width: 150,
-            height: 313,
-            radius,
-            padding: elementsPadding,
+            height: 318,
             items,
+            vertPadding: 18,
         });
 
-        scrollBox.x = window.width / 2 - scrollBox.width / 2 - 10;
-        scrollBox.y = window.height / 2 - scrollBox.height / 2 + 12;
+        scrollBox.x = window.width / 2 - scrollBox.width / 2;
+        scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
 
         window.addChild(scrollBox);
 
