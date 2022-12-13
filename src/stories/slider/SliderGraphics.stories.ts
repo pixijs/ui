@@ -6,14 +6,14 @@ import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    min: 0,
-    max: 100,
-    value: 50,
     meshColor: '#35b600',
     fillColor: '#ff4545',
     borderColor: '#FFFFFF',
     backgroundColor: '#F1D583',
     fontColor: '#FFFFFF',
+    min: 0,
+    max: 100,
+    value: 50,
     width: 450,
     height: 35,
     radius: 25,

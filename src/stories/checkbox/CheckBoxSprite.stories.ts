@@ -8,9 +8,9 @@ import { preloadAssets } from '../../utils/helpers/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    count: 3,
     text: '',
     textColor: '#FFFFFF',
+    count: 3,
     checked: false,
     onChange: action('Checkbox changed'),
 };

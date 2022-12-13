@@ -6,11 +6,11 @@ import { preloadAssets } from '../../utils/helpers/loader';
 import { Container } from 'pixi.js';
 
 const args = {
+    fontColor: '#FFFFFF',
     min: 0,
     max: 100,
     value: 50,
     fontSize: 20,
-    fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
 };

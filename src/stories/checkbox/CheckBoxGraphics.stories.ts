@@ -7,10 +7,8 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    count: 3,
     text: 'Checkbox',
     textColor: '#FFFFFF',
-    checked: false,
     color: '#F1D583',
     borderColor: '#DCB000',
     fillBorderColor: '#FFFFFF',
@@ -18,6 +16,8 @@ const args = {
     width: 50,
     height: 50,
     radius: 11,
+    count: 3,
+    checked: false,
     onPress: action('Checkbox: '),
 };
 

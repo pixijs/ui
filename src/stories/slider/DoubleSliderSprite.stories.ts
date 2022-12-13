@@ -6,12 +6,12 @@ import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../../utils/helpers/loader';
 
 const args = {
+    fontColor: '#FFFFFF',
     min: 0,
     max: 100,
     value1: 15,
     value2: 85,
     fontSize: 20,
-    fontColor: '#FFFFFF',
     showValue: false,
     onChange: action('Slider changed'),
 };

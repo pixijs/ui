@@ -7,9 +7,9 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    count: 3,
     text: 'Radio',
     textColor: '#FFFFFF',
+    count: 3,
     onChange: action('Radio changed'),
 };
 

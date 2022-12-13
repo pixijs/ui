@@ -10,10 +10,10 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
-    disabled: false,
     padding: 11,
     textOffsetX: 0,
     textOffsetY: -7,
+    disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
 };
 
