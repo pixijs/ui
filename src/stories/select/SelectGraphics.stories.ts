@@ -85,8 +85,8 @@ function getClosedBG(
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height, radius);
 
-    preloadAssets(['arrow-down.png']).then(() => {
-        const arrowDown = new Sprite(Texture.from('arrow-down.png'));
+    preloadAssets(['arrow_down.png']).then(() => {
+        const arrowDown = new Sprite(Texture.from('arrow_down.png'));
 
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
@@ -107,8 +107,8 @@ function getOpenBG(
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height * 6, radius);
 
-    preloadAssets(['arrow-down.png']).then(() => {
-        const arrowUp = new Sprite(Texture.from('arrow-down.png'));
+    preloadAssets(['arrow_down.png']).then(() => {
+        const arrowUp = new Sprite(Texture.from('arrow_down.png'));
 
         arrowUp.angle = 180;
         arrowUp.anchor.set(0.5);
