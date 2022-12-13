@@ -74,6 +74,10 @@ export class ScrollBox extends Container {
     constructor(private readonly options: ScrollBoxOptions) {
         super();
 
+        if (!this.options.padding) {
+            this.options.padding = 0;
+        }
+
         this.addBackground();
 
         this.__width = options.width | this.background.width;
@@ -82,12 +86,9 @@ export class ScrollBox extends Container {
         this.layout = new Layout({
             type: options.type,
             elementsMargin: options.elementsMargin,
-            vertPadding: options.vertPadding,
-            horPadding: options.horPadding,
+            vertPadding: options.vertPadding ?? this.options.padding,
+            horPadding: options.horPadding ?? this.options.padding,
         });
-
-        this.layout.x = this.options.padding;
-        this.layout.y = this.options.padding;
 
         super.addChild(this.layout);
 
@@ -116,6 +117,8 @@ export class ScrollBox extends Container {
     }
 
     public addItem<T extends Container[]>(...items: T): T[0] {
+        console.log(`!!!`, items);
+
         if (items.length > 1) {
             items.forEach((item) => this.addItem(item));
         } else {
@@ -321,11 +324,9 @@ export class ScrollBox extends Container {
                 this.layout.x + this.layoutWidth < this.__width
             ) {
                 this.layout.x =
-                    this.__width -
-                    this.layoutWidth +
-                    (this.options.padding ?? 0);
+                    this.__width - this.layoutWidth + this.options.padding;
             } else if (this.layout.x > 0) {
-                this.layout.x = this.options.padding ?? 0;
+                this.layout.x = this.options.padding;
             }
         } else {
             const layoutHeight = this.layoutHeight;
@@ -336,7 +337,7 @@ export class ScrollBox extends Container {
             ) {
                 this.layout.y = this.__height - layoutHeight;
             } else if (this.layout.y > 0) {
-                this.layout.y = this.options.padding ?? 0;
+                this.layout.y = this.options.padding;
             }
         }
 
@@ -359,7 +360,7 @@ export class ScrollBox extends Container {
         ) {
             this.renderAllItems();
 
-            const of = this.options.padding | 0;
+            const of = this.options.padding;
 
             if (!this.options.width) {
                 this.__width += this.layoutWidth;
@@ -437,14 +438,14 @@ export class ScrollBox extends Container {
 
         if (
             this.layout.y < 0 &&
-            this.layout.y + this.layoutHeight + (this.options.padding ?? 0) <
+            this.layout.y + this.layoutHeight + this.options.padding <
                 this.__height
         ) {
             this.layout.y = this.__height - this.layoutHeight;
         }
 
         if (this.layout.y > 0) {
-            this.layout.y = this.options.padding ?? 0;
+            this.layout.y = this.options.padding;
         }
 
         this.snap();
