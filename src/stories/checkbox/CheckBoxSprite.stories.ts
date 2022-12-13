@@ -27,17 +27,15 @@ export const Sprite = ({ checked, onChange, count, textColor, text }: any) => {
         for (let i = 0; i < count; i++) {
             // Component usage !!!
             const checkBox = new CheckBox({
+                text: text ?? `${text} ${i + 1}`,
                 checked,
                 style: {
                     unchecked: new PixiSprite(Texture.from(`switch_off.png`)),
                     checked: new PixiSprite(Texture.from(`switch_on.png`)),
                     text: {
-                        text: text ?? `${text} ${i + 1}`,
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 22,
-                            fill: textColor,
-                        },
+                        ...defaultTextStyle,
+                        fontSize: 22,
+                        fill: textColor,
                     },
                 },
             });

@@ -8,14 +8,13 @@ export type MaskedFrameOptions = {
 };
 
 /**
- * Draws mask or/and border around any container based element
+ * Applies mask to a container and draws a same shape border around it
  *
  * @example
  * ```
- * const sprite = new Sprite(texture.from('picture.png'));
  * new MaskedFrame({
- *     target: new PixiSprite(Texture.from(`avatar.png`)),
- *     mask: new PixiSprite(Texture.from(`avatar_mask.png`)),
+ *     target: `avatar.png`,
+ *     mask: `avatar_mask.png`),
  *     borderWidth: 5,
  *     borderColor: 0xFFFFFF,
  * });

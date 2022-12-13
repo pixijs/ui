@@ -26,12 +26,13 @@ export const Single = ({
 }: any) => {
     const view = new Container();
 
-    const assets = ['slider_bg.png', 'slider.png'];
+    const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
     preloadAssets(assets).then(() => {
         // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
+            fill: 'slider_progress.png',
             slider: 'slider.png',
             min,
             max,
@@ -43,6 +44,10 @@ export const Single = ({
             showValue,
             valueTextOffset: {
                 y: -40,
+            },
+            fillOffset: {
+                x: -1,
+                y: -2,
             },
         });
 

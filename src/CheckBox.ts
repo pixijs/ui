@@ -6,14 +6,12 @@ import { Switch } from './Switch';
 export type CheckBoxStyle = {
     checked: Container | string;
     unchecked: Container | string;
-    text?: {
-        text: string;
-        style?: TextStyle | Partial<ITextStyle>;
-    };
+    text?: TextStyle | Partial<ITextStyle>;
 };
 
 export type CheckBoxOptions = {
     style: CheckBoxStyle;
+    text: string;
     checked?: boolean;
 };
 
@@ -47,19 +45,13 @@ export class CheckBox extends Switch {
 
         super([unchecked, checked], options.checked ? 1 : 0);
 
-        if (options.style.text) {
-            this.label = new Text(
-                options.style.text.text,
-                options.style.text.style,
-            );
+        if (options.text) {
+            this.label = new Text(options.text, options.style.text);
             this.label.x = unchecked.width + 10;
             this.label.y = (unchecked.height - this.label.height) / 2;
             unchecked.addChild(this.label);
 
-            this.label = new Text(
-                options.style.text.text,
-                options.style.text.style,
-            );
+            this.label = new Text(options.text, options.style.text);
             this.label.x = checked.width + 10;
             this.label.y = (checked.height - this.label.height) / 2;
             checked.addChild(this.label);

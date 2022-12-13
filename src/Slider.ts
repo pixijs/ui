@@ -17,41 +17,35 @@ export type SliderOptions = {
         x?: number;
         y?: number;
     };
+    fillOffset?: {
+        x?: number;
+        y?: number;
+    };
 };
 
 /**
  * Creates a slider with range selection option
  * @example
  * ```
- * const width = 250;
- * const height = 50;
- *
- * const bg = new Graphics()
- *     .beginFill(0x000000).drawRoundedRect(0, 0, width, height, height/2)
- *     .beginFill(0x808080).drawRoundedRect(5, 5, width-10, height-10, height/2);
- *
- * const fill = new Graphics()
- *     .beginFill(0xFFFFFF).drawRoundedRect(0, 0, width-10, height-10, (height-10)/2);
- *
- * const slider = new Graphics()
- *     .beginFill(0xDCDCDC).drawCircle(0, 0, 23)
- *     .beginFill(0x000000).drawCircle(0, 0, 20);
- *
- * const slider = new Slider({
- *     bg,
- *     fill,
- *     slider,
+ * new Slider({
+ *     bg: 'slider_bg.png',
+ *     fill: 'slider.png',
+ *     slider: 'slider.png',
  *     min: 0,
  *     max: 100,
  *     value: 50,
  *     valueTextStyle: {
- *         fill: 0xDCDCDC,
- *         fontSize: 14
- *     }
+ *         fill: 0xffffff,
+ *         fontSize: 22,
+ *     },
+ *     showValue: true,
+ *     valueTextOffset: {
+ *         y: -40,
+ *     },
  * });
  *
- * slider.onChange.connect((value) =>{
- *     console.log(`New slider value ${value}`);
+ * singleSlider.onChange.connect((value) => {
+ *     onChange(`Slider changed > ${value}`);
  * });
  * ```
  */
@@ -91,9 +85,14 @@ export class Slider extends Container {
                     : options.fill;
 
             this.fill = new Container();
+
             this.fill.addChild(fill);
-            this.fill.x = (this.bg.width - this.fill.width) / 2;
-            this.fill.y = (this.bg.height - this.fill.height) / 2;
+
+            const offsetX = options.fillOffset?.x ?? 0;
+            const offsetY = options.fillOffset?.y ?? 0;
+
+            this.fill.x = (this.bg.width - this.fill.width) / 2 + offsetX;
+            this.fill.y = (this.bg.height - this.fill.height) / 2 + offsetY;
 
             this.fillMask = new Graphics();
             this.fill.addChild(this.fillMask);
