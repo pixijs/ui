@@ -29,7 +29,7 @@ export interface ButtonOptions {
  *     hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
  *     pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
  *     disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
- *     textView: new Text(text, { ...buttonTextStyle, fill: textColor || buttonTextStyle.fill }),
+ *     textView: new Text(text, { fill: 0xFFFFFF }),
  * });
  *
  * const graphicsButton = new Button({
@@ -37,9 +37,9 @@ export interface ButtonOptions {
  *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
  *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
  *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
- *     textView: new Text(text, { ...buttonTextStyle, fill: textColor || buttonTextStyle.fill }),
- *     padding,
- *     textOffset: { x: textOffsetX, y: textOffsetY },
+ *     textView: new Text(text, { fill: 0xFFFFFF }),
+ *     padding: 10,
+ *     textOffset: { x: 10, y: 1 },
  * });
  *
  * ```

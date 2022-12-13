@@ -47,6 +47,7 @@ export const Graphics = ({
     for (let i = 0; i < count; i++) {
         // Component usage !!!
         const checkBox = new CheckBox({
+            text: `${text} ${i + 1}`,
             checked,
             style: {
                 unchecked: new PixiGraphics()
@@ -64,12 +65,9 @@ export const Graphics = ({
                     .beginFill(fillColor)
                     .drawRoundedRect(5, 5, width - 10, height - 10, radius),
                 text: {
-                    text: `${text} ${i + 1}`,
-                    style: {
-                        ...defaultTextStyle,
-                        fontSize: 22,
-                        fill: textColor,
-                    },
+                    ...defaultTextStyle,
+                    fontSize: 22,
+                    fill: textColor,
                 },
             },
         });

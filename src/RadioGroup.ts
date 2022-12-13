@@ -84,14 +84,12 @@ export class RadioGroup extends Container {
                     : this.getGraphics(options.style.checked);
 
             const checkBox = new CheckBox({
+                text: item,
                 checked: options.selectedItem === id,
                 style: {
                     unchecked,
                     checked,
-                    text: {
-                        text: item,
-                        style: options.style.textStyle,
-                    },
+                    text: options.style.textStyle,
                 },
             });
 
