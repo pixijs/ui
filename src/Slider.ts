@@ -24,7 +24,7 @@ export type SliderOptions = {
 };
 
 /**
- * Creates a slider with range selection option
+ * Creates a slider
  * @example
  * ```
  * new Slider({

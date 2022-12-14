@@ -37,6 +37,41 @@ export type SelectOptions = {
     };
 };
 
+/**
+ * Container based component that gives us a selection dropdown.
+ * It is a composition of a [[Button]] and a [[ScrollBox]].
+ *
+ * @example
+ * ```
+ * new Select({
+ *     closedBG: `select_closed.png`,
+ *     openBG: `select_open.png`,
+ *     textStyle: { fill: 0xffffff, fontSize: 20 },
+ *     items: {
+ *         items,
+ *         backgroundColor: 0x000000,
+ *         hoverColor: 0x000000,
+ *         width: 200,
+ *         height: 50,
+ *         textStyle: { fill: 0xffffff, fontSize: 20 },,
+ *         radius: 25,
+ *     },
+ *     selectedTextOffset: {
+ *         y: -13,
+ *     },
+ *     scrollBox: {
+ *         width: 200,
+ *         height: 350,
+ *         radius: 30,
+ *         offset: {
+ *             y: -16,
+ *             x: 24,
+ *         },
+ *     },
+ * });
+ *
+ * ```
+ */
 export class Select extends Container {
     private readonly closedBG: Container;
     private readonly openBG: Container;

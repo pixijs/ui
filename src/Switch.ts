@@ -4,6 +4,7 @@ import { Button } from './Button';
 
 /**
  * Container based component that switches visibility of containers by click.
+ *
  * Can be used for creating tabs, radio buttons, checkboxes etc.
  *
  * @example

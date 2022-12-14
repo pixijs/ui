@@ -12,11 +12,13 @@ Here are some useful resources:
 ## Install
 
 ```sh
-npm install @play-co/pixi-ui
+npm install @pixijs/ui
 ```
 
 There is no default export. The correct way to import pixi-ui is:
 
 ```js
-import { Button, Layout, ScrollBox } from '@play-co/pixi-ui';
+import { Button, Layout, ScrollBox } from '@pixijs/ui';
 ```
+
+To use any of the components you can go to it's page and copypaste the example code to your project.
