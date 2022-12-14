@@ -10,5 +10,3 @@ indent_style = space
 indent_size = 4
 
 [{*.json,bower.json,.travis.yml}]
-
-indent_size = 2
