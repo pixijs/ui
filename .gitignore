@@ -25,7 +25,7 @@ npm-debug.log
 !.gitkeep
 *__temp
 node_modules
-# docs/
+docs/
 bin/
 lib/
 dist/

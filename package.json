@@ -58,8 +58,6 @@
     "@goodboydigital/eslint-config": "^2.1.0",
     "@pixi/storybook-renderer": "^0.0.2",
     "@pixi/storybook-webpack5": "^0.0.2",
-    "@play-co/odie": "^13.0.1",
-    "@play-co/typedoc-plugin-timestep": "^0.0.3",
     "@storybook/addon-essentials": "7.0.0-alpha.48",
     "@storybook/addon-interactions": "7.0.0-alpha.48",
     "@storybook/addon-links": "7.0.0-alpha.48",
@@ -91,10 +89,10 @@
     "enhanced-resolve@5.11.0": "5.10.0"
   },
   "peerDependencies": {
-    "@play-co/odie": ">= 13.x",
     "pixi.js": ">= 6.x"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "@pixijs:registry": "https://npm.pkg.github.com"
   }
 }
