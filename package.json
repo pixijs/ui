@@ -92,6 +92,7 @@
     "pixi.js": ">= 6.x"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "@pixijs:registry": "https://npm.pkg.github.com"
   }
 }
