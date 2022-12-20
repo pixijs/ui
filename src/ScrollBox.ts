@@ -17,6 +17,7 @@ export type ScrollBoxOptions = {
     vertPadding?: number;
     horPadding?: number;
     padding?: number;
+    scrollSpeed?: number;
 };
 
 /**
@@ -69,6 +70,14 @@ export class ScrollBox extends Container {
         y: 0,
     };
 
+    private targetPosition: {
+        x: number;
+        y: number;
+    } = {
+        x: null,
+        y: null,
+    };
+
     private childrenInteractiveStorage: boolean[] = [];
 
     constructor(private readonly options: ScrollBoxOptions) {
@@ -109,7 +118,7 @@ export class ScrollBox extends Container {
 
         this.onMouseScrollBinded = this.onMouseScroll.bind(this);
 
-        this.update();
+        this.resize();
     }
 
     private get hasBounds(): boolean {
@@ -152,7 +161,7 @@ export class ScrollBox extends Container {
             }
         }
 
-        this.update();
+        this.resize();
 
         return items[0];
     }
@@ -170,7 +179,7 @@ export class ScrollBox extends Container {
 
         await this.snap();
 
-        this.update();
+        this.resize();
     }
 
     public isItemVisible(item: Container): boolean {
@@ -212,14 +221,14 @@ export class ScrollBox extends Container {
 
         this.addChild(this.background);
 
-        this.update();
+        this.resize();
     }
 
     private addMask() {
         this.borderMask = new Graphics();
         super.addChild(this.borderMask);
         this.mask = this.borderMask;
-        this.update();
+        this.resize();
     }
 
     private makeScrollable() {
@@ -325,10 +334,9 @@ export class ScrollBox extends Container {
                 this.layout.x < 0 &&
                 this.layout.x + this.layoutWidth < this.__width
             ) {
-                this.layout.x =
-                    this.__width - this.layoutWidth + this.options.horPadding;
+                this.targetPosition.x = this.__width - this.layoutWidth;
             } else if (this.layout.x > 0) {
-                this.layout.x = this.options.horPadding;
+                this.targetPosition.x = 0;
             }
         } else {
             const layoutHeight = this.layoutHeight;
@@ -337,13 +345,11 @@ export class ScrollBox extends Container {
                 this.layout.y < 0 &&
                 this.layout.y + layoutHeight < this.__height
             ) {
-                this.layout.y = this.__height - layoutHeight;
+                this.targetPosition.y = this.__height - layoutHeight;
             } else if (this.layout.y > 0) {
-                this.layout.y = 0;
+                this.targetPosition.y = 0;
             }
         }
-
-        this.stopRenderHiddenItems();
     }
 
     private get layoutHeight(): number {
@@ -354,7 +360,7 @@ export class ScrollBox extends Container {
         return this.layout.width + this.options.horPadding * 2;
     }
 
-    public update(): void {
+    public resize(): void {
         if (
             this.borderMask &&
             (this.lastWidth !== this.layoutWidth ||
@@ -438,22 +444,35 @@ export class ScrollBox extends Container {
             (typeof event.deltaX !== 'undefined' ||
                 typeof event.deltaY !== 'undefined')
         ) {
-            this.layout.x -= event.deltaX;
-            this.layout.x -= event.deltaY;
+            const targetPos = event.deltaY
+                ? this.layout.x - event.deltaY
+                : this.layout.x - event.deltaX;
+
+            if (
+                targetPos < 0 &&
+                targetPos + this.layoutWidth + this.options.horPadding <
+                    this.__width
+            ) {
+                this.layout.x = this.__width - this.layoutWidth;
+            } else if (targetPos > this.options.horPadding) {
+                this.layout.x = 0;
+            } else {
+                this.layout.x = targetPos;
+            }
         } else if (typeof event.deltaY !== 'undefined') {
-            this.layout.y -= event.deltaY;
-        }
+            const targetPos = this.layout.y - event.deltaY;
 
-        if (
-            this.layout.y < 0 &&
-            this.layout.y + this.layoutHeight + this.options.vertPadding <
-                this.__height
-        ) {
-            this.layout.y = this.__height - this.layoutHeight;
-        }
-
-        if (this.layout.y > 0) {
-            this.layout.y = this.options.vertPadding;
+            if (
+                targetPos < 0 &&
+                targetPos + this.layoutHeight + this.options.vertPadding <
+                    this.__height
+            ) {
+                this.layout.y = this.__height - this.layoutHeight;
+            } else if (targetPos > this.options.vertPadding) {
+                this.layout.y = 0;
+            } else {
+                this.layout.y = targetPos;
+            }
         }
 
         this.snap();
@@ -467,16 +486,8 @@ export class ScrollBox extends Container {
         }
     }
 
-    public async scrollTop(): Promise<void> {
-        return new Promise((resolve) => {
-            this.renderAllItems();
-
-            this.layout.x = 0;
-            this.layout.y = 0;
-
-            this.snap();
-            resolve();
-        });
+    public async scrollTop() {
+        this.targetPosition.y = 0;
     }
 
     public renderAllItems() {
@@ -513,17 +524,21 @@ export class ScrollBox extends Container {
 
             const x =
                 this.options.type === 'horizontal'
-                    ? this.__width - target.x - target.width
+                    ? this.__width -
+                      target.x -
+                      target.width -
+                      this.options.horPadding
                     : 0;
             const y =
                 !this.options.type || this.options.type === 'vertical'
-                    ? this.__height - target.y - target.height
+                    ? this.__height -
+                      target.y -
+                      target.height -
+                      this.options.vertPadding
                     : 0;
 
-            this.renderAllItems();
-
-            this.layout.x = x;
-            this.layout.y = y;
+            this.targetPosition.x = x;
+            this.targetPosition.y = y;
 
             this.snap();
             resolve();
@@ -536,5 +551,52 @@ export class ScrollBox extends Container {
 
     public override get width(): number {
         return this.__width;
+    }
+
+    public update() {
+        if (
+            this.targetPosition.x !== null ||
+            !!this.targetPosition.y !== null
+        ) {
+            this.renderAllItems();
+        } else {
+            this.stopRenderHiddenItems();
+
+            return;
+        }
+
+        const speed = this.options.scrollSpeed || 10;
+
+        if (this.targetPosition.x !== null) {
+            const direction = this.layout.x < this.targetPosition.x ? 1 : -1;
+
+            this.layout.x += speed * direction;
+
+            if (direction > 0 && this.layout.x > this.targetPosition.x) {
+                this.layout.x = this.targetPosition.x;
+                this.targetPosition.x = null;
+            }
+
+            if (direction < 0 && this.layout.x < this.targetPosition.x) {
+                this.layout.x = this.targetPosition.x;
+                this.targetPosition.x = null;
+            }
+        }
+
+        if (this.targetPosition.y !== null) {
+            const direction = this.layout.y < this.targetPosition.y ? 1 : -1;
+
+            this.layout.y += speed * direction;
+
+            if (direction > 0 && this.layout.y > this.targetPosition.y) {
+                this.layout.y = this.targetPosition.y;
+                this.targetPosition.y = null;
+            }
+
+            if (direction < 0 && this.layout.y < this.targetPosition.y) {
+                this.layout.y = this.targetPosition.y;
+                this.targetPosition.y = null;
+            }
+        }
     }
 }

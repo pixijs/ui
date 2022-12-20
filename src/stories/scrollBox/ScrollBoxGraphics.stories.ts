@@ -75,7 +75,11 @@ export const Graphics = ({
 
     view.addChild(scrollBox);
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        update: () => scrollBox.update(),
+    };
 };
 
 export default {
