@@ -81,6 +81,8 @@ export class Select extends Container {
 
     public onSelect: Signal<(value: number, text: string) => void>;
 
+    private scrollBox: ScrollBox;
+
     constructor({
         closedBG,
         textStyle,
@@ -135,7 +137,7 @@ export class Select extends Container {
         this.selectedText.y =
             this.closedBG.height / 2 + (selectedTextOffset?.y || 0);
 
-        const scroll = new ScrollBox({
+        this.scrollBox = new ScrollBox({
             type: 'vertical',
             elementsMargin: 0,
             width: this.closedBG.width,
@@ -145,13 +147,13 @@ export class Select extends Container {
             ...scrollBox,
         });
 
-        this.openBG.addChild(scroll);
+        this.openBG.addChild(this.scrollBox);
 
-        scroll.y = this.closedBG.height;
+        this.scrollBox.y = this.closedBG.height;
 
         if (scrollBox?.offset) {
-            scroll.x += scrollBox.offset.x ?? 0;
-            scroll.y += scrollBox.offset.y ?? 0;
+            this.scrollBox.x += scrollBox.offset.x ?? 0;
+            this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
 
         this.onSelect = new Signal();
@@ -170,7 +172,7 @@ export class Select extends Container {
                 this.close();
             });
 
-            scroll.addItem(button);
+            this.scrollBox.addItem(button);
         });
     }
 
@@ -215,5 +217,9 @@ export class Select extends Container {
         });
 
         return buttons;
+    }
+
+    public update() {
+        this.scrollBox.update();
     }
 }

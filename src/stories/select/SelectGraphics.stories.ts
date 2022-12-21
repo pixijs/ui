@@ -71,7 +71,11 @@ export const Graphics = ({
 
     view.addChild(select);
 
-    return { view, resize: () => centerElement(view, 0.5, 0) };
+    return {
+        view,
+        resize: () => centerElement(view, 0.5, 0),
+        update: () => select.update(),
+    };
 };
 
 function getClosedBG(

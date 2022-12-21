@@ -54,8 +54,6 @@ export class ScrollBox extends Container {
     private __width = 0;
     private __height = 0;
 
-    private isInteractive = false;
-
     private readonly onMouseScrollBinded: (event: any) => void;
 
     private readonly layout: Layout;
@@ -438,15 +436,16 @@ export class ScrollBox extends Container {
         this.stopRenderHiddenItems();
     }
 
-    public async scrollDown() {
-        if (!this.isInteractive) {
-            await this.scrollTop();
+    public scrollBottom() {
+        if (!this.interactive) {
+            this.scrollTop();
         } else {
-            await this.scrollTo(this.layout.children.length - 1);
+            this.scrollTo(this.layout.children.length - 1);
         }
     }
 
     public async scrollTop() {
+        this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
 
@@ -471,7 +470,7 @@ export class ScrollBox extends Container {
     }
 
     public scrollTo(elementID: number) {
-        if (!this.isInteractive) {
+        if (!this.interactive) {
             return;
         }
 
