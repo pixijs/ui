@@ -57,7 +57,6 @@ export const Graphics = ({
             textStyle,
             radius,
         },
-        selected: 2,
         scrollBox: {
             height: height * 5,
             radius,

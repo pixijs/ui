@@ -18,7 +18,6 @@ export type ScrollBoxOptions = {
     vertPadding?: number;
     horPadding?: number;
     padding?: number;
-    scrollSpeed?: number;
 };
 
 /**
