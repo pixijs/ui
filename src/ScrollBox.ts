@@ -360,20 +360,23 @@ export class ScrollBox extends Container {
         }
 
         if (this._trackpad) {
-            if ((this, this.options.type === 'horizontal')) {
-                const maxWidth =
-                    this.borderMask.width -
-                    this.layout.width -
-                    this.options.horPadding * 2;
+            const maxWidth =
+                this.borderMask.width -
+                this.layout.width -
+                this.options.horPadding * 2;
 
-                this._trackpad.xAxis.max = -Math.abs(maxWidth);
-            } else if (this.options.type === 'vertical') {
-                const maxHeight =
-                    this.borderMask.height -
-                    this.layout.height -
-                    this.options.vertPadding * 2;
+            const maxHeight =
+                this.borderMask.height -
+                this.layout.height -
+                this.options.vertPadding * 2;
 
+            if (this.options.type === 'vertical') {
                 this._trackpad.yAxis.max = -Math.abs(maxHeight);
+            } else if (this.options.type === 'horizontal') {
+                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+            } else {
+                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+                this._trackpad.xAxis.max = -Math.abs(maxWidth);
             }
         }
 
@@ -518,7 +521,7 @@ export class ScrollBox extends Container {
             } else {
                 this.stopRenderHiddenItems();
             }
-        } else if (this.options.type === 'vertical') {
+        } else {
             if (this.layout.y !== this._trackpad.y) {
                 this.renderAllItems();
                 this.layout.y = this._trackpad.y;
