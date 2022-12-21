@@ -23,6 +23,9 @@ export type ScrollBoxOptions = {
 /**
  * ScrollBox for arranging and scrolling pixi containers withing some area with scrolling
  *
+ * !!! Important
+ * In order scroll to work, you have to call update() method in your game loop.
+ *
  * @example
  * ```
  * new ScrollBox({

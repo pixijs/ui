@@ -62,6 +62,7 @@ export const Graphics = ({
     }
 
     // Component usage !!!
+    // Important: in order scroll to work, you have to call update() method in your game loop.
     const scrollBox = new ScrollBox({
         background: backgroundColor,
         type,

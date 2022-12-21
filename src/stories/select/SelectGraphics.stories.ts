@@ -44,6 +44,7 @@ export const Graphics = ({
     const items = getItems(itemsCount, 'Item');
 
     // Component usage !!!
+    // Important: in order scroll to work, you have to call update() method in your game loop.
     const select = new Select({
         closedBG: getClosedBG(backgroundColor, width, height, radius),
         openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),

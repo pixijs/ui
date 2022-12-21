@@ -41,6 +41,9 @@ export type SelectOptions = {
  * Container based component that gives us a selection dropdown.
  * It is a composition of a [[Button]] and a [[ScrollBox]].
  *
+ * !!! Important
+ * In order scroll to work, you have to call update() method in your game loop.
+ *
  * @example
  * ```
  * new Select({

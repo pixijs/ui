@@ -38,6 +38,7 @@ export const Sprite = ({
         const items = getItems(itemsCount, 'Item');
 
         // Component usage !!!
+        // Important: in order scroll to work, you have to call update() method in your game loop.
         select = new Select({
             closedBG: `select_closed.png`,
             openBG: `select_open.png`,
