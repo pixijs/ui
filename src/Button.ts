@@ -1,7 +1,9 @@
-import { InteractionEvent, utils } from 'pixi.js';
+import type { InteractionEvent } from 'pixi.js';
 import { Text } from 'pixi.js';
 import { Container } from 'pixi.js';
 import { Signal } from 'typed-signals';
+
+import { Device } from './utils';
 
 export interface ButtonOptions {
     view: Container;
@@ -181,7 +183,7 @@ export class Button extends Container {
             }
         });
 
-        if (!utils.isMobile) {
+        if (Device.desktop) {
             this.onHover.connect((_bth, e) => {
                 if (this.hoverView) {
                     this.hoverView.visible = true;

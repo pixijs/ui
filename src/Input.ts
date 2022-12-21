@@ -1,13 +1,7 @@
-import {
-    Container,
-    Sprite,
-    Text,
-    TextStyle,
-    Texture,
-    Graphics,
-    utils,
-} from 'pixi.js';
+import { Container, Sprite, Text, TextStyle, Texture, Graphics } from 'pixi.js';
 import { Signal } from 'typed-signals';
+
+import { Device } from './utils';
 
 export type InputOptions = {
     bg?: Container | string;
@@ -116,7 +110,7 @@ export class Input extends Container {
 
         this.on('pointertap', () => (this.activation = true));
 
-        if (utils.isMobile) {
+        if (Device.mobile) {
             window.addEventListener('touchstart', () =>
                 this.handleActivation(),
             );
@@ -203,7 +197,7 @@ export class Input extends Container {
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (utils.isMobile) {
+        if (Device.mobile) {
             const keyboard = document.getElementById(
                 'v-keyboard',
             ) as HTMLInputElement;
@@ -235,7 +229,7 @@ export class Input extends Container {
         }
 
         if (this.value.length === 0) this.placeholder.visible = true;
-        if (utils.isMobile) document.getElementById('v-keyboard')?.blur();
+        if (Device.mobile) document.getElementById('v-keyboard')?.blur();
 
         this.align();
     }
