@@ -62,6 +62,7 @@ export const Graphics = ({
     }
 
     // Component usage !!!
+    // Important: in order scroll to work, you have to call update() method in your game loop.
     const scrollBox = new ScrollBox({
         background: backgroundColor,
         type,
@@ -70,12 +71,17 @@ export const Graphics = ({
         height,
         radius,
         padding: elementsPadding,
-        items,
     });
+
+    items.forEach((item) => scrollBox.addItem(item));
 
     view.addChild(scrollBox);
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        update: () => scrollBox.update(),
+    };
 };
 
 export default {

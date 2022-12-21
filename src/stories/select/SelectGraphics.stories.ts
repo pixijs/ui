@@ -44,6 +44,7 @@ export const Graphics = ({
     const items = getItems(itemsCount, 'Item');
 
     // Component usage !!!
+    // Important: in order scroll to work, you have to call update() method in your game loop.
     const select = new Select({
         closedBG: getClosedBG(backgroundColor, width, height, radius),
         openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
@@ -57,7 +58,6 @@ export const Graphics = ({
             textStyle,
             radius,
         },
-        selected: 2,
         scrollBox: {
             height: height * 5,
             radius,
@@ -72,7 +72,11 @@ export const Graphics = ({
 
     view.addChild(select);
 
-    return { view, resize: () => centerElement(view, 0.5, 0) };
+    return {
+        view,
+        resize: () => centerElement(view, 0.5, 0),
+        update: () => select.update(),
+    };
 };
 
 function getClosedBG(
