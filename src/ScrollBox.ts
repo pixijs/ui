@@ -47,9 +47,6 @@ export type ScrollBoxOptions = {
  * ```
  */
 
-// TODO: make scroll inertion
-// TODO: fix snap on mouse scroll with high padding value
-
 export class ScrollBox extends Container {
     private background: Graphics | Sprite;
     private borderMask: Graphics;
@@ -70,6 +67,10 @@ export class ScrollBox extends Container {
     };
 
     private _trackpad: Trackpad;
+
+    private isDragging = 0;
+
+    private childrenInteractiveStorage: boolean[] = [];
 
     constructor(private readonly options: ScrollBoxOptions) {
         super();
@@ -231,32 +232,68 @@ export class ScrollBox extends Container {
     }
 
     private makeScrollable() {
-        this.borderMask.on('pointerdown', (e: InteractionEvent) => {
+        this.on('pointerdown', (e: InteractionEvent) => {
+            this.isDragging = 1;
             this._trackpad.pointerDown(e.data.global);
         });
 
-        this.borderMask.on('pointerup', () => {
+        this.on('pointerup', () => {
+            this.isDragging = 0;
             this._trackpad.pointerUp();
+            this.restoreChildrenInteractivity();
         });
 
-        this.borderMask.on('pointerupoutside', () => {
+        this.on('pointerupoutside', () => {
+            this.isDragging = 0;
             this._trackpad.pointerUp();
+            this.restoreChildrenInteractivity();
         });
 
-        this.borderMask.on('pointermove', (e: InteractionEvent) => {
+        this.on('pointermove', (e: InteractionEvent) => {
             this._trackpad.pointerMove(e.data.global);
+
+            if (this.isDragging) {
+                this.disableChildrenInteractivity();
+            }
         });
 
         const { onMouseHover, onMouseOut } = this;
 
-        this.borderMask
-            .on('mouseover', onMouseHover, this)
-            .on('mouseout', onMouseOut, this);
+        this.on('mouseover', onMouseHover, this).on(
+            'mouseout',
+            onMouseOut,
+            this,
+        );
+    }
+
+    private disableChildrenInteractivity() {
+        // prevent clicks on buttons
+        this.items.forEach((item, itemID) => {
+            if (!this.childrenInteractiveStorage[itemID]) {
+                this.childrenInteractiveStorage[itemID] =
+                    item.interactive === true;
+            }
+
+            item.interactive = false;
+        });
+    }
+
+    private restoreChildrenInteractivity() {
+        // prevent clicks on buttons
+        this.items.forEach((item, itemID) => {
+            const wasItemInteractive =
+                this.childrenInteractiveStorage[itemID] === true;
+
+            if (wasItemInteractive) {
+                item.interactive = wasItemInteractive;
+
+                delete this.childrenInteractiveStorage[itemID];
+            }
+        });
     }
 
     private setInteractive(interactive: boolean) {
-        this.isInteractive = interactive;
-        this.borderMask.interactive = interactive;
+        this.interactive = interactive;
     }
 
     private get layoutHeight(): number {
