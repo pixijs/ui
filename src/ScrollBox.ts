@@ -1,9 +1,8 @@
 import type { InteractionEvent } from 'pixi.js';
-import { Container, Graphics, Point, Sprite, Texture } from 'pixi.js';
+import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
-import type { DragObject } from './utils';
 import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
@@ -65,16 +64,12 @@ export class ScrollBox extends Container {
 
     private readonly layout: Layout;
 
-    private isDragging: number;
-
     private readonly freeSlot = {
         x: 0,
         y: 0,
     };
 
     private _trackpad: Trackpad;
-
-    private childrenInteractiveStorage: boolean[] = [];
 
     constructor(private readonly options: ScrollBoxOptions) {
         super();
@@ -121,6 +116,7 @@ export class ScrollBox extends Container {
             yEase: spring,
         });
 
+        this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
 
         this.resize();
@@ -328,12 +324,21 @@ export class ScrollBox extends Container {
             this.lastHeight = this.layoutHeight;
 
             if (this._trackpad) {
-                const y =
-                    this.borderMask.height -
-                    this.layout.height -
-                    this.options.vertPadding * 2;
+                if ((this, this.options.type === 'horizontal')) {
+                    const maxWidth =
+                        this.borderMask.width -
+                        this.layout.width -
+                        this.options.horPadding * 2;
 
-                this._trackpad.yAxis.max = -Math.abs(y);
+                    this._trackpad.xAxis.max = -Math.abs(maxWidth);
+                } else if (this.options.type === 'vertical') {
+                    const maxHeight =
+                        this.borderMask.height -
+                        this.layout.height -
+                        this.options.vertPadding * 2;
+
+                    this._trackpad.yAxis.max = -Math.abs(maxHeight);
+                }
             }
 
             this.stopRenderHiddenItems();
@@ -361,6 +366,8 @@ export class ScrollBox extends Container {
     }
 
     private onMouseScroll(event: any): void {
+        this.renderAllItems();
+
         if (
             this.options.type === 'horizontal' &&
             (typeof event.deltaX !== 'undefined' ||
@@ -396,6 +403,8 @@ export class ScrollBox extends Container {
                 this._trackpad.yAxis.value = targetPos;
             }
         }
+
+        this.stopRenderHiddenItems();
     }
 
     public async scrollDown() {
@@ -469,6 +478,20 @@ export class ScrollBox extends Container {
     public update() {
         this._trackpad.update();
 
-        this.layout.y = this._trackpad.y;
+        if (this.options.type === 'horizontal') {
+            if (this.layout.x !== this._trackpad.x) {
+                this.renderAllItems();
+                this.layout.x = this._trackpad.x;
+            } else {
+                this.stopRenderHiddenItems();
+            }
+        } else if (this.options.type === 'vertical') {
+            if (this.layout.y !== this._trackpad.y) {
+                this.renderAllItems();
+                this.layout.y = this._trackpad.y;
+            } else {
+                this.stopRenderHiddenItems();
+            }
+        }
     }
 }
