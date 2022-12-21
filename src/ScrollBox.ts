@@ -4,6 +4,8 @@ import { Container, Graphics, Point, Sprite, Texture } from 'pixi.js';
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
 import type { DragObject } from './utils';
+import ScrollSpring from './utils/trackpad/ScrollSpring';
+import { Trackpad } from './utils/trackpad/Trackpad';
 
 export type ScrollBoxOptions = {
     type?: LayoutType;
@@ -70,13 +72,7 @@ export class ScrollBox extends Container {
         y: 0,
     };
 
-    private targetPosition: {
-        x: number;
-        y: number;
-    } = {
-        x: null,
-        y: null,
-    };
+    private _trackpad: Trackpad;
 
     private childrenInteractiveStorage: boolean[] = [];
 
@@ -117,6 +113,15 @@ export class ScrollBox extends Container {
         }
 
         this.onMouseScrollBinded = this.onMouseScroll.bind(this);
+
+        const spring = new ScrollSpring();
+
+        this._trackpad = new Trackpad({
+            constrain: true,
+            yEase: spring,
+        });
+
+        this._trackpad.yAxis.value = 0;
 
         this.resize();
     }
@@ -177,8 +182,6 @@ export class ScrollBox extends Container {
 
         this.layout.removeChild(child);
 
-        await this.snap();
-
         this.resize();
     }
 
@@ -232,124 +235,32 @@ export class ScrollBox extends Container {
     }
 
     private makeScrollable() {
-        const { onDragStart, onDragMove, onDragEnd, onMouseHover, onMouseOut } =
-            this;
+        this.borderMask.on('pointerdown', (e: InteractionEvent) => {
+            this._trackpad.pointerDown(e.data.global);
+        });
 
-        this.layout
-            .on('pointerdown', onDragStart, this)
-            .on('pointermove', onDragMove, this)
-            .on('pointerup', onDragEnd, this)
-            .on('pointerupoutside', onDragEnd, this);
+        this.borderMask.on('pointerup', () => {
+            this._trackpad.pointerUp();
+        });
 
-        this.on('pointerupoutside', onDragEnd, this)
+        this.borderMask.on('pointerupoutside', () => {
+            this._trackpad.pointerUp();
+        });
+
+        this.borderMask.on('pointermove', (e: InteractionEvent) => {
+            this._trackpad.pointerMove(e.data.global);
+        });
+
+        const { onMouseHover, onMouseOut } = this;
+
+        this.borderMask
             .on('mouseover', onMouseHover, this)
             .on('mouseout', onMouseOut, this);
     }
 
     private setInteractive(interactive: boolean) {
         this.isInteractive = interactive;
-        this.interactive = interactive;
-        this.layout.interactive = interactive;
-    }
-
-    private onDragStart(event: InteractionEvent) {
-        this.renderAllItems();
-
-        const obj = event.currentTarget as DragObject;
-
-        obj.dragData = event.data;
-        this.isDragging = 1;
-        obj.dragPointerStart = event.data.getLocalPosition(obj.parent);
-        obj.dragObjStart = new Point();
-        obj.dragObjStart.copyFrom(obj.position);
-        obj.dragGlobalStart = new Point();
-        obj.dragGlobalStart.copyFrom(event.data.global);
-    }
-
-    private onDragMove(event: InteractionEvent) {
-        const obj = event.currentTarget as DragObject;
-
-        if (!this.isDragging) {
-            return;
-        }
-
-        const data = obj.dragData; // it can be different pointer!
-
-        if (this.isDragging === 1) {
-            // click or drag?
-            if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x) +
-                    Math.abs(data.global.y - obj.dragGlobalStart?.y) >=
-                3
-            ) {
-                // DRAG
-                this.isDragging = 2;
-            }
-        }
-
-        if (this.isDragging === 2) {
-            this.items.forEach((item, itemID) => {
-                if (!this.childrenInteractiveStorage[itemID]) {
-                    this.childrenInteractiveStorage[itemID] =
-                        item.interactive === true;
-                }
-                item.interactive = false;
-            });
-
-            const dragPointerEnd = data.getLocalPosition(obj.parent);
-
-            // DRAG
-            if (this.options.type === 'horizontal') {
-                obj.x =
-                    obj.dragObjStart.x +
-                    (dragPointerEnd.x - obj.dragPointerStart.x);
-            } else {
-                obj.y =
-                    obj.dragObjStart.y +
-                    (dragPointerEnd.y - obj.dragPointerStart.y);
-            }
-        }
-    }
-
-    private onDragEnd() {
-        if (!this.isDragging) {
-            return;
-        }
-
-        this.items.forEach((item, itemID) => {
-            if (this.childrenInteractiveStorage[itemID]) {
-                item.interactive = this.childrenInteractiveStorage[itemID];
-                delete this.childrenInteractiveStorage[itemID];
-            }
-        });
-
-        this.isDragging = 0;
-
-        this.snap();
-    }
-
-    private snap() {
-        if (this.options.type === 'horizontal') {
-            if (
-                this.layout.x < 0 &&
-                this.layout.x + this.layoutWidth < this.__width
-            ) {
-                this.targetPosition.x = this.__width - this.layoutWidth;
-            } else if (this.layout.x > 0) {
-                this.targetPosition.x = 0;
-            }
-        } else {
-            const layoutHeight = this.layoutHeight;
-
-            if (
-                this.layout.y < 0 &&
-                this.layout.y + layoutHeight < this.__height
-            ) {
-                this.targetPosition.y = this.__height - layoutHeight;
-            } else if (this.layout.y > 0) {
-                this.targetPosition.y = 0;
-            }
-        }
+        this.borderMask.interactive = interactive;
     }
 
     private get layoutHeight(): number {
@@ -416,6 +327,15 @@ export class ScrollBox extends Container {
             this.lastWidth = this.layoutWidth;
             this.lastHeight = this.layoutHeight;
 
+            if (this._trackpad) {
+                const y =
+                    this.borderMask.height -
+                    this.layout.height -
+                    this.options.vertPadding * 2;
+
+                this._trackpad.yAxis.max = -Math.abs(y);
+            }
+
             this.stopRenderHiddenItems();
         }
 
@@ -424,11 +344,15 @@ export class ScrollBox extends Container {
     }
 
     private onMouseHover() {
+        this.renderAllItems();
+
         document.addEventListener('mousewheel', this.onMouseScrollBinded);
         document.addEventListener('DOMMouseScroll', this.onMouseScrollBinded);
     }
 
     private onMouseOut() {
+        this.stopRenderHiddenItems();
+
         document.removeEventListener('mousewheel', this.onMouseScrollBinded);
         document.removeEventListener(
             'DOMMouseScroll',
@@ -437,8 +361,6 @@ export class ScrollBox extends Container {
     }
 
     private onMouseScroll(event: any): void {
-        this.renderAllItems();
-
         if (
             this.options.type === 'horizontal' &&
             (typeof event.deltaX !== 'undefined' ||
@@ -453,11 +375,11 @@ export class ScrollBox extends Container {
                 targetPos + this.layoutWidth + this.options.horPadding <
                     this.__width
             ) {
-                this.layout.x = this.__width - this.layoutWidth;
+                this._trackpad.xAxis.value = this.__width - this.layoutWidth;
             } else if (targetPos > this.options.horPadding) {
-                this.layout.x = 0;
+                this._trackpad.xAxis.value = 0;
             } else {
-                this.layout.x = targetPos;
+                this._trackpad.xAxis.value = targetPos;
             }
         } else if (typeof event.deltaY !== 'undefined') {
             const targetPos = this.layout.y - event.deltaY;
@@ -467,15 +389,13 @@ export class ScrollBox extends Container {
                 targetPos + this.layoutHeight + this.options.vertPadding <
                     this.__height
             ) {
-                this.layout.y = this.__height - this.layoutHeight;
+                this._trackpad.yAxis.value = this.__height - this.layoutHeight;
             } else if (targetPos > this.options.vertPadding) {
-                this.layout.y = 0;
+                this._trackpad.yAxis.value = 0;
             } else {
-                this.layout.y = targetPos;
+                this._trackpad.yAxis.value = targetPos;
             }
         }
-
-        this.snap();
     }
 
     public async scrollDown() {
@@ -487,7 +407,7 @@ export class ScrollBox extends Container {
     }
 
     public async scrollTop() {
-        this.targetPosition.y = 0;
+        this._trackpad.yAxis.value = 0;
     }
 
     public renderAllItems() {
@@ -510,39 +430,32 @@ export class ScrollBox extends Container {
         });
     }
 
-    public scrollTo(elementID: number): Promise<void> {
-        return new Promise((resolve) => {
-            if (!this.isInteractive) {
-                resolve();
-            }
+    public scrollTo(elementID: number) {
+        if (!this.isInteractive) {
+            return;
+        }
 
-            const target = this.layout.children[elementID];
+        const target = this.layout.children[elementID];
 
-            if (!target) {
-                resolve();
-            }
+        if (!target) {
+            return;
+        }
 
-            const x =
-                this.options.type === 'horizontal'
-                    ? this.__width -
-                      target.x -
-                      target.width -
-                      this.options.horPadding
-                    : 0;
-            const y =
-                !this.options.type || this.options.type === 'vertical'
-                    ? this.__height -
-                      target.y -
-                      target.height -
-                      this.options.vertPadding
-                    : 0;
+        this._trackpad.xAxis.value =
+            this.options.type === 'horizontal'
+                ? this.__width -
+                  target.x -
+                  target.width -
+                  this.options.horPadding
+                : 0;
 
-            this.targetPosition.x = x;
-            this.targetPosition.y = y;
-
-            this.snap();
-            resolve();
-        });
+        this._trackpad.yAxis.value =
+            !this.options.type || this.options.type === 'vertical'
+                ? this.__height -
+                  target.y -
+                  target.height -
+                  this.options.vertPadding
+                : 0;
     }
 
     public override get height(): number {
@@ -554,49 +467,8 @@ export class ScrollBox extends Container {
     }
 
     public update() {
-        if (
-            this.targetPosition.x !== null ||
-            !!this.targetPosition.y !== null
-        ) {
-            this.renderAllItems();
-        } else {
-            this.stopRenderHiddenItems();
+        this._trackpad.update();
 
-            return;
-        }
-
-        const speed = this.options.scrollSpeed || 10;
-
-        if (this.targetPosition.x !== null) {
-            const direction = this.layout.x < this.targetPosition.x ? 1 : -1;
-
-            this.layout.x += speed * direction;
-
-            if (direction > 0 && this.layout.x > this.targetPosition.x) {
-                this.layout.x = this.targetPosition.x;
-                this.targetPosition.x = null;
-            }
-
-            if (direction < 0 && this.layout.x < this.targetPosition.x) {
-                this.layout.x = this.targetPosition.x;
-                this.targetPosition.x = null;
-            }
-        }
-
-        if (this.targetPosition.y !== null) {
-            const direction = this.layout.y < this.targetPosition.y ? 1 : -1;
-
-            this.layout.y += speed * direction;
-
-            if (direction > 0 && this.layout.y > this.targetPosition.y) {
-                this.layout.y = this.targetPosition.y;
-                this.targetPosition.y = null;
-            }
-
-            if (direction < 0 && this.layout.y < this.targetPosition.y) {
-                this.layout.y = this.targetPosition.y;
-                this.targetPosition.y = null;
-            }
-        }
+        this.layout.y = this._trackpad.y;
     }
 }
