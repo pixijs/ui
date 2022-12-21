@@ -27,6 +27,8 @@ export const Sprite = ({
 
     const assets = [`select_closed.png`, `select_open.png`];
 
+    let select: Select;
+
     preloadAssets(assets).then(() => {
         backgroundColor = Number(backgroundColor.replace('#', '0x'));
         const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
@@ -36,7 +38,8 @@ export const Sprite = ({
         const items = getItems(itemsCount, 'Item');
 
         // Component usage !!!
-        const select = new Select({
+        // Important: in order scroll to work, you have to call update() method in your game loop.
+        select = new Select({
             closedBG: `select_closed.png`,
             openBG: `select_open.png`,
             textStyle,
@@ -74,7 +77,11 @@ export const Sprite = ({
         centerElement(view, 0.5, 0);
     });
 
-    return { view, resize: () => centerElement(view, 0.5, 0) };
+    return {
+        view,
+        resize: () => centerElement(view, 0.5, 0),
+        update: () => select?.update(),
+    };
 };
 
 function getItems(itemsCount: number, text: string): string[] {

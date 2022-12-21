@@ -8,7 +8,6 @@ import { preloadAssets } from '../../utils/helpers/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
-    type: ['vertical', 'horizontal'],
     fontColor: '#000000',
     elementsMargin: 6,
     itemsCount: 100,
@@ -16,7 +15,6 @@ const args = {
 };
 
 export const Sprite = ({
-    type,
     fontColor,
     elementsMargin,
     itemsCount,
@@ -26,12 +24,17 @@ export const Sprite = ({
 
     const view = new Container();
 
-    const assets = [
-        `window.png`,
-        `scroll_bg.png`,
-        `button.png`,
-        `button_hover.png`,
-    ];
+    const assets = [`window.png`, `button.png`, `button_hover.png`];
+
+    // Component usage !!!
+    // Important: in order scroll to work, you have to call update() method in your game loop.
+    const scrollBox = new ScrollBox({
+        type: 'vertical',
+        elementsMargin,
+        width: 150,
+        height: 318,
+        vertPadding: 18,
+    });
 
     preloadAssets(assets).then(() => {
         const window = new PixiSprite(Texture.from(`window.png`));
@@ -39,15 +42,7 @@ export const Sprite = ({
 
         const items: Container[] = createItems(itemsCount, fontColor, onPress);
 
-        // Component usage !!!
-        const scrollBox = new ScrollBox({
-            type,
-            elementsMargin,
-            width: 150,
-            height: 318,
-            items,
-            vertPadding: 18,
-        });
+        items.forEach((item) => scrollBox.addItem(item));
 
         scrollBox.x = window.width / 2 - scrollBox.width / 2;
         scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
@@ -57,7 +52,11 @@ export const Sprite = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        update: () => scrollBox.update(),
+    };
 };
 
 function createItems(

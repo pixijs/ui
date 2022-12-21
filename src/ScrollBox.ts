@@ -1,9 +1,10 @@
 import type { InteractionEvent } from 'pixi.js';
-import { Container, Graphics, Point, Sprite, Texture } from 'pixi.js';
+import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
-import type { DragObject } from './utils';
+import ScrollSpring from './utils/trackpad/ScrollSpring';
+import { Trackpad } from './utils/trackpad/Trackpad';
 
 export type ScrollBoxOptions = {
     type?: LayoutType;
@@ -21,6 +22,9 @@ export type ScrollBoxOptions = {
 
 /**
  * ScrollBox for arranging and scrolling pixi containers withing some area with scrolling
+ *
+ * !!! Important
+ * In order scroll to work, you have to call update() method in your game loop.
  *
  * @example
  * ```
@@ -45,9 +49,6 @@ export type ScrollBoxOptions = {
  * ```
  */
 
-// TODO: make scroll inertion
-// TODO: fix snap on mouse scroll with high padding value
-
 export class ScrollBox extends Container {
     private background: Graphics | Sprite;
     private borderMask: Graphics;
@@ -56,18 +57,18 @@ export class ScrollBox extends Container {
     private __width = 0;
     private __height = 0;
 
-    private isInteractive = false;
-
     private readonly onMouseScrollBinded: (event: any) => void;
 
     private readonly layout: Layout;
-
-    private isDragging: number;
 
     private readonly freeSlot = {
         x: 0,
         y: 0,
     };
+
+    private _trackpad: Trackpad;
+
+    private isDragging = 0;
 
     private childrenInteractiveStorage: boolean[] = [];
 
@@ -109,7 +110,17 @@ export class ScrollBox extends Container {
 
         this.onMouseScrollBinded = this.onMouseScroll.bind(this);
 
-        this.update();
+        const spring = new ScrollSpring();
+
+        this._trackpad = new Trackpad({
+            constrain: true,
+            yEase: spring,
+        });
+
+        this._trackpad.xAxis.value = 0;
+        this._trackpad.yAxis.value = 0;
+
+        this.resize();
     }
 
     private get hasBounds(): boolean {
@@ -152,7 +163,7 @@ export class ScrollBox extends Container {
             }
         }
 
-        this.update();
+        this.resize();
 
         return items[0];
     }
@@ -164,13 +175,9 @@ export class ScrollBox extends Container {
             return;
         }
 
-        this.renderAllItems();
-
         this.layout.removeChild(child);
 
-        await this.snap();
-
-        this.update();
+        this.resize();
     }
 
     public isItemVisible(item: Container): boolean {
@@ -212,138 +219,79 @@ export class ScrollBox extends Container {
 
         this.addChild(this.background);
 
-        this.update();
+        this.resize();
     }
 
     private addMask() {
         this.borderMask = new Graphics();
         super.addChild(this.borderMask);
         this.mask = this.borderMask;
-        this.update();
+        this.resize();
     }
 
     private makeScrollable() {
-        const { onDragStart, onDragMove, onDragEnd, onMouseHover, onMouseOut } =
-            this;
+        this.on('pointerdown', (e: InteractionEvent) => {
+            this.isDragging = 1;
+            this._trackpad.pointerDown(e.data.global);
+        });
 
-        this.layout
-            .on('pointerdown', onDragStart, this)
-            .on('pointermove', onDragMove, this)
-            .on('pointerup', onDragEnd, this)
-            .on('pointerupoutside', onDragEnd, this);
+        this.on('pointerup', () => {
+            this.isDragging = 0;
+            this._trackpad.pointerUp();
+            this.restoreChildrenInteractivity();
+        });
 
-        this.on('pointerupoutside', onDragEnd, this)
-            .on('mouseover', onMouseHover, this)
-            .on('mouseout', onMouseOut, this);
-    }
+        this.on('pointerupoutside', () => {
+            this.isDragging = 0;
+            this._trackpad.pointerUp();
+            this.restoreChildrenInteractivity();
+        });
 
-    private setInteractive(interactive: boolean) {
-        this.isInteractive = interactive;
-        this.interactive = interactive;
-        this.layout.interactive = interactive;
-    }
+        this.on('pointermove', (e: InteractionEvent) => {
+            this._trackpad.pointerMove(e.data.global);
 
-    private onDragStart(event: InteractionEvent) {
-        this.renderAllItems();
-
-        const obj = event.currentTarget as DragObject;
-
-        obj.dragData = event.data;
-        this.isDragging = 1;
-        obj.dragPointerStart = event.data.getLocalPosition(obj.parent);
-        obj.dragObjStart = new Point();
-        obj.dragObjStart.copyFrom(obj.position);
-        obj.dragGlobalStart = new Point();
-        obj.dragGlobalStart.copyFrom(event.data.global);
-    }
-
-    private onDragMove(event: InteractionEvent) {
-        const obj = event.currentTarget as DragObject;
-
-        if (!this.isDragging) {
-            return;
-        }
-
-        const data = obj.dragData; // it can be different pointer!
-
-        if (this.isDragging === 1) {
-            // click or drag?
-            if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x) +
-                    Math.abs(data.global.y - obj.dragGlobalStart?.y) >=
-                3
-            ) {
-                // DRAG
-                this.isDragging = 2;
-            }
-        }
-
-        if (this.isDragging === 2) {
-            this.items.forEach((item, itemID) => {
-                if (!this.childrenInteractiveStorage[itemID]) {
-                    this.childrenInteractiveStorage[itemID] =
-                        item.interactive === true;
-                }
-                item.interactive = false;
-            });
-
-            const dragPointerEnd = data.getLocalPosition(obj.parent);
-
-            // DRAG
-            if (this.options.type === 'horizontal') {
-                obj.x =
-                    obj.dragObjStart.x +
-                    (dragPointerEnd.x - obj.dragPointerStart.x);
-            } else {
-                obj.y =
-                    obj.dragObjStart.y +
-                    (dragPointerEnd.y - obj.dragPointerStart.y);
-            }
-        }
-    }
-
-    private onDragEnd() {
-        if (!this.isDragging) {
-            return;
-        }
-
-        this.items.forEach((item, itemID) => {
-            if (this.childrenInteractiveStorage[itemID]) {
-                item.interactive = this.childrenInteractiveStorage[itemID];
-                delete this.childrenInteractiveStorage[itemID];
+            if (this.isDragging) {
+                this.disableChildrenInteractivity();
             }
         });
 
-        this.isDragging = 0;
+        const { onMouseHover, onMouseOut } = this;
 
-        this.snap();
+        this.on('mouseover', onMouseHover, this).on(
+            'mouseout',
+            onMouseOut,
+            this,
+        );
     }
 
-    private snap() {
-        if (this.options.type === 'horizontal') {
-            if (
-                this.layout.x < 0 &&
-                this.layout.x + this.layoutWidth < this.__width
-            ) {
-                this.layout.x =
-                    this.__width - this.layoutWidth + this.options.horPadding;
-            } else if (this.layout.x > 0) {
-                this.layout.x = this.options.horPadding;
+    private disableChildrenInteractivity() {
+        // prevent clicks on buttons
+        this.items.forEach((item, itemID) => {
+            if (!this.childrenInteractiveStorage[itemID]) {
+                this.childrenInteractiveStorage[itemID] =
+                    item.interactive === true;
             }
-        } else {
-            const layoutHeight = this.layoutHeight;
 
-            if (
-                this.layout.y < 0 &&
-                this.layout.y + layoutHeight < this.__height
-            ) {
-                this.layout.y = this.__height - layoutHeight;
-            } else if (this.layout.y > 0) {
-                this.layout.y = 0;
+            item.interactive = false;
+        });
+    }
+
+    private restoreChildrenInteractivity() {
+        // prevent clicks on buttons
+        this.items.forEach((item, itemID) => {
+            const wasItemInteractive =
+                this.childrenInteractiveStorage[itemID] === true;
+
+            if (wasItemInteractive) {
+                item.interactive = wasItemInteractive;
+
+                delete this.childrenInteractiveStorage[itemID];
             }
-        }
+        });
+    }
 
-        this.stopRenderHiddenItems();
+    private setInteractive(interactive: boolean) {
+        this.interactive = interactive;
     }
 
     private get layoutHeight(): number {
@@ -354,14 +302,14 @@ export class ScrollBox extends Container {
         return this.layout.width + this.options.horPadding * 2;
     }
 
-    public update(): void {
+    public resize(): void {
+        this.renderAllItems();
+
         if (
             this.borderMask &&
             (this.lastWidth !== this.layoutWidth ||
                 this.lastHeight !== this.layoutHeight)
         ) {
-            this.renderAllItems();
-
             const verPadding = this.options.vertPadding;
             const horPadding = this.options.horPadding;
 
@@ -409,20 +357,42 @@ export class ScrollBox extends Container {
 
             this.lastWidth = this.layoutWidth;
             this.lastHeight = this.layoutHeight;
-
-            this.stopRenderHiddenItems();
         }
 
-        // this.x = this.__width / 2
-        // this.y = this.__height / 2;
+        if (this._trackpad) {
+            const maxWidth =
+                this.borderMask.width -
+                this.layout.width -
+                this.options.horPadding * 2;
+
+            const maxHeight =
+                this.borderMask.height -
+                this.layout.height -
+                this.options.vertPadding * 2;
+
+            if (this.options.type === 'vertical') {
+                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+            } else if (this.options.type === 'horizontal') {
+                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+            } else {
+                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+            }
+        }
+
+        this.stopRenderHiddenItems();
     }
 
     private onMouseHover() {
+        this.renderAllItems();
+
         document.addEventListener('mousewheel', this.onMouseScrollBinded);
         document.addEventListener('DOMMouseScroll', this.onMouseScrollBinded);
     }
 
     private onMouseOut() {
+        this.stopRenderHiddenItems();
+
         document.removeEventListener('mousewheel', this.onMouseScrollBinded);
         document.removeEventListener(
             'DOMMouseScroll',
@@ -438,45 +408,51 @@ export class ScrollBox extends Container {
             (typeof event.deltaX !== 'undefined' ||
                 typeof event.deltaY !== 'undefined')
         ) {
-            this.layout.x -= event.deltaX;
-            this.layout.x -= event.deltaY;
+            const targetPos = event.deltaY
+                ? this.layout.x - event.deltaY
+                : this.layout.x - event.deltaX;
+
+            if (
+                targetPos < 0 &&
+                targetPos + this.layoutWidth + this.options.horPadding <
+                    this.__width
+            ) {
+                this._trackpad.xAxis.value = this.__width - this.layoutWidth;
+            } else if (targetPos > this.options.horPadding) {
+                this._trackpad.xAxis.value = 0;
+            } else {
+                this._trackpad.xAxis.value = targetPos;
+            }
         } else if (typeof event.deltaY !== 'undefined') {
-            this.layout.y -= event.deltaY;
+            const targetPos = this.layout.y - event.deltaY;
+
+            if (
+                targetPos < 0 &&
+                targetPos + this.layoutHeight + this.options.vertPadding <
+                    this.__height
+            ) {
+                this._trackpad.yAxis.value = this.__height - this.layoutHeight;
+            } else if (targetPos > this.options.vertPadding) {
+                this._trackpad.yAxis.value = 0;
+            } else {
+                this._trackpad.yAxis.value = targetPos;
+            }
         }
 
-        if (
-            this.layout.y < 0 &&
-            this.layout.y + this.layoutHeight + this.options.vertPadding <
-                this.__height
-        ) {
-            this.layout.y = this.__height - this.layoutHeight;
-        }
-
-        if (this.layout.y > 0) {
-            this.layout.y = this.options.vertPadding;
-        }
-
-        this.snap();
+        this.stopRenderHiddenItems();
     }
 
-    public async scrollDown() {
-        if (!this.isInteractive) {
-            await this.scrollTop();
+    public scrollBottom() {
+        if (!this.interactive) {
+            this.scrollTop();
         } else {
-            await this.scrollTo(this.layout.children.length - 1);
+            this.scrollTo(this.layout.children.length - 1);
         }
     }
 
-    public async scrollTop(): Promise<void> {
-        return new Promise((resolve) => {
-            this.renderAllItems();
-
-            this.layout.x = 0;
-            this.layout.y = 0;
-
-            this.snap();
-            resolve();
-        });
+    public async scrollTop() {
+        this._trackpad.xAxis.value = 0;
+        this._trackpad.yAxis.value = 0;
     }
 
     public renderAllItems() {
@@ -499,35 +475,32 @@ export class ScrollBox extends Container {
         });
     }
 
-    public scrollTo(elementID: number): Promise<void> {
-        return new Promise((resolve) => {
-            if (!this.isInteractive) {
-                resolve();
-            }
+    public scrollTo(elementID: number) {
+        if (!this.interactive) {
+            return;
+        }
 
-            const target = this.layout.children[elementID];
+        const target = this.layout.children[elementID];
 
-            if (!target) {
-                resolve();
-            }
+        if (!target) {
+            return;
+        }
 
-            const x =
-                this.options.type === 'horizontal'
-                    ? this.__width - target.x - target.width
-                    : 0;
-            const y =
-                !this.options.type || this.options.type === 'vertical'
-                    ? this.__height - target.y - target.height
-                    : 0;
+        this._trackpad.xAxis.value =
+            this.options.type === 'horizontal'
+                ? this.__width -
+                  target.x -
+                  target.width -
+                  this.options.horPadding
+                : 0;
 
-            this.renderAllItems();
-
-            this.layout.x = x;
-            this.layout.y = y;
-
-            this.snap();
-            resolve();
-        });
+        this._trackpad.yAxis.value =
+            !this.options.type || this.options.type === 'vertical'
+                ? this.__height -
+                  target.y -
+                  target.height -
+                  this.options.vertPadding
+                : 0;
     }
 
     public override get height(): number {
@@ -536,5 +509,25 @@ export class ScrollBox extends Container {
 
     public override get width(): number {
         return this.__width;
+    }
+
+    public update() {
+        this._trackpad.update();
+
+        if (this.options.type === 'horizontal') {
+            if (this.layout.x !== this._trackpad.x) {
+                this.renderAllItems();
+                this.layout.x = this._trackpad.x;
+            } else {
+                this.stopRenderHiddenItems();
+            }
+        } else {
+            if (this.layout.y !== this._trackpad.y) {
+                this.renderAllItems();
+                this.layout.y = this._trackpad.y;
+            } else {
+                this.stopRenderHiddenItems();
+            }
+        }
     }
 }
