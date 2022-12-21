@@ -70,8 +70,9 @@ export const Graphics = ({
         height,
         radius,
         padding: elementsPadding,
-        items,
     });
+
+    items.forEach((item) => scrollBox.addItem(item));
 
     view.addChild(scrollBox);
 

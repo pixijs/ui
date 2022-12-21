@@ -175,8 +175,6 @@ export class ScrollBox extends Container {
             return;
         }
 
-        this.renderAllItems();
-
         this.layout.removeChild(child);
 
         this.resize();
@@ -305,13 +303,13 @@ export class ScrollBox extends Container {
     }
 
     public resize(): void {
+        this.renderAllItems();
+
         if (
             this.borderMask &&
             (this.lastWidth !== this.layoutWidth ||
                 this.lastHeight !== this.layoutHeight)
         ) {
-            this.renderAllItems();
-
             const verPadding = this.options.vertPadding;
             const horPadding = this.options.horPadding;
 
@@ -359,30 +357,27 @@ export class ScrollBox extends Container {
 
             this.lastWidth = this.layoutWidth;
             this.lastHeight = this.layoutHeight;
-
-            if (this._trackpad) {
-                if ((this, this.options.type === 'horizontal')) {
-                    const maxWidth =
-                        this.borderMask.width -
-                        this.layout.width -
-                        this.options.horPadding * 2;
-
-                    this._trackpad.xAxis.max = -Math.abs(maxWidth);
-                } else if (this.options.type === 'vertical') {
-                    const maxHeight =
-                        this.borderMask.height -
-                        this.layout.height -
-                        this.options.vertPadding * 2;
-
-                    this._trackpad.yAxis.max = -Math.abs(maxHeight);
-                }
-            }
-
-            this.stopRenderHiddenItems();
         }
 
-        // this.x = this.__width / 2
-        // this.y = this.__height / 2;
+        if (this._trackpad) {
+            if ((this, this.options.type === 'horizontal')) {
+                const maxWidth =
+                    this.borderMask.width -
+                    this.layout.width -
+                    this.options.horPadding * 2;
+
+                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+            } else if (this.options.type === 'vertical') {
+                const maxHeight =
+                    this.borderMask.height -
+                    this.layout.height -
+                    this.options.vertPadding * 2;
+
+                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+            }
+        }
+
+        this.stopRenderHiddenItems();
     }
 
     private onMouseHover() {
