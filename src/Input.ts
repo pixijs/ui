@@ -116,7 +116,7 @@ export class Input extends Container {
 
         this.on('pointertap', () => (this.activation = true));
 
-        if (utils.isMobile) {
+        if (utils.isMobile.any) {
             window.addEventListener('touchstart', () =>
                 this.handleActivation(),
             );
@@ -203,7 +203,7 @@ export class Input extends Container {
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (utils.isMobile) {
+        if (utils.isMobile.any) {
             const keyboard = document.getElementById(
                 'v-keyboard',
             ) as HTMLInputElement;
@@ -235,7 +235,7 @@ export class Input extends Container {
         }
 
         if (this.value.length === 0) this.placeholder.visible = true;
-        if (utils.isMobile) document.getElementById('v-keyboard')?.blur();
+        if (utils.isMobile.any) document.getElementById('v-keyboard')?.blur();
 
         this.align();
     }

@@ -181,7 +181,7 @@ export class Button extends Container {
             }
         });
 
-        if (!utils.isMobile) {
+        if (!utils.isMobile.any) {
             this.onHover.connect((_bth, e) => {
                 if (this.hoverView) {
                     this.hoverView.visible = true;
