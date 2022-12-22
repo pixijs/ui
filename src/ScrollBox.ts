@@ -168,7 +168,7 @@ export class ScrollBox extends Container {
         return items[0];
     }
 
-    public async removeItem(itemID: number) {
+    public removeItem(itemID: number) {
         const child = this.layout.children[itemID];
 
         if (!child) {
@@ -450,7 +450,7 @@ export class ScrollBox extends Container {
         }
     }
 
-    public async scrollTop() {
+    public scrollTop() {
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
