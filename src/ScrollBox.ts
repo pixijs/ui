@@ -5,6 +5,7 @@ import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
 import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
+import { Ticker } from 'pixi.js';
 
 export type ScrollBoxOptions = {
     type?: LayoutType;
@@ -21,10 +22,7 @@ export type ScrollBoxOptions = {
 };
 
 /**
- * ScrollBox for arranging and scrolling pixi containers withing some area with scrolling
- *
- * !!! Important
- * In order scroll to work, you have to call update() method in your game loop.
+ * Can be used for arranging a lists of pixi container based elements and make them scrollable.
  *
  * @example
  * ```
@@ -71,6 +69,8 @@ export class ScrollBox extends Container {
     private isDragging = 0;
 
     private childrenInteractiveStorage: boolean[] = [];
+    
+    private ticker = Ticker.shared;
 
     constructor(private readonly options: ScrollBoxOptions) {
         super();
@@ -121,6 +121,8 @@ export class ScrollBox extends Container {
         this._trackpad.yAxis.value = 0;
 
         this.resize();
+
+        this.ticker.add(this.update, this);
     }
 
     private get hasBounds(): boolean {
@@ -168,7 +170,7 @@ export class ScrollBox extends Container {
         return items[0];
     }
 
-    public async removeItem(itemID: number) {
+    public removeItem(itemID: number) {
         const child = this.layout.children[itemID];
 
         if (!child) {
@@ -450,7 +452,7 @@ export class ScrollBox extends Container {
         }
     }
 
-    public async scrollTop() {
+    public scrollTop() {
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
