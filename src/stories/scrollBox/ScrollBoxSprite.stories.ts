@@ -27,7 +27,6 @@ export const Sprite = ({
     const assets = [`window.png`, `button.png`, `button_hover.png`];
 
     // Component usage !!!
-    // Important: in order scroll to work, you have to call update() method in your game loop.
     const scrollBox = new ScrollBox({
         type: 'vertical',
         elementsMargin,
@@ -55,7 +54,6 @@ export const Sprite = ({
     return {
         view,
         resize: () => centerElement(view),
-        update: () => scrollBox.update(),
     };
 };
 
