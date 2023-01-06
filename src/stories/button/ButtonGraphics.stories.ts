@@ -37,7 +37,8 @@ export const Graphics = ({
     textOffsetX,
     textOffsetY,
     onPress,
-}: any) => {
+}: any) =>
+{
     color = Number(color.replace('#', '0x'));
     hoverColor = Number(hoverColor.replace('#', '0x'));
     pressedColor = Number(pressedColor.replace('#', '0x'));
@@ -65,7 +66,8 @@ export const Graphics = ({
         textOffset: { x: textOffsetX, y: textOffsetY },
     });
 
-    if (disabled) {
+    if (disabled)
+    {
         view.enabled = false;
     }
 

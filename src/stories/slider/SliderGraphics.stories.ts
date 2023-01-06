@@ -41,7 +41,8 @@ export const Single = ({
     border,
     onChange,
     showValue,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -56,8 +57,8 @@ export const Single = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -68,8 +69,8 @@ export const Single = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -89,12 +90,13 @@ export const Single = ({
         value,
         valueTextStyle: {
             fill: fontColor,
-            fontSize: fontSize,
+            fontSize,
         },
         showValue,
     });
 
-    singleSlider.onChange.connect((value) => {
+    singleSlider.onChange.connect((value) =>
+    {
         onChange(`Slider changed > ${value}`);
     });
 

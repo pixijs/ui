@@ -10,12 +10,14 @@ const args = {
 };
 
 // TODO: implement preloading
-export const Sprite = ({ borderColor, borderWidth }: any) => {
+export const Sprite = ({ borderColor, borderWidth }: any) =>
+{
     const view = new Container();
 
     const assets = [`avatar.png`, `avatar_mask.png`];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         borderColor = Number(borderColor.replace('#', '0x'));
 
         // Component usage !!!

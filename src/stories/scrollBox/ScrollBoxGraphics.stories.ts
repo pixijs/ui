@@ -34,7 +34,8 @@ export const Graphics = ({
     itemsCount,
     backgroundColor,
     onPress,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -42,7 +43,8 @@ export const Graphics = ({
 
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         const button = new Button({
             view: new PixiGraphics()
                 .beginFill(0xa5e24d)

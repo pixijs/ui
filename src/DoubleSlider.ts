@@ -70,7 +70,8 @@ export type DoubleSliderOptions = {
 
 // TODO: implement vertical slider
 // TODO: make this fill to be draggable and move border values at the same time
-export class DoubleSlider extends Container {
+export class DoubleSlider extends Container
+{
     protected readonly bg: Container;
     protected readonly fill?: Container;
     protected readonly fillMask?: Graphics;
@@ -89,14 +90,15 @@ export class DoubleSlider extends Container {
     public value1 = 0;
     public value2 = 0;
 
-    public onChange: Signal<(value1: number, value2: number) => void> =
-        new Signal();
+    public onChange: Signal<(value1: number, value2: number) => void>
+        = new Signal();
 
-    constructor(private readonly options: DoubleSliderOptions) {
+    constructor(private readonly options: DoubleSliderOptions)
+    {
         super();
 
-        const bg =
-            typeof options.bg === 'string'
+        const bg
+            = typeof options.bg === 'string'
                 ? new Sprite(Texture.from(options.bg))
                 : options.bg;
 
@@ -106,9 +108,10 @@ export class DoubleSlider extends Container {
 
         this.addChild(this.bg);
 
-        if (options.fill) {
-            const fill =
-                typeof options.fill === 'string'
+        if (options.fill)
+        {
+            const fill
+                = typeof options.fill === 'string'
                     ? new Sprite(Texture.from(options.fill))
                     : options.fill;
 
@@ -118,8 +121,8 @@ export class DoubleSlider extends Container {
             const offsetX = options.fillOffset?.x ?? 0;
             const offsetY = options.fillOffset?.y ?? 0;
 
-            this.fill.x = (this.bg.width - this.fill.width) / 2 + offsetX;
-            this.fill.y = (this.bg.height - this.fill.height) / 2 + offsetY;
+            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
+            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
 
             this.fillMask = new Graphics();
             this.fill.addChild(this.fillMask);
@@ -128,12 +131,13 @@ export class DoubleSlider extends Container {
             this.addChild(this.fill);
         }
 
-        const slider1 =
-            typeof options.slider1 === 'string'
+        const slider1
+            = typeof options.slider1 === 'string'
                 ? new Sprite(Texture.from(options.slider1))
                 : options.slider1;
 
-        if (slider1 instanceof Sprite) {
+        if (slider1 instanceof Sprite)
+        {
             slider1.anchor.set(0.5);
         }
 
@@ -142,12 +146,13 @@ export class DoubleSlider extends Container {
         this.slider1 = new Container();
         this.slider1.addChild(slider1);
         this.slider1.y = this.bg.height / 2;
-        const slider2 =
-            typeof options.slider2 === 'string'
+        const slider2
+            = typeof options.slider2 === 'string'
                 ? new Sprite(Texture.from(options.slider2))
                 : options.slider2;
 
-        if (slider2 instanceof Sprite) {
+        if (slider2 instanceof Sprite)
+        {
             slider2.anchor.set(0.5);
         }
 
@@ -159,7 +164,8 @@ export class DoubleSlider extends Container {
 
         this.addChild(this.slider2, this.slider1);
 
-        if (options.showValue) {
+        if (options.showValue)
+        {
             this.slider1Text = new Text(
                 '',
                 options.valueTextStyle || { fill: 0xffffff },
@@ -168,7 +174,8 @@ export class DoubleSlider extends Container {
             this.addChild(this.slider1Text);
         }
 
-        if (options.showValue) {
+        if (options.showValue)
+        {
             this.slider2Text = new Text(
                 '',
                 options.valueTextStyle || { fill: 0xffffff },
@@ -184,22 +191,27 @@ export class DoubleSlider extends Container {
         this.update();
     }
 
-    private validateSettings() {
+    private validateSettings()
+    {
         const { options } = this;
 
-        if (!options.min) {
+        if (!options.min)
+        {
             options.min = 0;
         }
 
-        if (!options.max) {
+        if (!options.max)
+        {
             options.max = 100;
         }
 
-        if (options.value1 < options.min) {
+        if (options.value1 < options.min)
+        {
             options.value1 = options.min;
         }
 
-        if (options.value2 > options.max) {
+        if (options.value2 > options.max)
+        {
             options.value2 = options.max;
         }
 
@@ -218,7 +230,8 @@ export class DoubleSlider extends Container {
         this.percent2 = (scaledVal2 * 100) / scale;
     }
 
-    private makeScrollable() {
+    private makeScrollable()
+    {
         this.interactive = true;
         this.slider1.interactive = true;
         this.slider2.interactive = true;
@@ -251,34 +264,45 @@ export class DoubleSlider extends Container {
         this.on('pointerupoutside', onDragEnd1, this);
     }
 
-    private onSetByClick(event: InteractionEvent) {
+    private onSetByClick(event: InteractionEvent)
+    {
         const obj = event.currentTarget as DragObject;
 
         const data = event.data;
 
-        let pos = data.getLocalPosition(obj.parent).x - this.slider2.width / 2;
+        let pos = data.getLocalPosition(obj.parent).x - (this.slider2.width / 2);
 
-        if (pos < 0) {
+        if (pos < 0)
+        {
             pos = 0;
         }
 
         const maxPos = this.bg.width - this.slider2.width;
 
-        if (pos > maxPos) {
+        if (pos > maxPos)
+        {
             pos = maxPos;
         }
 
-        if (pos < this.slider1.x) {
+        if (pos < this.slider1.x)
+        {
             this.setSlider1Val(pos);
-        } else if (pos > this.slider2.x) {
+        }
+        else if (pos > this.slider2.x)
+        {
             this.setSlider2Val(pos);
-        } else {
+        }
+        else
+        {
             const distToSlider1 = pos - this.slider1.x;
             const distToSlider2 = this.slider2.x - pos;
 
-            if (distToSlider1 < distToSlider2) {
+            if (distToSlider1 < distToSlider2)
+            {
                 this.setSlider1Val(pos);
-            } else {
+            }
+            else
+            {
                 this.setSlider2Val(pos);
             }
         }
@@ -288,7 +312,8 @@ export class DoubleSlider extends Container {
         this.onChange?.emit(this.value1, this.value2);
     }
 
-    private onDragStart1(event: InteractionEvent) {
+    private onDragStart1(event: InteractionEvent)
+    {
         const obj = event.currentTarget as DragObject;
 
         obj.dragData = event.data;
@@ -300,45 +325,53 @@ export class DoubleSlider extends Container {
         obj.dragGlobalStart.copyFrom(event.data.global);
     }
 
-    private onDragMove1(event: InteractionEvent) {
+    private onDragMove1(event: InteractionEvent)
+    {
         const obj = event.currentTarget as DragObject;
 
-        if (!this.dragging1) {
+        if (!this.dragging1)
+        {
             return;
         }
 
         const data = obj.dragData; // it can be different pointer!
 
-        if (this.dragging1 === 1) {
+        if (this.dragging1 === 1)
+        {
             // click or drag?
             if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x) +
-                    Math.abs(data.global.y - obj.dragGlobalStart?.y) >=
-                3
-            ) {
+                Math.abs(data.global.x - obj.dragGlobalStart?.x)
+                    + Math.abs(data.global.y - obj.dragGlobalStart?.y)
+                >= 3
+            )
+            {
                 // DRAG
                 this.dragging1 = 2;
             }
         }
 
-        if (this.dragging1 === 2) {
+        if (this.dragging1 === 2)
+        {
             const dragPointerEnd = data.getLocalPosition(obj.parent);
 
-            let pos =
-                obj.dragObjStart.x +
-                (dragPointerEnd.x - obj.dragPointerStart.x);
+            let pos
+                = obj.dragObjStart.x
+                + (dragPointerEnd.x - obj.dragPointerStart.x);
 
-            if (pos < 0) {
+            if (pos < 0)
+            {
                 pos = 0;
             }
 
-            if (pos > this.slider2.x) {
+            if (pos > this.slider2.x)
+            {
                 pos = this.slider2.x;
             }
 
             const maxPos = this.bg.width - this.slider1.width;
 
-            if (pos > maxPos) {
+            if (pos > maxPos)
+            {
                 pos = maxPos;
             }
 
@@ -348,19 +381,22 @@ export class DoubleSlider extends Container {
         }
     }
 
-    private setSlider1Val(pos: number) {
+    private setSlider1Val(pos: number)
+    {
         const maxPos = this.bg.width - this.slider1.width;
 
         this.percent1 = Math.round((pos / maxPos) * 100);
-        this.value1 =
-            this.options.min +
-            Math.round(
+        this.value1
+            = this.options.min
+            + Math.round(
                 ((this.options.max - this.options.min) / 100) * this.percent1,
             );
     }
 
-    private onDragEnd1() {
-        if (!this.dragging1) {
+    private onDragEnd1()
+    {
+        if (!this.dragging1)
+        {
             return;
         }
 
@@ -369,7 +405,8 @@ export class DoubleSlider extends Container {
         this.onChange?.emit(this.value1, this.value2);
     }
 
-    private onDragStart2(event: InteractionEvent) {
+    private onDragStart2(event: InteractionEvent)
+    {
         const obj = event.currentTarget as DragObject;
 
         obj.dragData = event.data;
@@ -381,41 +418,48 @@ export class DoubleSlider extends Container {
         obj.dragGlobalStart.copyFrom(event.data.global);
     }
 
-    private onDragMove2(event: InteractionEvent) {
+    private onDragMove2(event: InteractionEvent)
+    {
         const obj = event.currentTarget as DragObject;
 
-        if (!this.dragging2) {
+        if (!this.dragging2)
+        {
             return;
         }
 
         const data = obj.dragData; // it can be different pointer!
 
-        if (this.dragging2 === 1) {
+        if (this.dragging2 === 1)
+        {
             // click or drag?
             if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x) +
-                    Math.abs(data.global.y - obj.dragGlobalStart?.y) >=
-                3
-            ) {
+                Math.abs(data.global.x - obj.dragGlobalStart?.x)
+                    + Math.abs(data.global.y - obj.dragGlobalStart?.y)
+                >= 3
+            )
+            {
                 // DRAG
                 this.dragging2 = 2;
             }
         }
 
-        if (this.dragging2 === 2) {
+        if (this.dragging2 === 2)
+        {
             const dragPointerEnd = data.getLocalPosition(obj.parent);
 
-            let pos =
-                obj.dragObjStart.x +
-                (dragPointerEnd.x - obj.dragPointerStart.x);
+            let pos
+                = obj.dragObjStart.x
+                + (dragPointerEnd.x - obj.dragPointerStart.x);
 
-            if (pos < this.slider1.x) {
+            if (pos < this.slider1.x)
+            {
                 pos = this.slider1.x;
             }
 
             const maxPos = this.bg.width - this.slider2.width;
 
-            if (pos > maxPos) {
+            if (pos > maxPos)
+            {
                 pos = maxPos;
             }
 
@@ -425,19 +469,22 @@ export class DoubleSlider extends Container {
         }
     }
 
-    private setSlider2Val(pos: number) {
+    private setSlider2Val(pos: number)
+    {
         const maxPos = this.bg.width - this.slider2.width;
 
         this.percent2 = Math.round((pos / maxPos) * 100);
-        this.value2 =
-            this.options.min +
-            Math.round(
+        this.value2
+            = this.options.min
+            + Math.round(
                 ((this.options.max - this.options.min) / 100) * this.percent2,
             );
     }
 
-    private onDragEnd2() {
-        if (!this.dragging2) {
+    private onDragEnd2()
+    {
+        if (!this.dragging2)
+        {
             return;
         }
 
@@ -446,11 +493,12 @@ export class DoubleSlider extends Container {
         this.onChange?.emit(this.value1, this.value2);
     }
 
-    private update() {
-        const position1 =
-            ((this.bg.width - this.slider1.width) / 100) * this.percent1;
-        const position2 =
-            ((this.bg.width - this.slider2.width) / 100) * this.percent2;
+    private update()
+    {
+        const position1
+            = ((this.bg.width - this.slider1.width) / 100) * this.percent1;
+        const position2
+            = ((this.bg.width - this.slider2.width) / 100) * this.percent2;
 
         this.slider1.x = position1;
         this.slider2.x = position2;
@@ -458,7 +506,8 @@ export class DoubleSlider extends Container {
         const startPoint = (this.bg.width / 100) * this.percent1;
         const endPoint = (this.bg.width / 100) * this.percent2;
 
-        if (this.fillMask) {
+        if (this.fillMask)
+        {
             this.fillMask
                 .clear()
                 .lineStyle(0)
@@ -471,25 +520,26 @@ export class DoubleSlider extends Container {
                 );
         }
 
-        if (this.options.showValue) {
+        if (this.options.showValue)
+        {
             this.slider1Text.text = this.value1;
             this.slider2Text.text = this.value2;
 
-            const slider1PosX = this.slider1.x + this.slider1.width / 2;
+            const slider1PosX = this.slider1.x + (this.slider1.width / 2);
             const slider1PosY = this.slider1.y;
 
-            this.slider1Text.x =
-                slider1PosX + (this.options.valueTextOffset?.x ?? 0);
-            this.slider1Text.y =
-                slider1PosY + (this.options.valueTextOffset?.y ?? 0);
+            this.slider1Text.x
+                = slider1PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider1Text.y
+                = slider1PosY + (this.options.valueTextOffset?.y ?? 0);
 
-            const slider2PosX = this.slider2.x + this.slider2.width / 2;
+            const slider2PosX = this.slider2.x + (this.slider2.width / 2);
             const slider2PosY = this.slider2.y;
 
-            this.slider2Text.x =
-                slider2PosX + (this.options.valueTextOffset?.x ?? 0);
-            this.slider2Text.y =
-                slider2PosY + (this.options.valueTextOffset?.y ?? 0);
+            this.slider2Text.x
+                = slider2PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider2Text.y
+                = slider2PosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onChange?.emit(this.value1, this.value2);

@@ -15,7 +15,8 @@ const args = {
     onChange: action('Checkbox changed'),
 };
 
-export const Sprite = ({ checked, onChange, count, textColor, text }: any) => {
+export const Sprite = ({ checked, onChange, count, textColor, text }: any) =>
+{
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 5,
@@ -23,8 +24,10 @@ export const Sprite = ({ checked, onChange, count, textColor, text }: any) => {
 
     const assets = [`switch_off.png`, `switch_on.png`];
 
-    preloadAssets(assets).then(() => {
-        for (let i = 0; i < count; i++) {
+    preloadAssets(assets).then(() =>
+    {
+        for (let i = 0; i < count; i++)
+        {
             // Component usage !!!
             const checkBox = new CheckBox({
                 text: text ?? `${text} ${i + 1}`,

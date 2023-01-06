@@ -4,20 +4,15 @@ import { ConstrainEase, SlidingNumber } from './SlidingNumber';
 
 interface TrackpadOptions
 {
-    /**
-     * override the easing function when constraining
-     */
-    xEase?:ConstrainEase;
-    yEase?:ConstrainEase;
+    /** override the easing function when constraining */
+    xEase?: ConstrainEase;
+    yEase?: ConstrainEase;
 
     maxSpeed?: number
     constrain?: boolean
 }
 
-/**
- * A track pad class that lets you scroll both in al directions.
- * Its up to you to hook up the events.
- */
+/** A track pad class that lets you scroll both in al directions. Its up to you to hook up the events. */
 export class Trackpad
 {
     public xAxis: SlidingNumber;
@@ -26,7 +21,7 @@ export class Trackpad
     private _isDown: boolean;
     private _globalPosition: Point;
     private _frame: Rectangle;
-    private _bounds:Rectangle;
+    private _bounds: Rectangle;
     private _dirty: boolean;
 
     constructor(options: TrackpadOptions)
@@ -102,7 +97,7 @@ export class Trackpad
         this._dirty = true;
     }
 
-    public setBounds(minX: number, maxX: number, minY: number, maxY: number):void
+    public setBounds(minX: number, maxX: number, minY: number, maxY: number): void
     {
         this._bounds.x = minX;
         this._bounds.width = maxX - minX;

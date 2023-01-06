@@ -36,7 +36,8 @@ export const Graphics = ({
     radius,
 
     onPress,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     color = Number(color.replace('#', '0x'));
@@ -44,7 +45,8 @@ export const Graphics = ({
     fillColor = Number(fillColor.replace('#', '0x'));
     fillBorderColor = Number(fillBorderColor.replace('#', '0x'));
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++)
+    {
         // Component usage !!!
         const checkBox = new CheckBox({
             text: `${text} ${i + 1}`,
@@ -72,7 +74,8 @@ export const Graphics = ({
             },
         });
 
-        checkBox.onChange.connect(() => {
+        checkBox.onChange.connect(() =>
+        {
             onPress(`${checkBox.checked}`);
         });
 

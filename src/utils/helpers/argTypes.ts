@@ -38,19 +38,25 @@ const controls = {
     },
 };
 
-export const argTypes = (args: Types) => {
+export const argTypes = (args: Types) =>
+{
     const exportArgTypes: any = {};
 
-    for (const key in args) {
-        if (typeof args[key] === 'number') {
+    for (const key in args)
+    {
+        if (typeof args[key] === 'number')
+        {
             let min = 0;
 
-            if (key.includes('font')) {
+            if (key.includes('font'))
+            {
                 min = 1;
             }
 
-            if (args[key] >= 0) {
-                if (args[key] >= 100) {
+            if (args[key] >= 0)
+            {
+                if (args[key] >= 100)
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
@@ -59,67 +65,83 @@ export const argTypes = (args: Types) => {
                             step: 10,
                         },
                     };
-                } else if (args[key] > 10) {
+                }
+                else if (args[key] > 10)
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
                             min,
                             max: 100,
-                            step: 1,
-                        },
-                    };
-                } else {
-                    exportArgTypes[key] = {
-                        control: {
-                            type: 'range',
-                            min,
-                            max: 10,
                             step: 1,
                         },
                     };
                 }
-            } else {
-                if (args[key] <= -100) {
+                else
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
-                            min: -1000,
-                            max: 1000,
-                            step: 10,
-                        },
-                    };
-                } else if (args[key] < -10) {
-                    exportArgTypes[key] = {
-                        control: {
-                            type: 'range',
-                            min: -100,
-                            max: 100,
-                            step: 10,
-                        },
-                    };
-                } else {
-                    exportArgTypes[key] = {
-                        control: {
-                            type: 'range',
-                            min: -10,
+                            min,
                             max: 10,
                             step: 1,
                         },
                     };
                 }
             }
-        } else {
-            if (getArgType(key)) {
+            else
+            if (args[key] <= -100)
+            {
+                exportArgTypes[key] = {
+                    control: {
+                        type: 'range',
+                        min: -1000,
+                        max: 1000,
+                        step: 10,
+                    },
+                };
+            }
+            else if (args[key] < -10)
+            {
+                exportArgTypes[key] = {
+                    control: {
+                        type: 'range',
+                        min: -100,
+                        max: 100,
+                        step: 10,
+                    },
+                };
+            }
+            else
+            {
+                exportArgTypes[key] = {
+                    control: {
+                        type: 'range',
+                        min: -10,
+                        max: 10,
+                        step: 1,
+                    },
+                };
+            }
+        }
+        else
+        {
+            if (getArgType(key))
+            {
                 exportArgTypes[key] = getArgType(key);
             }
 
-            switch (typeof args[key]) {
+            switch (typeof args[key])
+            {
                 case 'object':
                     exportArgTypes[key] = controls.select;
 
-                    if (Array.isArray(args[key])) {
+                    if (Array.isArray(args[key]))
+                    {
                         exportArgTypes[key].options = args[key];
-                    } else {
+                    }
+                    else
+                    {
                         exportArgTypes[key].options = Object.keys(args).map(
                             (key) => args[key],
                         );
@@ -135,9 +157,12 @@ export const argTypes = (args: Types) => {
     return exportArgTypes;
 };
 
-function getArgType(type: string) {
-    for (const control in controls) {
-        if (type.toLowerCase().indexOf(control) > -1) {
+function getArgType(type: string)
+{
+    for (const control in controls)
+    {
+        if (type.toLowerCase().indexOf(control) > -1)
+        {
             // const keys = type.split(control);
 
             // if (options[keys[0]]) {
@@ -152,13 +177,17 @@ function getArgType(type: string) {
     return undefined;
 }
 
-export const getDefaultArgs = (args: Types) => {
+export const getDefaultArgs = (args: Types) =>
+{
     const exportArgs: any = {};
 
-    for (const key in args) {
-        switch (typeof args[key]) {
+    for (const key in args)
+    {
+        switch (typeof args[key])
+        {
             case 'object':
-                if (Array.isArray(args[key])) {
+                if (Array.isArray(args[key]))
+                {
                     // @ts-ignore
                     exportArgs[key] = args[key][0] as any;
                 }

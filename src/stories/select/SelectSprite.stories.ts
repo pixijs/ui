@@ -22,16 +22,19 @@ export const Sprite = ({
     backgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     const assets = [`select_closed.png`, `select_open.png`];
 
     let select: Select;
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         backgroundColor = Number(backgroundColor.replace('#', '0x'));
         const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
+
         fontColor = Number(fontColor.replace('#', '0x'));
         const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
@@ -68,7 +71,8 @@ export const Sprite = ({
 
         select.y = 10;
 
-        select.onSelect.connect((_, text) => {
+        select.onSelect.connect((_, text) =>
+        {
             onSelect(select.value, text);
         });
 
@@ -84,10 +88,12 @@ export const Sprite = ({
     };
 };
 
-function getItems(itemsCount: number, text: string): string[] {
+function getItems(itemsCount: number, text: string): string[]
+{
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         items.push(`${text} ${i + 1}`);
     }
 

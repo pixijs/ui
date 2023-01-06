@@ -29,23 +29,26 @@ export type CheckBoxOptions = {
  *
  * ```
  */
-export class CheckBox extends Switch {
+export class CheckBox extends Switch
+{
     private label: Text;
 
-    constructor(options: CheckBoxOptions) {
-        const unchecked =
-            typeof options.style.unchecked === 'string'
+    constructor(options: CheckBoxOptions)
+    {
+        const unchecked
+            = typeof options.style.unchecked === 'string'
                 ? new Sprite(Texture.from(options.style.unchecked))
                 : options.style.unchecked;
 
-        const checked =
-            typeof options.style.checked === 'string'
+        const checked
+            = typeof options.style.checked === 'string'
                 ? new Sprite(Texture.from(options.style.checked))
                 : options.style.checked;
 
         super([unchecked, checked], options.checked ? 1 : 0);
 
-        if (options.text) {
+        if (options.text)
+        {
             this.label = new Text(options.text, options.style.text);
             this.label.x = unchecked.width + 10;
             this.label.y = (unchecked.height - this.label.height) / 2;
@@ -62,24 +65,29 @@ export class CheckBox extends Switch {
         this.onChange = new Signal();
     }
 
-    public update() {
+    public update()
+    {
         this.hitArea = new Rectangle(0, 0, this.width, this.height);
     }
 
-    public set text(text: string) {
+    public set text(text: string)
+    {
         this.label.text = text;
         this.update();
     }
 
-    public get text(): string {
+    public get text(): string
+    {
         return this.label.text;
     }
 
-    public get checked(): boolean {
+    public get checked(): boolean
+    {
         return this.activeViewID === 1;
     }
 
-    public set checked(checked: boolean) {
+    public set checked(checked: boolean)
+    {
         this.switch(checked ? 1 : 0);
         this.update();
     }

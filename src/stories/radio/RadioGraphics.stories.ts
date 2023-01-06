@@ -33,7 +33,8 @@ export const Graphics = ({
     radius,
 
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     bgColor = bgColor.replace('#', '0x');
@@ -41,7 +42,8 @@ export const Graphics = ({
 
     const items = [];
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++)
+    {
         items.push(`${text} ${i + 1}`);
     }
 
@@ -61,7 +63,7 @@ export const Graphics = ({
             },
             checked: {
                 color: bgColor,
-                fillColor: fillColor,
+                fillColor,
                 width,
                 height,
                 padding,

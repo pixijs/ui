@@ -19,7 +19,8 @@ export const Sprite = ({
     elementsMargin,
     itemsCount,
     onPress,
-}: any) => {
+}: any) =>
+{
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();
@@ -35,16 +36,18 @@ export const Sprite = ({
         vertPadding: 18,
     });
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         const window = new PixiSprite(Texture.from(`window.png`));
+
         view.addChild(window);
 
         const items: Container[] = createItems(itemsCount, fontColor, onPress);
 
         items.forEach((item) => scrollBox.addItem(item));
 
-        scrollBox.x = window.width / 2 - scrollBox.width / 2;
-        scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
+        scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
+        scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
 
         window.addChild(scrollBox);
 
@@ -61,10 +64,12 @@ function createItems(
     itemsCount: number,
     fontColor: number,
     onPress: (buttonID: number) => void,
-): Button[] {
+): Button[]
+{
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
             hoverView: new PixiSprite(Texture.from(`button_hover.png`)),

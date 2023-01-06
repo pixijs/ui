@@ -43,7 +43,8 @@ export const Double = ({
     handleBorder,
     showValue,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -58,8 +59,8 @@ export const Double = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -70,8 +71,8 @@ export const Double = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -100,12 +101,13 @@ export const Double = ({
         value2,
         valueTextStyle: {
             fill: fontColor,
-            fontSize: fontSize,
+            fontSize,
         },
         showValue,
     });
 
-    doubleSlider.onChange.connect((value1, value2) => {
+    doubleSlider.onChange.connect((value1, value2) =>
+    {
         onChange(`Slider changed > ${value1} - ${value2}`);
     });
 

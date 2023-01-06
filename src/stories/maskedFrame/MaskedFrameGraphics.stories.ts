@@ -11,12 +11,14 @@ const args = {
 };
 
 // TODO: implement preloading
-export const Graphics = ({ borderColor, radius, borderWidth }: any) => {
+export const Graphics = ({ borderColor, radius, borderWidth }: any) =>
+{
     const view = new Container();
 
     const assets = [`avatar.png`];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         borderColor = Number(borderColor.replace('#', '0x'));
 
         const target = new Sprite(Texture.from(`avatar.png`));
@@ -28,6 +30,7 @@ export const Graphics = ({ borderColor, radius, borderWidth }: any) => {
             borderWidth,
             borderColor,
         });
+
         view.addChild(frame);
 
         centerElement(view);
@@ -36,14 +39,18 @@ export const Graphics = ({ borderColor, radius, borderWidth }: any) => {
     return { view, resize: () => centerElement(view) };
 };
 
-function getMask(width: number, height: number, radius: number): PixiGraphics {
+function getMask(width: number, height: number, radius: number): PixiGraphics
+{
     const isCircle = width === height && radius >= width / 2;
 
     const mask = new PixiGraphics();
 
-    if (isCircle) {
+    if (isCircle)
+    {
         mask.beginFill(0x000000).drawCircle(width / 2, height / 2, width / 2);
-    } else {
+    }
+    else
+    {
         mask.beginFill(0x000000).drawRoundedRect(0, 0, width, height, radius);
     }
 

@@ -48,19 +48,21 @@ export type RadioBoxOptions = {
  *
  * ```
  */
-export class RadioGroup extends Container {
+export class RadioGroup extends Container
+{
     private items: CheckBox[] = [];
 
     public value: string;
     public selected: number;
 
     public onChange: Signal<
-        (selectedItemID: number, selectedVal: string) => void
+    (selectedItemID: number, selectedVal: string) => void
     >;
 
     public view: Layout;
 
-    constructor(private readonly options: RadioBoxOptions) {
+    constructor(private readonly options: RadioBoxOptions)
+    {
         super();
 
         this.value = options.items[options.selectedItem];
@@ -72,14 +74,15 @@ export class RadioGroup extends Container {
             elementsMargin: options.elementsMargin,
         });
 
-        options.items.forEach((item, id) => {
-            const unchecked =
-                typeof options.style.bg === 'string'
+        options.items.forEach((item, id) =>
+        {
+            const unchecked
+                = typeof options.style.bg === 'string'
                     ? new Sprite(Texture.from(options.style.bg))
                     : this.getGraphics(options.style.bg);
 
-            const checked =
-                typeof options.style.checked === 'string'
+            const checked
+                = typeof options.style.checked === 'string'
                     ? new Sprite(Texture.from(options.style.checked))
                     : this.getGraphics(options.style.checked);
 
@@ -112,7 +115,8 @@ export class RadioGroup extends Container {
         height,
         radius,
         padding,
-    }: GraphicsType) {
+    }: GraphicsType)
+    {
         const graphics = new Graphics().beginFill(color);
 
         const isCircle = width === height && radius >= width / 2;
@@ -121,19 +125,23 @@ export class RadioGroup extends Container {
             ? graphics.drawCircle(width / 2, width / 2, width / 2)
             : graphics.drawRoundedRect(0, 0, width, height, radius);
 
-        if (fillColor !== undefined) {
+        if (fillColor !== undefined)
+        {
             graphics.beginFill(fillColor);
 
             const center = width / 2;
 
-            if (isCircle) {
+            if (isCircle)
+            {
                 graphics.drawCircle(center, center, center - padding);
-            } else {
+            }
+            else
+            {
                 graphics.drawRoundedRect(
                     padding,
                     padding,
-                    width - padding * 2,
-                    height - padding * 2,
+                    width - (padding * 2),
+                    height - (padding * 2),
                     radius,
                 );
             }
@@ -142,7 +150,8 @@ export class RadioGroup extends Container {
         return graphics;
     }
 
-    public selectItem(id: number) {
+    public selectItem(id: number)
+    {
         this.selected = id;
 
         this.items.map((item) => (item.checked = false));

@@ -9,7 +9,6 @@ export type MaskedFrameOptions = {
 
 /**
  * Applies mask to a container and draws a same shape border around it
- *
  * @example
  * ```
  * new MaskedFrame({
@@ -20,7 +19,8 @@ export type MaskedFrameOptions = {
  * });
  * ```
  */
-export class MaskedFrame extends Container {
+export class MaskedFrame extends Container
+{
     // private readonly borderMask: Graphics;
     private border?: Graphics;
     public target: Container;
@@ -31,36 +31,38 @@ export class MaskedFrame extends Container {
         mask,
         borderWidth,
         borderColor,
-    }: MaskedFrameOptions) {
+    }: MaskedFrameOptions)
+    {
         super();
 
-        this.target =
-            typeof target === 'string'
+        this.target
+            = typeof target === 'string'
                 ? new Sprite(Texture.from(target))
                 : target;
 
-        this.targetMask =
-            typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask;
+        this.targetMask
+            = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask;
 
         this.target.addChild(this.targetMask);
 
         this.target.mask = this.targetMask;
 
-        if (borderWidth) {
+        if (borderWidth)
+        {
             this.border = new Graphics()
                 .beginFill(borderColor)
                 .drawRect(
                     0,
                     0,
-                    this.target.width + borderWidth * 2,
-                    this.target.height + borderWidth * 2,
+                    this.target.width + (borderWidth * 2),
+                    this.target.height + (borderWidth * 2),
                 );
 
             this.target.x = borderWidth;
             this.target.y = borderWidth;
 
-            const borderMask =
-                typeof mask === 'string'
+            const borderMask
+                = typeof mask === 'string'
                     ? new Sprite(Texture.from(mask))
                     : mask.clone();
 
@@ -77,13 +79,15 @@ export class MaskedFrame extends Container {
         this.addChild(this.target);
     }
 
-    public showBorder() {
+    public showBorder()
+    {
         if (!this.border) return;
 
         this.border.visible = true;
     }
 
-    public hideBorder() {
+    public hideBorder()
+    {
         if (!this.border) return;
 
         this.border.visible = false;

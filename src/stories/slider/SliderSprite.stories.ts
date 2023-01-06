@@ -23,12 +23,14 @@ export const Single = ({
     fontColor,
     onChange,
     showValue,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
@@ -51,7 +53,8 @@ export const Single = ({
             },
         });
 
-        singleSlider.onChange.connect((value) => {
+        singleSlider.onChange.connect((value) =>
+        {
             onChange(`Slider changed > ${value}`);
         });
 

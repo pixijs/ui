@@ -29,13 +29,16 @@ export const Sprite = ({
     align,
     placeholder,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     const assets = [`input.png`];
 
-    preloadAssets(assets).then(() => {
-        for (let i = 0; i < count; i++) {
+    preloadAssets(assets).then(() =>
+    {
+        for (let i = 0; i < count; i++)
+        {
             // Component usage
             const input = new Input({
                 bg: new PixiSprite(Texture.from('input.png')),

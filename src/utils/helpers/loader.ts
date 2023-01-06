@@ -1,14 +1,18 @@
 import { Loader } from 'pixi.js';
 
-export function preloadAssets(assets: string[]): Promise<void> {
-    return new Promise((resolve) => {
+export function preloadAssets(assets: string[]): Promise<void>
+{
+    return new Promise((resolve) =>
+    {
         const loader = Loader.shared;
 
-        assets.forEach((asset) => {
+        assets.forEach((asset) =>
+        {
             !loader.resources[asset] && loader.add(asset);
         });
 
-        loader.load(() => {
+        loader.load(() =>
+        {
             resolve();
         });
     });

@@ -13,7 +13,8 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const Sprite = ({ count, text, textColor, onChange }: any) => {
+export const Sprite = ({ count, text, textColor, onChange }: any) =>
+{
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 20,
@@ -21,10 +22,12 @@ export const Sprite = ({ count, text, textColor, onChange }: any) => {
 
     const assets = [`radio.png`, `radio_checked.png`];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         const items = [];
 
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < count; i++)
+        {
             items.push(`${text} ${i + 1}`);
         }
 

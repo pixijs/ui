@@ -39,14 +39,16 @@ export const Graphics = ({
     align,
     placeholder,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     backgroundColor = backgroundColor.replace('#', '0x');
     borderColor = Number(borderColor.replace('#', '0x'));
     textColor = Number(textColor.replace('#', '0x'));
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++)
+    {
         // Component usage
         const input = new Input({
             bg: new PixiGraphics()
@@ -56,8 +58,8 @@ export const Graphics = ({
                 .drawRoundedRect(
                     border,
                     border,
-                    width - border * 2,
-                    height - border * 2,
+                    width - (border * 2),
+                    height - (border * 2),
                     radius,
                 ),
             padding: border ? border + 3 : 0,

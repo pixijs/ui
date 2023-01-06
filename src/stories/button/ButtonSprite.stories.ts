@@ -25,7 +25,8 @@ export const Sprite = ({
     padding,
     textOffsetX,
     textOffsetY,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 20,
@@ -38,7 +39,8 @@ export const Sprite = ({
         `button_disabled.png`,
     ];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
@@ -53,7 +55,8 @@ export const Sprite = ({
             textOffset: { x: textOffsetX, y: textOffsetY },
         });
 
-        if (disabled) {
+        if (disabled)
+        {
             button.enabled = false;
         }
 

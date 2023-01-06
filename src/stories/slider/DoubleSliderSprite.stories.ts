@@ -25,12 +25,14 @@ export const Double = ({
     fontColor,
     showValue,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const doubleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
@@ -43,7 +45,7 @@ export const Double = ({
             value2,
             valueTextStyle: {
                 fill: fontColor,
-                fontSize: fontSize,
+                fontSize,
             },
             showValue,
             valueTextOffset: {
@@ -55,7 +57,8 @@ export const Double = ({
             },
         });
 
-        doubleSlider.onChange.connect((value1, value2) => {
+        doubleSlider.onChange.connect((value1, value2) =>
+        {
             onChange(`Slider changed > ${value1} - ${value2}`);
         });
 
