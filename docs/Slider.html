@@ -488,36 +488,182 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="index.html">Home</h1>
+        <h1 class="page-title" data-filename="Slider.html">Class: Slider</h1>
         
+
+
+<section>
+
+<header>
+  <div class="header content-size">
+      <h2>
+        Slider
+
+        
+      </h2>
+
+      
+      
+          <div class="class-description"><p>Creates a slider</p></div>
+      
+  </div>
+</header>
+
+<article class="content-size">
+    <div class="container-overview">
+        
+        
+
+        
+<dl class="details">
+    
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code> ```
+ new Slider({
+     bg: 'slider_bg.png',
+     fill: 'slider.png',
+     slider: 'slider.png',
+     min: 0,
+     max: 100,
+     value: 50,
+     valueTextStyle: {
+         fill: 0xffffff,
+         fontSize: 22,
+     },
+     showValue: true,
+     valueTextOffset: {
+         y: -40,
+     },
+ });
 
-    <section>
-        <article class="readme content-size"><div align="center">
-    <h1>PIXI-UI</h1>
-    <h3>It is a library that contains commonly used UI components, that are extensible to allow them to be used in any project</h3>
-</div>
-<p>Here are some useful resources:</p>
-<ul>
-<li><a href="https://pixijs.io/ui/">Full docs</a></li>
-<li><a href="https://github.com/pixijs/ui">Github Repo</a></li>
-<li><a href="https://pixijs.io/ui/storybook/">Storybook</a></li>
-</ul>
-<h2>Install</h2>
-<pre><code class="hljs language-sh">npm install @pixijs/ui
-</code></pre>
-<p>There is no default export. The correct way to import pixi-ui is:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Layout</span>, <span class="hljs-title class_">ScrollBox</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@pixijs/ui&#x27;</span>;
-</code></pre>
-<p>To use any of the components you can go to it's page and copypaste the example code to your project.</p>
+ singleSlider.onChange.connect((value) => {
+     onChange(`Slider changed > ${value}`);
+ });
+ ```</code></pre>
+
+        
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+          
+
+            <li>Container</li>
+          
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="options">
+            <a class="share-icon" href="#options"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">options</span>
+            <span class="type-signature type">SliderOptions</span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </article>
-    </section>
 
-
+</section>
 
 
 

@@ -52,7 +52,7 @@
             <span class="title  ">
                 
                 
-                    <a href=Button.html>Button</a>
+                    <a href="Button.html">Button</a>
                 
             </span>
             
@@ -95,9 +95,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li class=" " data-name="CheckBox.activeViewID"><a href=CheckBox.html#activeViewID>activeViewID</a></li>
+                <li class=" " data-name="CheckBox.activeViewID"><a href="CheckBox.html#activeViewID">activeViewID</a></li>
             
-                <li class=" " data-name="CheckBox.views"><a href=CheckBox.html#views>views</a></li>
+                <li class=" " data-name="CheckBox.views"><a href="CheckBox.html#views">views</a></li>
             
             </ul>
 
@@ -233,7 +233,7 @@
             <span class="title  ">
                 
                 
-                    <a href=MaskedFrame.html>MaskedFrame</a>
+                    <a href="MaskedFrame.html">MaskedFrame</a>
                 
             </span>
             
@@ -338,7 +338,7 @@
             <span class="title  ">
                 
                 
-                    <a href=Select.html>Select</a>
+                    <a href="Select.html">Select</a>
                 
             </span>
             
@@ -381,7 +381,7 @@
             
             <span class="subtitle">Members</span>
             
-                <li class="parent " data-name="Slider.options"><a href=Slider.html#options>options</a></li>
+                <li class="parent " data-name="Slider.options"><a href="Slider.html#options">options</a></li>
             
             </ul>
 
@@ -420,9 +420,9 @@
             
             <span class="subtitle">Members</span>
             
-                <li class="parent " data-name="Switch.activeViewID"><a href=Switch.html#activeViewID>activeViewID</a></li>
+                <li class="parent " data-name="Switch.activeViewID"><a href="Switch.html#activeViewID">activeViewID</a></li>
             
-                <li class="parent " data-name="Switch.views"><a href=Switch.html#views>views</a></li>
+                <li class="parent " data-name="Switch.views"><a href="Switch.html#views">views</a></li>
             
             </ul>
 
@@ -453,7 +453,7 @@
             <span class="title  ">
                 
                 
-                    <a href=Trackpad.html>Trackpad</a>
+                    <a href="Trackpad.html">Trackpad</a>
                 
             </span>
             
@@ -488,36 +488,129 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="index.html">Home</h1>
+        <h1 class="page-title" data-filename="Button.html">Class: Button</h1>
         
+
+
+<section>
+
+<header>
+  <div class="header content-size">
+      <h2>
+        Button
+
+        
+      </h2>
+
+      
+      
+          <div class="class-description"><p>Container based component that gives us a starting point for UI buttons.
+It composes a view rather than extends one, this means we can easily make any pixi container a button!</p></div>
+      
+  </div>
+</header>
+
+<article class="content-size">
+    <div class="container-overview">
+        
+        
+
+        
+<dl class="details">
+    
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code> ```
+ const spriteButton = new Button({
+     view: new PixiSprite(Texture.from(`button.png`)),
+     hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
+     pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
+     disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
+     textView: new Text(text, { fill: 0xFFFFFF }),
+ });
 
-    <section>
-        <article class="readme content-size"><div align="center">
-    <h1>PIXI-UI</h1>
-    <h3>It is a library that contains commonly used UI components, that are extensible to allow them to be used in any project</h3>
-</div>
-<p>Here are some useful resources:</p>
-<ul>
-<li><a href="https://pixijs.io/ui/">Full docs</a></li>
-<li><a href="https://github.com/pixijs/ui">Github Repo</a></li>
-<li><a href="https://pixijs.io/ui/storybook/">Storybook</a></li>
-</ul>
-<h2>Install</h2>
-<pre><code class="hljs language-sh">npm install @pixijs/ui
-</code></pre>
-<p>There is no default export. The correct way to import pixi-ui is:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">Layout</span>, <span class="hljs-title class_">ScrollBox</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@pixijs/ui&#x27;</span>;
-</code></pre>
-<p>To use any of the components you can go to it's page and copypaste the example code to your project.</p>
+ const graphicsButton = new Button({
+     view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
+     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
+     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
+     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
+     textView: new Text(text, { fill: 0xFFFFFF }),
+     padding: 10,
+     textOffset: { x: 10, y: 1 },
+ });
+
+ ```</code></pre>
+
+        
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+          
+
+            <li>Container</li>
+          
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </article>
-    </section>
 
-
+</section>
 
 
 
