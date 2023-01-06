@@ -25,6 +25,9 @@ export const Single = ({
     showValue,
 }: any) =>
 {
+    // TODO: We should update the components to work with the new move events
+    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
+
     const view = new Container();
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];

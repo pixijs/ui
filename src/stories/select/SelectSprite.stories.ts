@@ -24,6 +24,9 @@ export const Sprite = ({
     onSelect,
 }: any) =>
 {
+    // TODO: We should update the components to work with the new move events
+    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
+
     const view = new Container();
 
     const assets = [`select_closed.png`, `select_open.png`];

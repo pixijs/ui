@@ -43,6 +43,9 @@ export const Single = ({
     showValue,
 }: any) =>
 {
+    // TODO: We should update the components to work with the new move events
+    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
+
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));

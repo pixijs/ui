@@ -24,6 +24,9 @@ export const Sprite = ({
     onPress,
 }: any) =>
 {
+    // TODO: We should update the components to work with the new move events
+    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
+
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();

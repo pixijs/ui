@@ -5,6 +5,7 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
+import { removeHitBox } from './utils/helpers/hitbox';
 
 import type { DragObject } from './utils/HelpTypes';
 
@@ -245,8 +246,9 @@ export class DoubleSlider extends Container
             .on('pointerupoutside', onDragEnd2, this);
 
         this.bg.on('pointerdown', onSetByClick, this);
-
         this.on('pointerupoutside', onDragEnd1, this);
+
+        removeHitBox(this.fill, this.slider1Text, this.slider2Text);
     }
 
     private onSetByClick(event: FederatedPointerEvent)

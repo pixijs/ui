@@ -1,8 +1,13 @@
-import type { InteractionEvent, ITextStyle, TextStyle } from 'pixi.js';
-import { Container, Graphics, Point, Sprite, Text, Texture } from 'pixi.js';
+import { Point, Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { ITextStyle, Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
+import { removeHitBox } from './utils/helpers/hitbox';
 
-import type { DragObject } from './utils';
+import type { DragObject } from './utils/HelpTypes';
 
 export type SliderOptions = {
     bg: Container | string;
@@ -50,7 +55,6 @@ export type SliderOptions = {
  * ```
  */
 // TODO: implement vertical slider
-
 export class Slider extends Container
 {
     protected readonly bg: Container;
@@ -60,20 +64,19 @@ export class Slider extends Container
     protected readonly valueText?: Text;
 
     private dragging = 0;
+    protected readonly options: SliderOptions;
 
     public percent = 100;
     public value = 0;
 
     public onChange: Signal<(value: number) => void> = new Signal();
 
-    constructor(protected readonly options: SliderOptions)
+    constructor(options: SliderOptions)
     {
         super();
 
-        const bg
-            = typeof options.bg === 'string'
-                ? new Sprite(Texture.from(options.bg))
-                : options.bg;
+        this.options = options;
+        const bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
 
         this.bg = new Container();
         this.bg.addChild(bg);
@@ -82,13 +85,9 @@ export class Slider extends Container
 
         if (options.fill)
         {
-            const fill
-                = typeof options.fill === 'string'
-                    ? new Sprite(Texture.from(options.fill))
-                    : options.fill;
+            const fill = typeof options.fill === 'string' ? new Sprite(Texture.from(options.fill)) : options.fill;
 
             this.fill = new Container();
-
             this.fill.addChild(fill);
 
             const offsetX = options.fillOffset?.x ?? 0;
@@ -104,10 +103,7 @@ export class Slider extends Container
             this.addChild(this.fill);
         }
 
-        const slider
-            = typeof options.slider === 'string'
-                ? new Sprite(Texture.from(options.slider))
-                : options.slider;
+        const slider = typeof options.slider === 'string' ? new Sprite(Texture.from(options.slider)) : options.slider;
 
         slider.x = slider.width / 2;
 
@@ -134,9 +130,7 @@ export class Slider extends Container
         }
 
         this.makeScrollable();
-
         this.validateSettings();
-
         this.update();
     }
 
@@ -186,19 +180,16 @@ export class Slider extends Container
             .on('pointermove', onDragMove, this)
             .on('pointerup', onDragEnd, this)
             .on('pointerupoutside', onDragEnd, this);
-
         this.bg.on('pointerdown', onSetByClick, this);
-
         this.on('pointerupoutside', onDragEnd, this);
+
+        removeHitBox(this.fill, this.valueText);
     }
 
-    protected onSetByClick(event: InteractionEvent)
+    protected onSetByClick(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
-
-        const data = event.data;
-
-        let pos = data.getLocalPosition(obj.parent).x - (this.slider.width / 2);
+        let pos = obj.parent.worldTransform.applyInverse(event.global).x - (this.slider.width / 2);
 
         if (pos < 0)
         {
@@ -218,31 +209,29 @@ export class Slider extends Container
         }
 
         this.percent = Math.round((pos / maxPos) * 100);
-        this.value
-            = this.options.min
-            + Math.round(
-                ((this.options.max - this.options.min) / 100) * this.percent,
-            );
+        this.value = this.options.min + Math.round(
+            ((this.options.max - this.options.min) / 100) * this.percent,
+        );
 
         this.update();
 
         this.onChange?.emit(this.value);
     }
 
-    private onDragStart(event: InteractionEvent)
+    private onDragStart(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
-        obj.dragData = event.data;
+        obj.dragData = event;
         this.dragging = 1;
-        obj.dragPointerStart = event.data.getLocalPosition(obj.parent);
+        obj.dragPointerStart = obj.parent.worldTransform.applyInverse(event.global);
         obj.dragObjStart = new Point();
         obj.dragObjStart.copyFrom(obj.position);
         obj.dragGlobalStart = new Point();
         obj.dragGlobalStart.copyFrom(event.data.global);
     }
 
-    private onDragMove(event: InteractionEvent)
+    private onDragMove(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
@@ -256,11 +245,7 @@ export class Slider extends Container
         if (this.dragging === 1)
         {
             // click or drag?
-            if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x)
-                    + Math.abs(data.global.y - obj.dragGlobalStart?.y)
-                >= 3
-            )
+            if (Math.abs(data.global.x - obj.dragGlobalStart?.x) + Math.abs(data.global.y - obj.dragGlobalStart?.y) >= 3)
             {
                 // DRAG
                 this.dragging = 2;
@@ -269,11 +254,8 @@ export class Slider extends Container
 
         if (this.dragging === 2)
         {
-            const dragPointerEnd = data.getLocalPosition(obj.parent);
-
-            let pos
-                = obj.dragObjStart.x
-                + (dragPointerEnd.x - obj.dragPointerStart.x);
+            const dragPointerEnd = obj.parent.worldTransform.applyInverse(data.global);
+            let pos = obj.dragObjStart.x + (dragPointerEnd.x - obj.dragPointerStart.x);
 
             if (pos < 0)
             {
@@ -288,12 +270,9 @@ export class Slider extends Container
             }
 
             this.percent = Math.round((pos / maxPos) * 100);
-            this.value
-                = this.options.min
-                + Math.round(
-                    ((this.options.max - this.options.min) / 100)
-                        * this.percent,
-                );
+            this.value = this.options.min + Math.round(
+                ((this.options.max - this.options.min) / 100) * this.percent,
+            );
 
             this.update();
         }
@@ -313,8 +292,7 @@ export class Slider extends Container
 
     protected update(pos?: number)
     {
-        const position
-            = pos ?? ((this.bg.width - this.slider.width) / 100) * this.percent;
+        const position = pos ?? ((this.bg.width - this.slider.width) / 100) * this.percent;
 
         this.slider.x = position;
 
@@ -342,10 +320,8 @@ export class Slider extends Container
             const sliderPosX = this.slider.x + (this.slider.width / 2);
             const sliderPosY = this.slider.y;
 
-            this.valueText.x
-                = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.valueText.y
-                = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.valueText.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.valueText.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onChange?.emit(this.value);
