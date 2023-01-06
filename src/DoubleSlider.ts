@@ -1,8 +1,12 @@
-import type { InteractionEvent, ITextStyle, TextStyle } from 'pixi.js';
-import { Container, Graphics, Point, Sprite, Text, Texture } from 'pixi.js';
+import { Point, Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { ITextStyle, Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
-import type { DragObject } from './utils';
+import type { DragObject } from './utils/HelpTypes';
 
 export type DoubleSliderOptions = {
     bg: Container | string;
@@ -93,27 +97,22 @@ export class DoubleSlider extends Container
     public onChange: Signal<(value1: number, value2: number) => void>
         = new Signal();
 
-    constructor(private readonly options: DoubleSliderOptions)
+    private readonly options: DoubleSliderOptions;
+
+    constructor(options: DoubleSliderOptions)
     {
         super();
 
-        const bg
-            = typeof options.bg === 'string'
-                ? new Sprite(Texture.from(options.bg))
-                : options.bg;
+        this.options = options;
+        const bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
 
         this.bg = new Container();
-
         this.bg.addChild(bg);
-
         this.addChild(this.bg);
 
         if (options.fill)
         {
-            const fill
-                = typeof options.fill === 'string'
-                    ? new Sprite(Texture.from(options.fill))
-                    : options.fill;
+            const fill = typeof options.fill === 'string' ? new Sprite(Texture.from(options.fill)) : options.fill;
 
             this.fill = new Container();
             this.fill.addChild(fill);
@@ -131,10 +130,7 @@ export class DoubleSlider extends Container
             this.addChild(this.fill);
         }
 
-        const slider1
-            = typeof options.slider1 === 'string'
-                ? new Sprite(Texture.from(options.slider1))
-                : options.slider1;
+        const slider1 = typeof options.slider1 === 'string' ? new Sprite(Texture.from(options.slider1)) : options.slider1;
 
         if (slider1 instanceof Sprite)
         {
@@ -146,10 +142,7 @@ export class DoubleSlider extends Container
         this.slider1 = new Container();
         this.slider1.addChild(slider1);
         this.slider1.y = this.bg.height / 2;
-        const slider2
-            = typeof options.slider2 === 'string'
-                ? new Sprite(Texture.from(options.slider2))
-                : options.slider2;
+        const slider2 = typeof options.slider2 === 'string' ? new Sprite(Texture.from(options.slider2)) : options.slider2;
 
         if (slider2 instanceof Sprite)
         {
@@ -237,15 +230,7 @@ export class DoubleSlider extends Container
         this.slider2.interactive = true;
         this.bg.interactive = true;
 
-        const {
-            onDragStart1,
-            onDragMove1,
-            onDragEnd1,
-            onSetByClick,
-            onDragStart2,
-            onDragMove2,
-            onDragEnd2,
-        } = this;
+        const { onDragStart1, onDragMove1, onDragEnd1, onSetByClick, onDragStart2, onDragMove2, onDragEnd2 } = this;
 
         this.slider1
             .on('pointerdown', onDragStart1, this)
@@ -264,13 +249,11 @@ export class DoubleSlider extends Container
         this.on('pointerupoutside', onDragEnd1, this);
     }
 
-    private onSetByClick(event: InteractionEvent)
+    private onSetByClick(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
-        const data = event.data;
-
-        let pos = data.getLocalPosition(obj.parent).x - (this.slider2.width / 2);
+        let pos = obj.parent.worldTransform.applyInverse(event.global).x - (this.slider2.width / 2);
 
         if (pos < 0)
         {
@@ -312,20 +295,20 @@ export class DoubleSlider extends Container
         this.onChange?.emit(this.value1, this.value2);
     }
 
-    private onDragStart1(event: InteractionEvent)
+    private onDragStart1(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
-        obj.dragData = event.data;
+        obj.dragData = event;
         this.dragging1 = 1;
-        obj.dragPointerStart = event.data.getLocalPosition(obj.parent);
+        obj.dragPointerStart = obj.parent.worldTransform.applyInverse(event.global);
         obj.dragObjStart = new Point();
         obj.dragObjStart.copyFrom(obj.position);
         obj.dragGlobalStart = new Point();
         obj.dragGlobalStart.copyFrom(event.data.global);
     }
 
-    private onDragMove1(event: InteractionEvent)
+    private onDragMove1(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
@@ -339,11 +322,7 @@ export class DoubleSlider extends Container
         if (this.dragging1 === 1)
         {
             // click or drag?
-            if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x)
-                    + Math.abs(data.global.y - obj.dragGlobalStart?.y)
-                >= 3
-            )
+            if (Math.abs(data.global.x - obj.dragGlobalStart?.x) + Math.abs(data.global.y - obj.dragGlobalStart?.y) >= 3)
             {
                 // DRAG
                 this.dragging1 = 2;
@@ -352,11 +331,9 @@ export class DoubleSlider extends Container
 
         if (this.dragging1 === 2)
         {
-            const dragPointerEnd = data.getLocalPosition(obj.parent);
+            const dragPointerEnd = obj.parent.worldTransform.applyInverse(data.global);
 
-            let pos
-                = obj.dragObjStart.x
-                + (dragPointerEnd.x - obj.dragPointerStart.x);
+            let pos = obj.dragObjStart.x + (dragPointerEnd.x - obj.dragPointerStart.x);
 
             if (pos < 0)
             {
@@ -386,11 +363,7 @@ export class DoubleSlider extends Container
         const maxPos = this.bg.width - this.slider1.width;
 
         this.percent1 = Math.round((pos / maxPos) * 100);
-        this.value1
-            = this.options.min
-            + Math.round(
-                ((this.options.max - this.options.min) / 100) * this.percent1,
-            );
+        this.value1 = this.options.min + Math.round(((this.options.max - this.options.min) / 100) * this.percent1);
     }
 
     private onDragEnd1()
@@ -405,20 +378,20 @@ export class DoubleSlider extends Container
         this.onChange?.emit(this.value1, this.value2);
     }
 
-    private onDragStart2(event: InteractionEvent)
+    private onDragStart2(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
         obj.dragData = event.data;
         this.dragging2 = 1;
-        obj.dragPointerStart = event.data.getLocalPosition(obj.parent);
+        obj.dragPointerStart = obj.parent.worldTransform.applyInverse(event.global);
         obj.dragObjStart = new Point();
         obj.dragObjStart.copyFrom(obj.position);
         obj.dragGlobalStart = new Point();
         obj.dragGlobalStart.copyFrom(event.data.global);
     }
 
-    private onDragMove2(event: InteractionEvent)
+    private onDragMove2(event: FederatedPointerEvent)
     {
         const obj = event.currentTarget as DragObject;
 
@@ -432,11 +405,7 @@ export class DoubleSlider extends Container
         if (this.dragging2 === 1)
         {
             // click or drag?
-            if (
-                Math.abs(data.global.x - obj.dragGlobalStart?.x)
-                    + Math.abs(data.global.y - obj.dragGlobalStart?.y)
-                >= 3
-            )
+            if (Math.abs(data.global.x - obj.dragGlobalStart?.x) + Math.abs(data.global.y - obj.dragGlobalStart?.y) >= 3)
             {
                 // DRAG
                 this.dragging2 = 2;
@@ -445,11 +414,9 @@ export class DoubleSlider extends Container
 
         if (this.dragging2 === 2)
         {
-            const dragPointerEnd = data.getLocalPosition(obj.parent);
+            const dragPointerEnd = obj.parent.worldTransform.applyInverse(data.global);
 
-            let pos
-                = obj.dragObjStart.x
-                + (dragPointerEnd.x - obj.dragPointerStart.x);
+            let pos = obj.dragObjStart.x + (dragPointerEnd.x - obj.dragPointerStart.x);
 
             if (pos < this.slider1.x)
             {
@@ -474,11 +441,7 @@ export class DoubleSlider extends Container
         const maxPos = this.bg.width - this.slider2.width;
 
         this.percent2 = Math.round((pos / maxPos) * 100);
-        this.value2
-            = this.options.min
-            + Math.round(
-                ((this.options.max - this.options.min) / 100) * this.percent2,
-            );
+        this.value2 = this.options.min + Math.round(((this.options.max - this.options.min) / 100) * this.percent2);
     }
 
     private onDragEnd2()
@@ -495,10 +458,8 @@ export class DoubleSlider extends Container
 
     private update()
     {
-        const position1
-            = ((this.bg.width - this.slider1.width) / 100) * this.percent1;
-        const position2
-            = ((this.bg.width - this.slider2.width) / 100) * this.percent2;
+        const position1 = ((this.bg.width - this.slider1.width) / 100) * this.percent1;
+        const position2 = ((this.bg.width - this.slider2.width) / 100) * this.percent2;
 
         this.slider1.x = position1;
         this.slider2.x = position2;
@@ -528,18 +489,14 @@ export class DoubleSlider extends Container
             const slider1PosX = this.slider1.x + (this.slider1.width / 2);
             const slider1PosY = this.slider1.y;
 
-            this.slider1Text.x
-                = slider1PosX + (this.options.valueTextOffset?.x ?? 0);
-            this.slider1Text.y
-                = slider1PosY + (this.options.valueTextOffset?.y ?? 0);
+            this.slider1Text.x = slider1PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider1Text.y = slider1PosY + (this.options.valueTextOffset?.y ?? 0);
 
             const slider2PosX = this.slider2.x + (this.slider2.width / 2);
             const slider2PosY = this.slider2.y;
 
-            this.slider2Text.x
-                = slider2PosX + (this.options.valueTextOffset?.x ?? 0);
-            this.slider2Text.y
-                = slider2PosY + (this.options.valueTextOffset?.y ?? 0);
+            this.slider2Text.x = slider2PosX + (this.options.valueTextOffset?.x ?? 0);
+            this.slider2Text.y = slider2PosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onChange?.emit(this.value1, this.value2);

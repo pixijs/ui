@@ -1,7 +1,10 @@
-import { Container, Sprite, Texture, Graphics as PixiGraphics } from 'pixi.js';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
 import { MaskedFrame } from '../../MaskedFrame';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {

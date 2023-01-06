@@ -1,5 +1,4 @@
-import { Point, Rectangle } from 'pixi.js';
-
+import { Point, Rectangle } from '@pixi/core';
 import { ConstrainEase, SlidingNumber } from './SlidingNumber';
 
 interface TrackpadOptions

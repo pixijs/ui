@@ -1,7 +1,7 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { MaskedFrame } from '../../MaskedFrame';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {

@@ -1,11 +1,12 @@
-import type { InteractionEvent } from 'pixi.js';
-import { Container, Graphics, Sprite, Texture } from 'pixi.js';
-
+import { Texture, Ticker } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
 import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
-import { Ticker } from 'pixi.js';
 
 export type ScrollBoxOptions = {
     type?: LayoutType;
@@ -65,17 +66,16 @@ export class ScrollBox extends Container
     };
 
     private _trackpad: Trackpad;
-
     private isDragging = 0;
-
     private childrenInteractiveStorage: boolean[] = [];
-
     private ticker = Ticker.shared;
+    private readonly options: ScrollBoxOptions;
 
-    constructor(private readonly options: ScrollBoxOptions)
+    constructor(options: ScrollBoxOptions)
     {
         super();
 
+        this.options = options;
         this.addBackground();
 
         this.__width = options.width | this.background.width;
@@ -201,8 +201,7 @@ export class ScrollBox extends Container
 
     public isItemVisible(item: Container): boolean
     {
-        const isVertical
-            = this.options.type === 'vertical' || !this.options.type;
+        const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
         const layout = this.layout;
 
@@ -212,8 +211,7 @@ export class ScrollBox extends Container
 
             if (
                 posY + item.height + this.options.vertPadding >= 0
-                && posY - this.options.vertPadding - this.options.elementsMargin
-                    <= this.options.height
+                && posY - this.options.vertPadding - this.options.elementsMargin <= this.options.height
             )
             {
                 isVisible = true;
@@ -239,10 +237,9 @@ export class ScrollBox extends Container
 
     private addBackground()
     {
-        this.background
-            = typeof this.options.background === 'string'
-                ? new Sprite(Texture.from(this.options.background))
-                : new Graphics();
+        this.background = typeof this.options.background === 'string'
+            ? new Sprite(Texture.from(this.options.background))
+            : new Graphics();
 
         this.addChild(this.background);
 
@@ -259,10 +256,10 @@ export class ScrollBox extends Container
 
     private makeScrollable()
     {
-        this.on('pointerdown', (e: InteractionEvent) =>
+        this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this.isDragging = 1;
-            this._trackpad.pointerDown(e.data.global);
+            this._trackpad.pointerDown(e.global);
         });
 
         this.on('pointerup', () =>
@@ -279,9 +276,9 @@ export class ScrollBox extends Container
             this.restoreChildrenInteractivity();
         });
 
-        this.on('pointermove', (e: InteractionEvent) =>
+        this.on('pointermove', (e: FederatedPointerEvent) =>
         {
-            this._trackpad.pointerMove(e.data.global);
+            this._trackpad.pointerMove(e.global);
 
             if (this.isDragging)
             {

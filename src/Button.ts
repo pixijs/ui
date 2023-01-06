@@ -1,13 +1,12 @@
+import { utils } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
+import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
 export interface ButtonOptions
 {
     view: Container;
-    accessible?: boolean;
-    accessibleTitle?: string;
-    tabIndex?: number;
     hoverView?: Container;
     pressedView?: Container;
     disabledView?: Container;
@@ -67,9 +66,6 @@ export class Button extends Container
         hoverView,
         pressedView,
         disabledView,
-        accessible,
-        accessibleTitle,
-        tabIndex,
         textView,
         padding,
         textOffset,
@@ -138,38 +134,34 @@ export class Button extends Container
         this.onOut = new Signal();
         this.onUpOut = new Signal();
 
-        this.accessible = accessible ?? true;
-        this.accessibleTitle = accessibleTitle ?? '';
-        this.tabIndex = tabIndex ?? 0;
-
-        this.on('pointerdown', (e: InteractionEvent) =>
+        this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this._isDown = true;
             this.onDown.emit(this, e);
         });
 
-        this.on('pointerup', (e: InteractionEvent) =>
+        this.on('pointerup', (e: FederatedPointerEvent) =>
         {
             this._processUp(e);
         });
 
-        this.on('pointerupoutside', (e: InteractionEvent) =>
+        this.on('pointerupoutside', (e: FederatedPointerEvent) =>
         {
             this._processUpOut(e);
         });
 
-        this.on('pointertap', (e: InteractionEvent) =>
+        this.on('pointertap', (e: FederatedPointerEvent) =>
         {
             this._isDown = false;
             this.onPress.emit(this, e);
         });
 
-        this.on('pointerover', (e: InteractionEvent) =>
+        this.on('pointerover', (e: FederatedPointerEvent) =>
         {
             this.onHover.emit(this, e);
         });
 
-        this.on('pointerout', (e: InteractionEvent) =>
+        this.on('pointerout', (e: FederatedPointerEvent) =>
         {
             this._processOut(e);
         });
@@ -227,17 +219,17 @@ export class Button extends Container
         this.enabled = true;
     }
 
-    public down(_e?: InteractionEvent): void
+    public down(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
 
-    public up(_e?: InteractionEvent): void
+    public up(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
 
-    public hover(_e?: InteractionEvent): void
+    public hover(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
@@ -251,8 +243,7 @@ export class Button extends Container
     {
         this._enabled = value;
         this.interactive = value;
-        this.buttonMode = value;
-        this.accessible = this.accessible && value;
+        this.cursor = value ? 'pointer' : 'default';
 
         if (this.disabledView)
         {
@@ -285,7 +276,7 @@ export class Button extends Container
         return this._shown;
     }
 
-    private _processUp(e?: InteractionEvent): void
+    private _processUp(e?: FederatedPointerEvent): void
     {
         if (this._isDown)
         {
@@ -294,7 +285,7 @@ export class Button extends Container
         this._isDown = false;
     }
 
-    private _processUpOut(e?: InteractionEvent): void
+    private _processUpOut(e?: FederatedPointerEvent): void
     {
         if (this._isDown)
         {
@@ -308,18 +299,18 @@ export class Button extends Container
         this._isDown = false;
     }
 
-    private _processOut(e?: InteractionEvent): void
+    private _processOut(e?: FederatedPointerEvent): void
     {
         this.onOut.emit(this, e);
         this._isDown = false;
     }
 
-    private _upOut(e?: InteractionEvent): void
+    private _upOut(e?: FederatedPointerEvent): void
     {
         this.up(e);
     }
 
-    private _out(e?: InteractionEvent): void
+    private _out(e?: FederatedPointerEvent): void
     {
         this.up(e);
     }

@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 
 export type LayoutType = 'horizontal' | 'vertical';
 
@@ -38,11 +38,13 @@ export class Layout extends Container
 
     public override readonly children: Container[] = [];
 
-    constructor(
-        private readonly options?: { type?: LayoutType } & LayoutOptions,
-    )
+    private readonly options?: { type?: LayoutType } & LayoutOptions;
+
+    constructor(options?: { type?: LayoutType } & LayoutOptions)
     {
         super();
+
+        this.options = options;
 
         if (options?.type)
         {

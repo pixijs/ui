@@ -1,7 +1,7 @@
-import { Graphics as PixiGraphics } from 'pixi.js';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 

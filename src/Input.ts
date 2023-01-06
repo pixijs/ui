@@ -1,12 +1,8 @@
-import {
-    Container,
-    Sprite,
-    Text,
-    TextStyle,
-    Texture,
-    Graphics,
-    utils,
-} from 'pixi.js';
+import { Texture, utils } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
 export type InputOptions = {
@@ -54,18 +50,17 @@ export class Input extends Container
     public readonly onChange: Signal<(text: string) => void>;
 
     private activation = false;
+    private readonly options: InputOptions;
 
     // TODO: make cursor blink
-    constructor(private readonly options: InputOptions)
+    constructor(options: InputOptions)
     {
         super();
 
-        this.bg
-            = typeof options.bg === 'string'
-                ? new Sprite(Texture.from(options.bg))
-                : options.bg;
-
-        this.bg.buttonMode = this.bg.interactive = true;
+        this.options = options;
+        this.bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
+        this.bg.cursor = 'text';
+        this.bg.interactive = true;
 
         const defaultTextStyle = {
             fill: 0x000000,
@@ -113,19 +108,16 @@ export class Input extends Container
 
         this.align();
 
-        this.interactive = this.buttonMode = true;
+        this.cursor = 'text';
+        this.interactive = true;
 
         this.on('pointertap', () => (this.activation = true));
 
         if (utils.isMobile.any)
         {
-            window.addEventListener('touchstart', () =>
-                this.handleActivation(),
-            );
+            window.addEventListener('touchstart', () => this.handleActivation());
 
-            let keyboard = document.getElementById(
-                'v-keyboard',
-            ) as HTMLInputElement;
+            let keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
 
             if (!keyboard)
             {
@@ -190,10 +182,7 @@ export class Input extends Container
             return;
         }
 
-        if (
-            this.options.maxLength
-            && this.value.length >= this.options.maxLength
-        )
+        if (this.options.maxLength && this.value.length >= this.options.maxLength)
         {
             return;
         }
@@ -223,9 +212,7 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            const keyboard = document.getElementById(
-                'v-keyboard',
-            ) as HTMLInputElement;
+            const keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
 
             keyboard.focus();
             keyboard.click();
@@ -275,15 +262,11 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x
-            = (this.bg.width * align)
-            + (align === 1 ? -this.padding : this.padding);
+        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
         this.inputField.y = this.bg.height / 2;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x
-            = (this.bg.width * align)
-            + (align === 1 ? -this.padding : this.padding);
+        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
         this.placeholder.y = this.bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
@@ -298,8 +281,7 @@ export class Input extends Container
     private getAlign(): 0 | 1 | 0.5
     {
         const maxWidth = this.bg.width * 0.95;
-        const isOverflowed
-            = this.inputField.width + (this.padding * 3) > maxWidth;
+        const isOverflowed = this.inputField.width + (this.padding * 3) > maxWidth;
 
         if (isOverflowed)
         {
@@ -330,6 +312,8 @@ export class Input extends Container
                 return this.inputField.x + (this.inputField.width * 0.5);
             case 1:
                 return this.inputField.x;
+            default:
+                return 0;
         }
     }
 

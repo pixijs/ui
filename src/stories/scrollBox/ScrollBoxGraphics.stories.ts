@@ -1,5 +1,7 @@
-import { Graphics as PixiGraphics, Text, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Container } from '@pixi/display';
+import { Text } from '@pixi/text';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
 import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';

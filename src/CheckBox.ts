@@ -1,5 +1,7 @@
-import type { ITextStyle, TextStyle } from 'pixi.js';
-import { Container, Rectangle, Sprite, Text, Texture } from 'pixi.js';
+import { Texture, Rectangle } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { TextStyle, Text, ITextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Switch } from './Switch';
 
@@ -35,15 +37,13 @@ export class CheckBox extends Switch
 
     constructor(options: CheckBoxOptions)
     {
-        const unchecked
-            = typeof options.style.unchecked === 'string'
-                ? new Sprite(Texture.from(options.style.unchecked))
-                : options.style.unchecked;
+        const unchecked = typeof options.style.unchecked === 'string'
+            ? new Sprite(Texture.from(options.style.unchecked))
+            : options.style.unchecked;
 
-        const checked
-            = typeof options.style.checked === 'string'
-                ? new Sprite(Texture.from(options.style.checked))
-                : options.style.checked;
+        const checked = typeof options.style.checked === 'string'
+            ? new Sprite(Texture.from(options.style.checked))
+            : options.style.checked;
 
         super([unchecked, checked], options.checked ? 1 : 0);
 

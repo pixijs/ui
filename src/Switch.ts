@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
 
@@ -18,11 +18,13 @@ import { Button } from './Button';
 export class Switch extends Container
 {
     public view = new Container();
+    public views: Container[] = [];
+    public activeViewID = 0;
     private button: Button;
 
     public onChange: Signal<(state: number) => void>;
 
-    constructor(public views: Container[], public activeViewID = 0)
+    constructor(views: Container[], activeViewID = 0)
     {
         super();
 
@@ -32,6 +34,9 @@ export class Switch extends Container
 
             state.visible = id === this.activeViewID;
         });
+
+        this.views = views;
+        this.activeViewID = activeViewID;
 
         this.button = new Button({ view: this.view });
 
@@ -54,7 +59,6 @@ export class Switch extends Container
     public switch(id?: number): void
     {
         this.activeView.visible = false;
-
         this.activeViewID = id === undefined ? this.activeViewID + 1 : id;
 
         if (this.activeViewID > this.views.length - 1)

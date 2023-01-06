@@ -1,4 +1,7 @@
-import { Container, Graphics, Texture, Sprite } from 'pixi.js';
+import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
 
 export type MaskedFrameOptions = {
     target: string | Container;
@@ -35,16 +38,9 @@ export class MaskedFrame extends Container
     {
         super();
 
-        this.target
-            = typeof target === 'string'
-                ? new Sprite(Texture.from(target))
-                : target;
-
-        this.targetMask
-            = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask;
-
+        this.target = typeof target === 'string' ? new Sprite(Texture.from(target)) : target;
+        this.targetMask = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask;
         this.target.addChild(this.targetMask);
-
         this.target.mask = this.targetMask;
 
         if (borderWidth)
@@ -61,18 +57,13 @@ export class MaskedFrame extends Container
             this.target.x = borderWidth;
             this.target.y = borderWidth;
 
-            const borderMask
-                = typeof mask === 'string'
-                    ? new Sprite(Texture.from(mask))
-                    : mask.clone();
+            const borderMask = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask.clone();
 
             borderMask.width += borderWidth * 2;
             borderMask.height += borderWidth * 2;
 
             this.border.mask = borderMask;
-
             this.border.addChild(borderMask);
-
             this.addChild(this.border);
         }
 

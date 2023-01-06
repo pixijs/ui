@@ -1,10 +1,6 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 
-export function centerElement(
-    view: Container,
-    horPos?: number,
-    verPos?: number,
-)
+export function centerElement(view: Container, horPos?: number, verPos?: number)
 {
     const canvas = document.getElementById('storybook-root');
 

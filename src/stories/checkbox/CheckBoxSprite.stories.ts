@@ -1,10 +1,11 @@
-import { Sprite as PixiSprite, Texture } from 'pixi.js';
+import { Sprite as PixiSprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Layout } from '../../Layout';
 import { CheckBox } from '../../CheckBox';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {

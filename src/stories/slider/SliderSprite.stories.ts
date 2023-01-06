@@ -1,9 +1,9 @@
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../../utils/helpers/loader';
-import { Container } from 'pixi.js';
+import { preloadAssets } from '../utils/loader';
+import { Container } from '@pixi/display';
 
 const args = {
     fontColor: '#FFFFFF',

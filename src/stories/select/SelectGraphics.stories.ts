@@ -1,8 +1,11 @@
-import { Graphics as PixiGraphics, Sprite, Texture, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Container } from '@pixi/display';
+import { Texture } from '@pixi/core';
+import { Sprite } from '@pixi/sprite';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 

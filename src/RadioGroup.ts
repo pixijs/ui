@@ -1,5 +1,8 @@
-import { ITextStyle, TextStyle, Texture } from 'pixi.js';
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { ITextStyle, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { CheckBox } from './CheckBox';
 import { Layout, LayoutType } from './Layout';
@@ -61,10 +64,13 @@ export class RadioGroup extends Container
 
     public view: Layout;
 
-    constructor(private readonly options: RadioBoxOptions)
+    private readonly options: RadioBoxOptions;
+
+    constructor(options: RadioBoxOptions)
     {
         super();
 
+        this.options = options;
         this.value = options.items[options.selectedItem];
 
         this.selected = options.selectedItem;
@@ -76,15 +82,13 @@ export class RadioGroup extends Container
 
         options.items.forEach((item, id) =>
         {
-            const unchecked
-                = typeof options.style.bg === 'string'
-                    ? new Sprite(Texture.from(options.style.bg))
-                    : this.getGraphics(options.style.bg);
+            const unchecked = typeof options.style.bg === 'string'
+                ? new Sprite(Texture.from(options.style.bg))
+                : this.getGraphics(options.style.bg);
 
-            const checked
-                = typeof options.style.checked === 'string'
-                    ? new Sprite(Texture.from(options.style.checked))
-                    : this.getGraphics(options.style.checked);
+            const checked = typeof options.style.checked === 'string'
+                ? new Sprite(Texture.from(options.style.checked))
+                : this.getGraphics(options.style.checked);
 
             const checkBox = new CheckBox({
                 text: item,

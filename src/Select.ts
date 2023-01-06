@@ -1,7 +1,11 @@
+import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { Text, TextStyle } from '@pixi/text';
+import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
-import { Signal } from 'typed-signals';
-import { Container, TextStyle, Sprite, Texture, Text, Graphics } from 'pixi.js';
 
 type Offset = {
     y: number;
@@ -98,19 +102,9 @@ export class Select extends Container
     {
         super();
 
-        this.closedBG
-            = typeof closedBG === 'string'
-                ? new Sprite(Texture.from(closedBG))
-                : closedBG;
-
-        this.openBG
-            = typeof openBG === 'string'
-                ? new Sprite(Texture.from(openBG))
-                : openBG;
-
+        this.closedBG = typeof closedBG === 'string' ? new Sprite(Texture.from(closedBG)) : closedBG;
+        this.openBG = typeof openBG === 'string' ? new Sprite(Texture.from(openBG)) : openBG;
         this.openBG.visible = false;
-
-        // this.addChild(this.closedBG);
 
         this.addChild(this.closedBG, this.openBG);
 
@@ -136,10 +130,8 @@ export class Select extends Container
         this.addChild(selectedTextButton);
 
         this.selectedText.anchor.set(0.5);
-        this.selectedText.x
-            = (this.closedBG.width / 2) + (selectedTextOffset?.x || 0);
-        this.selectedText.y
-            = (this.closedBG.height / 2) + (selectedTextOffset?.y || 0);
+        this.selectedText.x = (this.closedBG.width / 2) + (selectedTextOffset?.x || 0);
+        this.selectedText.y = (this.closedBG.height / 2) + (selectedTextOffset?.y || 0);
 
         this.scrollBox = new ScrollBox({
             type: 'vertical',

@@ -1,7 +1,8 @@
-import { Graphics as PixiGraphics, Text } from 'pixi.js';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 

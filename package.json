@@ -46,7 +46,7 @@
   },
   "lint-staged": {
     "*.{ts,js,mjs}": [
-      "eslint --cache --fix --max-warnings 0"
+      "npm run lint --"
     ]
   },
   "devDependencies": {
@@ -91,5 +91,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "typed-signals": "^2.5.0"
   }
 }

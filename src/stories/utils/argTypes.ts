@@ -163,13 +163,7 @@ function getArgType(type: string)
     {
         if (type.toLowerCase().indexOf(control) > -1)
         {
-            // const keys = type.split(control);
-
-            // if (options[keys[0]]) {
-            //     argTypes[key].options = options[keys[0]];
-            // }
-
-            // @ts-ignore
+            // @ts-expect-error - we are lazy
             return controls[control];
         }
     }
@@ -188,7 +182,7 @@ export const getDefaultArgs = (args: Types) =>
             case 'object':
                 if (Array.isArray(args[key]))
                 {
-                    // @ts-ignore
+                    // @ts-expect-error - we are lazy
                     exportArgs[key] = args[key][0] as any;
                 }
                 break;
