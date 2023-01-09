@@ -8,6 +8,7 @@ import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -35,9 +36,6 @@ export const Graphics = ({
     onSelect,
 }: any) =>
 {
-    // TODO: We should update the components to work with the new move events
-    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -84,6 +82,7 @@ export const Graphics = ({
         view,
         resize: () => centerElement(view, 0.5, 0),
         update: () => select.update(),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

@@ -4,6 +4,7 @@ import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     meshColor: '#35b600',
@@ -43,9 +44,6 @@ export const Single = ({
     showValue,
 }: any) =>
 {
-    // TODO: We should update the components to work with the new move events
-    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -105,7 +103,11 @@ export const Single = ({
 
     view.addChild(singleSlider);
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+    };
 };
 
 export default {

@@ -9,6 +9,7 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     fontColor: '#000000',
@@ -24,9 +25,6 @@ export const Sprite = ({
     onPress,
 }: any) =>
 {
-    // TODO: We should update the components to work with the new move events
-    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
-
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();
@@ -63,6 +61,7 @@ export const Sprite = ({
     return {
         view,
         resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

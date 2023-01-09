@@ -7,7 +7,7 @@ import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
-import { FederatedPointerEvent } from '@pixi/events';
+import type { Application } from '@pixi/app';
 
 const args = {
     type: ['vertical', 'horizontal'],
@@ -39,39 +39,7 @@ export const Graphics = ({
     onPress,
 }: any) =>
 {
-    // TODO: We should update the components to work with the new move events
-    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Container();
-
-    // const scroll = new Container();
-
-    // scroll.interactive = true;
-    // view.addChild(scroll);
-
-    // const bg = new PixiGraphics()
-    //     .beginFill(0x000000)
-    //     .drawRect(0, 0, width, height);
-    // const elementA = new PixiGraphics()
-    //     .beginFill(0xff0000)
-    //     .drawRect(0, 0, 50, 50);
-    // const elementB = new PixiGraphics()
-    //     .beginFill(0x00ff00)
-    //     .drawRect(40, 0, 50, 50);
-
-    // const mask = new PixiGraphics()
-    //     .beginFill(0x000000)
-    //     .drawRect(0, 0, width - 50, height);
-
-    // scroll.mask = mask;
-    // scroll.addChild(mask);
-
-    // elementA.interactive = elementB.interactive = true;
-    // elementA.on('pointerdown', () => console.log('elementA pointerdown'));
-    // elementB.on('pointerdown', () => console.log('elementB pointerdown'));
-    // scroll.on('pointerdown', () => console.log('scroll pointerdown'));
-
-    // scroll.addChild(bg, elementA, elementB);
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
     fontColor = Number(fontColor.replace('#', '0x'));
@@ -113,11 +81,10 @@ export const Graphics = ({
 
     view.addChild(scrollBox);
 
-    console.log('scrollBox', scrollBox);
-
     return {
         view,
         resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

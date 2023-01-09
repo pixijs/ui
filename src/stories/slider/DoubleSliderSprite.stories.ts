@@ -4,6 +4,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
+import type { Application } from '@pixi/app';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -27,11 +28,7 @@ export const Double = ({
     onChange,
 }: any) =>
 {
-    // TODO: We should update the components to work with the new move events
-    window.PIXI.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Container();
-
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
     preloadAssets(assets).then(() =>
@@ -70,7 +67,11 @@ export const Double = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+    };
 };
 
 export default {

@@ -30,14 +30,15 @@
     "clean": "extension-scripts clean",
     "deploy": "extension-scripts deploy",
     "docs": "extension-scripts docs && npm run storybook:build",
+    "postinstall": "patch-package",
     "lint": "extension-scripts lint",
+    "prepare": "husky install",
     "release": "extension-scripts release",
     "serve": "extension-scripts serve",
-    "types": "extension-scripts types",
-    "watch": "extension-scripts watch",
-    "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build --output-dir docs/storybook"
+    "storybook:build": "storybook build --output-dir docs/storybook",
+    "types": "extension-scripts types",
+    "watch": "extension-scripts watch"
   },
   "husky": {
     "hooks": {
@@ -49,6 +50,9 @@
       "npm run lint --"
     ]
   },
+  "dependencies": {
+    "typed-signals": "^2.5.0"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
@@ -56,7 +60,7 @@
     "@pixi/display": "^7.0.0",
     "@pixi/eslint-config": "^4.0.1",
     "@pixi/events": "^7.0.0",
-    "@pixi/extension-scripts": "latest",
+    "@pixi/extension-scripts": "^1.3.0",
     "@pixi/graphics": "^7.0.0",
     "@pixi/sprite": "^7.0.0",
     "@pixi/storybook-renderer": "^0.0.3",
@@ -77,6 +81,7 @@
     "jest": "^26.6.3",
     "jest-raw-loader": "^1.0.1",
     "lint-staged": "^13.1.0",
+    "patch-package": "^6.5.1",
     "storybook": "7.0.0-beta.13",
     "ts-jest": "^26.5.6",
     "typescript": "^4.9.4"
@@ -91,8 +96,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "typed-signals": "^2.5.0"
   }
 }
