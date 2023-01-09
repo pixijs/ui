@@ -5,6 +5,7 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
+import { removeHitBox } from './utils/helpers/hitbox';
 import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
@@ -288,11 +289,7 @@ export class ScrollBox extends Container
 
         const { onMouseHover, onMouseOut } = this;
 
-        this.on('mouseover', onMouseHover, this).on(
-            'mouseout',
-            onMouseOut,
-            this,
-        );
+        this.on('mouseover', onMouseHover, this).on('mouseout', onMouseOut, this);
     }
 
     private disableChildrenInteractivity()
@@ -376,6 +373,7 @@ export class ScrollBox extends Container
                     this.__height,
                     this.options.radius | 0,
                 );
+            removeHitBox(this.borderMask);
 
             if (
                 this.background instanceof Graphics
