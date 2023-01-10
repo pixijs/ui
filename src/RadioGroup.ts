@@ -55,13 +55,14 @@ export class RadioGroup extends Container
 {
     private items: CheckBox[] = [];
 
+    /** TODO */
     public value: string;
+    /** TODO */
     public selected: number;
 
-    public onChange: Signal<
-    (selectedItemID: number, selectedVal: string) => void
-    >;
-
+    /** TODO */
+    public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
+    /** TODO */
     public view: Layout;
 
     private readonly options: RadioBoxOptions;
@@ -154,6 +155,10 @@ export class RadioGroup extends Container
         return graphics;
     }
 
+    /**
+     * TODO
+     * @param id
+     */
     public selectItem(id: number)
     {
         this.selected = id;

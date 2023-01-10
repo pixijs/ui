@@ -90,13 +90,17 @@ export class DoubleSlider extends Container
     private dragging1 = 0;
     private dragging2 = 0;
 
+    /** TODO */
     public percent1 = 0;
+    /** TODO */
     public percent2 = 100;
+    /** TODO */
     public value1 = 0;
+    /** TODO */
     public value2 = 0;
 
-    public onChange: Signal<(value1: number, value2: number) => void>
-        = new Signal();
+    /** TODO */
+    public onChange: Signal<(value1: number, value2: number) => void> = new Signal();
 
     private readonly options: DoubleSliderOptions;
 

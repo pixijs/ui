@@ -142,6 +142,10 @@ export class ScrollBox extends Container
         // do nothing we manage this in addItem
     }
 
+    /**
+     * TODO
+     * @param {...any} items
+     */
     public addItem<T extends Container[]>(...items: T): T[0]
     {
         if (items.length > 1)
@@ -186,6 +190,10 @@ export class ScrollBox extends Container
         return items[0];
     }
 
+    /**
+     * TODO
+     * @param itemID
+     */
     public removeItem(itemID: number)
     {
         const child = this.layout.children[itemID];
@@ -200,6 +208,10 @@ export class ScrollBox extends Container
         this.resize();
     }
 
+    /**
+     * TODO
+     * @param item
+     */
     public isItemVisible(item: Container): boolean
     {
         const isVertical = this.options.type === 'vertical' || !this.options.type;
@@ -231,6 +243,7 @@ export class ScrollBox extends Container
         return isVisible;
     }
 
+    /** TODO */
     public get items(): Container[] | []
     {
         return this.layout?.children ?? [];
@@ -339,6 +352,7 @@ export class ScrollBox extends Container
         return this.layout.width + (this.options.horPadding * 2);
     }
 
+    /** TODO */
     public resize(): void
     {
         this.renderAllItems();
@@ -510,6 +524,7 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
     }
 
+    /** TODO */
     public scrollBottom()
     {
         if (!this.interactive)
@@ -522,12 +537,14 @@ export class ScrollBox extends Container
         }
     }
 
+    /** TODO */
     public scrollTop()
     {
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
 
+    /** TODO */
     public renderAllItems()
     {
         if (this.options.disableDynamicRendering)
@@ -541,6 +558,7 @@ export class ScrollBox extends Container
         });
     }
 
+    /** TODO */
     public stopRenderHiddenItems()
     {
         if (this.options.disableDynamicRendering)
@@ -554,6 +572,10 @@ export class ScrollBox extends Container
         });
     }
 
+    /**
+     * TODO
+     * @param elementID
+     */
     public scrollTo(elementID: number)
     {
         if (!this.interactive)
@@ -585,16 +607,19 @@ export class ScrollBox extends Container
                 : 0;
     }
 
+    /** TODO */
     public override get height(): number
     {
         return this.__height;
     }
 
+    /** TODO */
     public override get width(): number
     {
         return this.__width;
     }
 
+    /** TODO */
     public update()
     {
         this._trackpad.update();

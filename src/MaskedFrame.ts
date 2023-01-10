@@ -26,7 +26,9 @@ export class MaskedFrame extends Container
 {
     // private readonly borderMask: Graphics;
     private border?: Graphics;
+    /** TODO */
     public target: Container;
+    /** TODO */
     public targetMask: Container;
 
     constructor({
@@ -70,6 +72,7 @@ export class MaskedFrame extends Container
         this.addChild(this.target);
     }
 
+    /** TODO */
     public showBorder()
     {
         if (!this.border) return;
@@ -77,6 +80,7 @@ export class MaskedFrame extends Container
         this.border.visible = true;
     }
 
+    /** TODO */
     public hideBorder()
     {
         if (!this.border) return;

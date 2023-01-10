@@ -26,19 +26,20 @@
     "dist/"
   ],
   "scripts": {
-    "build": "extension-scripts build",
-    "clean": "extension-scripts clean",
-    "deploy": "extension-scripts deploy",
-    "docs": "extension-scripts docs && npm run storybook:build",
+    "build": "xs build",
+    "clean": "xs clean",
+    "deploy": "xs deploy",
+    "docs": "xs docs && npm run storybook:build",
     "postinstall": "patch-package",
-    "lint": "extension-scripts lint",
+    "lint": "xs lint",
+    "lint:fix": "xs lint --fix",
     "prepare": "husky install",
-    "release": "extension-scripts release",
-    "serve": "extension-scripts serve",
+    "release": "xs release",
+    "serve": "xs serve",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build --output-dir docs/storybook",
-    "types": "extension-scripts types",
-    "watch": "extension-scripts watch"
+    "types": "xs types",
+    "watch": "xs watch"
   },
   "husky": {
     "hooks": {
@@ -47,7 +48,7 @@
   },
   "lint-staged": {
     "*.{ts,js,mjs}": [
-      "npm run lint --"
+      "npm run lint:fix --"
     ]
   },
   "dependencies": {

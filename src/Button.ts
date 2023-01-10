@@ -42,17 +42,28 @@ export interface ButtonOptions
  */
 export class Button extends Container
 {
+    /** TODO */
     public defaultView: Container;
+    /** TODO */
     public hoverView: Container;
+    /** TODO */
     public pressedView: Container;
+    /** TODO */
     public disabledView: Container;
+    /** TODO */
     public text: Text;
 
+    /** TODO */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** TODO */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** TODO */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** TODO */
     public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** TODO */
     public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** TODO */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     private _isDown: boolean;
@@ -219,26 +230,46 @@ export class Button extends Container
         this.enabled = true;
     }
 
+    /**
+     * TODO
+     * @param _e
+     */
     public down(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
 
+    /**
+     * TODO
+     * @param _e
+     */
     public up(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
 
+    /**
+     * TODO
+     * @param _e
+     */
     public hover(_e?: FederatedPointerEvent): void
     {
         // override me!
     }
 
+    /** TODO */
+    public getText(): string
+    {
+        return this.text.text;
+    }
+
+    /** TODO */
     get isDown(): boolean
     {
         return this._isDown;
     }
 
+    /** TODO */
     set enabled(value: boolean)
     {
         this._enabled = value;
@@ -256,11 +287,13 @@ export class Button extends Container
         }
     }
 
+    /** TODO */
     get enabled(): boolean
     {
         return this._enabled;
     }
 
+    /** TODO */
     set shown(value: boolean)
     {
         this._shown = value;
@@ -271,6 +304,7 @@ export class Button extends Container
         }
     }
 
+    /** TODO */
     get shown(): boolean
     {
         return this._shown;
@@ -313,10 +347,5 @@ export class Button extends Container
     private _out(e?: FederatedPointerEvent): void
     {
         this.up(e);
-    }
-
-    public getText(): string
-    {
-        return this.text.text;
     }
 }
