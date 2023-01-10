@@ -1,10 +1,14 @@
-import { Graphics as PixiGraphics, Sprite, Texture, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Container } from '@pixi/display';
+import { Texture } from '@pixi/core';
+import { Sprite } from '@pixi/sprite';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -30,7 +34,8 @@ export const Graphics = ({
     dropDownBackgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -66,7 +71,8 @@ export const Graphics = ({
 
     select.y = 10;
 
-    select.onSelect.connect((_, text) => {
+    select.onSelect.connect((_, text) =>
+    {
         onSelect(select.value, text);
     });
 
@@ -76,6 +82,7 @@ export const Graphics = ({
         view,
         resize: () => centerElement(view, 0.5, 0),
         update: () => select.update(),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 
@@ -84,12 +91,14 @@ function getClosedBG(
     width: number,
     height: number,
     radius: number,
-) {
+)
+{
     const closedBG = new PixiGraphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height, radius);
 
-    preloadAssets(['arrow_down.png']).then(() => {
+    preloadAssets(['arrow_down.png']).then(() =>
+    {
         const arrowDown = new Sprite(Texture.from('arrow_down.png'));
 
         arrowDown.anchor.set(0.5);
@@ -106,12 +115,14 @@ function getOpenBG(
     width: number,
     height: number,
     radius: number,
-) {
+)
+{
     const openBG = new PixiGraphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height * 6, radius);
 
-    preloadAssets(['arrow_down.png']).then(() => {
+    preloadAssets(['arrow_down.png']).then(() =>
+    {
         const arrowUp = new Sprite(Texture.from('arrow_down.png'));
 
         arrowUp.angle = 180;
@@ -124,10 +135,12 @@ function getOpenBG(
     return openBG;
 }
 
-function getItems(itemsCount: number, text: string): string[] {
+function getItems(itemsCount: number, text: string): string[]
+{
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         items.push(`${text} ${i + 1}`);
     }
 

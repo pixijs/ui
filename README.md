@@ -12,13 +12,21 @@ Here are some useful resources:
 ## Install
 
 ```sh
-npm install @pixijs/ui
+npm install @pixi/ui
 ```
 
 There is no default export. The correct way to import pixi-ui is:
 
 ```js
-import { Button, Layout, ScrollBox } from '@pixijs/ui';
+import { Button, Layout, ScrollBox } from '@pixi/ui';
 ```
 
-To use any of the components you can go to it's page and copypaste the example code to your project.
+To use any of the components you can go to it's page and copy/paste the example code to your project.
+
+## Known Issues
+
+Dragging behaviour for components such as `select`, `slider`, and `scrollbox` need to have `moveOnAll` set to `true` in the pixi's `EventsSystem`
+
+```ts
+app.renderer.events.rootBoundary.moveOnAll = true;
+```

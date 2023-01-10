@@ -31,35 +31,4 @@
     "./test",
     "./docs-source"
   ],
-  "typedocOptions": {
-    "entryPoints": [
-      "./src/index.ts"
-    ],
-    "name": "Pixi-UI",
-    "out": "./docs/",
-    "hideGenerator": true,
-    "includes": "./docs-source/",
-    "includeVersion": true,
-    "excludeExternals": true,
-    "excludePrivate": true,
-    "excludeProtected": false,
-    "excludeInternal": false,
-    "plugin": [
-      "@play-co/typedoc-plugin-timestep"
-    ],
-    "theme": "pages-plugin",
-    "pages": {
-      "groups": [
-        {
-          "title": "Getting Started",
-          "pages": [
-            {
-              "title": "Quick Start",
-              "source": "./README.md"
-            }
-          ]
-        }
-      ]
-    }
-  }
 }

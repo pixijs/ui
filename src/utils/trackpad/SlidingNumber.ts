@@ -3,8 +3,8 @@ import ScrollSpring from './ScrollSpring';
 export interface SlidingNumberOptions
 {
     constrain?: boolean
-    maxSpeed?:number;
-    ease?:ConstrainEase
+    maxSpeed?: number;
+    ease?: ConstrainEase
 }
 
 export interface ConstrainEase

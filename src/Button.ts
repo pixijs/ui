@@ -1,13 +1,12 @@
-import { InteractionEvent, utils } from 'pixi.js';
-import { Text } from 'pixi.js';
-import { Container } from 'pixi.js';
+import { utils } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
+import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
-export interface ButtonOptions {
+export interface ButtonOptions
+{
     view: Container;
-    accessible?: boolean;
-    accessibleTitle?: string;
-    tabIndex?: number;
     hoverView?: Container;
     pressedView?: Container;
     disabledView?: Container;
@@ -19,7 +18,6 @@ export interface ButtonOptions {
 /**
  * Container based component that gives us a starting point for UI buttons.
  * It composes a view rather than extends one, this means we can easily make any pixi container a button!
- *
  * @example
  * ```
  * const spriteButton = new Button({
@@ -42,19 +40,20 @@ export interface ButtonOptions {
  *
  * ```
  */
-export class Button extends Container {
+export class Button extends Container
+{
     public defaultView: Container;
     public hoverView: Container;
     public pressedView: Container;
     public disabledView: Container;
     public text: Text;
 
-    public onPress: Signal<(btn?: this, e?: InteractionEvent) => void>;
-    public onDown: Signal<(btn?: this, e?: InteractionEvent) => void>;
-    public onUp: Signal<(btn?: this, e?: InteractionEvent) => void>;
-    public onHover: Signal<(btn?: this, e?: InteractionEvent) => void>;
-    public onOut: Signal<(btn?: this, e?: InteractionEvent) => void>;
-    public onUpOut: Signal<(btn?: this, e?: InteractionEvent) => void>;
+    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     private _isDown: boolean;
     private _enabled: boolean;
@@ -67,16 +66,15 @@ export class Button extends Container {
         hoverView,
         pressedView,
         disabledView,
-        accessible,
-        accessibleTitle,
-        tabIndex,
         textView,
         padding,
         textOffset,
-    }: ButtonOptions) {
+    }: ButtonOptions)
+    {
         super();
 
-        if (padding) {
+        if (padding)
+        {
             this.padding = padding * 2;
         }
 
@@ -84,39 +82,45 @@ export class Button extends Container {
         this.defaultView.zIndex = 1;
         this.addChild(this.defaultView);
 
-        if (hoverView) {
+        if (hoverView)
+        {
             this.hoverView = hoverView;
             this.hoverView.zIndex = 2;
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
 
-        if (pressedView) {
+        if (pressedView)
+        {
             this.pressedView = pressedView;
             this.pressedView.zIndex = 3;
             this.addChild(this.pressedView);
             this.pressedView.visible = false;
         }
 
-        if (disabledView) {
+        if (disabledView)
+        {
             this.disabledView = disabledView;
             this.disabledView.zIndex = 4;
             this.addChild(this.disabledView);
             this.disabledView.visible = false;
         }
 
-        if (textView) {
+        if (textView)
+        {
             this.text = textView;
             this.text.zIndex = 4;
             textView.anchor.set(0.5);
 
-            textView.x = this.width / 2 + (textOffset?.x ?? 0);
-            textView.y = this.height / 2 + (textOffset?.y ?? 0);
+            textView.x = (this.width / 2) + (textOffset?.x ?? 0);
+            textView.y = (this.height / 2) + (textOffset?.y ?? 0);
 
             this.addChild(this.text);
 
-            if (textView.width + this.padding > this.defaultView?.width) {
+            if (textView.width + this.padding > this.defaultView?.width)
+            {
                 const maxWidth = this.defaultView?.width;
+
                 textView.scale.set(maxWidth / (textView.width + this.padding));
             }
         }
@@ -130,68 +134,81 @@ export class Button extends Container {
         this.onOut = new Signal();
         this.onUpOut = new Signal();
 
-        this.accessible = accessible ?? true;
-        this.accessibleTitle = accessibleTitle ?? '';
-        this.tabIndex = tabIndex ?? 0;
-
-        this.on('pointerdown', (e: InteractionEvent) => {
+        this.on('pointerdown', (e: FederatedPointerEvent) =>
+        {
             this._isDown = true;
             this.onDown.emit(this, e);
         });
 
-        this.on('pointerup', (e: InteractionEvent) => {
+        this.on('pointerup', (e: FederatedPointerEvent) =>
+        {
             this._processUp(e);
         });
 
-        this.on('pointerupoutside', (e: InteractionEvent) => {
+        this.on('pointerupoutside', (e: FederatedPointerEvent) =>
+        {
             this._processUpOut(e);
         });
 
-        this.on('pointertap', (e: InteractionEvent) => {
+        this.on('pointertap', (e: FederatedPointerEvent) =>
+        {
             this._isDown = false;
             this.onPress.emit(this, e);
         });
 
-        this.on('pointerover', (e: InteractionEvent) => {
+        this.on('pointerover', (e: FederatedPointerEvent) =>
+        {
             this.onHover.emit(this, e);
         });
 
-        this.on('pointerout', (e: InteractionEvent) => {
+        this.on('pointerout', (e: FederatedPointerEvent) =>
+        {
             this._processOut(e);
         });
 
-        this.onDown.connect((_btn, e) => {
+        this.onDown.connect((_btn, e) =>
+        {
             this.down(e);
-            if (this.pressedView) {
+            if (this.pressedView)
+            {
                 this.pressedView.visible = true;
             }
         });
 
-        this.onUp.connect((_btn, e) => {
+        this.onUp.connect((_btn, e) =>
+        {
             this.up(e);
-            if (this.pressedView) {
+            if (this.pressedView)
+            {
                 this.pressedView.visible = false;
             }
         });
 
-        this.onUpOut.connect((_bth, e) => {
+        this.onUpOut.connect((_bth, e) =>
+        {
             this._upOut(e);
-            if (this.pressedView) {
+            if (this.pressedView)
+            {
                 this.pressedView.visible = false;
             }
         });
 
-        if (!utils.isMobile.any) {
-            this.onHover.connect((_bth, e) => {
-                if (this.hoverView) {
+        if (!utils.isMobile.any)
+        {
+            this.onHover.connect((_bth, e) =>
+            {
+                if (this.hoverView)
+                {
                     this.hoverView.visible = true;
                 }
                 this.hover(e);
             });
         }
 
-        this.onOut.connect((_bth, e) => {
-            if (this.hoverView) {
+        this.onOut.connect((_bth, e) =>
+        {
+            if (this.hoverView)
+            {
                 this.hoverView.visible = false;
             }
             this._out(e);
@@ -202,85 +219,104 @@ export class Button extends Container {
         this.enabled = true;
     }
 
-    public down(_e?: InteractionEvent): void {
+    public down(_e?: FederatedPointerEvent): void
+    {
         // override me!
     }
 
-    public up(_e?: InteractionEvent): void {
+    public up(_e?: FederatedPointerEvent): void
+    {
         // override me!
     }
 
-    public hover(_e?: InteractionEvent): void {
+    public hover(_e?: FederatedPointerEvent): void
+    {
         // override me!
     }
 
-    get isDown(): boolean {
+    get isDown(): boolean
+    {
         return this._isDown;
     }
 
-    set enabled(value: boolean) {
+    set enabled(value: boolean)
+    {
         this._enabled = value;
         this.interactive = value;
-        this.buttonMode = value;
-        this.accessible = this.accessible && value;
+        this.cursor = value ? 'pointer' : 'default';
 
-        if (this.disabledView) {
+        if (this.disabledView)
+        {
             this.disabledView.visible = !value;
         }
 
-        if (!value) {
+        if (!value)
+        {
             this._processUp();
         }
     }
 
-    get enabled(): boolean {
+    get enabled(): boolean
+    {
         return this._enabled;
     }
 
-    set shown(value: boolean) {
+    set shown(value: boolean)
+    {
         this._shown = value;
         this.enabled = value;
-        if (this.defaultView) {
+        if (this.defaultView)
+        {
             this.defaultView.visible = value;
         }
     }
 
-    get shown(): boolean {
+    get shown(): boolean
+    {
         return this._shown;
     }
 
-    private _processUp(e?: InteractionEvent): void {
-        if (this._isDown) {
+    private _processUp(e?: FederatedPointerEvent): void
+    {
+        if (this._isDown)
+        {
             this.onUp.emit(this, e);
         }
         this._isDown = false;
     }
 
-    private _processUpOut(e?: InteractionEvent): void {
-        if (this._isDown) {
+    private _processUpOut(e?: FederatedPointerEvent): void
+    {
+        if (this._isDown)
+        {
             this.onUpOut.emit(this, e);
         }
 
-        if (this.pressedView) {
+        if (this.pressedView)
+        {
             this.pressedView.visible = false;
         }
         this._isDown = false;
     }
 
-    private _processOut(e?: InteractionEvent): void {
+    private _processOut(e?: FederatedPointerEvent): void
+    {
         this.onOut.emit(this, e);
         this._isDown = false;
     }
 
-    private _upOut(e?: InteractionEvent): void {
+    private _upOut(e?: FederatedPointerEvent): void
+    {
         this.up(e);
     }
 
-    private _out(e?: InteractionEvent): void {
+    private _out(e?: FederatedPointerEvent): void
+    {
         this.up(e);
     }
 
-    public getText(): string {
+    public getText(): string
+    {
         return this.text.text;
     }
 }

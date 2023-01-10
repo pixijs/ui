@@ -1,7 +1,10 @@
-import type { DisplayObject, InteractionData, Point } from 'pixi.js';
+import { Point } from '@pixi/core';
+import { DisplayObject } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
 
-export interface DragObject extends DisplayObject {
-    dragData: InteractionData;
+export interface DragObject extends DisplayObject
+{
+    dragData: FederatedPointerEvent;
     dragging: number;
     dragPointerStart: DisplayObject;
     dragObjStart: Point;

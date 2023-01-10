@@ -1,9 +1,10 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
+import type { Application } from '@pixi/app';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -25,12 +26,13 @@ export const Double = ({
     fontColor,
     showValue,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
-
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const doubleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
@@ -43,7 +45,7 @@ export const Double = ({
             value2,
             valueTextStyle: {
                 fill: fontColor,
-                fontSize: fontSize,
+                fontSize,
             },
             showValue,
             valueTextOffset: {
@@ -55,7 +57,8 @@ export const Double = ({
             },
         });
 
-        doubleSlider.onChange.connect((value1, value2) => {
+        doubleSlider.onChange.connect((value1, value2) =>
+        {
             onChange(`Slider changed > ${value1} - ${value2}`);
         });
 
@@ -64,7 +67,11 @@ export const Double = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+    };
 };
 
 export default {

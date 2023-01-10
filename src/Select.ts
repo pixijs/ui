@@ -1,7 +1,11 @@
+import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
+import { Text, TextStyle } from '@pixi/text';
+import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
-import { Signal } from 'typed-signals';
-import { Container, TextStyle, Sprite, Texture, Text, Graphics } from 'pixi.js';
 
 type Offset = {
     y: number;
@@ -43,7 +47,6 @@ export type SelectOptions = {
  *
  * !!! Important
  * In order scroll to work, you have to call update() method in your game loop.
- *
  * @example
  * ```
  * new Select({
@@ -75,7 +78,8 @@ export type SelectOptions = {
  *
  * ```
  */
-export class Select extends Container {
+export class Select extends Container
+{
     private readonly closedBG: Container;
     private readonly openBG: Container;
     public selectedText: Text;
@@ -94,22 +98,13 @@ export class Select extends Container {
         selected,
         selectedTextOffset,
         scrollBox,
-    }: SelectOptions) {
+    }: SelectOptions)
+    {
         super();
 
-        this.closedBG =
-            typeof closedBG === 'string'
-                ? new Sprite(Texture.from(closedBG))
-                : closedBG;
-
-        this.openBG =
-            typeof openBG === 'string'
-                ? new Sprite(Texture.from(openBG))
-                : openBG;
-
+        this.closedBG = typeof closedBG === 'string' ? new Sprite(Texture.from(closedBG)) : closedBG;
+        this.openBG = typeof openBG === 'string' ? new Sprite(Texture.from(openBG)) : openBG;
         this.openBG.visible = false;
-
-        // this.addChild(this.closedBG);
 
         this.addChild(this.closedBG, this.openBG);
 
@@ -135,10 +130,8 @@ export class Select extends Container {
         this.addChild(selectedTextButton);
 
         this.selectedText.anchor.set(0.5);
-        this.selectedText.x =
-            this.closedBG.width / 2 + (selectedTextOffset?.x || 0);
-        this.selectedText.y =
-            this.closedBG.height / 2 + (selectedTextOffset?.y || 0);
+        this.selectedText.x = (this.closedBG.width / 2) + (selectedTextOffset?.x || 0);
+        this.selectedText.y = (this.closedBG.height / 2) + (selectedTextOffset?.y || 0);
 
         this.scrollBox = new ScrollBox({
             type: 'vertical',
@@ -154,21 +147,25 @@ export class Select extends Container {
 
         this.scrollBox.y = this.closedBG.height;
 
-        if (scrollBox?.offset) {
+        if (scrollBox?.offset)
+        {
             this.scrollBox.x += scrollBox.offset.x ?? 0;
             this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
 
         this.onSelect = new Signal();
 
-        this.convertItemsToButtons(items).forEach((button, id) => {
+        this.convertItemsToButtons(items).forEach((button, id) =>
+        {
             const text = button.getText();
 
-            if (id === selected) {
+            if (id === selected)
+            {
                 this.selectedText.text = text;
             }
 
-            button.onPress.connect(() => {
+            button.onPress.connect(() =>
+            {
                 this.value = id;
                 this.onSelect.emit(id, text);
                 this.selectedText.text = text;
@@ -179,17 +176,20 @@ export class Select extends Container {
         });
     }
 
-    public toggle() {
+    public toggle()
+    {
         this.openBG.visible = !this.openBG.visible;
         this.closedBG.visible = !this.closedBG.visible;
     }
 
-    public open() {
+    public open()
+    {
         this.openBG.visible = true;
         this.closedBG.visible = false;
     }
 
-    public close() {
+    public close()
+    {
         this.openBG.visible = false;
         this.closedBG.visible = true;
     }
@@ -202,10 +202,12 @@ export class Select extends Container {
         height,
         textStyle,
         radius,
-    }: SelectItemsOptions): Button[] {
+    }: SelectItemsOptions): Button[]
+    {
         const buttons: Button[] = [];
 
-        items.forEach((item) => {
+        items.forEach((item) =>
+        {
             const view = new Graphics()
                 .beginFill(backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
@@ -222,7 +224,8 @@ export class Select extends Container {
         return buttons;
     }
 
-    public update() {
+    public update()
+    {
         this.scrollBox.update();
     }
 }

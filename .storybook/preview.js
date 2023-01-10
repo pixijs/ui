@@ -2,7 +2,7 @@ export const parameters = {
     layout: 'fullscreen',
     pixi: {
         applicationOptions: {
-            transparent: true,
+            backgroundAlpha: 0,
             resolution: 1,
             antialias: true,
         },

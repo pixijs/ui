@@ -1,10 +1,11 @@
-import { Sprite as PixiSprite, Texture } from 'pixi.js';
+import { Sprite as PixiSprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
 import { Input } from '../../Input';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
@@ -29,13 +30,16 @@ export const Sprite = ({
     align,
     placeholder,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     const assets = [`input.png`];
 
-    preloadAssets(assets).then(() => {
-        for (let i = 0; i < count; i++) {
+    preloadAssets(assets).then(() =>
+    {
+        for (let i = 0; i < count; i++)
+        {
             // Component usage
             const input = new Input({
                 bg: new PixiSprite(Texture.from('input.png')),

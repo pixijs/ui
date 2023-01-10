@@ -1,11 +1,15 @@
-import { Sprite as PixiSprite, Text, Texture, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Sprite as PixiSprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
+import { Text } from '@pixi/text';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
 import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     fontColor: '#000000',
@@ -19,7 +23,8 @@ export const Sprite = ({
     elementsMargin,
     itemsCount,
     onPress,
-}: any) => {
+}: any) =>
+{
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();
@@ -35,16 +40,18 @@ export const Sprite = ({
         vertPadding: 18,
     });
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         const window = new PixiSprite(Texture.from(`window.png`));
+
         view.addChild(window);
 
         const items: Container[] = createItems(itemsCount, fontColor, onPress);
 
         items.forEach((item) => scrollBox.addItem(item));
 
-        scrollBox.x = window.width / 2 - scrollBox.width / 2;
-        scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
+        scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
+        scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
 
         window.addChild(scrollBox);
 
@@ -54,6 +61,7 @@ export const Sprite = ({
     return {
         view,
         resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 
@@ -61,10 +69,12 @@ function createItems(
     itemsCount: number,
     fontColor: number,
     onPress: (buttonID: number) => void,
-): Button[] {
+): Button[]
+{
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
             hoverView: new PixiSprite(Texture.from(`button_hover.png`)),

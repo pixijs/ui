@@ -1,10 +1,11 @@
-import { Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Container } from '@pixi/display';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -22,16 +23,18 @@ export const Sprite = ({
     backgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
-
     const assets = [`select_closed.png`, `select_open.png`];
 
     let select: Select;
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         backgroundColor = Number(backgroundColor.replace('#', '0x'));
         const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
+
         fontColor = Number(fontColor.replace('#', '0x'));
         const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
@@ -68,7 +71,8 @@ export const Sprite = ({
 
         select.y = 10;
 
-        select.onSelect.connect((_, text) => {
+        select.onSelect.connect((_, text) =>
+        {
             onSelect(select.value, text);
         });
 
@@ -81,13 +85,16 @@ export const Sprite = ({
         view,
         resize: () => centerElement(view, 0.5, 0),
         update: () => select?.update(),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 
-function getItems(itemsCount: number, text: string): string[] {
+function getItems(itemsCount: number, text: string): string[]
+{
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         items.push(`${text} ${i + 1}`);
     }
 

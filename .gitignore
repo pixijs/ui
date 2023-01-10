@@ -37,3 +37,5 @@ pnpm-lock.yaml
 # jetBrains IDE ignores
 .idea
 .vs-code
+.eslintcache
+./docs

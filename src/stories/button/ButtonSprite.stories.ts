@@ -1,10 +1,12 @@
-import { Sprite as PixiSprite, Text, Texture } from 'pixi.js';
+import { Sprite as PixiSprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
+import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Layout } from './../../Layout';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../../utils/helpers/loader';
+import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
@@ -25,7 +27,8 @@ export const Sprite = ({
     padding,
     textOffsetX,
     textOffsetY,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({
         type: 'vertical',
         elementsMargin: 20,
@@ -38,7 +41,8 @@ export const Sprite = ({
         `button_disabled.png`,
     ];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const button = new Button({
             view: new PixiSprite(Texture.from(`button.png`)),
@@ -53,7 +57,8 @@ export const Sprite = ({
             textOffset: { x: textOffsetX, y: textOffsetY },
         });
 
-        if (disabled) {
+        if (disabled)
+        {
             button.enabled = false;
         }
 

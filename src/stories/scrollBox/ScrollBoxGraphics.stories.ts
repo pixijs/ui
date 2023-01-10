@@ -1,10 +1,13 @@
-import { Graphics as PixiGraphics, Text, Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Container } from '@pixi/display';
+import { Text } from '@pixi/text';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
 import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     type: ['vertical', 'horizontal'],
@@ -34,7 +37,8 @@ export const Graphics = ({
     itemsCount,
     backgroundColor,
     onPress,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -42,7 +46,8 @@ export const Graphics = ({
 
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = 0; i < itemsCount; i++)
+    {
         const button = new Button({
             view: new PixiGraphics()
                 .beginFill(0xa5e24d)
@@ -79,6 +84,7 @@ export const Graphics = ({
     return {
         view,
         resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

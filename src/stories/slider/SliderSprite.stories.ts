@@ -1,9 +1,10 @@
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../../utils/helpers/loader';
-import { Container } from 'pixi.js';
+import { preloadAssets } from '../utils/loader';
+import { Container } from '@pixi/display';
+import type { Application } from '@pixi/app';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -23,12 +24,14 @@ export const Single = ({
     fontColor,
     onChange,
     showValue,
-}: any) => {
+}: any) =>
+{
     const view = new Container();
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() => {
+    preloadAssets(assets).then(() =>
+    {
         // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
@@ -51,7 +54,8 @@ export const Single = ({
             },
         });
 
-        singleSlider.onChange.connect((value) => {
+        singleSlider.onChange.connect((value) =>
+        {
             onChange(`Slider changed > ${value}`);
         });
 
@@ -60,7 +64,11 @@ export const Single = ({
         centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+    };
 };
 
 export default {

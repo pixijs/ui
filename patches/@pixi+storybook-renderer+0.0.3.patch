@@ -1,0 +1,42 @@
+diff --git a/node_modules/@pixi/storybook-renderer/dist/chunk-SHJVHIVM.mjs b/node_modules/@pixi/storybook-renderer/dist/chunk-SHJVHIVM.mjs
+index 6f536d9..5cd4198 100644
+--- a/node_modules/@pixi/storybook-renderer/dist/chunk-SHJVHIVM.mjs
++++ b/node_modules/@pixi/storybook-renderer/dist/chunk-SHJVHIVM.mjs
+@@ -79,6 +79,9 @@ function addStory({
+   resizeFn,
+   storyObject
+ }) {
++  if (storyObject.startup) {
++    storyObject.startup(app);
++  }
+   const storyResizeHandler = initResize({
+     app,
+     resizeFn,
+diff --git a/node_modules/@pixi/storybook-renderer/dist/config.js b/node_modules/@pixi/storybook-renderer/dist/config.js
+index cc33890..c9b574b 100644
+--- a/node_modules/@pixi/storybook-renderer/dist/config.js
++++ b/node_modules/@pixi/storybook-renderer/dist/config.js
+@@ -113,6 +113,9 @@ function addStory({
+   resizeFn,
+   storyObject
+ }) {
++  if (storyObject.startup) {
++    storyObject.startup(app);
++  }
+   const storyResizeHandler = initResize({
+     app,
+     resizeFn,
+diff --git a/node_modules/@pixi/storybook-renderer/dist/index.js b/node_modules/@pixi/storybook-renderer/dist/index.js
+index 54abdca..0d6baec 100644
+--- a/node_modules/@pixi/storybook-renderer/dist/index.js
++++ b/node_modules/@pixi/storybook-renderer/dist/index.js
+@@ -123,6 +123,9 @@ function addStory({
+   resizeFn,
+   storyObject
+ }) {
++  if (storyObject.startup) {
++    storyObject.startup(app);
++  }
+   const storyResizeHandler = initResize({
+     app,
+     resizeFn,

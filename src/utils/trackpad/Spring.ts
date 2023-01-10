@@ -54,7 +54,7 @@ export class Spring
         return this._options.max;
     }
 
-    set max(value:number)
+    set max(value: number)
     {
         this._options.max = value;
     }
@@ -64,7 +64,7 @@ export class Spring
         return this._options.damp;
     }
 
-    set damp(value:number)
+    set damp(value: number)
     {
         this._options.damp = value;
     }
@@ -74,7 +74,7 @@ export class Spring
         return this._options.springiness;
     }
 
-    set springiness(value:number)
+    set springiness(value: number)
     {
         this._options.springiness = value;
     }

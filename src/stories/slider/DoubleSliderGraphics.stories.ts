@@ -1,9 +1,10 @@
-import { Graphics as PixiGraphics } from 'pixi.js';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
+import type { Application } from '@pixi/app';
 
 const args = {
     meshColor: '#35b600',
@@ -43,7 +44,8 @@ export const Double = ({
     handleBorder,
     showValue,
     onChange,
-}: any) => {
+}: any) =>
+{
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -58,8 +60,8 @@ export const Double = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -70,8 +72,8 @@ export const Double = ({
         .drawRoundedRect(
             border,
             border,
-            width - border * 2,
-            height - border * 2,
+            width - (border * 2),
+            height - (border * 2),
             radius,
         );
 
@@ -100,18 +102,23 @@ export const Double = ({
         value2,
         valueTextStyle: {
             fill: fontColor,
-            fontSize: fontSize,
+            fontSize,
         },
         showValue,
     });
 
-    doubleSlider.onChange.connect((value1, value2) => {
+    doubleSlider.onChange.connect((value1, value2) =>
+    {
         onChange(`Slider changed > ${value1} - ${value2}`);
     });
 
     view.addChild(doubleSlider);
 
-    return { view, resize: () => centerElement(view) };
+    return {
+        view,
+        resize: () => centerElement(view),
+        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+    };
 };
 
 export default {

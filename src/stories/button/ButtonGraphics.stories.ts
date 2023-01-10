@@ -1,7 +1,8 @@
-import { Graphics as PixiGraphics, Text } from 'pixi.js';
+import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../../utils/helpers/argTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 
@@ -37,7 +38,8 @@ export const Graphics = ({
     textOffsetX,
     textOffsetY,
     onPress,
-}: any) => {
+}: any) =>
+{
     color = Number(color.replace('#', '0x'));
     hoverColor = Number(hoverColor.replace('#', '0x'));
     pressedColor = Number(pressedColor.replace('#', '0x'));
@@ -65,7 +67,8 @@ export const Graphics = ({
         textOffset: { x: textOffsetX, y: textOffsetY },
     });
 
-    if (disabled) {
+    if (disabled)
+    {
         view.enabled = false;
     }
 
