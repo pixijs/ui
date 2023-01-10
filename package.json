@@ -34,7 +34,7 @@
     "lint": "xs lint",
     "lint:fix": "xs lint --fix",
     "prepare": "husky install",
-    "release": "xs release",
+    "release": "xs bump,test,build,docs,publish,git-push",
     "serve": "xs serve",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build --output-dir docs/storybook",
@@ -50,6 +50,12 @@
     "*.{ts,js,mjs}": [
       "npm run lint:fix --"
     ]
+  },
+  "extensionConfig": {
+    "docsName": "PixiJS UI",
+    "docsTitle": "PixiJS UI",
+    "docsDescription": "API Documentation for UI components made with PixiJS",
+    "docsKeyword": "PixiJS, UI, components, layout"
   },
   "dependencies": {
     "typed-signals": "^2.5.0"
