@@ -28,6 +28,7 @@ export type SliderOptions = {
     };
 };
 
+// TODO: implement vertical slider
 /**
  * Creates a slider
  * @example
@@ -54,7 +55,6 @@ export type SliderOptions = {
  * });
  * ```
  */
-// TODO: implement vertical slider
 export class Slider extends Container
 {
     protected readonly bg: Container;
@@ -66,9 +66,11 @@ export class Slider extends Container
     private dragging = 0;
     protected readonly options: SliderOptions;
 
+    /** TODO */
     public percent = 100;
+    /** TODO */
     public value = 0;
-
+    /** TODO */
     public onChange: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)

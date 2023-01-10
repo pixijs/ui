@@ -65,27 +65,32 @@ export class CheckBox extends Switch
         this.onChange = new Signal();
     }
 
+    /** TODO */
     public update()
     {
         this.hitArea = new Rectangle(0, 0, this.width, this.height);
     }
 
+    /** TODO */
     public set text(text: string)
     {
         this.label.text = text;
         this.update();
     }
 
+    /** TODO */
     public get text(): string
     {
         return this.label.text;
     }
 
+    /** TODO */
     public get checked(): boolean
     {
         return this.activeViewID === 1;
     }
 
+    /** TODO */
     public set checked(checked: boolean)
     {
         this.switch(checked ? 1 : 0);

@@ -38,4 +38,4 @@ pnpm-lock.yaml
 .idea
 .vs-code
 .eslintcache
-./docs
+example.api.json*

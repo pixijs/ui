@@ -9,6 +9,7 @@ export type LayoutOptions = {
     horPadding?: number;
 };
 
+// TODO: replace this with pixi-layout component
 /**
  * Container based element for arranging pixi containers inside it basing on their sizes
  * @example
@@ -25,17 +26,19 @@ export type LayoutOptions = {
  * layout.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
  * ```
  */
-
-// TODO: replace this with pixi-layout component
-
 export class Layout extends Container
 {
+    /** TODO */
     public view: Container;
+    /** TODO */
     public type: LayoutType;
 
+    /** TODO */
     public w: number;
+    /** TODO */
     public h: number;
 
+    /** TODO */
     public override readonly children: Container[] = [];
 
     private readonly options?: { type?: LayoutType } & LayoutOptions;

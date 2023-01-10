@@ -82,10 +82,11 @@ export class Select extends Container
 {
     private readonly closedBG: Container;
     private readonly openBG: Container;
+    /** TODO */
     public selectedText: Text;
-
+    /** TODO */
     public value: number;
-
+    /** TODO */
     public onSelect: Signal<(value: number, text: string) => void>;
 
     private scrollBox: ScrollBox;
@@ -176,18 +177,21 @@ export class Select extends Container
         });
     }
 
+    /** TODO */
     public toggle()
     {
         this.openBG.visible = !this.openBG.visible;
         this.closedBG.visible = !this.closedBG.visible;
     }
 
+    /** TODO */
     public open()
     {
         this.openBG.visible = true;
         this.closedBG.visible = false;
     }
 
+    /** TODO */
     public close()
     {
         this.openBG.visible = false;
@@ -224,6 +228,7 @@ export class Select extends Container
         return buttons;
     }
 
+    /** TODO */
     public update()
     {
         this.scrollBox.update();

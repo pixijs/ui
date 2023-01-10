@@ -17,12 +17,15 @@ import { Button } from './Button';
  */
 export class Switch extends Container
 {
+    /** TODO */
     public view = new Container();
+    /** TODO */
     public views: Container[] = [];
+    /** TODO */
     public activeViewID = 0;
-    private button: Button;
-
+    /** TODO */
     public onChange: Signal<(state: number) => void>;
+    private button: Button;
 
     constructor(views: Container[], activeViewID = 0)
     {
@@ -51,11 +54,16 @@ export class Switch extends Container
         });
     }
 
+    /** TODO */
     public get activeView(): Container
     {
         return this.views[this.activeViewID];
     }
 
+    /**
+     * TODO
+     * @param id
+     */
     public switch(id?: number): void
     {
         this.activeView.visible = false;

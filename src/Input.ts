@@ -46,7 +46,9 @@ export class Input extends Container
     private editing = false;
     private tick = 0;
 
+    /** TODO */
     public readonly onEnter: Signal<(text: string) => void>;
+    /** TODO */
     public readonly onChange: Signal<(text: string) => void>;
 
     private activation = false;
@@ -234,6 +236,7 @@ export class Input extends Container
         }
     }
 
+    /** TODO */
     public stopEditing(): void
     {
         this._cursor.alpha = 0;
@@ -250,6 +253,10 @@ export class Input extends Container
         this.align();
     }
 
+    /**
+     * TODO
+     * @param dt
+     */
     public update(dt: number): void
     {
         if (!this.editing) return;
@@ -317,6 +324,7 @@ export class Input extends Container
         }
     }
 
+    /** TODO */
     set value(text: string)
     {
         this.inputField.text = text;
@@ -333,6 +341,7 @@ export class Input extends Container
         this.align();
     }
 
+    /** TODO */
     get value(): string
     {
         return this.inputField.text;
