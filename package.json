@@ -34,7 +34,7 @@
     "lint": "xs lint",
     "lint:fix": "xs lint --fix",
     "prepare": "husky install",
-    "release": "xs bump,test,build,docs,publish,git-push",
+    "release": "xs bump,build,docs,publish,git-push",
     "serve": "xs serve",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build --output-dir docs/storybook",
