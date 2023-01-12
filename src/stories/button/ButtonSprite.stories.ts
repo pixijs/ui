@@ -20,7 +20,7 @@ const args = {
     anchorY: 0.5,
 };
 
-export const Sprite = ({
+export const UseSprite = ({
     text,
     textColor,
     disabled,
@@ -45,7 +45,7 @@ export const Sprite = ({
     {
         // Component usage !!!
         const button = new Button({
-            view: PixiSprite.from(`button.png`),
+            defaultView: PixiSprite.from(`button.png`),
             hoverView: PixiSprite.from(`button_hover.png`),
             pressedView: PixiSprite.from(`button_pressed.png`),
             disabledView: PixiSprite.from(`button_disabled.png`),
@@ -79,7 +79,7 @@ export const Sprite = ({
 };
 
 export default {
-    title: 'UI components/Button/Sprite',
+    title: 'UI components/Button/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };
