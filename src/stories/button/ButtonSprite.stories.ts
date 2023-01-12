@@ -43,26 +43,20 @@ export const Sprite = ({
 
     preloadAssets(assets).then(() =>
     {
-        const defaultView = PixiSprite.from(`button.png`);
-        const hoverView = PixiSprite.from(`button_hover.png`);
-        const pressedView = PixiSprite.from(`button_pressed.png`);
-        const disabledView = PixiSprite.from(`button_disabled.png`);
-
-        hoverView.scale.set(1.03);
-        hoverView.anchor.set(0.5);
-
         // Component usage !!!
         const button = new Button({
-            view: defaultView,
-            hoverView,
-            pressedView,
-            disabledView,
+            view: PixiSprite.from(`button.png`),
+            hoverView: PixiSprite.from(`button_hover.png`),
+            pressedView: PixiSprite.from(`button_pressed.png`),
+            disabledView: PixiSprite.from(`button_disabled.png`),
             textView: new Text(text, {
                 ...defaultTextStyle,
                 fill: textColor || defaultTextStyle.fill,
             }),
             padding,
-            offsets: { text: { x: textOffsetX, y: textOffsetY } },
+            offsets: {
+                pressedView: { y: 5 },
+                text: { x: textOffsetX, y: textOffsetY } },
             anchor: {
                 x: anchorX,
                 y: anchorY,
