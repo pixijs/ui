@@ -3,7 +3,19 @@ import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
+import { Sprite } from '@pixi/sprite';
 
+type Pos = number | { x?: number; y?: number };
+
+type State = 'default' | 'hover' | 'pressed' | 'disabled';
+
+type Offsets = {
+    defaultView?: Pos;
+    hoverView?: Pos;
+    pressedView?: Pos;
+    disabledView?: Pos;
+    text?: Pos;
+};
 export interface ButtonOptions
 {
     view: Container;
@@ -12,7 +24,8 @@ export interface ButtonOptions
     disabledView?: Container;
     textView?: Text;
     padding?: number;
-    textOffset?: { x: number; y: number };
+    anchor?: Pos;
+    offsets?: Offsets;
 }
 
 /**
@@ -21,10 +34,10 @@ export interface ButtonOptions
  * @example
  * ```
  * const spriteButton = new Button({
- *     view: new PixiSprite(Texture.from(`button.png`)),
- *     hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
- *     pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
- *     disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
+ *     view: new Sprite(Texture.from(`button.png`)),
+ *     hoverView: new Sprite(Texture.from(`button_hover.png`)),
+ *     pressedView: new Sprite(Texture.from(`button_pressed.png`)),
+ *     disabledView: new Sprite(Texture.from(`button_disabled.png`)),
  *     textView: new Text(text, { fill: 0xFFFFFF }),
  * });
  *
@@ -71,6 +84,10 @@ export class Button extends Container
     private _shown: boolean;
 
     private padding = 0;
+    private _anchor: Pos = 0.5;
+    private offsets: Offsets = {};
+
+    public state: State = 'default';
 
     constructor({
         view,
@@ -79,24 +96,30 @@ export class Button extends Container
         disabledView,
         textView,
         padding,
-        textOffset,
+        offsets,
+        anchor,
     }: ButtonOptions)
     {
         super();
 
-        if (padding)
-        {
-            this.padding = padding * 2;
-        }
+        this.padding = (padding ?? 0) * 2;
+
+        this.offsets = offsets ?? {};
 
         this.defaultView = view;
-        this.defaultView.zIndex = 1;
+
+        this.defaultView.x = this.getOffset(offsets.defaultView).x;
+        this.defaultView.y = this.getOffset(offsets.defaultView).y;
+
         this.addChild(this.defaultView);
 
         if (hoverView)
         {
             this.hoverView = hoverView;
-            this.hoverView.zIndex = 2;
+
+            this.hoverView.x = this.getOffset(offsets.hoverView).x;
+            this.hoverView.y = this.getOffset(offsets.hoverView).y;
+
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
@@ -104,7 +127,10 @@ export class Button extends Container
         if (pressedView)
         {
             this.pressedView = pressedView;
-            this.pressedView.zIndex = 3;
+
+            this.pressedView.x = this.getOffset(offsets.pressedView).x;
+            this.pressedView.y = this.getOffset(offsets.pressedView).y;
+
             this.addChild(this.pressedView);
             this.pressedView.visible = false;
         }
@@ -112,7 +138,10 @@ export class Button extends Container
         if (disabledView)
         {
             this.disabledView = disabledView;
-            this.disabledView.zIndex = 4;
+
+            this.disabledView.x = this.getOffset(offsets.disabledView).x;
+            this.disabledView.y = this.getOffset(offsets.disabledView).y;
+
             this.addChild(this.disabledView);
             this.disabledView.visible = false;
         }
@@ -120,21 +149,10 @@ export class Button extends Container
         if (textView)
         {
             this.text = textView;
-            this.text.zIndex = 4;
-            textView.anchor.set(0.5);
-
-            textView.x = (this.width / 2) + (textOffset?.x ?? 0);
-            textView.y = (this.height / 2) + (textOffset?.y ?? 0);
-
-            this.addChild(this.text);
-
-            if (textView.width + this.padding > this.defaultView?.width)
-            {
-                const maxWidth = this.defaultView?.width;
-
-                textView.scale.set(maxWidth / (textView.width + this.padding));
-            }
         }
+
+        this.anchor = anchor ?? 0.5;
+        this.setState('default');
 
         this._enabled = true;
 
@@ -182,7 +200,7 @@ export class Button extends Container
             this.down(e);
             if (this.pressedView)
             {
-                this.pressedView.visible = true;
+                this.setState('pressed');
             }
         });
 
@@ -191,7 +209,7 @@ export class Button extends Container
             this.up(e);
             if (this.pressedView)
             {
-                this.pressedView.visible = false;
+                this.setState('hover');
             }
         });
 
@@ -200,7 +218,7 @@ export class Button extends Container
             this._upOut(e);
             if (this.pressedView)
             {
-                this.pressedView.visible = false;
+                this.setState('default');
             }
         });
 
@@ -210,7 +228,7 @@ export class Button extends Container
             {
                 if (this.hoverView)
                 {
-                    this.hoverView.visible = true;
+                    this.setState('hover');
                 }
                 this.hover(e);
             });
@@ -220,7 +238,7 @@ export class Button extends Container
         {
             if (this.hoverView)
             {
-                this.hoverView.visible = false;
+                this.setState('default');
             }
             this._out(e);
         });
@@ -347,5 +365,110 @@ export class Button extends Container
     private _out(e?: FederatedPointerEvent): void
     {
         this.up(e);
+    }
+
+    private getOffset(val: Pos): {x: number, y: number}
+    {
+        const offsetX = typeof val === 'number' ? val : (val?.x ?? 0);
+        const offsetY = typeof val === 'number' ? val : (val?.y ?? 0);
+
+        return {
+            x: offsetX,
+            y: offsetY,
+        };
+    }
+
+    private setState(state: State)
+    {
+        this.state = state;
+
+        this.defaultView.visible = false;
+        this.hoverView.visible = false;
+        this.pressedView.visible = false;
+        this.disabledView.visible = false;
+
+        const activeView = this[`${state}View`];
+
+        activeView.addChild(this.text);
+
+        this.text.anchor.set(0);
+        this.text.x = ((activeView.width - this.text.width) / 2) + this.getOffset(this.offsets.text).x;
+        this.text.y = ((activeView.height - this.text.height) / 2) + this.getOffset(this.offsets.text).y;
+
+        if (this.text.width + this.padding > activeView.width)
+        {
+            const maxWidth = activeView.width;
+
+            this.text.scale.set(maxWidth / (this.text.width + this.padding));
+        }
+
+        switch (state)
+        {
+            case 'default':
+                this.defaultView.visible = true;
+                break;
+            case 'hover':
+                this.hoverView.visible = true;
+                break;
+            case 'pressed':
+                this.pressedView.visible = true;
+                break;
+            case 'disabled':
+                this.disabledView.visible = true;
+                break;
+        }
+    }
+
+    set anchor(anchor: Pos)
+    {
+        this._anchor = anchor;
+        const anchorX = typeof this._anchor === 'number' ? this._anchor : this._anchor.x;
+        const anchorY = typeof this._anchor === 'number' ? this._anchor : this._anchor.y;
+
+        (this.defaultView as Sprite).anchor?.set(0);
+        (this.hoverView as Sprite).anchor?.set(0);
+        (this.pressedView as Sprite).anchor?.set(0);
+        (this.disabledView as Sprite).anchor?.set(0);
+
+        this.defaultView.x
+            = (this.width / 2)
+            - (this.defaultView.width * anchorX)
+            + this.getOffset(this.offsets.defaultView).x;
+        this.defaultView.y
+            = (this.height / 2)
+            - (this.defaultView.height * anchorY)
+            + this.getOffset(this.offsets.defaultView).y;
+
+        this.hoverView.x
+            = (this.width / 2)
+            - (this.hoverView.width * anchorX)
+            + this.getOffset(this.offsets.hoverView).x;
+        this.hoverView.y
+            = (this.height / 2)
+            - (this.hoverView.height * anchorY)
+            + this.getOffset(this.offsets.hoverView).y;
+
+        this.pressedView.x
+            = (this.width / 2)
+            - (this.pressedView.width * anchorX)
+            + this.getOffset(this.offsets.pressedView).x;
+        this.pressedView.y
+            = (this.height / 2)
+            - (this.pressedView.height * anchorY)
+            + this.getOffset(this.offsets.pressedView).y;
+
+        this.disabledView.x
+            = (this.width / 2)
+            - (this.disabledView.width * anchorX)
+            + this.getOffset(this.offsets.disabledView).x;
+        this.disabledView.y
+            = (this.height / 2)
+            - (this.disabledView.height * anchorY)
+            + this.getOffset(this.offsets.disabledView).y;
+    }
+
+    get anchor(): Pos
+    {
+        return this._anchor;
     }
 }

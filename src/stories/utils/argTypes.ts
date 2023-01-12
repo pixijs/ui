@@ -77,6 +77,17 @@ export const argTypes = (args: Types) =>
                         },
                     };
                 }
+                else if (args[key] !== 0 && args[key] < 1)
+                {
+                    exportArgTypes[key] = {
+                        control: {
+                            type: 'range',
+                            min: 0,
+                            max: 1,
+                            step: 0.1,
+                        },
+                    };
+                }
                 else
                 {
                     exportArgTypes[key] = {
@@ -89,8 +100,7 @@ export const argTypes = (args: Types) =>
                     };
                 }
             }
-            else
-            if (args[key] <= -100)
+            else if (args[key] <= -100)
             {
                 exportArgTypes[key] = {
                     control: {
@@ -109,6 +119,17 @@ export const argTypes = (args: Types) =>
                         min: -100,
                         max: 100,
                         step: 10,
+                    },
+                };
+            }
+            else if (args[key] !== 0 && args[key] > -1)
+            {
+                exportArgTypes[key] = {
+                    control: {
+                        type: 'range',
+                        min: -1,
+                        max: 0,
+                        step: 0.1,
                     },
                 };
             }
@@ -143,7 +164,7 @@ export const argTypes = (args: Types) =>
                     else
                     {
                         exportArgTypes[key].options = Object.keys(args).map(
-                            (key) => args[key],
+                            (key) => args[key]
                         );
                     }
                     break;

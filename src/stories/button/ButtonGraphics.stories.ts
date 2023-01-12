@@ -19,6 +19,7 @@ const args = {
     radius: 50,
     textOffsetX: 0,
     textOffsetY: 0,
+    pressedOffsetY: 10,
     disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
 };
@@ -37,6 +38,7 @@ export const Graphics = ({
     textColor,
     textOffsetX,
     textOffsetY,
+    pressedOffsetY,
     onPress,
 }: any) =>
 {
@@ -55,7 +57,7 @@ export const Graphics = ({
             .drawRoundedRect(0, 0, width, height, radius),
         pressedView: new PixiGraphics()
             .beginFill(pressedColor)
-            .drawRoundedRect(0, 0, width, height, radius),
+            .drawRoundedRect(0, 0, width - 5, height - 5, radius),
         disabledView: new PixiGraphics()
             .beginFill(disabledColor)
             .drawRoundedRect(0, 0, width, height, radius),
@@ -64,7 +66,13 @@ export const Graphics = ({
             fill: textColor || defaultTextStyle.fill,
         }),
         padding,
-        textOffset: { x: textOffsetX, y: textOffsetY },
+        offsets: {
+            pressedView: { y: pressedOffsetY },
+            text: {
+                x: textOffsetX,
+                y: textOffsetY,
+            },
+        },
     });
 
     if (disabled)
