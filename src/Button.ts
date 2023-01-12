@@ -264,8 +264,6 @@ export class Button extends Container
         this.interactive = enabled;
         this.cursor = enabled ? 'pointer' : 'default';
 
-        this.hideAllViews();
-
         this.setState(enabled ? 'default' : 'disabled');
 
         if (!enabled)
@@ -386,8 +384,6 @@ export class Button extends Container
     private setState(state: State)
     {
         this.state = state;
-
-        console.log('setState', state);
 
         this.hideAllViews();
 
