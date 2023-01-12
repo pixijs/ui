@@ -156,16 +156,19 @@ export class Button extends Container
 
         this.on('pointerup', (e: FederatedPointerEvent) =>
         {
+            this.setState('default');
             this._processUp(e);
         });
 
         this.on('pointerupoutside', (e: FederatedPointerEvent) =>
         {
+            this.setState('default');
             this._processUpOut(e);
         });
 
         this.on('pointerout', (e: FederatedPointerEvent) =>
         {
+            this.setState('default');
             this._processOut(e);
         });
 
@@ -364,9 +367,9 @@ export class Button extends Container
         }
     }
 
-    private getActiveView(): Container
+    private getActiveView(state: State): Container
     {
-        switch (this.state)
+        switch (state)
         {
             case 'default':
                 return this.defaultView;
@@ -383,23 +386,22 @@ export class Button extends Container
 
     private setState(state: State)
     {
-        this.state = state;
-
         this.hideAllViews();
 
-        const activeView = this.getActiveView();
+        const exActiveView = this.getActiveView(this.state);
 
-        activeView.visible = true;
-        activeView.addChild(this.text);
+        exActiveView.x -= this.getOffset(this.offsets[`${this.state}View`]).x;
+        exActiveView.y -= this.getOffset(this.offsets[`${this.state}View`]).y;
 
-        console.log({
-            state,
-            offsets: this.offsets,
-            offset: this.offsets[state],
-        });
+        this.state = state;
+
+        const activeView = this.getActiveView(this.state);
 
         activeView.x += this.getOffset(this.offsets[`${state}View`]).x;
         activeView.y += this.getOffset(this.offsets[`${state}View`]).y;
+
+        activeView.visible = true;
+        activeView.addChild(this.text);
 
         this.text.x = ((activeView.width - this.text.width) / 2) + this.getOffset(this.offsets.text).x;
         this.text.y = ((activeView.height - this.text.height) / 2) + this.getOffset(this.offsets.text).y;
