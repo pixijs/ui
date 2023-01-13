@@ -34,7 +34,7 @@ export interface ButtonOptions
  * @example
  * ```
  * const spriteButton = new Button({
- *     view: `button.png`,
+ *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     disabledView: `button_disabled.png`,
@@ -42,7 +42,7 @@ export interface ButtonOptions
  * });
  *
  * const graphicsButton = new Button({
- *     view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
+ *     defaultView: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
  *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
  *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
  *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
@@ -483,6 +483,8 @@ export class Button extends Container
         {
             return view;
         }
+        console.log(view);
+
         throw new Error('Invalid view');
     }
 }

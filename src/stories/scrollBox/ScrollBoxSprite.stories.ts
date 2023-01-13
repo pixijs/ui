@@ -76,13 +76,15 @@ function createItems(
     for (let i = 0; i < itemsCount; i++)
     {
         const button = new Button({
-            view: new PixiSprite(Texture.from(`button.png`)),
-            hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
             textView: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
                 fill: fontColor,
             }),
-            textOffset: { x: 0, y: -7 },
+            offsets: {
+                text: { x: 0, y: -7 },
+            }
         });
 
         button.scale.set(0.5);

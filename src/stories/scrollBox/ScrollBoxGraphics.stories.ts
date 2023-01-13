@@ -49,7 +49,7 @@ export const Graphics = ({
     for (let i = 0; i < itemsCount; i++)
     {
         const button = new Button({
-            view: new PixiGraphics()
+            defaultView: new PixiGraphics()
                 .beginFill(0xa5e24d)
                 .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             hoverView: new PixiGraphics()

@@ -56,7 +56,8 @@ export const UseSprite = ({
             padding,
             offsets: {
                 pressedView: { y: 5 },
-                text: { x: textOffsetX, y: textOffsetY } },
+                text: { x: textOffsetX, y: textOffsetY }
+            },
             anchor: {
                 x: anchorX,
                 y: anchorY,

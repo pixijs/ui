@@ -110,7 +110,7 @@ export class Select extends Container
         this.addChild(this.closedBG, this.openBG);
 
         const openButton = new Button({
-            view: this.closedBG,
+            defaultView: this.closedBG,
         });
 
         this.addChild(openButton);
@@ -123,7 +123,7 @@ export class Select extends Container
         );
 
         const selectedTextButton = new Button({
-            view: this.selectedText,
+            defaultView: this.selectedText,
         });
 
         selectedTextButton.onPress.connect(() => this.toggle());
@@ -212,7 +212,7 @@ export class Select extends Container
 
         items.forEach((item) =>
         {
-            const view = new Graphics()
+            const defaultView = new Graphics()
                 .beginFill(backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
             const hoverView = new Graphics()
@@ -220,7 +220,7 @@ export class Select extends Container
                 .drawRoundedRect(0, 0, width, height, radius);
             const textView = new Text(item, textStyle);
 
-            const button = new Button({ view, hoverView, textView });
+            const button = new Button({ defaultView, hoverView, textView });
 
             buttons.push(button);
         });

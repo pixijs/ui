@@ -41,7 +41,7 @@ export class Switch extends Container
         this.views = views;
         this.activeViewID = activeViewID;
 
-        this.button = new Button({ view: this.view });
+        this.button = new Button({ defaultView: this.view });
 
         this.addChild(this.button);
 
