@@ -1,4 +1,4 @@
-import { Texture, Ticker } from '@pixi/core';
+import { Ticker } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';

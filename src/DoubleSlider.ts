@@ -1,4 +1,4 @@
-import { Point, Texture } from '@pixi/core';
+import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';

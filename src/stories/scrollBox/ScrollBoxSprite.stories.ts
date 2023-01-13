@@ -1,5 +1,4 @@
 import { Sprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
