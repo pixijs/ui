@@ -83,7 +83,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'UI components/Input/Use Graphics',
+    title: 'Components/Input/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

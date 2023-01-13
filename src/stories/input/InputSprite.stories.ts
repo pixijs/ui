@@ -66,7 +66,7 @@ export const UseSprite = ({
 };
 
 export default {
-    title: 'UI components/Input/Use Sprite',
+    title: 'Components/Input/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

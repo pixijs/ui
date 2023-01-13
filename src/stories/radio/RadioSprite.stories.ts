@@ -62,7 +62,7 @@ export const UseSprite = ({ count, text, textColor, onChange }: any) =>
 };
 
 export default {
-    title: 'UI components/RadioGroup/Use Sprite',
+    title: 'Components/RadioGroup/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

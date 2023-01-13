@@ -77,7 +77,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'UI components/Button/Use Graphics',
+    title: 'Components/Button/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

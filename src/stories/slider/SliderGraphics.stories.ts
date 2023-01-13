@@ -111,7 +111,7 @@ export const Single = ({
 };
 
 export default {
-    title: 'UI components/Slider/Graphics',
+    title: 'Components/Slider/Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

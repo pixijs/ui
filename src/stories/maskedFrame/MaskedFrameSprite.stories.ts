@@ -37,7 +37,7 @@ export const UseSprite = ({ borderColor, borderWidth }: any) =>
 };
 
 export default {
-    title: 'UI components/MaskedFrame/Use Sprite',
+    title: 'Components/MaskedFrame/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

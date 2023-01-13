@@ -55,7 +55,7 @@ export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 };
 
 export default {
-    title: 'UI components/Checkbox/Use Sprite',
+    title: 'Components/Checkbox/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

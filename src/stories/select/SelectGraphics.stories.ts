@@ -147,7 +147,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Use Graphics',
+    title: 'Components/Select/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

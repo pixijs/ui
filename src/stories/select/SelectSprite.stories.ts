@@ -102,7 +102,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Use Sprite',
+    title: 'Components/Select/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

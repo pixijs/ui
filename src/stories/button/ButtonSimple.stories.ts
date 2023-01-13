@@ -100,7 +100,7 @@ export const Simple = ({
 };
 
 export default {
-    title: 'UI components/Button',
+    title: 'Components/Button',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

@@ -97,7 +97,7 @@ function createItems(
 }
 
 export default {
-    title: 'UI components/ScrollBox/Use Sprite',
+    title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

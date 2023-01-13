@@ -87,7 +87,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'UI components/RadioGroup/Use Graphics',
+    title: 'Components/RadioGroup/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

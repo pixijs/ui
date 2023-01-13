@@ -61,7 +61,7 @@ function getMask(width: number, height: number, radius: number): Graphics
 }
 
 export default {
-    title: 'UI components/MaskedFrame/Use Graphics',
+    title: 'Components/MaskedFrame/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

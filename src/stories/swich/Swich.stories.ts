@@ -40,7 +40,7 @@ export const Simple = ({ onChange }: any) =>
 };
 
 export default {
-    title: 'UI components/Swich/Simple',
+    title: 'Components/Swich/Simple',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

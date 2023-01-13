@@ -89,7 +89,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'UI components/ScrollBox/Use Graphics',
+    title: 'Components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

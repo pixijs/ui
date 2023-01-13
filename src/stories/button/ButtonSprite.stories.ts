@@ -79,7 +79,7 @@ export const UseSprite = ({
 };
 
 export default {
-    title: 'UI components/Button/Use Sprite',
+    title: 'Components/Button/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

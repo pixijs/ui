@@ -86,7 +86,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'UI components/Checkbox/Use Graphics',
+    title: 'Components/Checkbox/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };
