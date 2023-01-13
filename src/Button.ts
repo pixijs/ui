@@ -396,11 +396,15 @@ export class Button extends Container
         }
     }
 
-    set anchor(anchor: Pos)
+    /**
+     * TODO
+     * @param anchor
+     * @param x
+     * @param y
+     */
+    setAnchor(x: number, y?: number)
     {
-        this._anchor = anchor;
-        const anchorX = typeof this._anchor === 'number' ? this._anchor : this._anchor.x;
-        const anchorY = typeof this._anchor === 'number' ? this._anchor : this._anchor.y;
+        y = y ?? x;
 
         if (this.defaultView)
         {
@@ -408,10 +412,10 @@ export class Button extends Container
 
             this.defaultView.x
                 = (this.width / 2)
-                - (this.defaultView.width * anchorX);
+                - (this.defaultView.width * x);
             this.defaultView.y
                 = (this.height / 2)
-                - (this.defaultView.height * anchorY);
+                - (this.defaultView.height * y);
         }
 
         if (this.hoverView)
@@ -420,10 +424,10 @@ export class Button extends Container
 
             this.hoverView.x
                 = (this.width / 2)
-                - (this.hoverView.width * anchorX);
+                - (this.hoverView.width * x);
             this.hoverView.y
                 = (this.height / 2)
-                - (this.hoverView.height * anchorY);
+                - (this.hoverView.height * y);
         }
 
         if (this.pressedView)
@@ -432,10 +436,10 @@ export class Button extends Container
 
             this.pressedView.x
                 = (this.width / 2)
-                - (this.pressedView.width * anchorX);
+                - (this.pressedView.width * x);
             this.pressedView.y
                 = (this.height / 2)
-                - (this.pressedView.height * anchorY);
+                - (this.pressedView.height * y);
         }
 
         if (this.disabledView)
@@ -444,24 +448,21 @@ export class Button extends Container
 
             this.disabledView.x
                 = (this.width / 2)
-                - (this.disabledView.width * anchorX);
+                - (this.disabledView.width * x);
             this.disabledView.y
                 = (this.height / 2)
-                - (this.disabledView.height * anchorY);
+                - (this.disabledView.height * y);
         }
     }
 
-    get anchor(): Pos
-    {
-        return this._anchor;
-    }
-
+    /** TODO */
     set text(text: string | number)
     {
         this.textView.text = text;
         this.setState(this.state);
     }
 
+    /** TODO */
     get text(): string
     {
         return this.textView.text;
