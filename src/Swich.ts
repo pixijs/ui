@@ -1,6 +1,7 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
+import { getView } from './utils/helpers/view';
 
 /**
  * Container based component that switches visibility of containers by click.
@@ -15,7 +16,7 @@ import { Button } from './Button';
  *
  * ```
  */
-export class Switch extends Container
+export class Swich extends Container
 {
     /** TODO */
     public view = new Container();
@@ -27,18 +28,21 @@ export class Switch extends Container
     public onChange: Signal<(state: number) => void>;
     private button: Button;
 
-    constructor(views: Container[], activeViewID = 0)
+    constructor(views: Array<Container | string>, activeViewID = 0)
     {
         super();
 
-        views.forEach((state, id) =>
+        this.views = views.map((stateView, id) =>
         {
-            this.view.addChild(state);
+            const view = getView(stateView);
 
-            state.visible = id === this.activeViewID;
+            this.view.addChild(view);
+
+            view.visible = id === this.activeViewID;
+
+            return view;
         });
 
-        this.views = views;
         this.activeViewID = activeViewID;
 
         this.button = new Button({ defaultView: this.view });

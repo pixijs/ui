@@ -4,6 +4,7 @@ import { FederatedPointerEvent } from '@pixi/events';
 import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Sprite } from '@pixi/sprite';
+import { getView } from './utils/helpers/view';
 
 type Pos = number | { x?: number; y?: number };
 
@@ -33,22 +34,12 @@ export interface ButtonOptions
  * It composes a view rather than extends one, this means we can easily make any pixi container a button!
  * @example
  * ```
- * const spriteButton = new Button({
+ * const button = new Button({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     disabledView: `button_disabled.png`,
  *     textView: new Text(text, { fill: 0xFFFFFF }),
- * });
- *
- * const graphicsButton = new Button({
- *     defaultView: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
- *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
- *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
- *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
- *     textView: new Text(text, { fill: 0xFFFFFF }),
- *     padding: 10,
- *     textOffset: { x: 10, y: 1 },
  * });
  *
  * ```
@@ -58,13 +49,13 @@ export class Button extends Container
     /** TODO */
     public defaultView: Container;
     /** TODO */
-    public hoverView: Container;
+    public hoverView!: Container;
     /** TODO */
-    public pressedView: Container;
+    public pressedView!: Container;
     /** TODO */
-    public disabledView: Container;
+    public disabledView!: Container;
     /** TODO */
-    public text: Text;
+    public text!: Text;
 
     /** TODO */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -106,26 +97,26 @@ export class Button extends Container
 
         this.offsets = offsets ?? {};
 
-        this.defaultView = this.getView(defaultView);
+        this.defaultView = getView(defaultView);
         this.addChild(this.defaultView);
 
         if (hoverView)
         {
-            this.hoverView = this.getView(hoverView);
+            this.hoverView = getView(hoverView);
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
 
         if (pressedView)
         {
-            this.pressedView = this.getView(pressedView);
+            this.pressedView = getView(pressedView);
             this.addChild(this.pressedView);
             this.pressedView.visible = false;
         }
 
         if (disabledView)
         {
-            this.disabledView = this.getView(disabledView);
+            this.disabledView = getView(disabledView);
             this.addChild(this.disabledView);
             this.disabledView.visible = false;
         }
@@ -251,7 +242,7 @@ export class Button extends Container
     /** TODO */
     public getText(): string
     {
-        return this.text.text;
+        return this.text?.text;
     }
 
     /** TODO */
@@ -400,16 +391,19 @@ export class Button extends Container
         activeView.y += this.getOffset(this.offsets[`${state}View`]).y;
 
         activeView.visible = true;
-        activeView.addChild(this.text);
 
-        this.text.x = ((activeView.width - this.text.width) / 2) + this.getOffset(this.offsets.text).x;
-        this.text.y = ((activeView.height - this.text.height) / 2) + this.getOffset(this.offsets.text).y;
-
-        if (this.text.width + this.padding > activeView.width)
+        if (this.text)
         {
-            const maxWidth = activeView.width;
+            activeView.addChild(this.text);
+            this.text.x = ((activeView.width - this.text.width) / 2) + this.getOffset(this.offsets.text).x;
+            this.text.y = ((activeView.height - this.text.height) / 2) + this.getOffset(this.offsets.text).y;
 
-            this.text.scale.set(maxWidth / (this.text.width + this.padding));
+            if (this.text.width + this.padding > activeView.width)
+            {
+                const maxWidth = activeView.width;
+
+                this.text.scale.set(maxWidth / (this.text.width + this.padding));
+            }
         }
     }
 
@@ -471,20 +465,5 @@ export class Button extends Container
     get anchor(): Pos
     {
         return this._anchor;
-    }
-
-    private getView(view: string | Container): Container
-    {
-        if (typeof view === 'string')
-        {
-            return Sprite.from(view);
-        }
-        else if (view instanceof Container)
-        {
-            return view;
-        }
-        console.log(view);
-
-        throw new Error('Invalid view');
     }
 }

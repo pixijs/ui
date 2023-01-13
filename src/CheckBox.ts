@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text, ITextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Switch } from './Switch';
+import { Swich } from './Swich';
 
 export type CheckBoxStyle = {
     checked: Container | string;
@@ -31,7 +31,7 @@ export type CheckBoxOptions = {
  *
  * ```
  */
-export class CheckBox extends Switch
+export class CheckBox extends Swich
 {
     private label: Text;
 

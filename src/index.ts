@@ -8,4 +8,4 @@ export * from './RadioGroup';
 export * from './ScrollBox';
 export * from './Select';
 export * from './Slider';
-export * from './Switch';
+export * from './Swich';
