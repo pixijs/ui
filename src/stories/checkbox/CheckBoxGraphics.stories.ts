@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { CheckBox } from '../../CheckBox';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
@@ -21,7 +21,7 @@ const args = {
     onPress: action('Checkbox: '),
 };
 
-export const Graphics = ({
+export const UseGraphics = ({
     text,
     count,
     checked,
@@ -52,12 +52,12 @@ export const Graphics = ({
             text: `${text} ${i + 1}`,
             checked,
             style: {
-                unchecked: new PixiGraphics()
+                unchecked: new Graphics()
                     .beginFill(borderColor)
                     .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
                     .beginFill(color)
                     .drawRoundedRect(0, 0, width, height, radius),
-                checked: new PixiGraphics()
+                checked: new Graphics()
                     .beginFill(borderColor)
                     .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
                     .beginFill(color)
@@ -86,7 +86,7 @@ export const Graphics = ({
 };
 
 export default {
-    title: 'UI components/Checkbox/Graphics',
+    title: 'UI components/Checkbox/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

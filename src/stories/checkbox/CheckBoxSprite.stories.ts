@@ -1,5 +1,4 @@
-import { Sprite as PixiSprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
+import { Sprite } from '@pixi/sprite';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Layout } from '../../Layout';
@@ -16,7 +15,7 @@ const args = {
     onChange: action('Checkbox changed'),
 };
 
-export const Sprite = ({ checked, onChange, count, textColor, text }: any) =>
+export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
@@ -34,8 +33,8 @@ export const Sprite = ({ checked, onChange, count, textColor, text }: any) =>
                 text: text ?? `${text} ${i + 1}`,
                 checked,
                 style: {
-                    unchecked: new PixiSprite(Texture.from(`switch_off.png`)),
-                    checked: new PixiSprite(Texture.from(`switch_on.png`)),
+                    unchecked: Sprite.from(`switch_off.png`),
+                    checked: Sprite.from(`switch_on.png`),
                     text: {
                         ...defaultTextStyle,
                         fontSize: 22,
@@ -56,7 +55,7 @@ export const Sprite = ({ checked, onChange, count, textColor, text }: any) =>
 };
 
 export default {
-    title: 'UI components/Checkbox/Sprite',
+    title: 'UI components/Checkbox/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

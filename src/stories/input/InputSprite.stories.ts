@@ -1,5 +1,4 @@
-import { Sprite as PixiSprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
+import { Sprite } from '@pixi/sprite';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
 import { Input } from '../../Input';
@@ -20,7 +19,7 @@ const args = {
     onChange: action('Input: '),
 };
 
-export const Sprite = ({
+export const UseSprite = ({
     text,
     count,
     padding,
@@ -42,7 +41,7 @@ export const Sprite = ({
         {
             // Component usage
             const input = new Input({
-                bg: new PixiSprite(Texture.from('input.png')),
+                bg: Sprite.from('input.png'),
                 padding,
                 textStyle: {
                     ...defaultTextStyle,
@@ -67,7 +66,7 @@ export const Sprite = ({
 };
 
 export default {
-    title: 'UI components/Input/Sprite',
+    title: 'UI components/Input/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

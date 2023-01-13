@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
@@ -55,16 +55,16 @@ export const UseGraphics = ({
 
     // Component usage !!!
     const view = new Button({
-        defaultView: new PixiGraphics()
+        defaultView: new Graphics()
             .beginFill(color)
             .drawRoundedRect(0, 0, width, height, radius),
-        hoverView: new PixiGraphics()
+        hoverView: new Graphics()
             .beginFill(hoverColor)
             .drawRoundedRect(0, 0, width, height, radius),
-        pressedView: new PixiGraphics()
+        pressedView: new Graphics()
             .beginFill(pressedColor)
             .drawRoundedRect(0, 0, width, height, radius),
-        disabledView: new PixiGraphics()
+        disabledView: new Graphics()
             .beginFill(disabledColor)
             .drawRoundedRect(0, 0, width, height, radius),
         textView: new Text(text, {

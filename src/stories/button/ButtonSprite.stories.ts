@@ -1,4 +1,3 @@
-import { Sprite as PixiSprite } from '@pixi/sprite';
 import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';

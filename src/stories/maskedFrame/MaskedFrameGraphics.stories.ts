@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { Texture } from '@pixi/core';
@@ -14,7 +14,7 @@ const args = {
 };
 
 // TODO: implement preloading
-export const Graphics = ({ borderColor, radius, borderWidth }: any) =>
+export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
 {
     const view = new Container();
 
@@ -42,11 +42,11 @@ export const Graphics = ({ borderColor, radius, borderWidth }: any) =>
     return { view, resize: () => centerElement(view) };
 };
 
-function getMask(width: number, height: number, radius: number): PixiGraphics
+function getMask(width: number, height: number, radius: number): Graphics
 {
     const isCircle = width === height && radius >= width / 2;
 
-    const mask = new PixiGraphics();
+    const mask = new Graphics();
 
     if (isCircle)
     {
@@ -61,7 +61,7 @@ function getMask(width: number, height: number, radius: number): PixiGraphics
 }
 
 export default {
-    title: 'UI components/MaskedFrame/Graphics',
+    title: 'UI components/MaskedFrame/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

@@ -1,6 +1,5 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Container } from '@pixi/display';
-import { Texture } from '@pixi/core';
 import { Sprite } from '@pixi/sprite';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
@@ -23,7 +22,7 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const Graphics = ({
+export const UseGraphics = ({
     fontColor,
     fontSize,
     width,
@@ -93,7 +92,7 @@ function getClosedBG(
     radius: number,
 )
 {
-    const closedBG = new PixiGraphics()
+    const closedBG = new Graphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height, radius);
 
@@ -117,7 +116,7 @@ function getOpenBG(
     radius: number,
 )
 {
-    const openBG = new PixiGraphics()
+    const openBG = new Graphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height * 6, radius);
 
@@ -148,7 +147,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Graphics',
+    title: 'UI components/Select/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

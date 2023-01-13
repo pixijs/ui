@@ -10,7 +10,7 @@ const args = {
 };
 
 // TODO: implement preloading
-export const Sprite = ({ borderColor, borderWidth }: any) =>
+export const UseSprite = ({ borderColor, borderWidth }: any) =>
 {
     const view = new Container();
 
@@ -37,7 +37,7 @@ export const Sprite = ({ borderColor, borderWidth }: any) =>
 };
 
 export default {
-    title: 'UI components/MaskedFrame/Sprite',
+    title: 'UI components/MaskedFrame/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

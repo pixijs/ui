@@ -21,7 +21,7 @@ export type InputOptions = {
  * @example
  * ```
  * new Input({
- *     bg: new PixiSprite(Texture.from('item.png')),
+ *     bg: Sprite.from('item.png'),
  *     padding,
  *     textStyle: {
  *         ...buttonTextStyle,

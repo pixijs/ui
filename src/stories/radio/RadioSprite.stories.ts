@@ -13,7 +13,7 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const Sprite = ({ count, text, textColor, onChange }: any) =>
+export const UseSprite = ({ count, text, textColor, onChange }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
@@ -62,7 +62,7 @@ export const Sprite = ({ count, text, textColor, onChange }: any) =>
 };
 
 export default {
-    title: 'UI components/RadioGroup/Sprite',
+    title: 'UI components/RadioGroup/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

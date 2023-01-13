@@ -10,33 +10,30 @@ import { getView } from './utils/helpers/view';
  * @example
  * ```
  * const switch = new Switch([
- *     new PixiSprite(Texture.from(`switch_off.png`)),
- *     new PixiSprite(Texture.from(`switch_on.png`)),
+ *     Sprite.from(`switch_off.png`),
+ *     Sprite.from(`switch_on.png`),
  * ]);
  *
  * ```
  */
-export class Swich extends Container
+export class Swich extends Button
 {
-    /** TODO */
-    public view = new Container();
     /** TODO */
     public views: Container[] = [];
     /** TODO */
     public activeViewID = 0;
     /** TODO */
     public onChange: Signal<(state: number) => void>;
-    private button: Button;
 
     constructor(views: Array<Container | string>, activeViewID = 0)
     {
-        super();
+        super({ defaultView: new Container() });
 
         this.views = views.map((stateView, id) =>
         {
             const view = getView(stateView);
 
-            this.view.addChild(view);
+            this.defaultView.addChild(view);
 
             view.visible = id === this.activeViewID;
 
@@ -45,13 +42,9 @@ export class Swich extends Container
 
         this.activeViewID = activeViewID;
 
-        this.button = new Button({ defaultView: this.view });
-
-        this.addChild(this.button);
-
         this.onChange = new Signal();
 
-        this.button.onPress.connect(() =>
+        this.onPress.connect(() =>
         {
             this.switch();
             this.onChange.emit(this.activeViewID);

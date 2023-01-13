@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -24,7 +24,7 @@ const args = {
     onPress: action('Button was pressed > '),
 };
 
-export const Graphics = ({
+export const UseGraphics = ({
     type,
     fontColor,
     elementsMargin,
@@ -49,10 +49,10 @@ export const Graphics = ({
     for (let i = 0; i < itemsCount; i++)
     {
         const button = new Button({
-            defaultView: new PixiGraphics()
+            defaultView: new Graphics()
                 .beginFill(0xa5e24d)
                 .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new PixiGraphics()
+            hoverView: new Graphics()
                 .beginFill(0xfec230)
                 .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             textView: new Text(`Item ${i + 1}`, {
@@ -89,7 +89,7 @@ export const Graphics = ({
 };
 
 export default {
-    title: 'UI components/ScrollBox/Graphics',
+    title: 'UI components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

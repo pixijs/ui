@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
@@ -46,7 +46,7 @@ export const Simple = ({
 
     // Component usage !!!
     const view = new Button({
-        defaultView: new PixiGraphics()
+        defaultView: new Graphics()
             .beginFill(color)
             .drawRoundedRect(0, 0, width, height, radius),
         textView: new Text(text, {

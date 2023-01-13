@@ -16,7 +16,7 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const Sprite = ({
+export const UseSprite = ({
     fontColor,
     fontSize,
     itemsCount,
@@ -102,7 +102,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Sprite',
+    title: 'UI components/Select/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };
