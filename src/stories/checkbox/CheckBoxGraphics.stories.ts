@@ -74,9 +74,9 @@ export const Graphics = ({
             },
         });
 
-        checkBox.onChange.connect(() =>
+        checkBox.onCheck.connect((checked) =>
         {
-            onPress(`${checkBox.checked}`);
+            onPress(`checkBox ${i + 1} ${checked}`);
         });
 
         view.addChild(checkBox);

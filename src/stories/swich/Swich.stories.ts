@@ -30,7 +30,7 @@ export const Simple = ({ onChange, count, checked }: any) =>
                 `switch_on.png`
             ], checked ? 1 : 0);
 
-            swich.onChange.connect((state) => onChange(`swich state ${state}`));
+            swich.onChange.connect((state) => onChange(`swich ${i + 1} state ${state}`));
 
             view.addChild(swich);
         }

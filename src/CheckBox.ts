@@ -13,7 +13,7 @@ export type CheckBoxStyle = {
 
 export type CheckBoxOptions = {
     style: CheckBoxStyle;
-    text: string;
+    text?: string;
     checked?: boolean;
 };
 
@@ -33,7 +33,9 @@ export type CheckBoxOptions = {
  */
 export class CheckBox extends Swich
 {
-    private label: Text;
+    private label1: Text;
+    private label2: Text;
+    public onCheck: Signal<(state: boolean) => void>;
 
     constructor(options: CheckBoxOptions)
     {
@@ -47,22 +49,23 @@ export class CheckBox extends Swich
 
         super([unchecked, checked], options.checked ? 1 : 0);
 
-        if (options.text)
-        {
-            this.label = new Text(options.text, options.style.text);
-            this.label.x = unchecked.width + 10;
-            this.label.y = (unchecked.height - this.label.height) / 2;
-            unchecked.addChild(this.label);
+        this.label1 = new Text(options.text ?? '', options.style.text);
+        this.label1.visible = options.text.length > 0;
+        this.label1.x = unchecked.width + 10;
+        this.label1.y = (unchecked.height - this.label1.height) / 2;
+        unchecked.addChild(this.label1);
 
-            this.label = new Text(options.text, options.style.text);
-            this.label.x = checked.width + 10;
-            this.label.y = (checked.height - this.label.height) / 2;
-            checked.addChild(this.label);
-        }
+        this.label2 = new Text(options.text ?? '', options.style.text);
+        this.label2.visible = options.text.length > 0;
+        this.label2.x = checked.width + 10;
+        this.label2.y = (checked.height - this.label2.height) / 2;
+        checked.addChild(this.label2);
 
         this.update();
 
-        this.onChange = new Signal();
+        this.onCheck = new Signal();
+
+        this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
     /** TODO */
@@ -74,14 +77,17 @@ export class CheckBox extends Swich
     /** TODO */
     public set text(text: string)
     {
-        this.label.text = text;
+        this.label1.text = text;
+        this.label2.text = text;
+        this.label1.visible = text.length > 0;
+        this.label2.visible = text.length > 0;
         this.update();
     }
 
     /** TODO */
     public get text(): string
     {
-        return this.label.text;
+        return this.label1.text;
     }
 
     /** TODO */
