@@ -1,4 +1,4 @@
-import { utils } from '@pixi/core';
+import { ObservablePoint, utils } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Text } from '@pixi/text';
@@ -26,7 +26,9 @@ export interface ButtonOptions
     disabledView?: string | Container;
     text?: string | Text;
     padding?: number;
-    anchor?: Pos;
+    anchor?: number;
+    anchorX?: number;
+    anchorY?: number;
     offsets?: Offsets;
 }
 
@@ -76,10 +78,11 @@ export class Button extends Container
     private _shown: boolean;
 
     private padding = 0;
-    private _anchor: Pos = 0.5;
     public offsets: Offsets = {};
 
     public state: State = 'default';
+
+    public anchor: ObservablePoint;
 
     constructor({
         defaultView,
@@ -90,6 +93,8 @@ export class Button extends Container
         padding,
         offsets,
         anchor,
+        anchorX,
+        anchorY,
     }: ButtonOptions)
     {
         super();
@@ -125,7 +130,14 @@ export class Button extends Container
         this.textView = getTextView(text);
         this.textView.anchor.set(0);
 
-        this.anchor = anchor ?? 0.5;
+        this.anchor = new ObservablePoint(
+            this.setAnchor,
+            this,
+            anchorX ?? anchor,
+            anchorY ?? anchor,
+        );
+        this.setAnchor();
+
         this.setState('default');
 
         this._enabled = true;
@@ -402,9 +414,12 @@ export class Button extends Container
      * @param x
      * @param y
      */
-    setAnchor(x: number, y?: number)
+    private setAnchor()
     {
-        y = y ?? x;
+        const x = this.anchor.x;
+        const y = this.anchor.y;
+
+        console.log('setAnchor', x, y);
 
         if (this.defaultView)
         {

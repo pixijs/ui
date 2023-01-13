@@ -10,6 +10,9 @@ const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
     color: '#A5E24D',
+    hoverColor: '#FEC230',
+    pressedColor: '#FE6048',
+    disabledColor: '#6E6E6E',
     width: 300,
     height: 137,
     padding: 11,
@@ -21,7 +24,7 @@ const args = {
     pressedOffset: 5,
     disabledOffset: 0,
     disabled: false,
-    onPress: action('button was pressed! (tap or click!)'),
+    action: action('button Event:'),
 };
 
 export const UseGraphics = ({
@@ -30,6 +33,9 @@ export const UseGraphics = ({
     radius,
     text,
     color,
+    hoverColor,
+    pressedColor,
+    disabledColor,
     disabled,
     padding,
     textColor,
@@ -39,15 +45,27 @@ export const UseGraphics = ({
     hoverOffset,
     pressedOffset,
     disabledOffset,
-    onPress,
+    action,
 }: any) =>
 {
     color = Number(color.replace('#', '0x'));
+    hoverColor = Number(hoverColor.replace('#', '0x'));
+    pressedColor = Number(pressedColor.replace('#', '0x'));
+    disabledColor = Number(disabledColor.replace('#', '0x'));
 
     // Component usage !!!
     const view = new Button({
         defaultView: new Graphics()
             .beginFill(color)
+            .drawRoundedRect(0, 0, width, height, radius),
+        hoverView: new Graphics()
+            .beginFill(hoverColor)
+            .drawRoundedRect(0, 0, width, height, radius),
+        pressedView: new Graphics()
+            .beginFill(pressedColor)
+            .drawRoundedRect(0, 0, width, height, radius),
+        disabledView: new Graphics()
+            .beginFill(disabledColor)
             .drawRoundedRect(0, 0, width, height, radius),
         text: new Text(text, {
             ...defaultTextStyle,
@@ -71,7 +89,12 @@ export const UseGraphics = ({
         view.enabled = false;
     }
 
-    view.onPress.connect(onPress);
+    view.onPress.connect(() => action('onPress'));
+    view.onDown.connect(() => action('onDown'));
+    view.onUp.connect(() => action('onUp'));
+    view.onHover.connect(() => action('onHover'));
+    view.onOut.connect(() => action('onOut'));
+    view.onUpOut.connect(() => action('onUpOut'));
 
     return { view, resize: () => centerElement(view) };
 };
