@@ -408,18 +408,11 @@ export class Button extends Container
         }
     }
 
-    /**
-     * TODO
-     * @param anchor
-     * @param x
-     * @param y
-     */
+    /** TODO */
     private setAnchor()
     {
         const x = this.anchor.x;
         const y = this.anchor.y;
-
-        console.log('setAnchor', x, y);
 
         if (this.defaultView)
         {
