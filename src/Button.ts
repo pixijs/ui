@@ -320,7 +320,7 @@ export class Button extends Container
     private _processOut(e?: FederatedPointerEvent): void
     {
         this.onOut.emit(this, e);
-        this._isDown = false;
+        // this._isDown = false;
     }
 
     private _upOut(e?: FederatedPointerEvent): void
