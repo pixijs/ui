@@ -24,7 +24,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const Simple = ({
+export const UseGraphics = ({
     width,
     height,
     radius,
@@ -49,7 +49,7 @@ export const Simple = ({
         defaultView: new Graphics()
             .beginFill(color)
             .drawRoundedRect(0, 0, width, height, radius),
-        textView: new Text(text, {
+        text: new Text(text, {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill,
         }),
@@ -77,7 +77,7 @@ export const Simple = ({
 };
 
 export default {
-    title: 'UI components/Button/Simple',
+    title: 'UI components/Button/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

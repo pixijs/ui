@@ -48,7 +48,7 @@ export const UseSprite = ({
             hoverView: `button_hover.png`,
             pressedView: `button_pressed.png`,
             disabledView: `button_disabled.png`,
-            textView: new Text(text, {
+            text: new Text(text, {
                 ...defaultTextStyle,
                 fill: textColor || defaultTextStyle.fill,
             }),

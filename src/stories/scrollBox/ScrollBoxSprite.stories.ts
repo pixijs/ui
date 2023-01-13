@@ -78,7 +78,7 @@ function createItems(
         const button = new Button({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
-            textView: new Text(`Item ${i + 1}`, {
+            text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
                 fill: fontColor,
             }),

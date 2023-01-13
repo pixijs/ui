@@ -24,10 +24,10 @@ const args = {
     pressedOffset: 5,
     disabledOffset: 0,
     disabled: false,
-    onPress: action('button was pressed! (tap or click!)'),
+    action: action('button Event:'),
 };
 
-export const UseGraphics = ({
+export const Simple = ({
     width,
     height,
     radius,
@@ -45,7 +45,7 @@ export const UseGraphics = ({
     hoverOffset,
     pressedOffset,
     disabledOffset,
-    onPress,
+    action,
 }: any) =>
 {
     color = Number(color.replace('#', '0x'));
@@ -67,7 +67,7 @@ export const UseGraphics = ({
         disabledView: new Graphics()
             .beginFill(disabledColor)
             .drawRoundedRect(0, 0, width, height, radius),
-        textView: new Text(text, {
+        text: new Text(text, {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill,
         }),
@@ -89,7 +89,12 @@ export const UseGraphics = ({
         view.enabled = false;
     }
 
-    view.onPress.connect(onPress);
+    view.onPress.connect(() => action('onPress'));
+    view.onDown.connect(() => action('onDown'));
+    view.onUp.connect(() => action('onUp'));
+    view.onHover.connect(() => action('onHover'));
+    view.onOut.connect(() => action('onOut'));
+    view.onUpOut.connect(() => action('onUpOut'));
 
     return { view, resize: () => centerElement(view) };
 };

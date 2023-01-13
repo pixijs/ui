@@ -30,13 +30,6 @@ export const Simple = ({ onChange }: any) =>
         const swich = new Swich(assets);
 
         swich.onChange.connect((state) => onChange(`swich state ${state}`));
-        swich.onPress.connect((state) => onChange(`swich onPress ${state}`));
-        swich.onDown.connect((state) => onChange(`swich onDown ${state}`));
-        swich.onUp.connect((state) => onChange(`swich onUp ${state}`));
-        swich.onHover.connect((state) => onChange(`swich onHover ${state}`));
-        swich.onOut.connect((state) => onChange(`swich onOut ${state}`));
-        swich.onUpOut.connect((state) => onChange(`swich onUpOut ${state}`));
-        swich.onChange.connect((state) => onChange(`swich state ${state}`));
 
         view.addChild(swich);
 

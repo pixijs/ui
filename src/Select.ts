@@ -159,7 +159,7 @@ export class Select extends Container
 
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
-            const text = button.getText();
+            const text = button.text;
 
             if (id === selected)
             {
@@ -216,12 +216,14 @@ export class Select extends Container
             const defaultView = new Graphics()
                 .beginFill(backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
+
             const hoverView = new Graphics()
                 .beginFill(hoverColor ?? backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
-            const textView = new Text(item, textStyle);
 
-            const button = new Button({ defaultView, hoverView, textView });
+            const text = new Text(item, textStyle);
+
+            const button = new Button({ defaultView, hoverView, text });
 
             buttons.push(button);
         });

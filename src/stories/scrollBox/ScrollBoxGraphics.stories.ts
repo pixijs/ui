@@ -55,7 +55,7 @@ export const UseGraphics = ({
             hoverView: new Graphics()
                 .beginFill(0xfec230)
                 .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            textView: new Text(`Item ${i + 1}`, {
+            text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
                 fill: fontColor || defaultTextStyle.fill,
             }),

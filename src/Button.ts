@@ -40,7 +40,7 @@ export interface ButtonOptions
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     disabledView: `button_disabled.png`,
- *     textView: new Text(text, { fill: 0xFFFFFF }),
+ *     text: new Text(text, { fill: 0xFFFFFF }),
  * });
  *
  * ```
