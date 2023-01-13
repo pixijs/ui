@@ -18,13 +18,13 @@ export const Graphics = ({ borderColor, radius, borderWidth }: any) =>
 {
     const view = new Container();
 
-    const assets = [`avatar.png`];
+    const assets = [`avatar-01.png`];
 
     preloadAssets(assets).then(() =>
     {
         borderColor = Number(borderColor.replace('#', '0x'));
 
-        const target = new Sprite(Texture.from(`avatar.png`));
+        const target = new Sprite(Texture.from(`avatar-01.png`));
 
         // Component usage !!!
         const frame = new MaskedFrame({
