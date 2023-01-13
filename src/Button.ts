@@ -18,10 +18,10 @@ type Offsets = {
 };
 export interface ButtonOptions
 {
-    defaultView: Container;
-    hoverView?: Container;
-    pressedView?: Container;
-    disabledView?: Container;
+    defaultView: string | Container;
+    hoverView?: string | Container;
+    pressedView?: string | Container;
+    disabledView?: string | Container;
     textView?: Text;
     padding?: number;
     anchor?: Pos;
@@ -34,10 +34,10 @@ export interface ButtonOptions
  * @example
  * ```
  * const spriteButton = new Button({
- *     view: new Sprite(Texture.from(`button.png`)),
- *     hoverView: new Sprite(Texture.from(`button_hover.png`)),
- *     pressedView: new Sprite(Texture.from(`button_pressed.png`)),
- *     disabledView: new Sprite(Texture.from(`button_disabled.png`)),
+ *     view: `button.png`,
+ *     hoverView: `button_hover.png`,
+ *     pressedView: `button_pressed.png`,
+ *     disabledView: `button_disabled.png`,
  *     textView: new Text(text, { fill: 0xFFFFFF }),
  * });
  *
@@ -106,26 +106,26 @@ export class Button extends Container
 
         this.offsets = offsets ?? {};
 
-        this.defaultView = defaultView;
+        this.defaultView = this.getView(defaultView);
         this.addChild(this.defaultView);
 
         if (hoverView)
         {
-            this.hoverView = hoverView;
+            this.hoverView = this.getView(hoverView);
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
 
         if (pressedView)
         {
-            this.pressedView = pressedView;
+            this.pressedView = this.getView(pressedView);
             this.addChild(this.pressedView);
             this.pressedView.visible = false;
         }
 
         if (disabledView)
         {
-            this.disabledView = disabledView;
+            this.disabledView = this.getView(disabledView);
             this.addChild(this.disabledView);
             this.disabledView.visible = false;
         }
@@ -471,5 +471,18 @@ export class Button extends Container
     get anchor(): Pos
     {
         return this._anchor;
+    }
+
+    private getView(view: string | Container): Container
+    {
+        if (typeof view === 'string')
+        {
+            return Sprite.from(view);
+        }
+        else if (view instanceof Container)
+        {
+            return view;
+        }
+        throw new Error('Invalid view');
     }
 }

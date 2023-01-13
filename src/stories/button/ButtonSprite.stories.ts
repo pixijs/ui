@@ -45,10 +45,10 @@ export const UseSprite = ({
     {
         // Component usage !!!
         const button = new Button({
-            defaultView: PixiSprite.from(`button.png`),
-            hoverView: PixiSprite.from(`button_hover.png`),
-            pressedView: PixiSprite.from(`button_pressed.png`),
-            disabledView: PixiSprite.from(`button_disabled.png`),
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
+            pressedView: `button_pressed.png`,
+            disabledView: `button_disabled.png`,
             textView: new Text(text, {
                 ...defaultTextStyle,
                 fill: textColor || defaultTextStyle.fill,
