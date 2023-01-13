@@ -99,7 +99,7 @@ function getClosedBG(
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
-        const arrowDown = new Sprite(Texture.from('arrow_down.png'));
+        const arrowDown = Sprite.from('arrow_down.png');
 
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
@@ -123,7 +123,7 @@ function getOpenBG(
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
-        const arrowUp = new Sprite(Texture.from('arrow_down.png'));
+        const arrowUp = Sprite.from('arrow_down.png');
 
         arrowUp.angle = 180;
         arrowUp.anchor.set(0.5);

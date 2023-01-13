@@ -4,6 +4,7 @@ import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text, ITextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Swich } from './Swich';
+import { getView } from './utils/helpers/view';
 
 export type CheckBoxStyle = {
     checked: Container | string;
@@ -39,13 +40,8 @@ export class CheckBox extends Swich
 
     constructor(options: CheckBoxOptions)
     {
-        const unchecked = typeof options.style.unchecked === 'string'
-            ? new Sprite(Texture.from(options.style.unchecked))
-            : options.style.unchecked;
-
-        const checked = typeof options.style.checked === 'string'
-            ? new Sprite(Texture.from(options.style.checked))
-            : options.style.checked;
+        const unchecked = getView(options.style.unchecked);
+        const checked = getView(options.style.checked);
 
         super([unchecked, checked], options.checked ? 1 : 0);
 

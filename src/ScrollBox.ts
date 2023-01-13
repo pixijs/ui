@@ -252,7 +252,7 @@ export class ScrollBox extends Container
     private addBackground()
     {
         this.background = typeof this.options.background === 'string'
-            ? new Sprite(Texture.from(this.options.background))
+            ? Sprite.from(this.options.background)
             : new Graphics();
 
         this.addChild(this.background);

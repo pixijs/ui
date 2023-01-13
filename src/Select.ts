@@ -6,6 +6,7 @@ import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
+import { getView } from './utils/helpers/view';
 
 type Offset = {
     y: number;
@@ -103,8 +104,8 @@ export class Select extends Container
     {
         super();
 
-        this.closedBG = typeof closedBG === 'string' ? new Sprite(Texture.from(closedBG)) : closedBG;
-        this.openBG = typeof openBG === 'string' ? new Sprite(Texture.from(openBG)) : openBG;
+        this.closedBG = getView(closedBG);
+        this.openBG = getView(openBG);
         this.openBG.visible = false;
 
         this.addChild(this.closedBG, this.openBG);

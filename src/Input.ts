@@ -4,6 +4,7 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
+import { getView } from './utils/helpers/view';
 
 export type InputOptions = {
     bg?: Container | string;
@@ -60,7 +61,7 @@ export class Input extends Container
         super();
 
         this.options = options;
-        this.bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
+        this.bg = getView(options.bg);
         this.bg.cursor = 'text';
         this.bg.interactive = true;
 
