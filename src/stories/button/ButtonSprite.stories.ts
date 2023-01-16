@@ -57,10 +57,8 @@ export const UseSprite = ({
                 pressedView: { y: 5 },
                 text: { x: textOffsetX, y: textOffsetY }
             },
-            anchor: {
-                x: anchorX,
-                y: anchorY,
-            },
+            anchorX,
+            anchorY,
         });
 
         if (disabled)
