@@ -409,7 +409,7 @@ export class Button extends Container
     }
 
     /** TODO */
-    private setAnchor()
+    protected setAnchor()
     {
         const x = this.anchor.x;
         const y = this.anchor.y;
