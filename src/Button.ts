@@ -133,8 +133,8 @@ export class Button extends Container
         this.anchor = new ObservablePoint(
             this.setAnchor,
             this,
-            anchorX ?? anchor,
-            anchorY ?? anchor,
+            anchorX ?? anchor ?? 0.5,
+            anchorY ?? anchor ?? 0.5,
         );
         this.setAnchor();
 
