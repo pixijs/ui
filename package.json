@@ -52,6 +52,9 @@
     ]
   },
   "extensionConfig": {
+    "lint": [
+        "src"
+    ],
     "docsName": "PixiJS UI",
     "docsTitle": "PixiJS UI",
     "docsDescription": "API Documentation for UI components made with PixiJS",
