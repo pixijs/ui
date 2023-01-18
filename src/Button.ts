@@ -7,17 +7,15 @@ import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 import { getTextView } from './utils/helpers/text';
 
-type Pos = number | { x?: number; y?: number };
+type State = 'default' | 'hover' | 'pressed' | 'disabled';
+type Pos = { x?: number; y?: number };
+type Offset = {
+    'default'?: Pos;
+    'hover'?: Pos;
+    'pressed'?: Pos;
+    'disabled'?: Pos;
+} & Pos;
 
-const STATE = ['default', 'hover', 'pressed', 'disabled'];
-
-type State = typeof STATE[number];
-
-type Offsets = {
-    [key in State]?: Pos;
-} & {
-    text?: Pos;
-};
 export interface ButtonOptions
 {
     defaultView: string | Container;
@@ -29,7 +27,8 @@ export interface ButtonOptions
     anchor?: number;
     anchorX?: number;
     anchorY?: number;
-    offsets?: Offsets;
+    offset?: Offset;
+    textOffset?: Offset;
 }
 
 /**
@@ -77,8 +76,9 @@ export class Button extends Container
     private _enabled: boolean;
     private _shown: boolean;
 
-    private padding = 0;
-    public offsets: Offsets = {};
+    private padding: number;
+    public offset: Offset & Pos;
+    public textOffset: Offset;
 
     public state: State = 'default';
 
@@ -91,7 +91,8 @@ export class Button extends Container
         disabledView,
         text,
         padding,
-        offsets,
+        offset,
+        textOffset,
         anchor,
         anchorX,
         anchorY,
@@ -100,8 +101,8 @@ export class Button extends Container
         super();
 
         this.padding = (padding ?? 0) * 2;
-
-        this.offsets = offsets ?? {};
+        this.offset = offset;
+        this.textOffset = textOffset;
 
         this.defaultView = getView(defaultView);
         this.addChild(this.defaultView);
@@ -306,6 +307,7 @@ export class Button extends Container
     {
         if (this._isDown)
         {
+            this.onUp.emit(this, e);
             this.onUpOut.emit(this, e);
         }
 
@@ -327,15 +329,72 @@ export class Button extends Container
         this.up(e);
     }
 
-    private getOffset(val: Pos): {x: number, y: number}
+    private getOffset(): Pos
     {
-        const offsetX = typeof val === 'number' ? val : (val?.x ?? 0);
-        const offsetY = typeof val === 'number' ? val : (val?.y ?? 0);
-
-        return {
-            x: offsetX,
-            y: offsetY,
+        const resultOffset: Pos = {
+            x: 0,
+            y: 0,
         };
+
+        if (this.offset === undefined)
+        {
+            return resultOffset;
+        }
+
+        const stateOffset = this.offset[this.state];
+        const defaultStateOffset = this.offset?.default;
+
+        if (stateOffset)
+        {
+            resultOffset.x = stateOffset.x ?? 0;
+            resultOffset.y = stateOffset.y ?? 0;
+        }
+        if (defaultStateOffset)
+        {
+            resultOffset.x = defaultStateOffset.x ?? 0;
+            resultOffset.y = defaultStateOffset.y ?? 0;
+        }
+        else if (this.offset.x || this.offset.y)
+        {
+            resultOffset.x = this.offset.x ?? 0;
+            resultOffset.y = this.offset.y ?? 0;
+        }
+
+        return resultOffset;
+    }
+
+    private getTextOffset(): Pos
+    {
+        const resultOffset: Pos = {
+            x: 0,
+            y: 0,
+        };
+
+        if (this.textOffset === undefined)
+        {
+            return resultOffset;
+        }
+
+        const stateOffset = this.textOffset[this.state];
+        const defaultStateOffset = this.textOffset.default;
+
+        if (stateOffset)
+        {
+            resultOffset.x = stateOffset.x ?? 0;
+            resultOffset.y = stateOffset.y ?? 0;
+        }
+        else if (defaultStateOffset)
+        {
+            resultOffset.x = defaultStateOffset.x ?? 0;
+            resultOffset.y = defaultStateOffset.y ?? 0;
+        }
+        else if (this.textOffset.x || this.textOffset.y)
+        {
+            resultOffset.x = this.textOffset.x ?? 0;
+            resultOffset.y = this.textOffset.y ?? 0;
+        }
+
+        return resultOffset;
     }
 
     private hideAllViews()
@@ -384,27 +443,36 @@ export class Button extends Container
 
         const exActiveView = this.getActiveView(this.state);
 
-        exActiveView.x -= this.getOffset(this.offsets[`${this.state}View`]).x;
-        exActiveView.y -= this.getOffset(this.offsets[`${this.state}View`]).y;
+        exActiveView.x -= this.getOffset().x;
+        exActiveView.y -= this.getOffset().y;
 
         this.state = state;
 
         const activeView = this.getActiveView(this.state);
 
-        activeView.x += this.getOffset(this.offsets[`${state}View`]).x;
-        activeView.y += this.getOffset(this.offsets[`${state}View`]).y;
+        const offset = this.getOffset();
+
+        activeView.x += offset.x;
+        activeView.y += offset.y;
 
         activeView.visible = true;
 
         activeView.addChild(this.textView);
-        this.textView.x = ((activeView.width - this.textView.width) / 2) + this.getOffset(this.offsets.text).x;
-        this.textView.y = ((activeView.height - this.textView.height) / 2) + this.getOffset(this.offsets.text).y;
 
-        if (this.textView.width + this.padding > activeView.width)
+        const textOffset = this.getTextOffset();
+
+        this.textView.x
+            = ((activeView.width - this.textView.width) / 2) + textOffset.x;
+        this.textView.y
+            = ((activeView.height - this.textView.height) / 2) + textOffset.y;
+
+        const maxWidth = activeView.width - this.padding;
+
+        if (Math.round(this.textView.width) > maxWidth)
         {
-            const maxWidth = activeView.width;
+            const scale = maxWidth / this.textView.width;
 
-            this.textView.scale.set(maxWidth / (this.textView.width + this.padding));
+            this.textView.scale.set(scale);
         }
     }
 
