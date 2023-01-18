@@ -1,9 +1,9 @@
-import { Texture, Rectangle } from '@pixi/core';
+import { Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { TextStyle, Text, ITextStyle } from '@pixi/text';
+import { TextStyle, ITextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Switch } from './Switch';
+import { Swich } from './Swich';
+import { getView } from './utils/helpers/view';
 
 export type CheckBoxStyle = {
     checked: Container | string;
@@ -13,7 +13,7 @@ export type CheckBoxStyle = {
 
 export type CheckBoxOptions = {
     style: CheckBoxStyle;
-    text: string;
+    text?: string;
     checked?: boolean;
 };
 
@@ -24,64 +24,43 @@ export type CheckBoxOptions = {
  *  new CheckBox({
  *     checked: false,
  *     style: {
- *         unchecked: new PixiSprite(Texture.from(`switch_off.png`)),
- *         checked: new PixiSprite(Texture.from(`switch_on.png`)),
+ *         unchecked: Sprite.from(`switch_off.png`),
+ *         checked: Sprite.from(`switch_on.png`),
  *     }
  * });
  *
  * ```
  */
-export class CheckBox extends Switch
+export class CheckBox extends Swich
 {
-    private label: Text;
+    public label: Text;
+    public onCheck: Signal<(state: boolean) => void>;
 
     constructor(options: CheckBoxOptions)
     {
-        const unchecked = typeof options.style.unchecked === 'string'
-            ? new Sprite(Texture.from(options.style.unchecked))
-            : options.style.unchecked;
-
-        const checked = typeof options.style.checked === 'string'
-            ? new Sprite(Texture.from(options.style.checked))
-            : options.style.checked;
+        const unchecked = getView(options.style.unchecked);
+        const checked = getView(options.style.checked);
 
         super([unchecked, checked], options.checked ? 1 : 0);
 
-        if (options.text)
-        {
-            this.label = new Text(options.text, options.style.text);
-            this.label.x = unchecked.width + 10;
-            this.label.y = (unchecked.height - this.label.height) / 2;
-            unchecked.addChild(this.label);
+        this.label = new Text(options.text ?? '', options.style.text);
+        this.label.visible = options.text.length > 0;
+        this.label.x = unchecked.width + 10;
+        this.label.y = (unchecked.height - this.label.height) / 2;
 
-            this.label = new Text(options.text, options.style.text);
-            this.label.x = checked.width + 10;
-            this.label.y = (checked.height - this.label.height) / 2;
-            checked.addChild(this.label);
-        }
+        this.addChild(this.label);
 
         this.update();
 
-        this.onChange = new Signal();
+        this.onCheck = new Signal();
+
+        this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
     /** TODO */
     public update()
     {
         this.hitArea = new Rectangle(0, 0, this.width, this.height);
-    }
-
-    /** TODO */
-    public set text(text: string)
-    {
-        this.label.text = text;
-        this.update();
-    }
-
-    /** TODO */
-    public get text(): string
-    {
-        return this.label.text;
     }
 
     /** TODO */

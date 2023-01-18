@@ -2,6 +2,7 @@ import { Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
+import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
     target: string | Container;
@@ -40,8 +41,8 @@ export class MaskedFrame extends Container
     {
         super();
 
-        this.target = typeof target === 'string' ? new Sprite(Texture.from(target)) : target;
-        this.targetMask = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask;
+        this.target = getView(target);
+        this.targetMask = getView(mask);
         this.target.addChild(this.targetMask);
         this.target.mask = this.targetMask;
 

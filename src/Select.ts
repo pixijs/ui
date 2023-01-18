@@ -1,11 +1,10 @@
-import { Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
-import { Sprite } from '@pixi/sprite';
 import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
+import { getView } from './utils/helpers/view';
 
 type Offset = {
     y: number;
@@ -103,14 +102,14 @@ export class Select extends Container
     {
         super();
 
-        this.closedBG = typeof closedBG === 'string' ? new Sprite(Texture.from(closedBG)) : closedBG;
-        this.openBG = typeof openBG === 'string' ? new Sprite(Texture.from(openBG)) : openBG;
+        this.closedBG = getView(closedBG);
+        this.openBG = getView(openBG);
         this.openBG.visible = false;
 
         this.addChild(this.closedBG, this.openBG);
 
         const openButton = new Button({
-            view: this.closedBG,
+            defaultView: this.closedBG,
         });
 
         this.addChild(openButton);
@@ -123,7 +122,7 @@ export class Select extends Container
         );
 
         const selectedTextButton = new Button({
-            view: this.selectedText,
+            defaultView: this.selectedText,
         });
 
         selectedTextButton.onPress.connect(() => this.toggle());
@@ -158,7 +157,7 @@ export class Select extends Container
 
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
-            const text = button.getText();
+            const text = button.text;
 
             if (id === selected)
             {
@@ -212,15 +211,17 @@ export class Select extends Container
 
         items.forEach((item) =>
         {
-            const view = new Graphics()
+            const defaultView = new Graphics()
                 .beginFill(backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
+
             const hoverView = new Graphics()
                 .beginFill(hoverColor ?? backgroundColor)
                 .drawRoundedRect(0, 0, width, height, radius);
-            const textView = new Text(item, textStyle);
 
-            const button = new Button({ view, hoverView, textView });
+            const text = new Text(item, textStyle);
+
+            const button = new Button({ defaultView, hoverView, text });
 
             buttons.push(button);
         });

@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
 import type { StoryFn } from '@storybook/types';
 import { DoubleSlider } from '../../DoubleSlider';
@@ -56,7 +56,7 @@ export const Double: StoryFn = ({
     borderColor = Number(borderColor.replace('#', '0x'));
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
 
-    const bg = new PixiGraphics()
+    const bg = new Graphics()
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(backgroundColor)
@@ -68,7 +68,7 @@ export const Double: StoryFn = ({
             radius,
         );
 
-    const fill = new PixiGraphics()
+    const fill = new Graphics()
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(fillColor)
@@ -80,14 +80,14 @@ export const Double: StoryFn = ({
             radius,
         );
 
-    const slider1 = new PixiGraphics()
+    const slider1 = new Graphics()
         .beginFill(borderColor)
         .drawCircle(0, 0, 20 + handleBorder)
         .beginFill(meshColor)
         .drawCircle(0, 0, 20)
         .endFill();
 
-    const slider2 = new PixiGraphics()
+    const slider2 = new Graphics()
         .beginFill(borderColor)
         .drawCircle(0, 0, 20 + handleBorder)
         .beginFill(meshColor)
@@ -124,7 +124,7 @@ export const Double: StoryFn = ({
 };
 
 export default {
-    title: 'UI components/Slider/Graphics',
+    title: 'Components/Slider/Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

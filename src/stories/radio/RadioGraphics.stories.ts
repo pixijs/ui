@@ -19,7 +19,7 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const Graphics = ({
+export const UseGraphics = ({
     count,
     text,
 
@@ -87,7 +87,7 @@ export const Graphics = ({
 };
 
 export default {
-    title: 'UI components/RadioGroup/Graphics',
+    title: 'Components/RadioGroup/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

@@ -1,4 +1,3 @@
-import { Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
@@ -84,11 +83,11 @@ export class RadioGroup extends Container
         options.items.forEach((item, id) =>
         {
             const unchecked = typeof options.style.bg === 'string'
-                ? new Sprite(Texture.from(options.style.bg))
+                ? Sprite.from(options.style.bg)
                 : this.getGraphics(options.style.bg);
 
             const checked = typeof options.style.checked === 'string'
-                ? new Sprite(Texture.from(options.style.checked))
+                ? Sprite.from(options.style.checked)
                 : this.getGraphics(options.style.checked);
 
             const checkBox = new CheckBox({

@@ -1,4 +1,4 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
 import { Layout } from '../../Layout';
 import { Input } from '../../Input';
@@ -24,7 +24,7 @@ const args = {
     onChange: action('Input: '),
 };
 
-export const Graphics = ({
+export const UseGraphics = ({
     text,
     count,
     border,
@@ -51,7 +51,7 @@ export const Graphics = ({
     {
         // Component usage
         const input = new Input({
-            bg: new PixiGraphics()
+            bg: new Graphics()
                 .beginFill(borderColor)
                 .drawRoundedRect(0, 0, width, height, radius + border)
                 .beginFill(backgroundColor)
@@ -83,7 +83,7 @@ export const Graphics = ({
 };
 
 export default {
-    title: 'UI components/Input/Graphics',
+    title: 'Components/Input/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

@@ -1,4 +1,4 @@
-import { Point, Texture } from '@pixi/core';
+import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
@@ -8,6 +8,7 @@ import { Signal } from 'typed-signals';
 import { removeHitBox } from './utils/helpers/hitbox';
 
 import type { DragObject } from './utils/HelpTypes';
+import { getView } from './utils/helpers/view';
 
 export type SliderOptions = {
     bg: Container | string;
@@ -78,7 +79,7 @@ export class Slider extends Container
         super();
 
         this.options = options;
-        const bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
+        const bg = getView(options.bg);
 
         this.bg = new Container();
         this.bg.addChild(bg);
@@ -87,7 +88,7 @@ export class Slider extends Container
 
         if (options.fill)
         {
-            const fill = typeof options.fill === 'string' ? new Sprite(Texture.from(options.fill)) : options.fill;
+            const fill = getView(options.fill);
 
             this.fill = new Container();
             this.fill.addChild(fill);
@@ -105,7 +106,7 @@ export class Slider extends Container
             this.addChild(this.fill);
         }
 
-        const slider = typeof options.slider === 'string' ? new Sprite(Texture.from(options.slider)) : options.slider;
+        const slider = getView(options.slider);
 
         slider.x = slider.width / 2;
 

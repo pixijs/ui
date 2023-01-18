@@ -1,6 +1,7 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
+import { getView } from './utils/helpers/view';
 
 /**
  * Container based component that switches visibility of containers by click.
@@ -9,45 +10,41 @@ import { Button } from './Button';
  * @example
  * ```
  * const switch = new Switch([
- *     new PixiSprite(Texture.from(`switch_off.png`)),
- *     new PixiSprite(Texture.from(`switch_on.png`)),
+ *     Sprite.from(`switch_off.png`),
+ *     Sprite.from(`switch_on.png`),
  * ]);
  *
  * ```
  */
-export class Switch extends Container
+export class Swich extends Button
 {
-    /** TODO */
-    public view = new Container();
     /** TODO */
     public views: Container[] = [];
     /** TODO */
     public activeViewID = 0;
     /** TODO */
     public onChange: Signal<(state: number) => void>;
-    private button: Button;
 
-    constructor(views: Container[], activeViewID = 0)
+    constructor(views: Array<Container | string>, activeViewID = 0)
     {
-        super();
+        super({ defaultView: new Container() });
 
-        views.forEach((state, id) =>
+        this.views = views.map((stateView, id) =>
         {
-            this.view.addChild(state);
+            const view = getView(stateView);
 
-            state.visible = id === this.activeViewID;
+            this.defaultView.addChild(view);
+
+            view.visible = id === this.activeViewID;
+
+            return view;
         });
 
-        this.views = views;
         this.activeViewID = activeViewID;
-
-        this.button = new Button({ view: this.view });
-
-        this.addChild(this.button);
 
         this.onChange = new Signal();
 
-        this.button.onPress.connect(() =>
+        this.onPress.connect(() =>
         {
             this.switch();
             this.onChange.emit(this.activeViewID);

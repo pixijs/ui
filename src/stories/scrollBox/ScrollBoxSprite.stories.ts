@@ -1,5 +1,4 @@
-import { Sprite as PixiSprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
+import { Sprite } from '@pixi/sprite';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -18,7 +17,7 @@ const args = {
     onPress: action('Button was pressed > '),
 };
 
-export const Sprite: StoryFn = ({
+export const UseSprite: StoryFn = ({
     fontColor,
     elementsMargin,
     itemsCount,
@@ -45,7 +44,7 @@ export const Sprite: StoryFn = ({
 
     preloadAssets(assets).then(() =>
     {
-        const window = new PixiSprite(Texture.from(`window.png`));
+        const window = Sprite.from(`window.png`);
 
         view.addChild(window);
 
@@ -78,13 +77,15 @@ function createItems(
     for (let i = 0; i < itemsCount; i++)
     {
         const button = new Button({
-            view: new PixiSprite(Texture.from(`button.png`)),
-            hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
-            textView: new Text(`Item ${i + 1}`, {
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
+            text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
                 fill: fontColor,
             }),
-            textOffset: { x: 0, y: -7 },
+            offsets: {
+                text: { x: 0, y: -7 },
+            }
         });
 
         button.scale.set(0.5);
@@ -98,7 +99,7 @@ function createItems(
 }
 
 export default {
-    title: 'UI components/ScrollBox/Sprite',
+    title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

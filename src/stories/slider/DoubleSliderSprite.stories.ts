@@ -78,7 +78,7 @@ export const Double: StoryFn = ({
 };
 
 export default {
-    title: 'UI components/Slider/Sprite',
+    title: 'Components/Slider/Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

@@ -1,4 +1,4 @@
-import { Point, Texture } from '@pixi/core';
+import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
@@ -8,6 +8,7 @@ import { Signal } from 'typed-signals';
 import { removeHitBox } from './utils/helpers/hitbox';
 
 import type { DragObject } from './utils/HelpTypes';
+import { getView } from './utils/helpers/view';
 
 export type DoubleSliderOptions = {
     bg: Container | string;
@@ -109,7 +110,7 @@ export class DoubleSlider extends Container
         super();
 
         this.options = options;
-        const bg = typeof options.bg === 'string' ? new Sprite(Texture.from(options.bg)) : options.bg;
+        const bg = getView(options.bg);
 
         this.bg = new Container();
         this.bg.addChild(bg);
@@ -117,7 +118,7 @@ export class DoubleSlider extends Container
 
         if (options.fill)
         {
-            const fill = typeof options.fill === 'string' ? new Sprite(Texture.from(options.fill)) : options.fill;
+            const fill = getView(options.fill);
 
             this.fill = new Container();
             this.fill.addChild(fill);
@@ -135,7 +136,7 @@ export class DoubleSlider extends Container
             this.addChild(this.fill);
         }
 
-        const slider1 = typeof options.slider1 === 'string' ? new Sprite(Texture.from(options.slider1)) : options.slider1;
+        const slider1 = getView(options.slider1);
 
         if (slider1 instanceof Sprite)
         {
@@ -147,7 +148,7 @@ export class DoubleSlider extends Container
         this.slider1 = new Container();
         this.slider1.addChild(slider1);
         this.slider1.y = this.bg.height / 2;
-        const slider2 = typeof options.slider2 === 'string' ? new Sprite(Texture.from(options.slider2)) : options.slider2;
+        const slider2 = getView(options.slider2);
 
         if (slider2 instanceof Sprite)
         {

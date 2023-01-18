@@ -1,6 +1,5 @@
-import { Graphics as PixiGraphics } from '@pixi/graphics';
+import { Graphics } from '@pixi/graphics';
 import { Container } from '@pixi/display';
-import { Texture } from '@pixi/core';
 import { Sprite } from '@pixi/sprite';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
@@ -23,7 +22,7 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const Graphics: StoryFn = ({
+export const UseGraphics: StoryFn = ({
     fontColor,
     fontSize,
     width,
@@ -95,13 +94,13 @@ function getClosedBG(
     radius: number,
 )
 {
-    const closedBG = new PixiGraphics()
+    const closedBG = new Graphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
-        const arrowDown = new Sprite(Texture.from('arrow_down.png'));
+        const arrowDown = Sprite.from('arrow_down.png');
 
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
@@ -119,13 +118,13 @@ function getOpenBG(
     radius: number,
 )
 {
-    const openBG = new PixiGraphics()
+    const openBG = new Graphics()
         .beginFill(backgroundColor)
         .drawRoundedRect(0, 0, width, height * 6, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
-        const arrowUp = new Sprite(Texture.from('arrow_down.png'));
+        const arrowUp = Sprite.from('arrow_down.png');
 
         arrowUp.angle = 180;
         arrowUp.anchor.set(0.5);
@@ -150,7 +149,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Graphics',
+    title: 'Components/Select/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

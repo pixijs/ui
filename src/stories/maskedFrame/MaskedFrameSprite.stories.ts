@@ -10,11 +10,11 @@ const args = {
 };
 
 // TODO: implement preloading
-export const Sprite = ({ borderColor, borderWidth }: any) =>
+export const UseSprite = ({ borderColor, borderWidth }: any) =>
 {
     const view = new Container();
 
-    const assets = [`avatar.png`, `avatar_mask.png`];
+    const assets = [`avatar-01.png`, `avatar_mask.png`];
 
     preloadAssets(assets).then(() =>
     {
@@ -22,7 +22,7 @@ export const Sprite = ({ borderColor, borderWidth }: any) =>
 
         // Component usage !!!
         const frame = new MaskedFrame({
-            target: `avatar.png`,
+            target: `avatar-01.png`,
             mask: `avatar_mask.png`,
             borderWidth,
             borderColor,
@@ -37,7 +37,7 @@ export const Sprite = ({ borderColor, borderWidth }: any) =>
 };
 
 export default {
-    title: 'UI components/MaskedFrame/Sprite',
+    title: 'Components/MaskedFrame/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

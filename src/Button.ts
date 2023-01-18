@@ -1,18 +1,35 @@
-import { utils } from '@pixi/core';
+import { ObservablePoint, utils } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
+import { Sprite } from '@pixi/sprite';
+import { getView } from './utils/helpers/view';
+import { getTextView } from './utils/helpers/text';
 
+type Pos = number | { x?: number; y?: number };
+
+const STATE = ['default', 'hover', 'pressed', 'disabled'];
+
+type State = typeof STATE[number];
+
+type Offsets = {
+    [key in State]?: Pos;
+} & {
+    text?: Pos;
+};
 export interface ButtonOptions
 {
-    view: Container;
-    hoverView?: Container;
-    pressedView?: Container;
-    disabledView?: Container;
-    textView?: Text;
+    defaultView: string | Container;
+    hoverView?: string | Container;
+    pressedView?: string | Container;
+    disabledView?: string | Container;
+    text?: string | Text;
     padding?: number;
-    textOffset?: { x: number; y: number };
+    anchor?: number;
+    anchorX?: number;
+    anchorY?: number;
+    offsets?: Offsets;
 }
 
 /**
@@ -20,22 +37,12 @@ export interface ButtonOptions
  * It composes a view rather than extends one, this means we can easily make any pixi container a button!
  * @example
  * ```
- * const spriteButton = new Button({
- *     view: new PixiSprite(Texture.from(`button.png`)),
- *     hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
- *     pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
- *     disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
- *     textView: new Text(text, { fill: 0xFFFFFF }),
- * });
- *
- * const graphicsButton = new Button({
- *     view: new PixiGraphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
- *     hoverView: new PixiGraphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
- *     pressedView: new PixiGraphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
- *     disabledView: new PixiGraphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
- *     textView: new Text(text, { fill: 0xFFFFFF }),
- *     padding: 10,
- *     textOffset: { x: 10, y: 1 },
+ * const button = new Button({
+ *     defaultView: `button.png`,
+ *     hoverView: `button_hover.png`,
+ *     pressedView: `button_pressed.png`,
+ *     disabledView: `button_disabled.png`,
+ *     text: new Text(text, { fill: 0xFFFFFF }),
  * });
  *
  * ```
@@ -45,13 +52,13 @@ export class Button extends Container
     /** TODO */
     public defaultView: Container;
     /** TODO */
-    public hoverView: Container;
+    public hoverView!: Container;
     /** TODO */
-    public pressedView: Container;
+    public pressedView!: Container;
     /** TODO */
-    public disabledView: Container;
+    public disabledView!: Container;
     /** TODO */
-    public text: Text;
+    public textView: Text;
 
     /** TODO */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -71,70 +78,67 @@ export class Button extends Container
     private _shown: boolean;
 
     private padding = 0;
+    public offsets: Offsets = {};
+
+    public state: State = 'default';
+
+    public anchor: ObservablePoint;
 
     constructor({
-        view,
+        defaultView,
         hoverView,
         pressedView,
         disabledView,
-        textView,
+        text,
         padding,
-        textOffset,
+        offsets,
+        anchor,
+        anchorX,
+        anchorY,
     }: ButtonOptions)
     {
         super();
 
-        if (padding)
-        {
-            this.padding = padding * 2;
-        }
+        this.padding = (padding ?? 0) * 2;
 
-        this.defaultView = view;
-        this.defaultView.zIndex = 1;
+        this.offsets = offsets ?? {};
+
+        this.defaultView = getView(defaultView);
         this.addChild(this.defaultView);
 
         if (hoverView)
         {
-            this.hoverView = hoverView;
-            this.hoverView.zIndex = 2;
+            this.hoverView = getView(hoverView);
             this.addChild(this.hoverView);
             this.hoverView.visible = false;
         }
 
         if (pressedView)
         {
-            this.pressedView = pressedView;
-            this.pressedView.zIndex = 3;
+            this.pressedView = getView(pressedView);
             this.addChild(this.pressedView);
             this.pressedView.visible = false;
         }
 
         if (disabledView)
         {
-            this.disabledView = disabledView;
-            this.disabledView.zIndex = 4;
+            this.disabledView = getView(disabledView);
             this.addChild(this.disabledView);
             this.disabledView.visible = false;
         }
 
-        if (textView)
-        {
-            this.text = textView;
-            this.text.zIndex = 4;
-            textView.anchor.set(0.5);
+        this.textView = getTextView(text);
+        this.textView.anchor.set(0);
 
-            textView.x = (this.width / 2) + (textOffset?.x ?? 0);
-            textView.y = (this.height / 2) + (textOffset?.y ?? 0);
+        this.anchor = new ObservablePoint(
+            this.setAnchor,
+            this,
+            anchorX ?? anchor ?? 0.5,
+            anchorY ?? anchor ?? 0.5,
+        );
+        this.setAnchor();
 
-            this.addChild(this.text);
-
-            if (textView.width + this.padding > this.defaultView?.width)
-            {
-                const maxWidth = this.defaultView?.width;
-
-                textView.scale.set(maxWidth / (textView.width + this.padding));
-            }
-        }
+        this.setState('default');
 
         this._enabled = true;
 
@@ -153,12 +157,20 @@ export class Button extends Container
 
         this.on('pointerup', (e: FederatedPointerEvent) =>
         {
+            this.setState('default');
             this._processUp(e);
         });
 
         this.on('pointerupoutside', (e: FederatedPointerEvent) =>
         {
+            this.setState('default');
             this._processUpOut(e);
+        });
+
+        this.on('pointerout', (e: FederatedPointerEvent) =>
+        {
+            this.setState('default');
+            this._processOut(e);
         });
 
         this.on('pointertap', (e: FederatedPointerEvent) =>
@@ -172,56 +184,36 @@ export class Button extends Container
             this.onHover.emit(this, e);
         });
 
-        this.on('pointerout', (e: FederatedPointerEvent) =>
-        {
-            this._processOut(e);
-        });
-
         this.onDown.connect((_btn, e) =>
         {
             this.down(e);
-            if (this.pressedView)
-            {
-                this.pressedView.visible = true;
-            }
+            this.setState('pressed');
         });
 
         this.onUp.connect((_btn, e) =>
         {
             this.up(e);
-            if (this.pressedView)
-            {
-                this.pressedView.visible = false;
-            }
+            this.setState('hover');
         });
 
         this.onUpOut.connect((_bth, e) =>
         {
             this._upOut(e);
-            if (this.pressedView)
-            {
-                this.pressedView.visible = false;
-            }
+            this.setState('default');
         });
 
         if (!utils.isMobile.any)
         {
             this.onHover.connect((_bth, e) =>
             {
-                if (this.hoverView)
-                {
-                    this.hoverView.visible = true;
-                }
+                this.setState('hover');
                 this.hover(e);
             });
         }
 
         this.onOut.connect((_bth, e) =>
         {
-            if (this.hoverView)
-            {
-                this.hoverView.visible = false;
-            }
+            this.setState('default');
             this._out(e);
         });
 
@@ -258,30 +250,21 @@ export class Button extends Container
     }
 
     /** TODO */
-    public getText(): string
-    {
-        return this.text.text;
-    }
-
-    /** TODO */
     get isDown(): boolean
     {
         return this._isDown;
     }
 
     /** TODO */
-    set enabled(value: boolean)
+    set enabled(enabled: boolean)
     {
-        this._enabled = value;
-        this.interactive = value;
-        this.cursor = value ? 'pointer' : 'default';
+        this._enabled = enabled;
+        this.interactive = enabled;
+        this.cursor = enabled ? 'pointer' : 'default';
 
-        if (this.disabledView)
-        {
-            this.disabledView.visible = !value;
-        }
+        this.setState(enabled ? 'default' : 'disabled');
 
-        if (!value)
+        if (!enabled)
         {
             this._processUp();
         }
@@ -326,17 +309,12 @@ export class Button extends Container
             this.onUpOut.emit(this, e);
         }
 
-        if (this.pressedView)
-        {
-            this.pressedView.visible = false;
-        }
         this._isDown = false;
     }
 
     private _processOut(e?: FederatedPointerEvent): void
     {
         this.onOut.emit(this, e);
-        this._isDown = false;
     }
 
     private _upOut(e?: FederatedPointerEvent): void
@@ -347,5 +325,154 @@ export class Button extends Container
     private _out(e?: FederatedPointerEvent): void
     {
         this.up(e);
+    }
+
+    private getOffset(val: Pos): {x: number, y: number}
+    {
+        const offsetX = typeof val === 'number' ? val : (val?.x ?? 0);
+        const offsetY = typeof val === 'number' ? val : (val?.y ?? 0);
+
+        return {
+            x: offsetX,
+            y: offsetY,
+        };
+    }
+
+    private hideAllViews()
+    {
+        if (this.defaultView)
+        {
+            this.defaultView.visible = false;
+        }
+
+        if (this.hoverView)
+        {
+            this.hoverView.visible = false;
+        }
+
+        if (this.pressedView)
+        {
+            this.pressedView.visible = false;
+        }
+
+        if (this.disabledView)
+        {
+            this.disabledView.visible = false;
+        }
+    }
+
+    private getActiveView(state: State): Container
+    {
+        switch (state)
+        {
+            case 'default':
+                return this.defaultView;
+            case 'hover':
+                return this.hoverView ?? this.defaultView;
+            case 'pressed':
+                return this.pressedView ?? this.defaultView;
+            case 'disabled':
+                return this.disabledView ?? this.defaultView;
+            default:
+                return this.defaultView;
+        }
+    }
+
+    private setState(state: State)
+    {
+        this.hideAllViews();
+
+        const exActiveView = this.getActiveView(this.state);
+
+        exActiveView.x -= this.getOffset(this.offsets[`${this.state}View`]).x;
+        exActiveView.y -= this.getOffset(this.offsets[`${this.state}View`]).y;
+
+        this.state = state;
+
+        const activeView = this.getActiveView(this.state);
+
+        activeView.x += this.getOffset(this.offsets[`${state}View`]).x;
+        activeView.y += this.getOffset(this.offsets[`${state}View`]).y;
+
+        activeView.visible = true;
+
+        activeView.addChild(this.textView);
+        this.textView.x = ((activeView.width - this.textView.width) / 2) + this.getOffset(this.offsets.text).x;
+        this.textView.y = ((activeView.height - this.textView.height) / 2) + this.getOffset(this.offsets.text).y;
+
+        if (this.textView.width + this.padding > activeView.width)
+        {
+            const maxWidth = activeView.width;
+
+            this.textView.scale.set(maxWidth / (this.textView.width + this.padding));
+        }
+    }
+
+    /** TODO */
+    protected setAnchor()
+    {
+        const x = this.anchor.x;
+        const y = this.anchor.y;
+
+        if (this.defaultView)
+        {
+            (this.defaultView as Sprite).anchor?.set(0);
+
+            this.defaultView.x
+                = (this.width / 2)
+                - (this.defaultView.width * x);
+            this.defaultView.y
+                = (this.height / 2)
+                - (this.defaultView.height * y);
+        }
+
+        if (this.hoverView)
+        {
+            (this.hoverView as Sprite).anchor?.set(0);
+
+            this.hoverView.x
+                = (this.width / 2)
+                - (this.hoverView.width * x);
+            this.hoverView.y
+                = (this.height / 2)
+                - (this.hoverView.height * y);
+        }
+
+        if (this.pressedView)
+        {
+            (this.pressedView as Sprite).anchor?.set(0);
+
+            this.pressedView.x
+                = (this.width / 2)
+                - (this.pressedView.width * x);
+            this.pressedView.y
+                = (this.height / 2)
+                - (this.pressedView.height * y);
+        }
+
+        if (this.disabledView)
+        {
+            (this.disabledView as Sprite).anchor?.set(0);
+
+            this.disabledView.x
+                = (this.width / 2)
+                - (this.disabledView.width * x);
+            this.disabledView.y
+                = (this.height / 2)
+                - (this.disabledView.height * y);
+        }
+    }
+
+    /** TODO */
+    set text(text: string | number)
+    {
+        this.textView.text = text;
+        this.setState(this.state);
+    }
+
+    /** TODO */
+    get text(): string
+    {
+        return this.textView.text;
     }
 }

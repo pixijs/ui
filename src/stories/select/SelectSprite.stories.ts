@@ -16,7 +16,7 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const Sprite: StoryFn = ({
+export const UseSprite: StoryFn = ({
     fontColor,
     fontSize,
     itemsCount,
@@ -104,7 +104,7 @@ function getItems(itemsCount: number, text: string): string[]
 }
 
 export default {
-    title: 'UI components/Select/Sprite',
+    title: 'Components/Select/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

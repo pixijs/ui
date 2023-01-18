@@ -1,13 +1,11 @@
-import { Sprite as PixiSprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
 import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from './../../Layout';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import { Container } from '@pixi/display';
 
 const args = {
     text: 'Click me!',
@@ -17,9 +15,11 @@ const args = {
     textOffsetY: -7,
     disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
+    anchorX: 0.5,
+    anchorY: 0.5,
 };
 
-export const Sprite = ({
+export const UseSprite = ({
     text,
     textColor,
     disabled,
@@ -27,12 +27,11 @@ export const Sprite = ({
     padding,
     textOffsetX,
     textOffsetY,
+    anchorX,
+    anchorY,
 }: any) =>
 {
-    const view = new Layout({
-        type: 'vertical',
-        elementsMargin: 20,
-    });
+    const view = new Container();
 
     const assets = [
         `button.png`,
@@ -45,16 +44,21 @@ export const Sprite = ({
     {
         // Component usage !!!
         const button = new Button({
-            view: new PixiSprite(Texture.from(`button.png`)),
-            hoverView: new PixiSprite(Texture.from(`button_hover.png`)),
-            pressedView: new PixiSprite(Texture.from(`button_pressed.png`)),
-            disabledView: new PixiSprite(Texture.from(`button_disabled.png`)),
-            textView: new Text(text, {
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
+            pressedView: `button_pressed.png`,
+            disabledView: `button_disabled.png`,
+            text: new Text(text, {
                 ...defaultTextStyle,
                 fill: textColor || defaultTextStyle.fill,
             }),
             padding,
-            textOffset: { x: textOffsetX, y: textOffsetY },
+            offsets: {
+                pressedView: { y: 5 },
+                text: { x: textOffsetX, y: textOffsetY }
+            },
+            anchorX,
+            anchorY,
         });
 
         if (disabled)
@@ -73,7 +77,7 @@ export const Sprite = ({
 };
 
 export default {
-    title: 'UI components/Button/Sprite',
+    title: 'Components/Button/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };
