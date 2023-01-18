@@ -4,7 +4,7 @@ import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
-import type { Application } from '@pixi/app';
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -16,7 +16,7 @@ const args = {
     onChange: action('Slider changed'),
 };
 
-export const Single = ({
+export const Single: StoryFn = ({
     min,
     max,
     value,
@@ -24,8 +24,12 @@ export const Single = ({
     fontColor,
     onChange,
     showValue,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
+
     const view = new Container();
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
@@ -67,7 +71,6 @@ export const Single = ({
     return {
         view,
         resize: () => centerElement(view),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

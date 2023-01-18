@@ -1,10 +1,10 @@
 import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
-import { Layout } from '../../Layout';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import type { StoryFn } from '@storybook/types';
 import { DoubleSlider } from '../../DoubleSlider';
+import { Layout } from '../../Layout';
 import { centerElement } from '../../utils/helpers/resize';
-import type { Application } from '@pixi/app';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
     meshColor: '#35b600',
@@ -26,7 +26,7 @@ const args = {
     onChange: action('Slider changed'),
 };
 
-export const Double = ({
+export const Double: StoryFn = ({
     min,
     max,
     value1,
@@ -44,8 +44,11 @@ export const Double = ({
     handleBorder,
     showValue,
     onChange,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -116,8 +119,7 @@ export const Double = ({
 
     return {
         view,
-        resize: () => centerElement(view),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+        resize: () => centerElement(view)
     };
 };
 
