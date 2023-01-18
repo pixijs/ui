@@ -306,6 +306,7 @@ export class Button extends Container
     {
         if (this._isDown)
         {
+            this.onUp.emit(this, e);
             this.onUpOut.emit(this, e);
         }
 
