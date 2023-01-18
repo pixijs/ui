@@ -7,7 +7,7 @@ import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
-import type { Application } from '@pixi/app';
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     type: ['vertical', 'horizontal'],
@@ -24,7 +24,7 @@ const args = {
     onPress: action('Button was pressed > '),
 };
 
-export const Graphics = ({
+export const Graphics: StoryFn = ({
     type,
     fontColor,
     elementsMargin,
@@ -37,8 +37,11 @@ export const Graphics = ({
     itemsCount,
     backgroundColor,
     onPress,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
@@ -83,8 +86,7 @@ export const Graphics = ({
 
     return {
         view,
-        resize: () => centerElement(view),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+        resize: () => centerElement(view)
     };
 };
 

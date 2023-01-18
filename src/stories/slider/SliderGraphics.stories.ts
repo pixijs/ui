@@ -4,7 +4,7 @@ import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import type { Application } from '@pixi/app';
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     meshColor: '#35b600',
@@ -25,7 +25,7 @@ const args = {
     onChange: action('Slider changed'),
 };
 
-export const Single = ({
+export const Single: StoryFn = ({
     min,
     max,
     value,
@@ -42,8 +42,12 @@ export const Single = ({
     border,
     onChange,
     showValue,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
+
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));
@@ -106,7 +110,6 @@ export const Single = ({
     return {
         view,
         resize: () => centerElement(view),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
     };
 };
 

@@ -9,7 +9,7 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
-import type { Application } from '@pixi/app';
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#000000',
@@ -18,13 +18,16 @@ const args = {
     onPress: action('Button was pressed > '),
 };
 
-export const Sprite = ({
+export const Sprite: StoryFn = ({
     fontColor,
     elementsMargin,
     itemsCount,
     onPress,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();
@@ -60,8 +63,7 @@ export const Sprite = ({
 
     return {
         view,
-        resize: () => centerElement(view),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+        resize: () => centerElement(view)
     };
 };
 

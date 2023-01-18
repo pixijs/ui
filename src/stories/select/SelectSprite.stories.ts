@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-import type { Application } from '@pixi/app';
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -16,15 +16,18 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const Sprite = ({
+export const Sprite: StoryFn = ({
     fontColor,
     fontSize,
     itemsCount,
     backgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any) =>
+}: any, context) =>
 {
+    const { app } = context.parameters.pixi;
+
+    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
     const assets = [`select_closed.png`, `select_open.png`];
 
@@ -84,8 +87,7 @@ export const Sprite = ({
     return {
         view,
         resize: () => centerElement(view, 0.5, 0),
-        update: () => select?.update(),
-        startup: (app: Application) => { app.renderer.events.rootBoundary.moveOnAll = true; }
+        update: () => select?.update()
     };
 };
 
