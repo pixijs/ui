@@ -23,7 +23,7 @@ export class Swich extends Button
     /** TODO */
     public activeViewID = 0;
     /** TODO */
-    public onChange: Signal<(state: number) => void>;
+    public onChange: Signal<(state: number | boolean) => void>;
 
     constructor(views: Array<Container | string>, activeViewID = 0)
     {
@@ -47,7 +47,10 @@ export class Swich extends Button
         this.onPress.connect(() =>
         {
             this.switch();
-            this.onChange.emit(this.activeViewID);
+
+            const res = this.views.length > 2 ? this.activeViewID : this.activeViewID === 1;
+
+            this.onChange.emit(res);
         });
     }
 
