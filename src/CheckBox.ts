@@ -43,6 +43,8 @@ export class CheckBox extends Swich
 
         super([unchecked, checked], options.checked ? 1 : 0);
 
+        this.anchor.set(0);
+
         this.label = new Text(options.text ?? '', options.style.text);
         this.label.visible = options.text.length > 0;
         this.label.x = unchecked.width + 10;
