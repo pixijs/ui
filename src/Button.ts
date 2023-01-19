@@ -486,48 +486,32 @@ export class Button extends Container
         {
             (this.defaultView as Sprite).anchor?.set(0);
 
-            this.defaultView.x
-                = (this.width / 2)
-                - (this.defaultView.width * x);
-            this.defaultView.y
-                = (this.height / 2)
-                - (this.defaultView.height * y);
+            this.defaultView.x = -this.defaultView.width * x;
+            this.defaultView.y = -this.defaultView.height * y;
         }
 
         if (this.hoverView)
         {
             (this.hoverView as Sprite).anchor?.set(0);
 
-            this.hoverView.x
-                = (this.width / 2)
-                - (this.hoverView.width * x);
-            this.hoverView.y
-                = (this.height / 2)
-                - (this.hoverView.height * y);
+            this.hoverView.x = -this.hoverView.width * x;
+            this.hoverView.y = -this.hoverView.height * y;
         }
 
         if (this.pressedView)
         {
             (this.pressedView as Sprite).anchor?.set(0);
 
-            this.pressedView.x
-                = (this.width / 2)
-                - (this.pressedView.width * x);
-            this.pressedView.y
-                = (this.height / 2)
-                - (this.pressedView.height * y);
+            this.pressedView.x = -this.pressedView.width * x;
+            this.pressedView.y = -this.pressedView.height * y;
         }
 
         if (this.disabledView)
         {
             (this.disabledView as Sprite).anchor?.set(0);
 
-            this.disabledView.x
-                = (this.width / 2)
-                - (this.disabledView.width * x);
-            this.disabledView.y
-                = (this.height / 2)
-                - (this.disabledView.height * y);
+            this.disabledView.x = -this.disabledView.width * x;
+            this.disabledView.y = -this.disabledView.height * y;
         }
     }
 

@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preloadAssets } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerElement, centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
 
 const args = {
@@ -53,10 +53,10 @@ export const UseSprite = ({
                 fill: textColor || defaultTextStyle.fill,
             }),
             padding,
-            offsets: {
-                pressedView: { y: 5 },
-                text: { x: textOffsetX, y: textOffsetY }
+            offset: {
+                pressed: { y: 5 },
             },
+            textOffset: { x: textOffsetX, y: textOffsetY },
             anchorX,
             anchorY,
         });
@@ -68,12 +68,12 @@ export const UseSprite = ({
 
         button.onPress.connect(onPress);
 
-        view.addChild(button);
+        centerView(view);
 
-        centerElement(view);
+        view.addChild(button);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return { view, resize: () => centerView(view) };
 };
 
 export default {
