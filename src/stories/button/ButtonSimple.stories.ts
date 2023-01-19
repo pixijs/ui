@@ -56,15 +56,11 @@ export const Simple = ({
             fill: textColor || defaultTextStyle.fill,
         }),
         padding,
-        offsets: {
-            defaultView: { y: defaultOffset },
-            hoverView: { y: hoverOffset },
-            pressedView: { y: pressedOffset },
-            disabledView: { y: disabledOffset },
-            text: {
-                x: textOffsetX,
-                y: textOffsetY,
-            },
+        offset: {
+            default: { y: defaultOffset },
+            hover: { y: hoverOffset },
+            pressed: { y: pressedOffset },
+            disabled: { y: disabledOffset },
         },
         anchor,
     });

@@ -7,13 +7,12 @@ import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 import { getTextView } from './utils/helpers/text';
 
-type State = 'default' | 'hover' | 'pressed' | 'disabled';
+const states = ['default', 'hover', 'pressed', 'disabled'] as const;
+
+type State = typeof states[number];
 type Pos = { x?: number; y?: number };
 type Offset = {
-    'default'?: Pos;
-    'hover'?: Pos;
-    'pressed'?: Pos;
-    'disabled'?: Pos;
+    [K in State]?: Pos
 } & Pos;
 
 export interface ButtonOptions
@@ -33,7 +32,8 @@ export interface ButtonOptions
 
 /**
  * Container based component that gives us a starting point for UI buttons.
- * It composes a view rather than extends one, this means we can easily make any pixi container a button!
+ * Text view by default is centered in the active view.
+ * If views are not the same size, offset can be used to adjust the position of the text and the view.
  * @example
  * ```
  * const button = new Button({
@@ -329,72 +329,28 @@ export class Button extends Container
         this.up(e);
     }
 
-    private getOffset(): Pos
+    private setOffset(view: Container, state: State, offset: Offset)
     {
-        const resultOffset: Pos = {
-            x: 0,
-            y: 0,
-        };
+        if (!view || offset === undefined) { return; }
 
-        if (this.offset === undefined)
-        {
-            return resultOffset;
-        }
-
-        const stateOffset = this.offset[this.state];
-        const defaultStateOffset = this.offset?.default;
+        const stateOffset = offset[state];
+        const defaultStateOffset = offset?.default;
 
         if (stateOffset)
         {
-            resultOffset.x = stateOffset.x ?? 0;
-            resultOffset.y = stateOffset.y ?? 0;
-        }
-        if (defaultStateOffset)
-        {
-            resultOffset.x = defaultStateOffset.x ?? 0;
-            resultOffset.y = defaultStateOffset.y ?? 0;
-        }
-        else if (this.offset.x || this.offset.y)
-        {
-            resultOffset.x = this.offset.x ?? 0;
-            resultOffset.y = this.offset.y ?? 0;
-        }
-
-        return resultOffset;
-    }
-
-    private getTextOffset(): Pos
-    {
-        const resultOffset: Pos = {
-            x: 0,
-            y: 0,
-        };
-
-        if (this.textOffset === undefined)
-        {
-            return resultOffset;
-        }
-
-        const stateOffset = this.textOffset[this.state];
-        const defaultStateOffset = this.textOffset.default;
-
-        if (stateOffset)
-        {
-            resultOffset.x = stateOffset.x ?? 0;
-            resultOffset.y = stateOffset.y ?? 0;
+            view.x += stateOffset.x ?? 0;
+            view.y += stateOffset.y ?? 0;
         }
         else if (defaultStateOffset)
         {
-            resultOffset.x = defaultStateOffset.x ?? 0;
-            resultOffset.y = defaultStateOffset.y ?? 0;
+            view.x += defaultStateOffset.x ?? 0;
+            view.y += defaultStateOffset.y ?? 0;
         }
-        else if (this.textOffset.x || this.textOffset.y)
+        else if (offset.x || offset.y)
         {
-            resultOffset.x = this.textOffset.x ?? 0;
-            resultOffset.y = this.textOffset.y ?? 0;
+            view.x += offset.x ?? 0;
+            view.y += offset.y ?? 0;
         }
-
-        return resultOffset;
     }
 
     private hideAllViews()
@@ -437,35 +393,24 @@ export class Button extends Container
         }
     }
 
-    private setState(state: State)
+    private setState(newState: State)
     {
+        this.state = newState;
+
         this.hideAllViews();
+        this.adjustTextView(newState);
 
-        const exActiveView = this.getActiveView(this.state);
-
-        exActiveView.x -= this.getOffset().x;
-        exActiveView.y -= this.getOffset().y;
-
-        this.state = state;
-
-        const activeView = this.getActiveView(this.state);
-
-        const offset = this.getOffset();
-
-        activeView.x += offset.x;
-        activeView.y += offset.y;
+        const activeView = this.getActiveView(newState);
 
         activeView.visible = true;
 
-        activeView.addChild(this.textView);
+        this.setAnchor();
+        this.setOffset(activeView, newState, this.offset);
+    }
 
-        const textOffset = this.getTextOffset();
-
-        this.textView.x
-            = ((activeView.width - this.textView.width) / 2) + textOffset.x;
-        this.textView.y
-            = ((activeView.height - this.textView.height) / 2) + textOffset.y;
-
+    private adjustTextView(state: State)
+    {
+        const activeView = this.getActiveView(this.state);
         const maxWidth = activeView.width - this.padding;
 
         if (Math.round(this.textView.width) > maxWidth)
@@ -474,6 +419,15 @@ export class Button extends Container
 
             this.textView.scale.set(scale);
         }
+
+        activeView.addChild(this.textView);
+
+        this.textView.x
+            = (activeView.width - this.textView.width) / 2;
+        this.textView.y
+            = (activeView.height - this.textView.height) / 2;
+
+        this.setOffset(this.textView, state, this.textOffset);
     }
 
     /** TODO */
