@@ -4,7 +4,7 @@ import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerElement, centerView } from '../../utils/helpers/resize';
 
 const args = {
     text: 'Click me!',
@@ -56,15 +56,15 @@ export const Simple = ({
             fill: textColor || defaultTextStyle.fill,
         }),
         padding,
-        offsets: {
-            defaultView: { y: defaultOffset },
-            hoverView: { y: hoverOffset },
-            pressedView: { y: pressedOffset },
-            disabledView: { y: disabledOffset },
-            text: {
-                x: textOffsetX,
-                y: textOffsetY,
-            },
+        offset: {
+            default: { y: defaultOffset },
+            hover: { y: hoverOffset },
+            pressed: { y: pressedOffset },
+            disabled: { y: disabledOffset },
+        },
+        textOffset: {
+            x: textOffsetX,
+            y: textOffsetY,
         },
         anchor,
     });
@@ -74,9 +74,11 @@ export const Simple = ({
         view.enabled = false;
     }
 
+    centerView(view);
+
     view.onPress.connect(onPress);
 
-    return { view, resize: () => centerElement(view) };
+    return { view, resize: () => centerView(view) };
 };
 
 export default {
