@@ -89,6 +89,8 @@ export const UseGraphics = ({
         view.enabled = false;
     }
 
+    view.anchor.set(0);
+
     view.onPress.connect(() => action('onPress'));
     view.onDown.connect(() => action('onDown'));
     view.onUp.connect(() => action('onUp'));
