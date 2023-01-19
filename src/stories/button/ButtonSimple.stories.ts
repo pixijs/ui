@@ -4,7 +4,7 @@ import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement, centerView } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 
 const args = {
     text: 'Click me!',

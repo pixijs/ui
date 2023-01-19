@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preloadAssets } from '../utils/loader';
-import { centerElement, centerView } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
 
 const args = {
