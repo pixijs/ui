@@ -11,7 +11,7 @@ const states = ['default', 'hover', 'pressed', 'disabled'] as const;
 
 type State = typeof states[number];
 type Pos = { x?: number; y?: number };
-type Offset = {
+export type Offset = {
     [K in State]?: Pos
 } & Pos;
 
@@ -134,14 +134,16 @@ export class Button extends Container
         this.anchor = new ObservablePoint(
             this.setAnchor,
             this,
-            anchorX ?? anchor ?? 0.5,
-            anchorY ?? anchor ?? 0.5,
+            anchorX ?? anchor ?? 0,
+            anchorY ?? anchor ?? 0,
         );
         this.setAnchor();
 
         this.setState('default');
 
         this._enabled = true;
+        this._isDown = false;
+        this.enabled = true;
 
         this.onPress = new Signal();
         this.onDown = new Signal();
@@ -217,10 +219,6 @@ export class Button extends Container
             this.setState('default');
             this._out(e);
         });
-
-        this._isDown = false;
-
-        this.enabled = true;
     }
 
     /**

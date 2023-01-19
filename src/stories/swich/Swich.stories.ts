@@ -1,9 +1,9 @@
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from '../../Layout';
 import { Swich } from '../../Swich';
 import { preloadAssets } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
+import { Container } from '@pixi/display';
 
 const args = {
     onChange: action('Checkbox changed'),
@@ -11,10 +11,7 @@ const args = {
 
 export const Simple = ({ onChange }: any) =>
 {
-    const view = new Layout({
-        type: 'vertical',
-        elementsMargin: 5,
-    });
+    const view = new Container();
 
     const assets = [
         `avatar-01.png`,
@@ -30,13 +27,13 @@ export const Simple = ({ onChange }: any) =>
         const swich = new Swich(assets);
 
         swich.onChange.connect((state) => onChange(`swich state ${state}`));
+        swich.anchor.set(0.5);
+        centerView(view);
 
         view.addChild(swich);
-
-        centerElement(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return { view, resize: () => centerView(view) };
 };
 
 export default {

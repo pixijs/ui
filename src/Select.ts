@@ -6,6 +6,8 @@ import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
+const defaultVisibleItems  = 5;
+
 type Offset = {
     y: number;
     x: number;
@@ -34,6 +36,8 @@ export type SelectOptions = {
     scrollBoxWidth?: number;
     scrollBoxHeight?: number;
     scrollBoxRadius?: number;
+
+    visibleItems?: number;
 
     scrollBox?: ScrollBoxOptions & {
         offset?: Offset;
@@ -77,12 +81,14 @@ export type SelectOptions = {
  *
  * ```
  */
+
+// TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly closedBG: Container;
-    private readonly openBG: Container;
-    /** TODO */
-    public selectedText: Text;
+    private readonly openButton: Button;
+    private readonly closeButton: Button;
+    private readonly openView: Container;
+
     /** TODO */
     public value: number;
     /** TODO */
@@ -98,54 +104,49 @@ export class Select extends Container
         selected,
         selectedTextOffset,
         scrollBox,
+        visibleItems,
     }: SelectOptions)
     {
         super();
 
-        this.closedBG = getView(closedBG);
-        this.openBG = getView(openBG);
-        this.openBG.visible = false;
-
-        this.addChild(this.closedBG, this.openBG);
-
-        const openButton = new Button({
-            defaultView: this.closedBG,
+        this.openButton = new Button({
+            defaultView: getView(closedBG),
+            text: new Text(
+                items?.items ? items.items[0] : '',
+                textStyle,
+            ),
+            textOffset: selectedTextOffset
         });
+        this.openButton.onPress.connect(() => this.toggle());
+        this.addChild(this.openButton);
 
-        this.addChild(openButton);
+        this.openView = getView(openBG);
+        this.openView.visible = false;
+        this.addChild(this.openView);
 
-        openButton.onPress.connect(() => this.toggle());
-
-        this.selectedText = new Text(
-            items?.items ? items.items[0] : '',
-            textStyle,
-        );
-
-        const selectedTextButton = new Button({
-            defaultView: this.selectedText,
+        this.closeButton = new Button({
+            defaultView:
+                new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
+            text: new Text(
+                items?.items ? items.items[0] : '',
+                textStyle,
+            ),
+            textOffset: selectedTextOffset
         });
-
-        selectedTextButton.onPress.connect(() => this.toggle());
-
-        this.addChild(selectedTextButton);
-
-        this.selectedText.anchor.set(0.5);
-        this.selectedText.x = (this.closedBG.width / 2) + (selectedTextOffset?.x || 0);
-        this.selectedText.y = (this.closedBG.height / 2) + (selectedTextOffset?.y || 0);
+        this.closeButton.onPress.connect(() => this.toggle());
+        this.openView.addChild(this.closeButton);
 
         this.scrollBox = new ScrollBox({
             type: 'vertical',
             elementsMargin: 0,
-            width: this.closedBG.width,
-            height: this.closedBG.height * 5,
+            width: this.openButton.width,
+            height: this.openButton.height * (visibleItems ?? defaultVisibleItems),
             radius: 0,
             padding: 0,
             ...scrollBox,
         });
-
-        this.openBG.addChild(this.scrollBox);
-
-        this.scrollBox.y = this.closedBG.height;
+        this.scrollBox.y = this.openButton.height;
+        this.openView.addChild(this.scrollBox);
 
         if (scrollBox?.offset)
         {
@@ -161,14 +162,16 @@ export class Select extends Container
 
             if (id === selected)
             {
-                this.selectedText.text = text;
+                this.openButton.text = text;
+                this.closeButton.text = text;
             }
 
             button.onPress.connect(() =>
             {
                 this.value = id;
                 this.onSelect.emit(id, text);
-                this.selectedText.text = text;
+                this.openButton.text = text;
+                this.closeButton.text = text;
                 this.close();
             });
 
@@ -179,22 +182,22 @@ export class Select extends Container
     /** TODO */
     public toggle()
     {
-        this.openBG.visible = !this.openBG.visible;
-        this.closedBG.visible = !this.closedBG.visible;
+        this.openView.visible = !this.openView.visible;
+        this.openButton.visible = !this.openButton.visible;
     }
 
     /** TODO */
     public open()
     {
-        this.openBG.visible = true;
-        this.closedBG.visible = false;
+        this.openView.visible = true;
+        this.openButton.visible = false;
     }
 
     /** TODO */
     public close()
     {
-        this.openBG.visible = false;
-        this.closedBG.visible = true;
+        this.openView.visible = false;
+        this.openButton.visible = true;
     }
 
     private convertItemsToButtons({

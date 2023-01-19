@@ -64,6 +64,7 @@ export const UseGraphics: StoryFn = ({
             }),
         });
 
+        button.anchor.set(0);
         button.onPress.connect(() => onPress(i + 1));
 
         items.push(button);

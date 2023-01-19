@@ -83,11 +83,12 @@ function createItems(
                 ...defaultTextStyle,
                 fill: fontColor,
             }),
-            offsets: {
-                text: { x: 0, y: -7 },
+            textOffset: {
+                x: 0, y: -7,
             }
         });
 
+        button.anchor.set(0);
         button.scale.set(0.5);
 
         button.onPress.connect(() => onPress(i + 1));

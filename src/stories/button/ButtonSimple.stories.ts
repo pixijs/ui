@@ -14,13 +14,6 @@ const args = {
     height: 137,
     padding: 11,
     radius: 50,
-    textOffsetX: 0,
-    textOffsetY: 0,
-    defaultOffset: 0,
-    hoverOffset: -1,
-    pressedOffset: 5,
-    disabledOffset: 0,
-    anchor: 0.5,
     disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
 };
@@ -34,13 +27,6 @@ export const Simple = ({
     disabled,
     padding,
     textColor,
-    textOffsetX,
-    textOffsetY,
-    defaultOffset,
-    hoverOffset,
-    pressedOffset,
-    disabledOffset,
-    anchor,
     onPress,
 }: any) =>
 {
@@ -56,18 +42,9 @@ export const Simple = ({
             fill: textColor || defaultTextStyle.fill,
         }),
         padding,
-        offset: {
-            default: { y: defaultOffset },
-            hover: { y: hoverOffset },
-            pressed: { y: pressedOffset },
-            disabled: { y: disabledOffset },
-        },
-        textOffset: {
-            x: textOffsetX,
-            y: textOffsetY,
-        },
-        anchor,
     });
+
+    view.anchor.set(0.5);
 
     if (disabled)
     {

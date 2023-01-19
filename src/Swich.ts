@@ -42,6 +42,8 @@ export class Swich extends Button
 
         this.activeViewID = activeViewID;
 
+        this.setAnchor();
+
         this.onChange = new Signal();
 
         this.onPress.connect(() =>
