@@ -1,11 +1,12 @@
-import { ObservablePoint, utils } from '@pixi/core';
+import { ObservablePoint } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
 import { Text } from '@pixi/text';
-import { Signal } from 'typed-signals';
 import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 import { getTextView } from './utils/helpers/text';
+import { ButtonEvents } from './ButtonEvents';
+import { Signal } from 'typed-signals';
+import { FederatedPointerEvent } from '@pixi/events';
 
 const states = ['default', 'hover', 'pressed', 'disabled'] as const;
 
@@ -32,7 +33,8 @@ export interface ButtonOptions
 }
 
 /**
- * Container based component that gives us a starting point for UI buttons.
+ * Button component with lots of settings, that can be used to create a button fast.
+ *
  * Text view by default is centered in the active view.
  * If views are not the same size, offset can be used to adjust the position of the text and the view.
  * @example
@@ -43,47 +45,57 @@ export interface ButtonOptions
  *     pressedView: `button_pressed.png`,
  *     disabledView: `button_disabled.png`,
  *     text: new Text(text, { fill: 0xFFFFFF }),
+ *     icon: `icon.png`,
  * });
  *
  * ```
  */
 export class Button extends Container
 {
+    private innerView: Container;
+    private events: ButtonEvents;
+    private padding: number;
+    private offset: Offset & Pos;
+    private textOffset: Offset;
+
     /** TODO */
-    public defaultView: Container;
+    public readonly defaultView: Container;
     /** TODO */
-    public hoverView!: Container;
+    public readonly hoverView!: Container;
     /** TODO */
     public pressedView!: Container;
     /** TODO */
     public disabledView!: Container;
     /** TODO */
-    public textView: Text;
-
+    public textView!: Text;
     /** TODO */
-    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-    /** TODO */
-    public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-    /** TODO */
-    public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-    /** TODO */
-    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-    /** TODO */
-    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-    /** TODO */
-    public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    private _isDown: boolean;
-    private _enabled: boolean;
-    private _shown: boolean;
-
-    private padding: number;
-    public offset: Offset & Pos;
-    public textOffset: Offset;
-
     public state: State = 'default';
-
+    /** TODO */
     public anchor: ObservablePoint;
+
+    /** Event that is fired when button is pressed. */
+    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+
+    /** Event that is fired when button is down. */
+    public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+
+    /**
+     * Event that is fired when down event happened inside the button
+     * and up event happened inside or outside of the button
+     */
+    public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+
+    /** Event that is fired when mouse hovers the button. */
+    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+
+    /** Event that is fired when mouse leaves button view. */
+    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+
+    /**
+     * Event that is fired when up event happens outside of the button
+     * when down event happened inside the button boundaries.
+     */
+    public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     constructor({
         defaultView,
@@ -101,226 +113,68 @@ export class Button extends Container
     {
         super();
 
+        this.createViews({
+            defaultView,
+            hoverView,
+            pressedView,
+            disabledView,
+            text
+        });
+
+        this.anchor = new ObservablePoint(this.resetPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
+        this.resetPositions();
+
+        this.setState('default');
+
         this.padding = (padding ?? 0) * 2;
         this.offset = offset;
         this.textOffset = textOffset;
 
-        this.defaultView = getView(defaultView);
-        this.addChild(this.defaultView);
-
-        if (hoverView)
-        {
-            this.hoverView = getView(hoverView);
-            this.addChild(this.hoverView);
-            this.hoverView.visible = false;
-        }
-
-        if (pressedView)
-        {
-            this.pressedView = getView(pressedView);
-            this.addChild(this.pressedView);
-            this.pressedView.visible = false;
-        }
-
-        if (disabledView)
-        {
-            this.disabledView = getView(disabledView);
-            this.addChild(this.disabledView);
-            this.disabledView.visible = false;
-        }
-
-        this.textView = getTextView(text);
-        this.textView.anchor.set(0);
-
-        this.anchor = new ObservablePoint(this.setAnchor, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-        this.setAnchor();
-
-        this.setState('default');
-
-        this._enabled = true;
-        this._isDown = false;
-        this.enabled = true;
-
-        this.onPress = new Signal();
-        this.onDown = new Signal();
-        this.onUp = new Signal();
-        this.onHover = new Signal();
-        this.onOut = new Signal();
-        this.onUpOut = new Signal();
-
-        this.on('pointerdown', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = true;
-            this.onDown.emit(this, e);
-        });
-
-        this.on('pointerup', (e: FederatedPointerEvent) =>
-        {
-            this.setState('default');
-            this._processUp(e);
-        });
-
-        this.on('pointerupoutside', (e: FederatedPointerEvent) =>
-        {
-            this.setState('default');
-            this._processUpOut(e);
-        });
-
-        this.on('pointerout', (e: FederatedPointerEvent) =>
-        {
-            this.setState('default');
-            this._processOut(e);
-        });
-
-        this.on('pointertap', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = false;
-            this.onPress.emit(this, e);
-        });
-
-        this.on('pointerover', (e: FederatedPointerEvent) =>
-        {
-            this.onHover.emit(this, e);
-        });
-
-        this.onDown.connect((_btn, e) =>
-        {
-            this.down(e);
-            this.setState('pressed');
-        });
-
-        this.onUp.connect((_btn, e) =>
-        {
-            this.up(e);
-            this.setState('hover');
-        });
-
-        this.onUpOut.connect((_bth, e) =>
-        {
-            this._upOut(e);
-            this.setState('default');
-        });
-
-        if (!utils.isMobile.any)
-        {
-            this.onHover.connect((_bth, e) =>
-            {
-                this.setState('hover');
-                this.hover(e);
-            });
-        }
-
-        this.onOut.connect((_bth, e) =>
-        {
-            this.setState('default');
-            this._out(e);
-        });
+        this.addEvents();
     }
 
     /**
-     * TODO
-     * @param _e
+     * Updates text of the text element of the button and updates text scaling basing one it's new size.
+     * @param {string | number} text - text to be set.
      */
-    public down(_e?: FederatedPointerEvent): void
+    set text(text: string | number)
     {
-    // override me!
+        if (!this.textView)
+        {
+            this.createTextView(typeof text === 'number' ? text.toString() : text);
+        }
+
+        this.textView.text = text;
+        this.setState(this.state);
+    }
+
+    /** Returns the text string of the button text element. */
+    get text(): string
+    {
+        return this.textView?.text;
     }
 
     /**
-     * TODO
-     * @param _e
+     * Setter, that prevents all button events from firing.
+     * @param {boolean} enabled
      */
-    public up(_e?: FederatedPointerEvent): void
-    {
-    // override me!
-    }
-
-    /**
-     * TODO
-     * @param _e
-     */
-    public hover(_e?: FederatedPointerEvent): void
-    {
-    // override me!
-    }
-
-    /** TODO */
-    get isDown(): boolean
-    {
-        return this._isDown;
-    }
-
-    /** TODO */
     set enabled(enabled: boolean)
     {
-        this._enabled = enabled;
-        this.interactive = enabled;
-        this.cursor = enabled ? 'pointer' : 'default';
+        this.events.enabled = enabled;
 
         this.setState(enabled ? 'default' : 'disabled');
-
-        if (!enabled)
-        {
-            this._processUp();
-        }
     }
 
-    /** TODO */
+    /** Getter that returns button state, that controls if button events are firing. */
     get enabled(): boolean
     {
-        return this._enabled;
+        return this.events.enabled;
     }
 
-    /** TODO */
-    set shown(value: boolean)
+    private createTextView(text: string | Text)
     {
-        this._shown = value;
-        this.enabled = value;
-        if (this.defaultView)
-        {
-            this.defaultView.visible = value;
-        }
-    }
-
-    /** TODO */
-    get shown(): boolean
-    {
-        return this._shown;
-    }
-
-    private _processUp(e?: FederatedPointerEvent): void
-    {
-        if (this._isDown)
-        {
-            this.onUp.emit(this, e);
-        }
-        this._isDown = false;
-    }
-
-    private _processUpOut(e?: FederatedPointerEvent): void
-    {
-        if (this._isDown)
-        {
-            this.onUp.emit(this, e);
-            this.onUpOut.emit(this, e);
-        }
-
-        this._isDown = false;
-    }
-
-    private _processOut(e?: FederatedPointerEvent): void
-    {
-        this.onOut.emit(this, e);
-    }
-
-    private _upOut(e?: FederatedPointerEvent): void
-    {
-        this.up(e);
-    }
-
-    private _out(e?: FederatedPointerEvent): void
-    {
-        this.up(e);
+        this.textView = getTextView(text);
+        this.textView.anchor.set(0);
     }
 
     private setOffset(view: Container, state: State, offset: Offset)
@@ -377,14 +231,13 @@ export class Button extends Container
     {
         switch (state)
         {
-            case 'default':
-                return this.defaultView;
             case 'hover':
                 return this.hoverView ?? this.defaultView;
             case 'pressed':
                 return this.pressedView ?? this.defaultView;
             case 'disabled':
                 return this.disabledView ?? this.defaultView;
+            case 'default':
             default:
                 return this.defaultView;
         }
@@ -395,18 +248,24 @@ export class Button extends Container
         this.state = newState;
 
         this.hideAllViews();
-        this.adjustTextView(newState);
 
         const activeView = this.getActiveView(newState);
 
+        this.adjustTextView(newState);
+
         activeView.visible = true;
 
-        this.setAnchor();
+        this.resetPositions();
         this.setOffset(activeView, newState, this.offset);
     }
 
     private adjustTextView(state: State)
     {
+        if (!this.textView)
+        {
+            return;
+        }
+
         const activeView = this.getActiveView(this.state);
         const maxWidth = activeView.width - this.padding;
 
@@ -425,12 +284,14 @@ export class Button extends Container
         this.setOffset(this.textView, state, this.textOffset);
     }
 
-    /** TODO */
-    protected setAnchor()
+    private resetPositions()
     {
         const x = this.anchor.x;
         const y = this.anchor.y;
 
+        // we have to set the anchor and position for each view individually as each of them can be different type view
+        // (container without anchor, sprite with anchor etc)
+        // we have to reset all anchors to 0,0 and then set the position manually
         if (this.defaultView)
         {
             (this.defaultView as Sprite).anchor?.set(0);
@@ -464,16 +325,86 @@ export class Button extends Container
         }
     }
 
-    /** TODO */
-    set text(text: string | number)
+    private createViews({ defaultView, hoverView, pressedView, disabledView, text }: Partial<ButtonOptions>)
     {
-        this.textView.text = text;
-        this.setState(this.state);
+        this.innerView = new Container();
+        this.addChild(this.innerView);
+
+        this.defaultView = getView(defaultView);
+        this.innerView.addChild(this.defaultView);
+
+        if (hoverView)
+        {
+            this.hoverView = getView(hoverView);
+            this.innerView.addChild(this.hoverView);
+            this.hoverView.visible = false;
+        }
+
+        if (pressedView)
+        {
+            this.pressedView = getView(pressedView);
+            this.innerView.addChild(this.pressedView);
+            this.pressedView.visible = false;
+        }
+
+        if (disabledView)
+        {
+            this.disabledView = getView(disabledView);
+            this.innerView.addChild(this.disabledView);
+            this.disabledView.visible = false;
+        }
+
+        if (text)
+        {
+            this.createTextView(text);
+        }
     }
 
-    /** TODO */
-    get text(): string
+    private addEvents()
     {
-        return this.textView.text;
+        this.events = new ButtonEvents(this);
+
+        this.onPress = new Signal();
+        this.onDown = new Signal();
+        this.onUp = new Signal();
+        this.onHover = new Signal();
+        this.onOut = new Signal();
+        this.onUpOut = new Signal();
+
+        this.events.onPress.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onPress.emit(this, e);
+            this.setState('hover');
+        });
+
+        this.events.onDown.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onDown.emit(this, e);
+            this.setState('pressed');
+        });
+
+        this.events.onUp.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onUp.emit(this, e);
+            this.setState('hover');
+        });
+
+        this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onHover.emit(this, e);
+            this.setState('hover');
+        });
+
+        this.events.onOut.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onOut.emit(this, e);
+            this.setState('default');
+        });
+
+        this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onUpOut.emit(this, e);
+            this.setState('default');
+        });
     }
 }
