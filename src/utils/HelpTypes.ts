@@ -11,3 +11,7 @@ export interface DragObject extends DisplayObject
     dragObjStart: Point;
     dragGlobalStart: Point;
 }
+
+export const BUTTON_EVENTS = ['onPress', 'onDown', 'onUp', 'onHover', 'onOut', 'onUpOut'];
+
+export type ButtonEvent = typeof BUTTON_EVENTS[number];

@@ -68,7 +68,7 @@ export class CheckBox extends Swich
     /** TODO */
     public get checked(): boolean
     {
-        return this.activeViewID === 1;
+        return this.active === 1;
     }
 
     /** TODO */
