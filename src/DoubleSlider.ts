@@ -240,13 +240,13 @@ export class DoubleSlider extends Container
 
         this.slider1
             .on('pointerdown', onDragStart1, this)
-            .on('pointermove', onDragMove1, this)
+            .on('globalpointermove', onDragMove1, this)
             .on('pointerup', onDragEnd1, this)
             .on('pointerupoutside', onDragEnd1, this);
 
         this.slider2
             .on('pointerdown', onDragStart2, this)
-            .on('pointermove', onDragMove2, this)
+            .on('globalpointermove', onDragMove2, this)
             .on('pointerup', onDragEnd2, this)
             .on('pointerupoutside', onDragEnd2, this);
 

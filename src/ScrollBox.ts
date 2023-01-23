@@ -290,7 +290,7 @@ export class ScrollBox extends Container
             this.restoreChildrenInteractivity();
         });
 
-        this.on('pointermove', (e: FederatedPointerEvent) =>
+        this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
             this._trackpad.pointerMove(e.global);
 

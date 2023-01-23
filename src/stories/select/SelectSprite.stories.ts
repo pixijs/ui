@@ -23,11 +23,8 @@ export const UseSprite: StoryFn = ({
     backgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any, context) =>
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
     const assets = [`select_closed.png`, `select_open.png`];
 
