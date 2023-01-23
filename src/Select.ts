@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { FancyButton } from './FancyButton';
+import { Button } from './Button';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
@@ -85,8 +85,8 @@ export type SelectOptions = {
 // TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly openButton: FancyButton;
-    private readonly closeButton: FancyButton;
+    private readonly openButton: Button;
+    private readonly closeButton: Button;
     private readonly openView: Container;
 
     /** TODO */
@@ -100,7 +100,7 @@ export class Select extends Container
     {
         super();
 
-        this.openButton = new FancyButton({
+        this.openButton = new Button({
             defaultView: getView(closedBG),
             text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
@@ -112,7 +112,7 @@ export class Select extends Container
         this.openView.visible = false;
         this.addChild(this.openView);
 
-        this.closeButton = new FancyButton({
+        this.closeButton = new Button({
             defaultView: new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
             text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
@@ -192,9 +192,9 @@ export class Select extends Container
         height,
         textStyle,
         radius
-    }: SelectItemsOptions): FancyButton[]
+    }: SelectItemsOptions): Button[]
     {
-        const buttons: FancyButton[] = [];
+        const buttons: Button[] = [];
 
         items.forEach((item) =>
         {
@@ -204,7 +204,7 @@ export class Select extends Container
 
             const text = new Text(item, textStyle);
 
-            const button = new FancyButton({ defaultView, hoverView, text });
+            const button = new Button({ defaultView, hoverView, text });
 
             buttons.push(button);
         });

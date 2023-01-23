@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
-import { FancyButton } from '../../FancyButton';
+import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
@@ -67,7 +67,7 @@ function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: 
 
     for (let i = 0; i < itemsCount; i++)
     {
-        const button = new FancyButton({
+        const button = new Button({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
             text: new Text(`Item ${i + 1}`, {

@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
-import { FancyButton } from '../../FancyButton';
+import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -54,7 +54,7 @@ export const UseGraphics = ({
     disabledColor = Number(disabledColor.replace('#', '0x'));
 
     // Component usage !!!
-    const view = new FancyButton({
+    const view = new Button({
         defaultView: new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
         hoverView: new Graphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
         pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
@@ -94,7 +94,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Use Graphics',
+    title: 'Components/Button/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

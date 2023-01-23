@@ -47,7 +47,7 @@ export interface ButtonOptions
  *
  * ```
  */
-export class FancyButton extends Container
+export class Button extends Container
 {
     /** TODO */
     public defaultView: Container;

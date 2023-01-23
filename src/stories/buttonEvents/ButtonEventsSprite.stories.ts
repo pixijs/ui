@@ -94,7 +94,7 @@ export class SpriteButton extends ButtonEvents
 export const UseSprite = (params: any) => new SpriteButton(params);
 
 export default {
-    title: 'Components/Button/Use Sprite',
+    title: 'Components/ButtonEvents/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

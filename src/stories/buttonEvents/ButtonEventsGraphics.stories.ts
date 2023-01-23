@@ -42,7 +42,7 @@ export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 };
 
 export default {
-    title: 'Components/Button/Use Graphics',
+    title: 'Components/ButtonEvents/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

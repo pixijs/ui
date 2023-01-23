@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
-import { FancyButton } from '../../FancyButton';
+import { Button } from '../../Button';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
@@ -54,7 +54,7 @@ export const UseGraphics: StoryFn = (
 
     for (let i = 0; i < itemsCount; i++)
     {
-        const button = new FancyButton({
+        const button = new Button({
             defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
