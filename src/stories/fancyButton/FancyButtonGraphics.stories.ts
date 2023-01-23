@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
-import { Button } from '../../Button';
+import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -24,7 +24,7 @@ const args = {
     pressedOffset: 5,
     disabledOffset: 0,
     disabled: false,
-    action: action('button Event:'),
+    action: action('button Event:')
 };
 
 export const UseGraphics = ({
@@ -45,7 +45,7 @@ export const UseGraphics = ({
     hoverOffset,
     pressedOffset,
     disabledOffset,
-    action,
+    action
 }: any) =>
 {
     color = Number(color.replace('#', '0x'));
@@ -54,34 +54,26 @@ export const UseGraphics = ({
     disabledColor = Number(disabledColor.replace('#', '0x'));
 
     // Component usage !!!
-    const view = new Button({
-        defaultView: new Graphics()
-            .beginFill(color)
-            .drawRoundedRect(0, 0, width, height, radius),
-        hoverView: new Graphics()
-            .beginFill(hoverColor)
-            .drawRoundedRect(0, 0, width, height, radius),
-        pressedView: new Graphics()
-            .beginFill(pressedColor)
-            .drawRoundedRect(0, 0, width, height, radius),
-        disabledView: new Graphics()
-            .beginFill(disabledColor)
-            .drawRoundedRect(0, 0, width, height, radius),
+    const view = new FancyButton({
+        defaultView: new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
+        hoverView: new Graphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
+        pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
+        disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
         text: new Text(text, {
             ...defaultTextStyle,
-            fill: textColor || defaultTextStyle.fill,
+            fill: textColor || defaultTextStyle.fill
         }),
         padding,
         offset: {
             default: { y: defaultOffset },
             hover: { y: hoverOffset },
             pressed: { y: pressedOffset },
-            disabled: { y: disabledOffset },
+            disabled: { y: disabledOffset }
         },
         textOffset: {
             x: textOffsetX,
-            y: textOffsetY,
-        },
+            y: textOffsetY
+        }
     });
 
     if (disabled)
@@ -102,7 +94,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'Components/Button/Use Graphics',
+    title: 'Components/FancyButton/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

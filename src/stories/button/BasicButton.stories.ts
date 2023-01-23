@@ -1,0 +1,48 @@
+import { Graphics } from '@pixi/graphics';
+import { Text } from '@pixi/text';
+import { Button } from '../../Button';
+import { action } from '@storybook/addon-actions';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { centerElement } from '../../utils/helpers/resize';
+
+const args = {
+    color: '#A5E24D',
+    size: 150,
+    radius: 150,
+    disabled: false,
+    action: action('button Event:')
+};
+
+export const Basic = ({ size, color, disabled, radius, action }: any) =>
+{
+    color = Number(color.replace('#', '0x'));
+
+    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
+
+    const text = new Text('🤙', { fontSize: 100 });
+
+    text.anchor.set(0.5);
+    text.x = buttonView.width / 2;
+    text.y = buttonView.height / 2;
+    buttonView.addChild(text);
+
+    // Component usage !!!
+    const button = new Button(buttonView);
+
+    button.enabled = !disabled;
+
+    button.onPress.connect(() => action('onPress'));
+    button.onDown.connect(() => action('onDown'));
+    button.onUp.connect(() => action('onUp'));
+    button.onHover.connect(() => action('onHover'));
+    button.onOut.connect(() => action('onOut'));
+    button.onUpOut.connect(() => action('onUpOut'));
+
+    return { view: button, resize: () => centerElement(button) };
+};
+
+export default {
+    title: 'Components/Button/Basic',
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args)
+};

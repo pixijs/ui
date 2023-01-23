@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
-import { Button } from '../../Button';
+import { FancyButton } from '../../FancyButton';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
@@ -14,15 +14,10 @@ const args = {
     fontColor: '#000000',
     elementsMargin: 6,
     itemsCount: 100,
-    onPress: action('Button was pressed > '),
+    onPress: action('Button was pressed > ')
 };
 
-export const UseSprite: StoryFn = ({
-    fontColor,
-    elementsMargin,
-    itemsCount,
-    onPress,
-}: any, context) =>
+export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsCount, onPress }: any, context) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -39,7 +34,7 @@ export const UseSprite: StoryFn = ({
         elementsMargin,
         width: 150,
         height: 318,
-        vertPadding: 18,
+        vertPadding: 18
     });
 
     preloadAssets(assets).then(() =>
@@ -66,25 +61,22 @@ export const UseSprite: StoryFn = ({
     };
 };
 
-function createItems(
-    itemsCount: number,
-    fontColor: number,
-    onPress: (buttonID: number) => void,
-): Button[]
+function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: number) => void): Button[]
 {
     const items = [];
 
     for (let i = 0; i < itemsCount; i++)
     {
-        const button = new Button({
+        const button = new FancyButton({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
-                fill: fontColor,
+                fill: fontColor
             }),
             textOffset: {
-                x: 0, y: -7,
+                x: 0,
+                y: -7
             }
         });
 
@@ -102,5 +94,5 @@ function createItems(
 export default {
     title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

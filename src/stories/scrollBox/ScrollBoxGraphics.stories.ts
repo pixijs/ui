@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
-import { Button } from '../../Button';
+import { FancyButton } from '../../FancyButton';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
@@ -21,23 +21,26 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsCount: 100,
-    onPress: action('Button was pressed > '),
+    onPress: action('Button was pressed > ')
 };
 
-export const UseGraphics: StoryFn = ({
-    type,
-    fontColor,
-    elementsMargin,
-    elementsPadding,
-    elementsWidth,
-    elementsHeight,
-    width,
-    height,
-    radius,
-    itemsCount,
-    backgroundColor,
-    onPress,
-}: any, context) =>
+export const UseGraphics: StoryFn = (
+    {
+        type,
+        fontColor,
+        elementsMargin,
+        elementsPadding,
+        elementsWidth,
+        elementsHeight,
+        width,
+        height,
+        radius,
+        itemsCount,
+        backgroundColor,
+        onPress
+    }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -51,17 +54,13 @@ export const UseGraphics: StoryFn = ({
 
     for (let i = 0; i < itemsCount; i++)
     {
-        const button = new Button({
-            defaultView: new Graphics()
-                .beginFill(0xa5e24d)
-                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics()
-                .beginFill(0xfec230)
-                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+        const button = new FancyButton({
+            defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
-                fill: fontColor || defaultTextStyle.fill,
-            }),
+                fill: fontColor || defaultTextStyle.fill
+            })
         });
 
         button.anchor.set(0);
@@ -78,7 +77,7 @@ export const UseGraphics: StoryFn = ({
         width,
         height,
         radius,
-        padding: elementsPadding,
+        padding: elementsPadding
     });
 
     items.forEach((item) => scrollBox.addItem(item));
@@ -94,5 +93,5 @@ export const UseGraphics: StoryFn = ({
 export default {
     title: 'Components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

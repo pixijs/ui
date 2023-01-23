@@ -2,11 +2,11 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Button } from './Button';
+import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
-const defaultVisibleItems  = 5;
+const defaultVisibleItems = 5;
 
 type Offset = {
     y: number;
@@ -85,8 +85,8 @@ export type SelectOptions = {
 // TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly openButton: Button;
-    private readonly closeButton: Button;
+    private readonly openButton: FancyButton;
+    private readonly closeButton: FancyButton;
     private readonly openView: Container;
 
     /** TODO */
@@ -96,25 +96,13 @@ export class Select extends Container
 
     private scrollBox: ScrollBox;
 
-    constructor({
-        closedBG,
-        textStyle,
-        items,
-        openBG,
-        selected,
-        selectedTextOffset,
-        scrollBox,
-        visibleItems,
-    }: SelectOptions)
+    constructor({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
     {
         super();
 
-        this.openButton = new Button({
+        this.openButton = new FancyButton({
             defaultView: getView(closedBG),
-            text: new Text(
-                items?.items ? items.items[0] : '',
-                textStyle,
-            ),
+            text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
         });
         this.openButton.onPress.connect(() => this.toggle());
@@ -124,13 +112,9 @@ export class Select extends Container
         this.openView.visible = false;
         this.addChild(this.openView);
 
-        this.closeButton = new Button({
-            defaultView:
-                new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
-            text: new Text(
-                items?.items ? items.items[0] : '',
-                textStyle,
-            ),
+        this.closeButton = new FancyButton({
+            defaultView: new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
+            text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
         });
         this.closeButton.onPress.connect(() => this.toggle());
@@ -143,7 +127,7 @@ export class Select extends Container
             height: this.openButton.height * (visibleItems ?? defaultVisibleItems),
             radius: 0,
             padding: 0,
-            ...scrollBox,
+            ...scrollBox
         });
         this.scrollBox.y = this.openButton.height;
         this.openView.addChild(this.scrollBox);
@@ -207,24 +191,20 @@ export class Select extends Container
         width,
         height,
         textStyle,
-        radius,
-    }: SelectItemsOptions): Button[]
+        radius
+    }: SelectItemsOptions): FancyButton[]
     {
-        const buttons: Button[] = [];
+        const buttons: FancyButton[] = [];
 
         items.forEach((item) =>
         {
-            const defaultView = new Graphics()
-                .beginFill(backgroundColor)
-                .drawRoundedRect(0, 0, width, height, radius);
+            const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
-            const hoverView = new Graphics()
-                .beginFill(hoverColor ?? backgroundColor)
-                .drawRoundedRect(0, 0, width, height, radius);
+            const hoverView = new Graphics().beginFill(hoverColor ?? backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
             const text = new Text(item, textStyle);
 
-            const button = new Button({ defaultView, hoverView, text });
+            const button = new FancyButton({ defaultView, hoverView, text });
 
             buttons.push(button);
         });
