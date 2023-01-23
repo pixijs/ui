@@ -36,10 +36,12 @@ export interface ButtonOptions
  * Button component with lots of settings, that can be used to create a button fast.
  *
  * Text view by default is centered in the active view.
- * If views are not the same size, offset can be used to adjust the position of the text and the view.
+ *
+ * If views are not the same size, offset property of the constructor
+ * can be used to adjust the position of the text and the view.
  * @example
  * ```
- * const button = new FancyButton({
+ * const button = new Button({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
@@ -73,7 +75,7 @@ export class Button extends Container
     /** View for the button text. */
     public textView!: Text;
 
-    /** State of the button */
+    /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
     public state: State = 'default';
 
     /** Anchor point of the button. */
