@@ -59,9 +59,9 @@ export class Button extends Container
     private textOffset: Offset;
 
     /** TODO */
-    public readonly defaultView: Container;
+    public defaultView: Container;
     /** TODO */
-    public readonly hoverView!: Container;
+    public hoverView!: Container;
     /** TODO */
     public pressedView!: Container;
     /** TODO */

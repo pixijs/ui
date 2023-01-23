@@ -1,7 +1,6 @@
 import { Point } from '@pixi/core';
-import { DisplayObject, Container } from '@pixi/display';
+import { DisplayObject } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
-import { Signal } from 'typed-signals';
 
 /** TODO */
 export interface DragObject extends DisplayObject

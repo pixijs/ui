@@ -80,12 +80,12 @@ export class Swich extends Container
 
         this.events = new ButtonEvents(this.view);
 
-        this.events.onPress.connect(() => this.switch('onPress'));
-        this.events.onDown.connect(() => this.switch('onDown'));
-        this.events.onUp.connect(() => this.switch('onUp'));
-        this.events.onHover.connect(() => this.switch('onHover'));
-        this.events.onOut.connect(() => this.switch('onOut'));
-        this.events.onUpOut.connect(() => this.switch('onUpOut'));
+        this.events.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
+        this.events.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
+        this.events.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
+        this.events.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
+        this.events.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
+        this.events.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
     }
 
     /** Returns the active view */
@@ -105,7 +105,7 @@ export class Swich extends Container
      * @param {number} id - optional id of the view that will be switched to.
      * @param {ButtonEvent} event - optional event that will be used to switch views.
      */
-    public switch(event?: ButtonEvent, id?: number): void
+    public switch(id?: number, event?: ButtonEvent): void
     {
         if (!this.triggerEvents.has(event))
         {
@@ -113,12 +113,7 @@ export class Swich extends Container
         }
 
         this.activeView.visible = false;
-        this.active = id === undefined ? this.active + 1 : id;
-
-        if (this.active > this.views.length - 1)
-        {
-            this.active = 0;
-        }
+        this.active = id ?? this.nextActive;
 
         const newState = this.views[this.active];
 
@@ -127,5 +122,10 @@ export class Swich extends Container
         const res = this.views.length > 2 ? this.active : this.active === 1;
 
         this.onChange.emit(res);
+    }
+
+    private get nextActive(): number
+    {
+        return this.active < this.views.length - 1 ? this.active + 1 : 0;
     }
 }

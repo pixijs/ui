@@ -41,9 +41,7 @@ export class CheckBox extends Swich
         const unchecked = getView(options.style.unchecked);
         const checked = getView(options.style.checked);
 
-        super([unchecked, checked], options.checked ? 1 : 0);
-
-        this.anchor.set(0);
+        super([unchecked, checked], ['onPress'], options.checked ? 1 : 0);
 
         this.label = new Text(options.text ?? '', options.style.text);
         this.label.visible = options.text.length > 0;

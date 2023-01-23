@@ -3,7 +3,6 @@ import { ButtonEvents } from '../../ButtonEvents';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
 import { preloadAssets } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
 import { Texture } from '@pixi/core';
