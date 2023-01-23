@@ -1,6 +1,6 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
-import { Button } from './Button';
+import { FancyButton } from './FancyButton';
 import { getView } from './utils/helpers/view';
 
 /**
@@ -16,7 +16,7 @@ import { getView } from './utils/helpers/view';
  *
  * ```
  */
-export class Swich extends Button
+export class Swich extends FancyButton
 {
     /** TODO */
     public views: Container[] = [];

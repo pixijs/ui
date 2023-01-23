@@ -15,10 +15,10 @@ import { Signal } from 'typed-signals';
  *
  * ```
  */
-export class Button extends Container
+export class ButtonEvents
 {
-    /** Holder for all the inner views. */
-    public innerView: Container;
+    /** Container, given as a constructor parameter that is a button view. */
+    public view: Container;
 
     /** Event that is fired when button is pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -26,7 +26,10 @@ export class Button extends Container
     /** Event that is fired when button is down. */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when button is up. */
+    /**
+     * Event that is fired when down event happened inside the button
+     * and up event happened inside or outside of the button
+     */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /** Event that is fired when mouse hovers the button. */
@@ -46,17 +49,12 @@ export class Button extends Container
     private _enabled: boolean;
 
     /**
-     * Turns a given contained based view into a button by wrapping it with a container and adding events.
+     * Turns a given container based view into a button by adding all button events to it.
      * @param {Container} view - Contained based view
      */
     constructor(view: Container)
     {
-        super();
-
-        this.innerView = new Container();
-        this.innerView.addChild(view);
-
-        this.addChild(this.innerView);
+        this.view = view;
 
         this.createEvents();
 
@@ -140,8 +138,8 @@ export class Button extends Container
     set enabled(enabled: boolean)
     {
         this._enabled = enabled;
-        this.interactive = enabled;
-        this.cursor = enabled ? 'pointer' : 'default';
+        this.view.interactive = enabled;
+        this.view.cursor = enabled ? 'pointer' : 'default';
 
         if (!enabled)
         {
@@ -186,12 +184,12 @@ export class Button extends Container
 
     private _upOut(e?: FederatedPointerEvent)
     {
-        this.up(e);
+        this.upOut(e);
     }
 
     private _out(e?: FederatedPointerEvent)
     {
-        this.up(e);
+        this.out(e);
     }
 
     private createEvents()
@@ -203,35 +201,35 @@ export class Button extends Container
         this.onOut = new Signal();
         this.onUpOut = new Signal();
 
-        this.on('pointerdown', (e: FederatedPointerEvent) =>
+        this.view.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this._isDown = true;
             this.onDown.emit(this, e);
         });
 
-        this.on('pointerup', (e: FederatedPointerEvent) =>
+        this.view.on('pointerup', (e: FederatedPointerEvent) =>
         {
             this._processUp(e);
         });
 
-        this.on('pointerupoutside', (e: FederatedPointerEvent) =>
+        this.view.on('pointerupoutside', (e: FederatedPointerEvent) =>
         {
             this._processUpOut(e);
         });
 
-        this.on('pointerout', (e: FederatedPointerEvent) =>
+        this.view.on('pointerout', (e: FederatedPointerEvent) =>
         {
             this._processOut(e);
         });
 
-        this.on('pointertap', (e: FederatedPointerEvent) =>
+        this.view.on('pointertap', (e: FederatedPointerEvent) =>
         {
             this._isDown = false;
             this.onPress.emit(this, e);
             this.press(e);
         });
 
-        this.on('pointerover', (e: FederatedPointerEvent) =>
+        this.view.on('pointerover', (e: FederatedPointerEvent) =>
         {
             this._isMouseIn = true;
             this.onHover.emit(this, e);
@@ -250,7 +248,6 @@ export class Button extends Container
         this.onUpOut.connect((_bth, e) =>
         {
             this._upOut(e);
-            this.upOut(e);
         });
 
         if (!utils.isMobile.any)
@@ -264,7 +261,6 @@ export class Button extends Container
         this.onOut.connect((_bth, e) =>
         {
             this._out(e);
-            this.out(e);
         });
     }
 }

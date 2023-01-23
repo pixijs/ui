@@ -1,4 +1,4 @@
-export * from './Button';
+export * from './ButtonEvents';
 export * from './CheckBox';
 export * from './DoubleSlider';
 export * from './Input';

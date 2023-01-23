@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
-import { Button } from '../../Button';
+import { ButtonEvents } from '../../ButtonEvents';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
@@ -13,13 +13,13 @@ const args = {
     action: action('button Event:')
 };
 
-export const Basic = ({ size, color, disabled, radius, action }: any) =>
+export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 {
     color = Number(color.replace('#', '0x'));
 
     const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
 
-    const text = new Text('🤙', { fontSize: 100 });
+    const text = new Text('🤙', { fontSize: 70 });
 
     text.anchor.set(0.5);
     text.x = buttonView.width / 2;
@@ -27,22 +27,22 @@ export const Basic = ({ size, color, disabled, radius, action }: any) =>
     buttonView.addChild(text);
 
     // Component usage !!!
-    const button = new Button(buttonView);
+    const buttonEvents = new ButtonEvents(buttonView);
 
-    button.enabled = !disabled;
+    buttonEvents.enabled = !disabled;
 
-    button.onPress.connect(() => action('onPress'));
-    button.onDown.connect(() => action('onDown'));
-    button.onUp.connect(() => action('onUp'));
-    button.onHover.connect(() => action('onHover'));
-    button.onOut.connect(() => action('onOut'));
-    button.onUpOut.connect(() => action('onUpOut'));
+    buttonEvents.onPress.connect(() => action('onPress'));
+    buttonEvents.onDown.connect(() => action('onDown'));
+    buttonEvents.onUp.connect(() => action('onUp'));
+    buttonEvents.onHover.connect(() => action('onHover'));
+    buttonEvents.onOut.connect(() => action('onOut'));
+    buttonEvents.onUpOut.connect(() => action('onUpOut'));
 
-    return { view: button, resize: () => centerElement(button) };
+    return { view: buttonView, resize: () => centerElement(buttonView) };
 };
 
 export default {
-    title: 'Components/Button/Basic',
+    title: 'Components/Button/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
