@@ -58,19 +58,25 @@ export class Button extends Container
     private offset: Offset & Pos;
     private textOffset: Offset;
 
-    /** TODO */
+    /** View that is shown when non of button events is active. */
     public defaultView: Container;
-    /** TODO */
+
+    /** View that is shown when mouse hovers the component. */
     public hoverView!: Container;
-    /** TODO */
+
+    /** View that is shown when mouse is pressed on the component. */
     public pressedView!: Container;
-    /** TODO */
+
+    /** View that is shown when button is disabled. */
     public disabledView!: Container;
-    /** TODO */
+
+    /** View for the button text. */
     public textView!: Text;
-    /** TODO */
+
+    /** State of the button */
     public state: State = 'default';
-    /** TODO */
+
+    /** Anchor point of the button. */
     public anchor: ObservablePoint;
 
     /** Event that is fired when button is pressed. */
