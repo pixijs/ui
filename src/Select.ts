@@ -112,8 +112,12 @@ export class Select extends Container
         this.openView.visible = false;
         this.addChild(this.openView);
 
+        const defaultView = new Graphics()
+            .beginFill(0x000000, 0.00001)
+            .drawRect(0, 0, this.openButton.width, this.openButton.height);
+
         this.closeButton = new Button({
-            defaultView: new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
+            defaultView,
             text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
         });
@@ -200,10 +204,9 @@ export class Select extends Container
         {
             const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
-            const hoverView = new Graphics().beginFill(hoverColor ?? backgroundColor).drawRoundedRect(0, 0, width, height, radius);
-
+            const color = hoverColor ?? backgroundColor;
+            const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
             const text = new Text(item, textStyle);
-
             const button = new Button({ defaultView, hoverView, text });
 
             buttons.push(button);
