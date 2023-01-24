@@ -7,6 +7,7 @@ import { getTextView } from './utils/helpers/text';
 import { ButtonEvents } from './ButtonEvents';
 import { Signal } from 'typed-signals';
 import { FederatedPointerEvent } from '@pixi/events';
+import { fitToView } from './utils/helpers/fit';
 
 const states = ['default', 'hover', 'pressed', 'disabled'] as const;
 
@@ -22,6 +23,7 @@ type Views = {
     pressedView?: string | Container;
     disabledView?: string | Container;
     text?: string | number | Text;
+    icon?: string | Container;
 };
 
 export type ButtonOptions = Views & {
@@ -31,6 +33,7 @@ export type ButtonOptions = Views & {
     anchorY?: number;
     offset?: Offset;
     textOffset?: Offset;
+    iconOffset?: Offset;
 };
 
 /**
@@ -66,6 +69,9 @@ export class Button extends Container
     /** Offset of the text view. Can be set to any state of the button. */
     public textOffset: Offset;
 
+    /** Offset of the icon view. Can be set to any state of the button. */
+    public iconOffset: Offset;
+
     //* View that holds all button inner views */
     public innerView: Container;
 
@@ -83,6 +89,9 @@ export class Button extends Container
 
     /** View for the button text. */
     public textView!: Text;
+
+    /** View for the button icon. */
+    public iconView!: Container;
 
     /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
     public state: State = 'default';
@@ -123,9 +132,11 @@ export class Button extends Container
         padding,
         offset,
         textOffset,
+        iconOffset,
         anchor,
         anchorX,
-        anchorY
+        anchorY,
+        icon
     }: ButtonOptions)
     {
         super();
@@ -135,15 +146,17 @@ export class Button extends Container
             hoverView,
             pressedView,
             disabledView,
-            text
+            text,
+            icon
         });
 
-        this.anchor = new ObservablePoint(this.resetPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-        this.resetPositions();
+        this.anchor = new ObservablePoint(this.resetViewsPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
+        this.resetViewsPositions();
 
         this.padding = padding ?? 0;
         this.offset = offset;
         this.textOffset = textOffset;
+        this.iconOffset = iconOffset;
 
         this.setState('default');
 
@@ -199,6 +212,15 @@ export class Button extends Container
     }
 
     /**
+     * Manages button icon view.
+     * @param {string | Text} icon - can be a string or a Text (Container based element).
+     */
+    private createIconView(icon: string | Container)
+    {
+        this.iconView = getView(icon);
+    }
+
+    /**
      * Manages views offsets if it's set.
      * @param view
      * @param state
@@ -206,7 +228,12 @@ export class Button extends Container
      */
     private setOffset(view: Container, state: State, offset: Offset)
     {
-        const stateOffset = offset[state];
+        const stateOffset = offset
+            ? offset[state]
+            : {
+                x: 0,
+                y: 0
+            };
         const defaultStateOffset = offset?.default;
 
         if (stateOffset)
@@ -285,9 +312,10 @@ export class Button extends Container
 
         activeView.visible = true;
 
-        this.resetPositions();
+        this.resetViewsPositions();
         this.setOffset(activeView, newState, this.offset);
         this.adjustTextView(newState);
+        this.adjustIconView(newState);
     }
 
     /**
@@ -302,14 +330,8 @@ export class Button extends Container
         }
 
         const activeView = this.getStateView(this.state);
-        const maxWidth = activeView.width - (this.padding * 2);
 
-        if (Math.round(this.textView.width) > maxWidth)
-        {
-            const scale = maxWidth / this.textView.width;
-
-            this.textView.scale.set(scale);
-        }
+        fitToView(activeView, this.textView, this.padding);
 
         activeView.addChild(this.textView);
 
@@ -319,19 +341,41 @@ export class Button extends Container
         this.setOffset(this.textView, state, this.textOffset);
     }
 
+    private adjustIconView(state: State)
+    {
+        if (!this.iconView)
+        {
+            return;
+        }
+
+        const activeView = this.getStateView(this.state);
+
+        fitToView(activeView, this.iconView, this.padding);
+
+        activeView.addChild(this.iconView);
+
+        this.iconView.x = (activeView.width / 2) - (this.iconView.width / 2);
+        this.iconView.y = (activeView.height / 2) - (this.iconView.height / 2);
+
+        this.setOffset(this.iconView, state, this.iconOffset);
+    }
+
     /**
      * Resets views positions according to button anchor setting.
      *  We have to set the anchor position for each view individually, as each of them
      *  can be different type of view (container without anchor, sprite with anchor etc)
      *  we have to reset all anchors to 0,0 and then set the position manually.
      */
-    private resetPositions()
+    private resetViewsPositions()
     {
         const x = this.anchor.x;
         const y = this.anchor.y;
+        const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView, this.iconView];
 
-        [this.defaultView, this.hoverView, this.pressedView, this.disabledView].forEach((view) =>
+        views.forEach((view) =>
         {
+            if (!view) return;
+
             (view as Sprite).anchor?.set(0);
 
             view.x = -view.width * x;
@@ -345,7 +389,7 @@ export class Button extends Container
      */
     private createViews(views: Views)
     {
-        const { defaultView, hoverView, pressedView, disabledView, text } = views;
+        const { defaultView, hoverView, pressedView, disabledView, text, icon } = views;
 
         this.innerView = new Container();
         this.addChild(this.innerView);
@@ -377,6 +421,11 @@ export class Button extends Container
         if (text)
         {
             this.createTextView(text);
+        }
+
+        if (icon)
+        {
+            this.createIconView(icon);
         }
     }
 

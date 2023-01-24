@@ -1,9 +1,7 @@
 import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
@@ -12,21 +10,17 @@ import { MaskedFrame } from '../../MaskedFrame';
 import { getMask } from '../maskedFrame/MaskedFrameGraphics.stories';
 
 const args = {
-    text: 'Click me!',
-    textColor: '#FFFFFF',
     color: '#A5E24D',
     hoverColor: '#FEC230',
     pressedColor: '#FE6048',
     disabledColor: '#6E6E6E',
-    width: 350,
+    width: 200,
     height: 200,
-    padding: 11,
-    radius: 50,
+    padding: 10,
+    radius: 200,
     iconSize: 100,
     iconOffsetX: 0,
-    iconOffsetY: -30,
-    textOffsetX: 0,
-    textOffsetY: 50,
+    iconOffsetY: 0,
     defaultOffset: 0,
     hoverOffset: -1,
     pressedOffset: 5,
@@ -35,23 +29,19 @@ const args = {
     action: action('button Event:')
 };
 
-export const UseGraphics = ({
+export const UseIcon = ({
     width,
     height,
     radius,
-    text,
     color,
     hoverColor,
     pressedColor,
     disabledColor,
     disabled,
     padding,
-    textColor,
     iconSize,
     iconOffsetX,
     iconOffsetY,
-    textOffsetX,
-    textOffsetY,
     defaultOffset,
     hoverOffset,
     pressedOffset,
@@ -70,7 +60,6 @@ export const UseGraphics = ({
 
     preloadAssets(assets).then(() =>
     {
-        const fill = textColor;
         const target = Sprite.from(`avatar-01.png`);
 
         // Component usage !!!
@@ -78,7 +67,7 @@ export const UseGraphics = ({
             target,
             mask: getMask(target.width, target.height, target.width),
             borderWidth: 10,
-            borderColor: fill
+            borderColor: 0xffffff
         });
 
         icon.scale.set(iconSize / target.width);
@@ -90,20 +79,12 @@ export const UseGraphics = ({
             pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
             disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
             icon,
-            text: new Text(text, {
-                ...defaultTextStyle,
-                fill
-            }),
             padding,
             offset: {
                 default: { y: defaultOffset },
                 hover: { y: hoverOffset },
                 pressed: { y: pressedOffset },
                 disabled: { y: disabledOffset }
-            },
-            textOffset: {
-                x: textOffsetX,
-                y: textOffsetY
             },
             iconOffset: {
                 x: iconOffsetX,
@@ -134,7 +115,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'Components/Button/Use Graphics',
+    title: 'Components/Button/Use Icon',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

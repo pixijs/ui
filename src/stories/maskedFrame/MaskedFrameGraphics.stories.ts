@@ -1,7 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
 import { MaskedFrame } from '../../MaskedFrame';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preloadAssets } from '../utils/loader';
@@ -10,7 +9,7 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     borderColor: '#FFFFFF',
     borderWidth: 10,
-    radius: 250,
+    radius: 250
 };
 
 // TODO: implement preloading
@@ -24,14 +23,14 @@ export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
     {
         borderColor = Number(borderColor.replace('#', '0x'));
 
-        const target = new Sprite(Texture.from(`avatar-01.png`));
+        const target = Sprite.from(`avatar-01.png`);
 
         // Component usage !!!
         const frame = new MaskedFrame({
             target,
             mask: getMask(target.width, target.height, radius),
             borderWidth,
-            borderColor,
+            borderColor
         });
 
         view.addChild(frame);
@@ -42,7 +41,7 @@ export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
     return { view, resize: () => centerElement(view) };
 };
 
-function getMask(width: number, height: number, radius: number): Graphics
+export function getMask(width: number, height: number, radius: number): Graphics
 {
     const isCircle = width === height && radius >= width / 2;
 
@@ -63,5 +62,5 @@ function getMask(width: number, height: number, radius: number): Graphics
 export default {
     title: 'Components/MaskedFrame/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

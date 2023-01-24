@@ -4,22 +4,20 @@ import { ButtonEvents } from '../../ButtonEvents';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
-import { drawStar } from '../../utils/helpers/star';
 
 const args = {
     color: '#A5E24D',
-    size: 100,
+    size: 150,
+    radius: 150,
     disabled: false,
     action: action('button Event:')
 };
 
-export const UseGraphics = ({ size, color, disabled, action }: any) =>
+export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 {
     color = Number(color.replace('#', '0x'));
 
-    const buttonView = new Graphics().beginFill(color);
-
-    drawStar(buttonView, size, size, 5, size / 2, size, 18);
+    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
 
     const text = new Text('🤙', { fontSize: 70 });
 
