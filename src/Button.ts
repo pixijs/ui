@@ -12,25 +12,26 @@ const states = ['default', 'hover', 'pressed', 'disabled'] as const;
 
 type State = typeof states[number];
 type Pos = { x?: number; y?: number };
-export type Offset = {
-    [K in State]?: Pos;
-} &
-Pos;
+type PosList = { [K in State]?: Pos };
 
-export interface ButtonOptions
-{
+export type Offset = Pos & PosList;
+
+type Views = {
     defaultView: string | Container;
     hoverView?: string | Container;
     pressedView?: string | Container;
     disabledView?: string | Container;
-    text?: string | Text;
+    text?: string | number | Text;
+};
+
+export type ButtonOptions = Views & {
     padding?: number;
     anchor?: number;
     anchorX?: number;
     anchorY?: number;
     offset?: Offset;
     textOffset?: Offset;
-}
+};
 
 /**
  * Button component with lots of settings, that can be used to create a button fast.
@@ -54,11 +55,19 @@ export interface ButtonOptions
  */
 export class Button extends Container
 {
-    private innerView: Container;
     private events: ButtonEvents;
-    private padding: number;
-    private offset: Offset & Pos;
-    private textOffset: Offset;
+
+    /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
+    public padding: number;
+
+    /** Offset of the button state views. If state views have different sizes, this option can help adjust them. */
+    public offset: Offset & Pos;
+
+    /** Offset of the text view. Can be set to any state of the button. */
+    public textOffset: Offset;
+
+    //* View that holds all button inner views */
+    public innerView: Container;
 
     /** View that is shown when non of button events is active. */
     public defaultView: Container;
@@ -132,11 +141,11 @@ export class Button extends Container
         this.anchor = new ObservablePoint(this.resetPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
         this.resetPositions();
 
-        this.setState('default');
-
-        this.padding = (padding ?? 0) * 2;
+        this.padding = padding ?? 0;
         this.offset = offset;
         this.textOffset = textOffset;
+
+        this.setState('default');
 
         this.addEvents();
     }
@@ -179,19 +188,24 @@ export class Button extends Container
         return this.events.enabled;
     }
 
-    private createTextView(text: string | Text)
+    /**
+     * Manages button text view.
+     * @param {string | Text} text - can be a string or a Text (Container based element).
+     */
+    private createTextView(text: string | number | Text)
     {
         this.textView = getTextView(text);
         this.textView.anchor.set(0);
     }
 
+    /**
+     * Manages views offsets if it's set.
+     * @param view
+     * @param state
+     * @param offset
+     */
     private setOffset(view: Container, state: State, offset: Offset)
     {
-        if (!view || offset === undefined)
-        {
-            return;
-        }
-
         const stateOffset = offset[state];
         const defaultStateOffset = offset?.default;
 
@@ -212,6 +226,7 @@ export class Button extends Container
         }
     }
 
+    /** Hides all button views. */
     private hideAllViews()
     {
         if (this.defaultView)
@@ -235,7 +250,11 @@ export class Button extends Container
         }
     }
 
-    private getActiveView(state: State): Container
+    /**
+     * Returns active view for the state.
+     * @param state
+     */
+    private getStateView(state: State): Container
     {
         switch (state)
         {
@@ -251,22 +270,30 @@ export class Button extends Container
         }
     }
 
+    /**
+     * Updates button state and shows according views.
+     * Updates positions and offsets of the views.
+     * @param {State} newState
+     */
     private setState(newState: State)
     {
         this.state = newState;
 
         this.hideAllViews();
 
-        const activeView = this.getActiveView(newState);
-
-        this.adjustTextView(newState);
+        const activeView = this.getStateView(newState);
 
         activeView.visible = true;
 
         this.resetPositions();
         this.setOffset(activeView, newState, this.offset);
+        this.adjustTextView(newState);
     }
 
+    /**
+     * Adjusts text view position and scale.
+     * @param {State} state
+     */
     private adjustTextView(state: State)
     {
         if (!this.textView)
@@ -274,8 +301,8 @@ export class Button extends Container
             return;
         }
 
-        const activeView = this.getActiveView(this.state);
-        const maxWidth = activeView.width - this.padding;
+        const activeView = this.getStateView(this.state);
+        const maxWidth = activeView.width - (this.padding * 2);
 
         if (Math.round(this.textView.width) > maxWidth)
         {
@@ -292,49 +319,34 @@ export class Button extends Container
         this.setOffset(this.textView, state, this.textOffset);
     }
 
+    /**
+     * Resets views positions according to button anchor setting.
+     *  We have to set the anchor position for each view individually, as each of them
+     *  can be different type of view (container without anchor, sprite with anchor etc)
+     *  we have to reset all anchors to 0,0 and then set the position manually.
+     */
     private resetPositions()
     {
         const x = this.anchor.x;
         const y = this.anchor.y;
 
-        // we have to set the anchor and position for each view individually as each of them can be different type view
-        // (container without anchor, sprite with anchor etc)
-        // we have to reset all anchors to 0,0 and then set the position manually
-        if (this.defaultView)
+        [this.defaultView, this.hoverView, this.pressedView, this.disabledView].forEach((view) =>
         {
-            (this.defaultView as Sprite).anchor?.set(0);
+            (view as Sprite).anchor?.set(0);
 
-            this.defaultView.x = -this.defaultView.width * x;
-            this.defaultView.y = -this.defaultView.height * y;
-        }
-
-        if (this.hoverView)
-        {
-            (this.hoverView as Sprite).anchor?.set(0);
-
-            this.hoverView.x = -this.hoverView.width * x;
-            this.hoverView.y = -this.hoverView.height * y;
-        }
-
-        if (this.pressedView)
-        {
-            (this.pressedView as Sprite).anchor?.set(0);
-
-            this.pressedView.x = -this.pressedView.width * x;
-            this.pressedView.y = -this.pressedView.height * y;
-        }
-
-        if (this.disabledView)
-        {
-            (this.disabledView as Sprite).anchor?.set(0);
-
-            this.disabledView.x = -this.disabledView.width * x;
-            this.disabledView.y = -this.disabledView.height * y;
-        }
+            view.x = -view.width * x;
+            view.y = -view.height * y;
+        });
     }
 
-    private createViews({ defaultView, hoverView, pressedView, disabledView, text }: Partial<ButtonOptions>)
+    /**
+     * Button views manager. Adds or creates all button views according to the config.
+     * @param {Views} views
+     */
+    private createViews(views: Views)
     {
+        const { defaultView, hoverView, pressedView, disabledView, text } = views;
+
         this.innerView = new Container();
         this.addChild(this.innerView);
 
@@ -368,6 +380,7 @@ export class Button extends Container
         }
     }
 
+    /** Creates all button events */
     private addEvents()
     {
         this.events = new ButtonEvents(this);
