@@ -41,7 +41,7 @@ export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
     return { view, resize: () => centerElement(view) };
 };
 
-export function getMask(width: number, height: number, radius: number): Graphics
+function getMask(width: number, height: number, radius: number): Graphics
 {
     const isCircle = width === height && radius >= width / 2;
 

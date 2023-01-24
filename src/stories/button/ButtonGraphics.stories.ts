@@ -9,7 +9,6 @@ import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
-import { getMask } from '../maskedFrame/MaskedFrameGraphics.stories';
 
 const args = {
     text: 'Click me!',
@@ -70,13 +69,13 @@ export const UseGraphics = ({
 
     preloadAssets(assets).then(() =>
     {
-        const fill = textColor;
+        const fill = Number(textColor.replace('#', '0x'));
         const target = Sprite.from(`avatar-01.png`);
 
         // Component usage !!!
         const icon = new MaskedFrame({
             target,
-            mask: getMask(target.width, target.height, target.width),
+            mask: new Graphics().beginFill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
             borderWidth: 10,
             borderColor: fill
         });

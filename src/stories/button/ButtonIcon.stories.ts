@@ -7,18 +7,17 @@ import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
-import { getMask } from '../maskedFrame/MaskedFrameGraphics.stories';
 
 const args = {
     color: '#A5E24D',
     hoverColor: '#FEC230',
     pressedColor: '#FE6048',
     disabledColor: '#6E6E6E',
-    width: 200,
-    height: 200,
+    width: 250,
+    height: 250,
     padding: 10,
     radius: 200,
-    iconSize: 100,
+    iconSize: 250,
     iconOffsetX: 0,
     iconOffsetY: 0,
     defaultOffset: 0,
@@ -62,15 +61,14 @@ export const UseIcon = ({
     {
         const target = Sprite.from(`avatar-01.png`);
 
-        // Component usage !!!
+        target.scale.set(iconSize / target.width);
+
         const icon = new MaskedFrame({
             target,
-            mask: getMask(target.width, target.height, target.width),
-            borderWidth: 10,
+            mask: new Graphics().beginFill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
+            borderWidth: 5,
             borderColor: 0xffffff
         });
-
-        icon.scale.set(iconSize / target.width);
 
         // Component usage !!!
         const button = new Button({
