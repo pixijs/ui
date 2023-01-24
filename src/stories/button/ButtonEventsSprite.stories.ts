@@ -1,5 +1,5 @@
 import { Text } from '@pixi/text';
-import { ButtonEvents } from '../../ButtonEvents';
+import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
@@ -14,7 +14,7 @@ const args = {
     action: action('button Event:')
 };
 
-export class SpriteButton extends ButtonEvents
+export class SpriteButton extends Button
 {
     private buttonView: Sprite;
     private textView: Text;
@@ -93,7 +93,7 @@ export class SpriteButton extends ButtonEvents
 export const UseSprite = (params: any) => new SpriteButton(params);
 
 export default {
-    title: 'Components/ButtonEvents/Use Sprite',
+    title: 'Components/Button/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

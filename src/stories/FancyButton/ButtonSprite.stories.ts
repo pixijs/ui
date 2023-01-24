@@ -1,5 +1,5 @@
 import { Text } from '@pixi/text';
-import { Button } from '../../Button';
+import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -38,7 +38,7 @@ export const UseSprite = ({
     preloadAssets(assets).then(() =>
     {
     // Component usage !!!
-        const button = new Button({
+        const button = new FancyButton({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
             pressedView: `button_pressed.png`,
@@ -72,7 +72,7 @@ export const UseSprite = ({
 };
 
 export default {
-    title: 'Components/Button/Use Sprite',
+    title: 'Components/FancyButton/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

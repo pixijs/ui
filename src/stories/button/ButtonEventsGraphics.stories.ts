@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { Text } from '@pixi/text';
-import { ButtonEvents } from '../../ButtonEvents';
+import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
@@ -27,7 +27,7 @@ export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
     buttonView.addChild(text);
 
     // Component usage !!!
-    const buttonEvents = new ButtonEvents(buttonView);
+    const buttonEvents = new Button(buttonView);
 
     buttonEvents.enabled = !disabled;
 
@@ -42,7 +42,7 @@ export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 };
 
 export default {
-    title: 'Components/ButtonEvents/Use Graphics',
+    title: 'Components/Button/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

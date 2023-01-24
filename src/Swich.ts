@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
-import { ButtonEvents } from './ButtonEvents';
+import { Button } from './Button';
 import { ButtonEvent } from './utils/HelpTypes';
 
 /**
@@ -32,7 +32,7 @@ export class Swich extends Container
     public onChange: Signal<(state: number | boolean) => void>;
 
     /** Button events that are used to switch views. */
-    public events: ButtonEvents;
+    public events: Button;
 
     /**
      * @param {Array<Container | string>} views - Array of views that will be switched or textures,
@@ -78,7 +78,7 @@ export class Swich extends Container
             this.triggerEvents = new Set(['onPress']);
         }
 
-        this.events = new ButtonEvents(this.view);
+        this.events = new Button(this.view);
 
         this.events.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
         this.events.onDown.connect(() => this.switch(this.nextActive, 'onDown'));

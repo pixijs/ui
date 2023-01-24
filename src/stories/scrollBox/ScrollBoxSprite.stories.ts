@@ -3,7 +3,7 @@ import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ScrollBox } from '../../ScrollBox';
-import { Button } from '../../Button';
+import { FancyButton } from '../../FancyButton';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
@@ -61,13 +61,13 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsCount, onPr
     };
 };
 
-function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: number) => void): Button[]
+function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: number) => void): FancyButton[]
 {
     const items = [];
 
     for (let i = 0; i < itemsCount; i++)
     {
-        const button = new Button({
+        const button = new FancyButton({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
             text: new Text(`Item ${i + 1}`, {

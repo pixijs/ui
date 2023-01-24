@@ -1,103 +1,28 @@
-import { ObservablePoint } from '@pixi/core';
+import { utils } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
-import { Sprite } from '@pixi/sprite';
-import { getView } from './utils/helpers/view';
-import { getTextView } from './utils/helpers/text';
-import { ButtonEvents } from './ButtonEvents';
-import { Signal } from 'typed-signals';
 import { FederatedPointerEvent } from '@pixi/events';
-import { fitToView } from './utils/helpers/fit';
-
-const states = ['default', 'hover', 'pressed', 'disabled'] as const;
-
-type State = typeof states[number];
-type Pos = { x?: number; y?: number };
-type PosList = { [K in State]?: Pos };
-
-export type Offset = Pos & PosList;
-
-type Views = {
-    defaultView: string | Container;
-    hoverView?: string | Container;
-    pressedView?: string | Container;
-    disabledView?: string | Container;
-    text?: string | number | Text;
-    icon?: string | Container;
-};
-
-export type ButtonOptions = Views & {
-    padding?: number;
-    anchor?: number;
-    anchorX?: number;
-    anchorY?: number;
-    offset?: Offset;
-    textOffset?: Offset;
-    iconOffset?: Offset;
-};
+import { Signal } from 'typed-signals';
 
 /**
- * Button component with lots of settings, that can be used to create a button fast.
- *
- * Text view by default is centered in the active view.
- *
- * If views are not the same size, offset property of the constructor
- * can be used to adjust the position of the text and the view.
+ * Adds button events to a given container based view so you can subscribe to them
+ * and use your container based instance as a button.
  * @example
  * ```
- * const button = new Button({
- *     defaultView: `button.png`,
- *     hoverView: `button_hover.png`,
- *     pressedView: `button_pressed.png`,
- *     disabledView: `button_disabled.png`,
- *     text: new Text(text, { fill: 0xFFFFFF }),
- *     icon: `icon.png`,
- * });
+ * const button = new Button(
+ *      new Graphics()
+ *          .beginFill(0xFFFFFF)
+ *          .drawRoundedRect(0, 0, width, height, radius)
+ * );
  *
+ * buttonEvents.onPress.connect(() => console.log('onPress'));
+ *
+ * parrent.addChild(buttonEvents.view);
  * ```
  */
-export class Button extends Container
+export class Button
 {
-    private events: ButtonEvents;
-
-    /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
-    public padding: number;
-
-    /** Offset of the button state views. If state views have different sizes, this option can help adjust them. */
-    public offset: Offset & Pos;
-
-    /** Offset of the text view. Can be set to any state of the button. */
-    public textOffset: Offset;
-
-    /** Offset of the icon view. Can be set to any state of the button. */
-    public iconOffset: Offset;
-
-    //* View that holds all button inner views */
-    public innerView: Container;
-
-    /** View that is shown when non of button events is active. */
-    public defaultView: Container;
-
-    /** View that is shown when mouse hovers the component. */
-    public hoverView!: Container;
-
-    /** View that is shown when mouse is pressed on the component. */
-    public pressedView!: Container;
-
-    /** View that is shown when button is disabled. */
-    public disabledView!: Container;
-
-    /** View for the button text. */
-    public textView!: Text;
-
-    /** View for the button icon. */
-    public iconView!: Container;
-
-    /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
-    public state: State = 'default';
-
-    /** Anchor point of the button. */
-    public anchor: ObservablePoint;
+    /** Container, given as a constructor parameter that is a button view. */
+    public view: Container;
 
     /** Event that is fired when button is pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -123,65 +48,91 @@ export class Button extends Container
      */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    constructor({
-        defaultView,
-        hoverView,
-        pressedView,
-        disabledView,
-        text,
-        padding,
-        offset,
-        textOffset,
-        iconOffset,
-        anchor,
-        anchorX,
-        anchorY,
-        icon
-    }: ButtonOptions)
+    private _isDown: boolean;
+    private _isMouseIn: boolean;
+    private _enabled: boolean;
+
+    /**
+     * Turns a given container based view into a button by adding all button events to it.
+     * @param {Container} view - Contained based view
+     */
+    constructor(view: Container)
     {
-        super();
+        this.view = view;
 
-        this.createViews({
-            defaultView,
-            hoverView,
-            pressedView,
-            disabledView,
-            text,
-            icon
-        });
+        this.createEvents();
 
-        this.anchor = new ObservablePoint(this.resetViewsPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-        this.resetViewsPositions();
-
-        this.padding = padding ?? 0;
-        this.offset = offset;
-        this.textOffset = textOffset;
-        this.iconOffset = iconOffset;
-
-        this.setState('default');
-
-        this.addEvents();
+        this.enabled = true;
     }
 
     /**
-     * Updates text of the text element of the button and updates text scaling basing one it's new size.
-     * @param {string | number} text - text to be set.
+     * Method called when button is pressed down.
+     * To be override.
+     * @param {FederatedPointerEvent} _e - event data
      */
-    set text(text: string | number)
+    public down(_e?: FederatedPointerEvent)
     {
-        if (!this.textView)
-        {
-            this.createTextView(typeof text === 'number' ? text.toString() : text);
-        }
-
-        this.textView.text = text;
-        this.setState(this.state);
+    // override me!
     }
 
-    /** Returns the text string of the button text element. */
-    get text(): string
+    /**
+     * Method called when button is pressed up.
+     * To be override.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public up(_e?: FederatedPointerEvent)
     {
-        return this.textView?.text;
+    // override me!
+    }
+
+    /**
+     * Method called when mouse hovers the button.
+     * To be override.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public hover(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when mouse hovers the button.
+     * To be override.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public press(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when mouse leaves button view.
+     * To be override.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public out(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when when up event happens outside of the button
+     * when down event happened inside the button boundaries.
+     * To be override.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public upOut(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    get isDown(): boolean
+    {
+        return this._isDown;
     }
 
     /**
@@ -190,250 +141,63 @@ export class Button extends Container
      */
     set enabled(enabled: boolean)
     {
-        this.events.enabled = enabled;
+        this._enabled = enabled;
+        this.view.interactive = enabled;
+        this.view.cursor = enabled ? 'pointer' : 'default';
 
-        this.setState(enabled ? 'default' : 'disabled');
+        if (!enabled)
+        {
+            this._processUp();
+        }
     }
 
     /** Getter that returns button state, that controls if button events are firing. */
     get enabled(): boolean
     {
-        return this.events.enabled;
+        return this._enabled;
     }
 
-    /**
-     * Manages button text view.
-     * @param {string | Text} text - can be a string or a Text (Container based element).
-     */
-    private createTextView(text: string | number | Text)
+    private _processUp(e?: FederatedPointerEvent)
     {
-        this.textView = getTextView(text);
-        this.textView.anchor.set(0);
-    }
-
-    /**
-     * Manages button icon view.
-     * @param {string | Text} icon - can be a string or a Text (Container based element).
-     */
-    private createIconView(icon: string | Container)
-    {
-        this.iconView = getView(icon);
-    }
-
-    /**
-     * Manages views offsets if it's set.
-     * @param view
-     * @param state
-     * @param offset
-     */
-    private setOffset(view: Container, state: State, offset: Offset)
-    {
-        const stateOffset = offset
-            ? offset[state]
-            : {
-                x: 0,
-                y: 0
-            };
-        const defaultStateOffset = offset?.default;
-
-        if (stateOffset)
+        if (this._isDown)
         {
-            view.x += stateOffset.x ?? 0;
-            view.y += stateOffset.y ?? 0;
+            this.onUp.emit(this, e);
         }
-        else if (defaultStateOffset)
+        this._isDown = false;
+    }
+
+    private _processUpOut(e?: FederatedPointerEvent)
+    {
+        if (this._isDown)
         {
-            view.x += defaultStateOffset.x ?? 0;
-            view.y += defaultStateOffset.y ?? 0;
+            this.onUp.emit(this, e);
+            this.onUpOut.emit(this, e);
         }
-        else if (offset.x || offset.y)
+
+        this._isDown = false;
+    }
+
+    private _processOut(e?: FederatedPointerEvent)
+    {
+        if (this._isMouseIn)
         {
-            view.x += offset.x ?? 0;
-            view.y += offset.y ?? 0;
+            this._isMouseIn = false;
+            this.onOut.emit(this, e);
         }
     }
 
-    /** Hides all button views. */
-    private hideAllViews()
+    private _upOut(e?: FederatedPointerEvent)
     {
-        if (this.defaultView)
-        {
-            this.defaultView.visible = false;
-        }
-
-        if (this.hoverView)
-        {
-            this.hoverView.visible = false;
-        }
-
-        if (this.pressedView)
-        {
-            this.pressedView.visible = false;
-        }
-
-        if (this.disabledView)
-        {
-            this.disabledView.visible = false;
-        }
+        this.upOut(e);
     }
 
-    /**
-     * Returns active view for the state.
-     * @param state
-     */
-    private getStateView(state: State): Container
+    private _out(e?: FederatedPointerEvent)
     {
-        switch (state)
-        {
-            case 'hover':
-                return this.hoverView ?? this.defaultView;
-            case 'pressed':
-                return this.pressedView ?? this.defaultView;
-            case 'disabled':
-                return this.disabledView ?? this.defaultView;
-            case 'default':
-            default:
-                return this.defaultView;
-        }
+        this.out(e);
     }
 
-    /**
-     * Updates button state and shows according views.
-     * Updates positions and offsets of the views.
-     * @param {State} newState
-     */
-    private setState(newState: State)
+    private createEvents()
     {
-        this.state = newState;
-
-        this.hideAllViews();
-
-        const activeView = this.getStateView(newState);
-
-        activeView.visible = true;
-
-        this.resetViewsPositions();
-        this.setOffset(activeView, newState, this.offset);
-        this.adjustTextView(newState);
-        this.adjustIconView(newState);
-    }
-
-    /**
-     * Adjusts text view position and scale.
-     * @param {State} state
-     */
-    private adjustTextView(state: State)
-    {
-        if (!this.textView)
-        {
-            return;
-        }
-
-        const activeView = this.getStateView(this.state);
-
-        fitToView(activeView, this.textView, this.padding);
-
-        activeView.addChild(this.textView);
-
-        this.textView.x = (activeView.width - this.textView.width) / 2;
-        this.textView.y = (activeView.height - this.textView.height) / 2;
-
-        this.setOffset(this.textView, state, this.textOffset);
-    }
-
-    private adjustIconView(state: State)
-    {
-        if (!this.iconView)
-        {
-            return;
-        }
-
-        const activeView = this.getStateView(this.state);
-
-        fitToView(activeView, this.iconView, this.padding);
-
-        activeView.addChild(this.iconView);
-
-        this.iconView.x = (activeView.width / 2) - (this.iconView.width / 2);
-        this.iconView.y = (activeView.height / 2) - (this.iconView.height / 2);
-
-        this.setOffset(this.iconView, state, this.iconOffset);
-    }
-
-    /**
-     * Resets views positions according to button anchor setting.
-     *  We have to set the anchor position for each view individually, as each of them
-     *  can be different type of view (container without anchor, sprite with anchor etc)
-     *  we have to reset all anchors to 0,0 and then set the position manually.
-     */
-    private resetViewsPositions()
-    {
-        const x = this.anchor.x;
-        const y = this.anchor.y;
-        const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView, this.iconView];
-
-        views.forEach((view) =>
-        {
-            if (!view) return;
-
-            (view as Sprite).anchor?.set(0);
-
-            view.x = -view.width * x;
-            view.y = -view.height * y;
-        });
-    }
-
-    /**
-     * Button views manager. Adds or creates all button views according to the config.
-     * @param {Views} views
-     */
-    private createViews(views: Views)
-    {
-        const { defaultView, hoverView, pressedView, disabledView, text, icon } = views;
-
-        this.innerView = new Container();
-        this.addChild(this.innerView);
-
-        this.defaultView = getView(defaultView);
-        this.innerView.addChild(this.defaultView);
-
-        if (hoverView)
-        {
-            this.hoverView = getView(hoverView);
-            this.innerView.addChild(this.hoverView);
-            this.hoverView.visible = false;
-        }
-
-        if (pressedView)
-        {
-            this.pressedView = getView(pressedView);
-            this.innerView.addChild(this.pressedView);
-            this.pressedView.visible = false;
-        }
-
-        if (disabledView)
-        {
-            this.disabledView = getView(disabledView);
-            this.innerView.addChild(this.disabledView);
-            this.disabledView.visible = false;
-        }
-
-        if (text)
-        {
-            this.createTextView(text);
-        }
-
-        if (icon)
-        {
-            this.createIconView(icon);
-        }
-    }
-
-    /** Creates all button events */
-    private addEvents()
-    {
-        this.events = new ButtonEvents(this);
-
         this.onPress = new Signal();
         this.onDown = new Signal();
         this.onUp = new Signal();
@@ -441,40 +205,66 @@ export class Button extends Container
         this.onOut = new Signal();
         this.onUpOut = new Signal();
 
-        this.events.onPress.connect((_bth, e?: FederatedPointerEvent) =>
+        this.view.on('pointerdown', (e: FederatedPointerEvent) =>
         {
-            this.onPress.emit(this, e);
-            this.setState('hover');
-        });
-
-        this.events.onDown.connect((_bth, e?: FederatedPointerEvent) =>
-        {
+            this._isDown = true;
             this.onDown.emit(this, e);
-            this.setState('pressed');
         });
 
-        this.events.onUp.connect((_bth, e?: FederatedPointerEvent) =>
+        this.view.on('pointerup', (e: FederatedPointerEvent) =>
         {
-            this.onUp.emit(this, e);
-            this.setState('hover');
+            this._processUp(e);
         });
 
-        this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
+        this.view.on('pointerupoutside', (e: FederatedPointerEvent) =>
         {
+            this._processUpOut(e);
+        });
+
+        this.view.on('pointerout', (e: FederatedPointerEvent) =>
+        {
+            this._processOut(e);
+        });
+
+        this.view.on('pointertap', (e: FederatedPointerEvent) =>
+        {
+            this._isDown = false;
+            this.onPress.emit(this, e);
+            this.press(e);
+        });
+
+        this.view.on('pointerover', (e: FederatedPointerEvent) =>
+        {
+            this._isMouseIn = true;
             this.onHover.emit(this, e);
-            this.setState('hover');
         });
 
-        this.events.onOut.connect((_bth, e?: FederatedPointerEvent) =>
+        this.onDown.connect((_btn, e) =>
         {
-            this.onOut.emit(this, e);
-            this.setState('default');
+            this.down(e);
         });
 
-        this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
+        this.onUp.connect((_btn, e) =>
         {
-            this.onUpOut.emit(this, e);
-            this.setState('default');
+            this.up(e);
+        });
+
+        this.onUpOut.connect((_bth, e) =>
+        {
+            this._upOut(e);
+        });
+
+        if (!utils.isMobile.any)
+        {
+            this.onHover.connect((_bth, e) =>
+            {
+                this.hover(e);
+            });
+        }
+
+        this.onOut.connect((_bth, e) =>
+        {
+            this._out(e);
         });
     }
 }

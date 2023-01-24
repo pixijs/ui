@@ -20,10 +20,11 @@ export function fitToView(parent: Container, child: Container, padding = 0)
     {
         scaleY = maxHeight / (child.height * scaleY);
     }
-    console.log({
-        scaleX,
-        scaleY
-    });
+
+    if (scaleX <= 0 || scaleY <= 0)
+    {
+        child.visible = false;
+    }
 
     child.scale.set(Math.min(scaleX, scaleY));
 }

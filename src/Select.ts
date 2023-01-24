@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Button } from './Button';
+import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
@@ -85,8 +85,8 @@ export type SelectOptions = {
 // TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly openButton: Button;
-    private readonly closeButton: Button;
+    private readonly openButton: FancyButton;
+    private readonly closeButton: FancyButton;
     private readonly openView: Container;
 
     /** TODO */
@@ -100,7 +100,7 @@ export class Select extends Container
     {
         super();
 
-        this.openButton = new Button({
+        this.openButton = new FancyButton({
             defaultView: getView(closedBG),
             text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
@@ -116,7 +116,7 @@ export class Select extends Container
             .beginFill(0x000000, 0.00001)
             .drawRect(0, 0, this.openButton.width, this.openButton.height);
 
-        this.closeButton = new Button({
+        this.closeButton = new FancyButton({
             defaultView,
             text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
@@ -196,9 +196,9 @@ export class Select extends Container
         height,
         textStyle,
         radius
-    }: SelectItemsOptions): Button[]
+    }: SelectItemsOptions): FancyButton[]
     {
-        const buttons: Button[] = [];
+        const buttons: FancyButton[] = [];
 
         items.forEach((item) =>
         {
@@ -207,7 +207,7 @@ export class Select extends Container
             const color = hoverColor ?? backgroundColor;
             const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
             const text = new Text(item, textStyle);
-            const button = new Button({ defaultView, hoverView, text });
+            const button = new FancyButton({ defaultView, hoverView, text });
 
             buttons.push(button);
         });
