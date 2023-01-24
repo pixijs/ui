@@ -4,7 +4,8 @@ import { FederatedPointerEvent } from '@pixi/events';
 import { Signal } from 'typed-signals';
 
 /**
- * Container based component that gives us a starting point for UI buttons.
+ * Adds button events to a given container based view so you can subscribe to them
+ * and use your container based instance as a button.
  * @example
  * ```
  * const button = new Button(
