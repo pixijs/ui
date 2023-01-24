@@ -18,7 +18,7 @@ const args = {
     radius: 11,
     count: 3,
     checked: false,
-    onPress: action('Checkbox: '),
+    onPress: action('Checkbox')
 };
 
 export const UseGraphics = ({
@@ -35,7 +35,7 @@ export const UseGraphics = ({
     height,
     radius,
 
-    onPress,
+    onPress
 }: any) =>
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
@@ -47,7 +47,7 @@ export const UseGraphics = ({
 
     for (let i = 0; i < count; i++)
     {
-        // Component usage !!!
+    // Component usage !!!
         const checkBox = new CheckBox({
             text: `${text} ${i + 1}`,
             checked,
@@ -69,9 +69,9 @@ export const UseGraphics = ({
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,
-                    fill: textColor,
-                },
-            },
+                    fill: textColor
+                }
+            }
         });
 
         checkBox.onCheck.connect((checked) =>
@@ -88,5 +88,5 @@ export const UseGraphics = ({
 export default {
     title: 'Components/Checkbox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

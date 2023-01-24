@@ -5,7 +5,7 @@ import { Signal } from 'typed-signals';
 import { Swich } from './Swich';
 import { getView } from './utils/helpers/view';
 
-export type CheckBoxStyle = {
+type CheckBoxStyle = {
     checked: Container | string;
     unchecked: Container | string;
     text?: TextStyle | Partial<ITextStyle>;
@@ -18,14 +18,14 @@ export type CheckBoxOptions = {
 };
 
 /**
- * Creates a container based checkbox element
+ * Creates a container based checkbox element.
  * @example
  * ```
  *  new CheckBox({
  *     checked: false,
  *     style: {
- *         unchecked: Sprite.from(`switch_off.png`),
- *         checked: Sprite.from(`switch_on.png`),
+ *         unchecked: `switch_off.png`,
+ *         checked: `switch_on.png`,
  *     }
  * });
  *
@@ -33,7 +33,10 @@ export type CheckBoxOptions = {
  */
 export class CheckBox extends Swich
 {
-    public label: Text;
+    //* Text label */
+    public label!: Text;
+
+    /** Signal emitted when checkbox state changes. */
     public onCheck: Signal<(state: boolean) => void>;
 
     constructor(options: CheckBoxOptions)
@@ -50,29 +53,29 @@ export class CheckBox extends Swich
 
         this.addChild(this.label);
 
-        this.update();
+        this.updateHitArea();
 
         this.onCheck = new Signal();
 
         this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
-    /** TODO */
-    public update()
+    /** Updates hitArea basing ot current states visible view. */
+    private updateHitArea()
     {
         this.hitArea = new Rectangle(0, 0, this.width, this.height);
     }
 
-    /** TODO */
+    /** Getter, that returns a checkbox state. */
     public get checked(): boolean
     {
         return this.active === 1;
     }
 
-    /** TODO */
+    /** Setter, that sets a checkbox state. */
     public set checked(checked: boolean)
     {
         this.switch(checked ? 1 : 0);
-        this.update();
+        this.updateHitArea();
     }
 }
