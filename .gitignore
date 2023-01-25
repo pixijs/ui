@@ -37,6 +37,7 @@ pnpm-lock.yaml
 # jetBrains IDE ignores
 .idea
 .vs-code
+.husky
 .eslintcache
 docs/
 example.api.json*
