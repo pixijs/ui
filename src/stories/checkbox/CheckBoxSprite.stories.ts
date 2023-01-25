@@ -12,14 +12,14 @@ const args = {
     textColor: '#FFFFFF',
     count: 3,
     checked: false,
-    onChange: action('Checkbox changed'),
+    onChange: action('Checkbox')
 };
 
 export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
-        elementsMargin: 5,
+        elementsMargin: 5
     });
 
     const assets = [`switch_off.png`, `switch_on.png`];
@@ -38,12 +38,12 @@ export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
                     text: {
                         ...defaultTextStyle,
                         fontSize: 22,
-                        fill: textColor,
-                    },
-                },
+                        fill: textColor
+                    }
+                }
             });
 
-            checkBox.onChange.connect(() => onChange(`${checkBox.checked}`));
+            checkBox.onChange.connect((checked) => onChange(`${i + 1} ${checked}`));
 
             view.addChild(checkBox);
         }
@@ -57,5 +57,5 @@ export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 export default {
     title: 'Components/Checkbox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

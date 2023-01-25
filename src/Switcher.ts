@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container, DisplayObject } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { Button } from './Button';
@@ -23,7 +23,7 @@ export class Switcher extends Container
     private triggerEvents: Set<ButtonEvent>;
 
     /** Container that will hold all the content of the component. */
-    public view: Container;
+    public innerView: Container;
 
     /** The id of the visible(active) view. */
     public active = 0;
@@ -32,7 +32,7 @@ export class Switcher extends Container
     public onChange: Signal<(state: number | boolean) => void>;
 
     /** Button events that are used to switch views. */
-    public events: Button;
+    public button: Button;
 
     /**
      * @param {Array<Container | string>} views - Array of views that will be switched or textures,
@@ -44,14 +44,14 @@ export class Switcher extends Container
     {
         super();
 
-        this.view = new Container();
-        this.addChild(this.view);
+        this.innerView = new Container();
+        this.addChild(this.innerView);
 
         views.map((stateView, id) =>
         {
             const view = getView(stateView);
 
-            this.view.addChild(view);
+            this.innerView.addChild(view);
 
             view.visible = id === this.active;
 
@@ -78,14 +78,14 @@ export class Switcher extends Container
             this.triggerEvents = new Set(['onPress']);
         }
 
-        this.events = new Button(this.view);
+        this.button = new Button(this);
 
-        this.events.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
-        this.events.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
-        this.events.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
-        this.events.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
-        this.events.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
-        this.events.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
+        this.button.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
+        this.button.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
+        this.button.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
+        this.button.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
+        this.button.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
+        this.button.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
     }
 
     /** Returns the active view */
@@ -97,7 +97,7 @@ export class Switcher extends Container
     /** Returns all the switchable views */
     get views(): Array<Container>
     {
-        return this.view.children as Array<Container>;
+        return this.innerView.children as Array<Container>;
     }
 
     /**

@@ -53,17 +53,9 @@ export class CheckBox extends Switcher
 
         this.addChild(this.label);
 
-        this.updateHitArea();
-
         this.onCheck = new Signal();
 
         this.onChange.connect(() => this.onCheck.emit(this.checked));
-    }
-
-    /** Updates hitArea basing ot current states visible view. */
-    private updateHitArea()
-    {
-        this.hitArea = new Rectangle(0, 0, this.width, this.height);
     }
 
     /** Getter, that returns a checkbox state. */
@@ -76,6 +68,5 @@ export class CheckBox extends Switcher
     public set checked(checked: boolean)
     {
         this.switch(checked ? 1 : 0);
-        this.updateHitArea();
     }
 }
