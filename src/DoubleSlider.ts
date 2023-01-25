@@ -1,7 +1,6 @@
 import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
-import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
@@ -9,6 +8,7 @@ import { removeHitBox } from './utils/helpers/hitbox';
 
 import type { DragObject } from './utils/HelpTypes';
 import { getView } from './utils/helpers/view';
+import { ProgressBar } from './ProgressBar';
 
 export type DoubleSliderOptions = {
     bg: Container | string;
@@ -76,12 +76,8 @@ export type DoubleSliderOptions = {
 
 // TODO: implement vertical slider
 // TODO: make this fill to be draggable and move border values at the same time
-export class DoubleSlider extends Container
+export class DoubleSlider extends ProgressBar
 {
-    protected readonly bg: Container;
-    protected readonly fill?: Container;
-    protected readonly fillMask?: Graphics;
-
     private readonly slider1: Container;
     private readonly slider2: Container;
 
@@ -91,50 +87,37 @@ export class DoubleSlider extends Container
     private dragging1 = 0;
     private dragging2 = 0;
 
-    /** TODO */
-    public percent1 = 0;
-    /** TODO */
-    public percent2 = 100;
-    /** TODO */
+    private percent1 = 0;
+    private percent2 = 100;
+
+    private options: DoubleSliderOptions;
+
+    /** Left value of the slider. */
     public value1 = 0;
-    /** TODO */
+
+    /** Right value of the slider. */
     public value2 = 0;
 
-    /** TODO */
+    /** Signal that fires when value have changed. */
     public onChange: Signal<(value1: number, value2: number) => void> = new Signal();
 
-    private readonly options: DoubleSliderOptions;
+    /** Signal that fires when value is changing. */
+    public onUpdate: Signal<(value1: number, value2: number) => void> = new Signal();
 
     constructor(options: DoubleSliderOptions)
     {
-        super();
+        super({
+            bg: options.bg,
+            fill: options.fill,
+            fillOffset: options.fillOffset,
+            progress: options.value1
+        });
 
-        this.options = options;
-        const bg = getView(options.bg);
+        this.min = options.min ?? 0;
+        this.max = options.max ?? 100;
 
-        this.bg = new Container();
-        this.bg.addChild(bg);
-        this.addChild(this.bg);
-
-        if (options.fill)
-        {
-            const fill = getView(options.fill);
-
-            this.fill = new Container();
-            this.fill.addChild(fill);
-
-            const offsetX = options.fillOffset?.x ?? 0;
-            const offsetY = options.fillOffset?.y ?? 0;
-
-            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
-
-            this.fillMask = new Graphics();
-            this.fill.addChild(this.fillMask);
-            this.fill.mask = this.fillMask;
-
-            this.addChild(this.fill);
-        }
+        this.value1 = options.value1 ?? this.min;
+        this.value2 = options.value2 ?? this.max;
 
         const slider1 = getView(options.slider1);
 
@@ -142,6 +125,8 @@ export class DoubleSlider extends Container
         {
             slider1.anchor.set(0.5);
         }
+
+        this.options = options;
 
         slider1.x = slider1.width / 2;
 
@@ -165,20 +150,14 @@ export class DoubleSlider extends Container
 
         if (options.showValue)
         {
-            this.slider1Text = new Text(
-                '',
-                options.valueTextStyle || { fill: 0xffffff },
-            );
+            this.slider1Text = new Text('', options.valueTextStyle || { fill: 0xffffff });
             this.slider1Text.anchor.set(0.5);
             this.addChild(this.slider1Text);
         }
 
         if (options.showValue)
         {
-            this.slider2Text = new Text(
-                '',
-                options.valueTextStyle || { fill: 0xffffff },
-            );
+            this.slider2Text = new Text('', options.valueTextStyle || { fill: 0xffffff });
             this.slider2Text.anchor.set(0.5);
             this.addChild(this.slider2Text);
         }
@@ -190,40 +169,38 @@ export class DoubleSlider extends Container
         this.update();
     }
 
-    private validateSettings()
+    override validateSettings()
     {
-        const { options } = this;
-
-        if (!options.min)
+        if (!this.min)
         {
-            options.min = 0;
+            this.min = 0;
         }
 
-        if (!options.max)
+        if (!this.max)
         {
-            options.max = 100;
+            this.max = 100;
         }
 
-        if (options.value1 < options.min)
+        if (this.value1 < this.min)
         {
-            options.value1 = options.min;
+            this.value1 = this.min;
         }
 
-        if (options.value2 > options.max)
+        if (this.value2 > this.max)
         {
-            options.value2 = options.max;
+            this.value2 = this.max;
         }
 
-        this.value1 = options.value1 ?? options.min ?? 0;
-        this.percent1 = (this.value1 * 100) / options.max;
+        this.value1 = this.value1 ?? this.min ?? 0;
+        this.percent1 = (this.value1 * 100) / this.max;
 
-        this.value2 = options.value2 ?? options.min ?? 0;
-        this.percent2 = (this.value2 * 100) / options.max;
+        this.value2 = this.value2 ?? this.min ?? 0;
+        this.percent2 = (this.value2 * 100) / this.max;
 
-        const scale = options.max - options.min;
+        const scale = this.max - this.min;
 
-        const scaledVal1 = this.value1 - options.min;
-        const scaledVal2 = this.value2 - options.min;
+        const scaledVal1 = this.value1 - this.min;
+        const scaledVal2 = this.value2 - this.min;
 
         this.percent1 = (scaledVal1 * 100) / scale;
         this.percent2 = (scaledVal2 * 100) / scale;
@@ -300,6 +277,7 @@ export class DoubleSlider extends Container
         this.update();
 
         this.onChange?.emit(this.value1, this.value2);
+        this.onUpdate?.emit(this.value1, this.value2);
     }
 
     private onDragStart1(event: FederatedPointerEvent)
@@ -370,7 +348,7 @@ export class DoubleSlider extends Container
         const maxPos = this.bg.width - this.slider1.width;
 
         this.percent1 = Math.round((pos / maxPos) * 100);
-        this.value1 = this.options.min + Math.round(((this.options.max - this.options.min) / 100) * this.percent1);
+        this.value1 = this.min + Math.round(((this.max - this.min) / 100) * this.percent1);
     }
 
     private onDragEnd1()
@@ -448,7 +426,7 @@ export class DoubleSlider extends Container
         const maxPos = this.bg.width - this.slider2.width;
 
         this.percent2 = Math.round((pos / maxPos) * 100);
-        this.value2 = this.options.min + Math.round(((this.options.max - this.options.min) / 100) * this.percent2);
+        this.value2 = this.min + Math.round(((this.max - this.min) / 100) * this.percent2);
     }
 
     private onDragEnd2()
@@ -480,12 +458,7 @@ export class DoubleSlider extends Container
                 .clear()
                 .lineStyle(0)
                 .beginFill(0xffffff)
-                .drawRect(
-                    startPoint,
-                    0,
-                    endPoint - startPoint,
-                    this.fill.height,
-                );
+                .drawRect(startPoint, 0, endPoint - startPoint, this.fill.height);
         }
 
         if (this.options.showValue)
@@ -506,6 +479,6 @@ export class DoubleSlider extends Container
             this.slider2Text.y = slider2PosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
-        this.onChange?.emit(this.value1, this.value2);
+        this.onUpdate?.emit(this.value1, this.value2);
     }
 }
