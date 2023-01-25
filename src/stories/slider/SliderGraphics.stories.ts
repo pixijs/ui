@@ -22,27 +22,30 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
-    onChange: action('Slider changed'),
+    onChange: action('Slider changed')
 };
 
-export const Single: StoryFn = ({
-    min,
-    max,
-    value,
-    meshColor,
-    borderColor,
-    backgroundColor,
-    fillColor,
-    handleBorder,
-    width,
-    height,
-    radius,
-    fontSize,
-    fontColor,
-    border,
-    onChange,
-    showValue,
-}: any, context) =>
+export const Single: StoryFn = (
+    {
+        min,
+        max,
+        value,
+        meshColor,
+        borderColor,
+        backgroundColor,
+        fillColor,
+        handleBorder,
+        width,
+        height,
+        radius,
+        fontSize,
+        fontColor,
+        border,
+        onChange,
+        showValue
+    }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -59,25 +62,13 @@ export const Single: StoryFn = ({
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(backgroundColor)
-        .drawRoundedRect(
-            border,
-            border,
-            width - (border * 2),
-            height - (border * 2),
-            radius,
-        );
+        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const fill = new Graphics()
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(fillColor)
-        .drawRoundedRect(
-            border,
-            border,
-            width - (border * 2),
-            height - (border * 2),
-            radius,
-        );
+        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const slider = new Graphics()
         .beginFill(borderColor)
@@ -95,9 +86,9 @@ export const Single: StoryFn = ({
         value,
         valueTextStyle: {
             fill: fontColor,
-            fontSize,
+            fontSize
         },
-        showValue,
+        showValue
     });
 
     singleSlider.onChange.connect((value) =>
@@ -109,12 +100,12 @@ export const Single: StoryFn = ({
 
     return {
         view,
-        resize: () => centerElement(view),
+        resize: () => centerElement(view)
     };
 };
 
 export default {
     title: 'Components/Slider/Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

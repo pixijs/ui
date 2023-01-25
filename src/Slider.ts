@@ -1,7 +1,6 @@
 import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
-import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
@@ -9,6 +8,7 @@ import { removeHitBox } from './utils/helpers/hitbox';
 
 import type { DragObject } from './utils/HelpTypes';
 import { getView } from './utils/helpers/view';
+import { ProgressBar } from './ProgressBar';
 
 export type SliderOptions = {
     bg: Container | string;
@@ -56,54 +56,39 @@ export type SliderOptions = {
  * });
  * ```
  */
-export class Slider extends Container
+export class Slider extends ProgressBar
 {
-    protected readonly bg: Container;
-    protected readonly fill?: Container;
-    protected readonly fillMask?: Graphics;
     protected readonly slider: Container;
     protected readonly valueText?: Text;
 
     private dragging = 0;
     protected readonly options: SliderOptions;
 
-    /** TODO */
-    public percent = 100;
-    /** TODO */
-    public value = 0;
-    /** TODO */
+    /** Signal that fires when value have changed. */
     public onChange: Signal<(value: number) => void> = new Signal();
+
+    /** Signal that fires when value is changing. */
+    public onUpdate: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)
     {
-        super();
+        super({
+            bg: options.bg,
+            fill: options.fill,
+            fillOffset: options.fillOffset,
+            progress: options.value
+        });
 
         this.options = options;
-        const bg = getView(options.bg);
 
-        this.bg = new Container();
-        this.bg.addChild(bg);
-
-        this.addChild(this.bg);
-
-        if (options.fill)
+        if (options.min)
         {
-            const fill = getView(options.fill);
+            this.min = options.min;
+        }
 
-            this.fill = new Container();
-            this.fill.addChild(fill);
-
-            const offsetX = options.fillOffset?.x ?? 0;
-            const offsetY = options.fillOffset?.y ?? 0;
-
-            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
-
-            this.fillMask = new Graphics();
-            this.fill.addChild(this.fillMask);
-            this.fill.mask = this.fillMask;
-
-            this.addChild(this.fill);
+        if (options.max)
+        {
+            this.max = options.max;
         }
 
         const slider = getView(options.slider);
@@ -124,53 +109,17 @@ export class Slider extends Container
 
         if (options.showValue)
         {
-            this.valueText = new Text(
-                '',
-                options.valueTextStyle || { fill: 0xffffff },
-            );
+            this.valueText = new Text('', options.valueTextStyle || { fill: 0xffffff });
             this.valueText.anchor.set(0.5);
             this.addChild(this.valueText);
         }
 
-        this.makeScrollable();
+        this.makeDraggable();
         this.validateSettings();
         this.update();
     }
 
-    protected validateSettings()
-    {
-        const { options } = this;
-
-        if (!options.min)
-        {
-            options.min = 0;
-        }
-
-        if (!options.max)
-        {
-            options.max = 100;
-        }
-
-        if (options.value < options.min)
-        {
-            options.value = options.min;
-        }
-
-        if (options.value > options.max)
-        {
-            options.value = options.max;
-        }
-
-        this.value = options.value ?? options.min ?? 0;
-        this.percent = (this.value * 100) / options.max;
-
-        const scale = options.max - options.min;
-        const scaledVal = this.value - options.min;
-
-        this.percent = (scaledVal * 100) / scale;
-    }
-
-    protected makeScrollable()
+    protected makeDraggable()
     {
         this.interactive = true;
         this.slider.interactive = true;
@@ -212,12 +161,11 @@ export class Slider extends Container
         }
 
         this.percent = Math.round((pos / maxPos) * 100);
-        this.value = this.options.min + Math.round(
-            ((this.options.max - this.options.min) / 100) * this.percent,
-        );
+        this.value = this.min + Math.round(((this.max - this.min) / 100) * this.percent);
 
         this.update();
 
+        this.onUpdate?.emit(this.value);
         this.onChange?.emit(this.value);
     }
 
@@ -273,9 +221,7 @@ export class Slider extends Container
             }
 
             this.percent = Math.round((pos / maxPos) * 100);
-            this.value = this.options.min + Math.round(
-                ((this.options.max - this.options.min) / 100) * this.percent,
-            );
+            this.value = this.min + Math.round(((this.max - this.min) / 100) * this.percent);
 
             this.update();
         }
@@ -308,12 +254,7 @@ export class Slider extends Container
                 .clear()
                 .lineStyle(0)
                 .beginFill(0xffffff)
-                .drawRect(
-                    startPoint,
-                    0,
-                    endPoint - startPoint,
-                    this.fill.height,
-                );
+                .drawRect(startPoint, 0, endPoint - startPoint, this.fill.height);
         }
 
         if (this.options.showValue)
@@ -327,6 +268,18 @@ export class Slider extends Container
             this.valueText.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
-        this.onChange?.emit(this.value);
+        this.onUpdate?.emit(this.value);
+    }
+
+    /** Returns current progress value. */
+    get value()
+    {
+        return this._progress;
+    }
+
+    /** Sets current progress value. */
+    set value(value: number)
+    {
+        this.progress = value;
     }
 }
