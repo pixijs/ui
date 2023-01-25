@@ -110,13 +110,6 @@ export const UseGraphics = ({
                 y: iconOffsetY
             },
             animations: {
-                default: {
-                    props: {
-                        scale: { x: 1, y: 1 },
-                        y: defaultOffset
-                    },
-                    duration: animationDuration
-                },
                 hover: {
                     props: {
                         scale: { x: 1.03, y: 1.03 },

@@ -54,13 +54,6 @@ export const UseSprite = ({
             anchorX,
             anchorY,
             animations: {
-                default: {
-                    props: {
-                        scale: { x: 1, y: 1 },
-                        y: 0
-                    },
-                    duration: animationDuration
-                },
                 hover: {
                     props: {
                         scale: { x: 1.03, y: 1.03 },

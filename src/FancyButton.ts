@@ -26,8 +26,15 @@ type Views = {
     text?: string | number | Text;
     icon?: string | Container;
 };
+type AnimationData = {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    scale?: Pos;
+};
 type Animation = {
-    props: any;
+    props: AnimationData;
     duration?: number;
 };
 type StateAnimations = {
@@ -69,6 +76,7 @@ export class FancyButton extends Container
 {
     private events: Button;
     private animations: StateAnimations;
+    private originalInnerViewState: AnimationData;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     public padding: number;
@@ -104,7 +112,7 @@ export class FancyButton extends Container
     public iconView!: Container;
 
     /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
-    public state: State = 'default';
+    public state: State;
 
     /** Anchor point of the button. */
     public anchor: ObservablePoint;
@@ -227,6 +235,11 @@ export class FancyButton extends Container
      */
     setState(newState: State)
     {
+        if (this.state === newState)
+        {
+            return;
+        }
+
         const currentView = this.getStateView(this.state);
         const activeView = this.getStateView(newState);
 
@@ -485,11 +498,29 @@ export class FancyButton extends Container
      */
     private playAnimations(state: State)
     {
+        if (!this.originalInnerViewState)
+        {
+            this.originalInnerViewState = {
+                x: this.innerView.x,
+                y: this.innerView.y,
+                width: this.innerView.width,
+                height: this.innerView.height,
+                scale: {
+                    x: this.innerView.scale.x,
+                    y: this.innerView.scale.y
+                }
+            };
+        }
+
         if (this.animations && this.animations[state])
         {
             const data = this.animations[state];
 
             new Tween(this.innerView).to(data.props, data.duration).start();
+        }
+        else if (this.animations && state === 'default')
+        {
+            new Tween(this.innerView).to(this.originalInnerViewState, 100).start();
         }
     }
 }
