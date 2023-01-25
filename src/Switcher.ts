@@ -18,7 +18,7 @@ import { ButtonEvent } from './utils/HelpTypes';
  *
  * ```
  */
-export class Swich extends Container
+export class Switcher extends Container
 {
     private triggerEvents: Set<ButtonEvent>;
 

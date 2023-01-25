@@ -2,7 +2,7 @@ import { Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { TextStyle, ITextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Swich } from './Swich';
+import { Switcher } from './Switcher';
 import { getView } from './utils/helpers/view';
 
 type CheckBoxStyle = {
@@ -31,7 +31,7 @@ export type CheckBoxOptions = {
  *
  * ```
  */
-export class CheckBox extends Swich
+export class CheckBox extends Switcher
 {
     //* Text label */
     public label!: Text;

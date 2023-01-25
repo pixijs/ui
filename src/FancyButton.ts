@@ -493,19 +493,4 @@ export class FancyButton extends Container
             new Tween(this.innerView).to(data.props, data.duration).start();
         }
     }
-
-    /**
-     * Shows new button state view with animation, and hides the old one.
-     * @param {State} newState
-     */
-    private switchStateViews(newState: State)
-    {
-        const currentStateView = this.getStateView(this.state);
-        const newStateView = this.getStateView(newState);
-
-        if (currentStateView === newStateView)
-        {
-            return;
-        }
-    }
 }

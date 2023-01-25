@@ -15,7 +15,7 @@ const args = {
     textOffsetY: -7,
     anchorX: 0.5,
     anchorY: 0.5,
-    animationDuration: 50,
+    animationDuration: 100,
     disabled: false,
     onPress: action('button was pressed! (tap or click!)')
 };

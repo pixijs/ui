@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Swich } from '../../Swich';
+import { Switcher } from '../../Switcher';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
@@ -22,7 +22,7 @@ export const Sprites = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }:
     preloadAssets(assets).then(() =>
     {
     // Component usage !!!
-        const swich = new Swich(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
+        const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
 
         swich.onChange.connect((state) => action(`state ${state}`));
 
@@ -35,7 +35,7 @@ export const Sprites = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }:
 };
 
 export default {
-    title: 'Components/Swich/Sprites',
+    title: 'Components/Switcher/Sprites',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
