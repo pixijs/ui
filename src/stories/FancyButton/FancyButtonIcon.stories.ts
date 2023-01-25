@@ -15,7 +15,7 @@ const args = {
     disabledColor: '#6E6E6E',
     width: 250,
     height: 250,
-    padding: 10,
+    padding: 30,
     radius: 200,
     iconOffsetX: 0,
     iconOffsetY: 0,
