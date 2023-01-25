@@ -16,7 +16,7 @@ const args = {
     radius: 25,
     amount: 3,
 
-    onChange: action('Radio changed')
+    onChange: action('Radio')
 };
 
 export const UseGraphics = ({

@@ -33,8 +33,8 @@ export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =
                 text: text ?? `${text} ${i + 1}`,
                 checked,
                 style: {
-                    unchecked: Sprite.from(`switch_off.png`),
-                    checked: Sprite.from(`switch_on.png`),
+                    unchecked: `switch_off.png`,
+                    checked: `switch_on.png`,
                     text: {
                         ...defaultTextStyle,
                         fontSize: 22,

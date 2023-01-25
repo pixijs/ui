@@ -113,7 +113,7 @@ export class Switcher extends Container
         }
 
         this.activeView.visible = false;
-        this.active = id ?? this.nextActive;
+        this.active = id !== undefined ? id : this.nextActive;
 
         const newState = this.views[this.active];
 
@@ -124,6 +124,21 @@ export class Switcher extends Container
         this.onChange.emit(res);
     }
 
+    /**
+     * Switches the view to a given one one without triggering the onChange event.
+     * @param {number} id
+     */
+    public forceSwitch(id: number): void
+    {
+        this.activeView.visible = false;
+        this.active = id !== undefined ? id : this.nextActive;
+
+        const newState = this.views[this.active];
+
+        newState.visible = true;
+    }
+
+    /** Returns the id of the next view to show. */
     private get nextActive(): number
     {
         return this.active < this.views.length - 1 ? this.active + 1 : 0;

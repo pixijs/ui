@@ -66,6 +66,15 @@ export class CheckBox extends Switcher
     /** Setter, that sets a checkbox state. */
     public set checked(checked: boolean)
     {
-        this.switch(checked ? 1 : 0);
+        this.switch(checked ? 1 : 0, 'onPress');
+    }
+
+    /**
+     * Setter, that sets a checkbox state without emitting a signal.
+     * @param checked
+     */
+    public forceCheck(checked: boolean)
+    {
+        this.forceSwitch(checked ? 1 : 0);
     }
 }

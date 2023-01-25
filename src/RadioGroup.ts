@@ -109,7 +109,7 @@ export class RadioGroup extends Container
 
     private getView(view: string | GraphicsType): Container
     {
-        if (view === 'string')
+        if (typeof view === 'string')
         {
             return Sprite.from(view);
         }
@@ -157,13 +157,18 @@ export class RadioGroup extends Container
      */
     public selectItem(id: number)
     {
+        this.items.forEach((item, key) =>
+        {
+            item.forceCheck(key === id);
+        });
+
+        this.value = this.options.items[id];
+
+        if (this.selected !== id)
+        {
+            this.onChange.emit(id, this.value);
+        }
+
         this.selected = id;
-
-        this.items.map((item) => (item.checked = false));
-
-        this.items[id].checked = true;
-
-        this.value = this.options.items[this.selected];
-        this.onChange.emit(this.selected, this.value);
     }
 }

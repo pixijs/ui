@@ -5,6 +5,7 @@ import { Layout } from '../../Layout';
 import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { Sprite } from '@pixi/sprite';
 
 const args = {
     text: 'Radio',
