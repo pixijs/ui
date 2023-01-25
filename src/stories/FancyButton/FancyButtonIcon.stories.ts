@@ -81,6 +81,7 @@ export const UseIcon = ({
             icon,
             padding,
             offset: {
+                default: { y: defaultOffset },
                 disabled: { y: disabledOffset }
             },
             iconOffset: {

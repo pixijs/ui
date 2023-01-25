@@ -12,18 +12,14 @@ const args = {
     dropDownHoverColor: '#A5E24D',
     fontColor: '#FFFFFF',
     fontSize: 28,
-    itemsCount: 100,
-    onSelect: action('Item selected'),
+    itemsAmount: 100,
+    onSelect: action('Item selected')
 };
 
-export const UseSprite: StoryFn = ({
-    fontColor,
-    fontSize,
-    itemsCount,
-    backgroundColor,
-    dropDownHoverColor,
-    onSelect,
-}: any, context) =>
+export const UseSprite: StoryFn = (
+    { fontColor, fontSize, itemsAmount, backgroundColor, dropDownHoverColor, onSelect }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -41,7 +37,7 @@ export const UseSprite: StoryFn = ({
         fontColor = Number(fontColor.replace('#', '0x'));
         const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
-        const items = getItems(itemsCount, 'Item');
+        const items = getItems(itemsAmount, 'Item');
 
         // Component usage !!!
         // Important: in order scroll to work, you have to call update() method in your game loop.
@@ -56,10 +52,10 @@ export const UseSprite: StoryFn = ({
                 width: 200,
                 height: 50,
                 textStyle,
-                radius: 25,
+                radius: 25
             },
             selectedTextOffset: {
-                y: -13,
+                y: -13
             },
             scrollBox: {
                 width: 200,
@@ -67,9 +63,9 @@ export const UseSprite: StoryFn = ({
                 radius: 30,
                 offset: {
                     y: -16,
-                    x: 24,
-                },
-            },
+                    x: 24
+                }
+            }
         });
 
         select.y = 10;
@@ -91,11 +87,11 @@ export const UseSprite: StoryFn = ({
     };
 };
 
-function getItems(itemsCount: number, text: string): string[]
+function getItems(itemsAmount: number, text: string): string[]
 {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++)
+    for (let i = 0; i < itemsAmount; i++)
     {
         items.push(`${text} ${i + 1}`);
     }
@@ -106,5 +102,5 @@ function getItems(itemsCount: number, text: string): string[]
 export default {
     title: 'Components/Select/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

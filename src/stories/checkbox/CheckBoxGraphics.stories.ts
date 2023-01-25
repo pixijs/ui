@@ -16,14 +16,14 @@ const args = {
     width: 50,
     height: 50,
     radius: 11,
-    count: 3,
+    amount: 3,
     checked: false,
     onPress: action('Checkbox')
 };
 
 export const UseGraphics = ({
     text,
-    count,
+    amount,
     checked,
 
     textColor,
@@ -45,7 +45,7 @@ export const UseGraphics = ({
     fillColor = Number(fillColor.replace('#', '0x'));
     fillBorderColor = Number(fillBorderColor.replace('#', '0x'));
 
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < amount; i++)
     {
     // Component usage !!!
         const checkBox = new CheckBox({

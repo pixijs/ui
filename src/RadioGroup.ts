@@ -62,7 +62,7 @@ export class RadioGroup extends Container
     /** TODO */
     public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
     /** TODO */
-    public view: Layout;
+    public innerView: Layout;
 
     private readonly options: RadioBoxOptions;
 
@@ -75,20 +75,20 @@ export class RadioGroup extends Container
 
         this.selected = options.selectedItem;
 
-        this.view = new Layout({
+        this.innerView = new Layout({
             type: options.type,
-            elementsMargin: options.elementsMargin,
+            elementsMargin: options.elementsMargin
         });
 
         options.items.forEach((item, id) =>
         {
-            const unchecked = typeof options.style.bg === 'string'
-                ? Sprite.from(options.style.bg)
-                : this.getGraphics(options.style.bg);
+            const unchecked
+        = typeof options.style.bg === 'string' ? Sprite.from(options.style.bg) : this.getGraphics(options.style.bg);
 
-            const checked = typeof options.style.checked === 'string'
-                ? Sprite.from(options.style.checked)
-                : this.getGraphics(options.style.checked);
+            const checked
+        = typeof options.style.checked === 'string'
+            ? Sprite.from(options.style.checked)
+            : this.getGraphics(options.style.checked);
 
             const checkBox = new CheckBox({
                 text: item,
@@ -96,38 +96,36 @@ export class RadioGroup extends Container
                 style: {
                     unchecked,
                     checked,
-                    text: options.style.textStyle,
-                },
+                    text: options.style.textStyle
+                }
             });
 
-            this.view.addChild(checkBox);
+            this.innerView.addChild(checkBox);
 
             checkBox.onChange.connect(() => this.selectItem(id));
 
             this.items.push(checkBox);
 
-            this.view.addChild(checkBox);
+            this.innerView.addChild(checkBox);
         });
 
         this.onChange = new Signal();
     }
 
-    private getGraphics({
-        color,
-        fillColor,
-        width,
-        height,
-        radius,
-        padding,
-    }: GraphicsType)
+    private getGraphics({ color, fillColor, width, height, radius, padding }: GraphicsType)
     {
         const graphics = new Graphics().beginFill(color);
 
         const isCircle = width === height && radius >= width / 2;
 
-        isCircle
-            ? graphics.drawCircle(width / 2, width / 2, width / 2)
-            : graphics.drawRoundedRect(0, 0, width, height, radius);
+        if (isCircle)
+        {
+            graphics.drawCircle(width / 2, width / 2, width / 2);
+        }
+        else
+        {
+            graphics.drawRoundedRect(0, 0, width, height, radius);
+        }
 
         if (fillColor !== undefined)
         {
@@ -141,13 +139,7 @@ export class RadioGroup extends Container
             }
             else
             {
-                graphics.drawRoundedRect(
-                    padding,
-                    padding,
-                    width - (padding * 2),
-                    height - (padding * 2),
-                    radius,
-                );
+                graphics.drawRoundedRect(padding, padding, width - (padding * 2), height - (padding * 2), radius);
             }
         }
 

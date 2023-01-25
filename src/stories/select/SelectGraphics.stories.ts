@@ -18,22 +18,25 @@ const args = {
     width: 250,
     height: 50,
     radius: 15,
-    itemsCount: 100,
-    onSelect: action('Item selected'),
+    itemsAmount: 100,
+    onSelect: action('Item selected')
 };
 
-export const UseGraphics: StoryFn = ({
-    fontColor,
-    fontSize,
-    width,
-    height,
-    radius,
-    itemsCount,
-    backgroundColor,
-    dropDownBackgroundColor,
-    dropDownHoverColor,
-    onSelect,
-}: any, context) =>
+export const UseGraphics: StoryFn = (
+    {
+        fontColor,
+        fontSize,
+        width,
+        height,
+        radius,
+        itemsAmount,
+        backgroundColor,
+        dropDownBackgroundColor,
+        dropDownHoverColor,
+        onSelect
+    }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -42,13 +45,11 @@ export const UseGraphics: StoryFn = ({
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));
     fontColor = Number(fontColor.replace('#', '0x'));
-    dropDownBackgroundColor = Number(
-        dropDownBackgroundColor.replace('#', '0x'),
-    );
+    dropDownBackgroundColor = Number(dropDownBackgroundColor.replace('#', '0x'));
     const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
     const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
-    const items = getItems(itemsCount, 'Item');
+    const items = getItems(itemsAmount, 'Item');
 
     // Component usage !!!
     // Important: in order scroll to work, you have to call update() method in your game loop.
@@ -63,12 +64,12 @@ export const UseGraphics: StoryFn = ({
             width,
             height,
             textStyle,
-            radius,
+            radius
         },
         scrollBox: {
             height: height * 5,
-            radius,
-        },
+            radius
+        }
     });
 
     select.y = 10;
@@ -87,16 +88,9 @@ export const UseGraphics: StoryFn = ({
     };
 };
 
-function getClosedBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
+function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const closedBG = new Graphics()
-        .beginFill(backgroundColor)
-        .drawRoundedRect(0, 0, width, height, radius);
+    const closedBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
@@ -111,16 +105,9 @@ function getClosedBG(
     return closedBG;
 }
 
-function getOpenBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
+function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const openBG = new Graphics()
-        .beginFill(backgroundColor)
-        .drawRoundedRect(0, 0, width, height * 6, radius);
+    const openBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
@@ -136,11 +123,11 @@ function getOpenBG(
     return openBG;
 }
 
-function getItems(itemsCount: number, text: string): string[]
+function getItems(itemsAmount: number, text: string): string[]
 {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++)
+    for (let i = 0; i < itemsAmount; i++)
     {
         items.push(`${text} ${i + 1}`);
     }
@@ -151,5 +138,5 @@ function getItems(itemsCount: number, text: string): string[]
 export default {
     title: 'Components/Select/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

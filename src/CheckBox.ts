@@ -1,4 +1,3 @@
-import { Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { TextStyle, ITextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';

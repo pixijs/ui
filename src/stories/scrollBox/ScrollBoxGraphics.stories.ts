@@ -20,7 +20,7 @@ const args = {
     elementsPadding: 10,
     elementsWidth: 300,
     elementsHeight: 80,
-    itemsCount: 100,
+    itemsAmount: 100,
     onPress: action('Button was pressed > ')
 };
 
@@ -35,7 +35,7 @@ export const UseGraphics: StoryFn = (
         width,
         height,
         radius,
-        itemsCount,
+        itemsAmount,
         backgroundColor,
         onPress
     }: any,
@@ -52,7 +52,7 @@ export const UseGraphics: StoryFn = (
 
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++)
+    for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
             defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),

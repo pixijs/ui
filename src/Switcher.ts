@@ -1,4 +1,4 @@
-import { Container, DisplayObject } from '@pixi/display';
+import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { Button } from './Button';

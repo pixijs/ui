@@ -15,21 +15,11 @@ const args = {
     maxLength: 100,
     fontSize: 24,
     padding: 5,
-    count: 1,
-    onChange: action('Input: '),
+    amount: 1,
+    onChange: action('Input: ')
 };
 
-export const UseSprite = ({
-    text,
-    count,
-    padding,
-    textColor,
-    fontSize,
-    maxLength,
-    align,
-    placeholder,
-    onChange,
-}: any) =>
+export const UseSprite = ({ text, amount, padding, textColor, fontSize, maxLength, align, placeholder, onChange }: any) =>
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
@@ -37,7 +27,7 @@ export const UseSprite = ({
 
     preloadAssets(assets).then(() =>
     {
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < amount; i++)
         {
             // Component usage
             const input = new Input({
@@ -46,12 +36,12 @@ export const UseSprite = ({
                 textStyle: {
                     ...defaultTextStyle,
                     fill: textColor,
-                    fontSize,
+                    fontSize
                 },
                 maxLength,
                 align,
                 placeholder,
-                value: text,
+                value: text
             });
 
             input.onChange.connect(() => onChange(input.value));
@@ -68,5 +58,5 @@ export const UseSprite = ({
 export default {
     title: 'Components/Input/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

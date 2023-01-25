@@ -99,6 +99,7 @@ export const UseGraphics = ({
             }),
             padding,
             offset: {
+                default: { y: defaultOffset },
                 disabled: { y: disabledOffset }
             },
             textOffset: {

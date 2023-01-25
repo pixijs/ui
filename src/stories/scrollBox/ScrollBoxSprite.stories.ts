@@ -13,11 +13,11 @@ import type { StoryFn } from '@storybook/types';
 const args = {
     fontColor: '#000000',
     elementsMargin: 6,
-    itemsCount: 100,
+    itemsAmount: 100,
     onPress: action('Button was pressed > ')
 };
 
-export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsCount, onPress }: any, context) =>
+export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any, context) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -43,7 +43,7 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsCount, onPr
 
         view.addChild(window);
 
-        const items: Container[] = createItems(itemsCount, fontColor, onPress);
+        const items: Container[] = createItems(itemsAmount, fontColor, onPress);
 
         items.forEach((item) => scrollBox.addItem(item));
 
@@ -61,11 +61,11 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsCount, onPr
     };
 };
 
-function createItems(itemsCount: number, fontColor: number, onPress: (buttonID: number) => void): FancyButton[]
+function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID: number) => void): FancyButton[]
 {
     const items = [];
 
-    for (let i = 0; i < itemsCount; i++)
+    for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
             defaultView: `button.png`,

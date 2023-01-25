@@ -10,12 +10,12 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     text: '',
     textColor: '#FFFFFF',
-    count: 3,
+    amount: 3,
     checked: false,
     onChange: action('Checkbox')
 };
 
-export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
+export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
@@ -26,7 +26,7 @@ export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 
     preloadAssets(assets).then(() =>
     {
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < amount; i++)
         {
             // Component usage !!!
             const checkBox = new CheckBox({
