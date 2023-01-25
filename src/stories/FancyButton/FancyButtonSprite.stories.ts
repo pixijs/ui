@@ -13,10 +13,11 @@ const args = {
     padding: 11,
     textOffsetX: 0,
     textOffsetY: -7,
-    disabled: false,
-    onPress: action('button was pressed! (tap or click!)'),
     anchorX: 0.5,
-    anchorY: 0.5
+    anchorY: 0.5,
+    animationDuration: 50,
+    disabled: false,
+    onPress: action('button was pressed! (tap or click!)')
 };
 
 export const UseSprite = ({
@@ -28,7 +29,8 @@ export const UseSprite = ({
     textOffsetX,
     textOffsetY,
     anchorX,
-    anchorY
+    anchorY,
+    animationDuration
 }: any) =>
 {
     const view = new Container();
@@ -48,12 +50,32 @@ export const UseSprite = ({
                 fill: textColor || defaultTextStyle.fill
             }),
             padding,
-            offset: {
-                pressed: { y: 5 }
-            },
             textOffset: { x: textOffsetX, y: textOffsetY },
             anchorX,
-            anchorY
+            anchorY,
+            animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        y: 0
+                    },
+                    duration: animationDuration
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        y: 10
+                    },
+                    duration: animationDuration
+                },
+                hover: {
+                    props: {
+                        scale: { x: 1.03, y: 1.03 },
+                        y: 0
+                    },
+                    duration: animationDuration
+                }
+            }
         });
 
         if (disabled)

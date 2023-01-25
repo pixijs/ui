@@ -1,4 +1,4 @@
-import { ObservablePoint } from '@pixi/core';
+import { ObservablePoint, Ticker } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { Sprite } from '@pixi/sprite';
@@ -8,6 +8,7 @@ import { Button } from './Button';
 import { Signal } from 'typed-signals';
 import { FederatedPointerEvent } from '@pixi/events';
 import { fitToView } from './utils/helpers/fit';
+import { Tween, Group } from 'tweedle.js';
 
 const states = ['default', 'hover', 'pressed', 'disabled'] as const;
 
@@ -25,6 +26,13 @@ type Views = {
     text?: string | number | Text;
     icon?: string | Container;
 };
+type Animation = {
+    props: any;
+    duration?: number;
+};
+type StateAnimations = {
+    [K in State]?: Animation;
+};
 
 export type ButtonOptions = Views & {
     padding?: number;
@@ -34,6 +42,7 @@ export type ButtonOptions = Views & {
     offset?: Offset;
     textOffset?: Offset;
     iconOffset?: Offset;
+    animations?: StateAnimations;
 };
 
 /**
@@ -59,6 +68,7 @@ export type ButtonOptions = Views & {
 export class FancyButton extends Container
 {
     private events: Button;
+    private animations: StateAnimations;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     public padding: number;
@@ -136,7 +146,8 @@ export class FancyButton extends Container
         anchor,
         anchorX,
         anchorY,
-        icon
+        icon,
+        animations
     }: ButtonOptions)
     {
         super();
@@ -157,6 +168,11 @@ export class FancyButton extends Container
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+        if (animations)
+        {
+            this.animations = animations;
+            Ticker.shared.add(() => Group.shared.update());
+        }
 
         this.setState('default');
 
@@ -202,6 +218,33 @@ export class FancyButton extends Container
     }
 
     /**
+     * Updates button state and shows according views.
+     *
+     * Updates positions and offsets of the views.
+     *
+     * Plays animations if they are set.
+     * @param {State} newState
+     */
+    setState(newState: State)
+    {
+        const currentView = this.getStateView(this.state);
+        const activeView = this.getStateView(newState);
+
+        currentView.visible = false;
+        activeView.visible = true;
+
+        this.state = newState;
+
+        this.resetViewsPositions();
+        this.setOffset(activeView, newState, this.offset);
+        this.adjustTextView(newState);
+        this.adjustIconView(newState);
+
+        this.playAnimations(newState);
+    }
+
+    /**
+     *
      * Manages button text view.
      * @param {string | Text} text - can be a string or a Text (Container based element).
      */
@@ -253,30 +296,6 @@ export class FancyButton extends Container
         }
     }
 
-    /** Hides all button views. */
-    private hideAllViews()
-    {
-        if (this.defaultView)
-        {
-            this.defaultView.visible = false;
-        }
-
-        if (this.hoverView)
-        {
-            this.hoverView.visible = false;
-        }
-
-        if (this.pressedView)
-        {
-            this.pressedView.visible = false;
-        }
-
-        if (this.disabledView)
-        {
-            this.disabledView.visible = false;
-        }
-    }
-
     /**
      * Returns active view for the state.
      * @param state
@@ -295,27 +314,6 @@ export class FancyButton extends Container
             default:
                 return this.defaultView;
         }
-    }
-
-    /**
-     * Updates button state and shows according views.
-     * Updates positions and offsets of the views.
-     * @param {State} newState
-     */
-    private setState(newState: State)
-    {
-        this.state = newState;
-
-        this.hideAllViews();
-
-        const activeView = this.getStateView(newState);
-
-        activeView.visible = true;
-
-        this.resetViewsPositions();
-        this.setOffset(activeView, newState, this.offset);
-        this.adjustTextView(newState);
-        this.adjustIconView(newState);
     }
 
     /**
@@ -372,8 +370,8 @@ export class FancyButton extends Container
      */
     private resetViewsPositions()
     {
-        const x = this.anchor.x;
-        const y = this.anchor.y;
+        const x = this.anchor?.x ?? 0;
+        const y = this.anchor?.y ?? 0;
         const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView, this.iconView];
 
         views.forEach((view) =>
@@ -480,5 +478,34 @@ export class FancyButton extends Container
             this.onUpOut.emit(this, e);
             this.setState('default');
         });
+    }
+
+    /**
+     * Starts animation for current button state if it's configured.
+     * @param {State} state
+     */
+    private playAnimations(state: State)
+    {
+        if (this.animations && this.animations[state])
+        {
+            const data = this.animations[state];
+
+            new Tween(this.innerView).to(data.props, data.duration).start();
+        }
+    }
+
+    /**
+     * Shows new button state view with animation, and hides the old one.
+     * @param {State} newState
+     */
+    private switchStateViews(newState: State)
+    {
+        const currentStateView = this.getStateView(this.state);
+        const newStateView = this.getStateView(newState);
+
+        if (currentStateView === newStateView)
+        {
+            return;
+        }
     }
 }
