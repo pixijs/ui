@@ -61,17 +61,17 @@ export const UseSprite = ({
                     },
                     duration: animationDuration
                 },
-                pressed: {
-                    props: {
-                        scale: { x: 0.9, y: 0.9 },
-                        y: 10
-                    },
-                    duration: animationDuration
-                },
                 hover: {
                     props: {
                         scale: { x: 1.03, y: 1.03 },
                         y: 0
+                    },
+                    duration: animationDuration
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        y: 10
                     },
                     duration: animationDuration
                 }

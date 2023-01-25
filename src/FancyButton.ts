@@ -161,8 +161,8 @@ export class FancyButton extends Container
             icon
         });
 
-        this.anchor = new ObservablePoint(this.resetViewsPositions, this, anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-        this.resetViewsPositions();
+        this.anchor = new ObservablePoint(this.resetViewsPositions, this);
+        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;
         this.offset = offset;
@@ -235,7 +235,6 @@ export class FancyButton extends Container
 
         this.state = newState;
 
-        this.resetViewsPositions();
         this.setOffset(activeView, newState, this.offset);
         this.adjustTextView(newState);
         this.adjustIconView(newState);
@@ -370,9 +369,9 @@ export class FancyButton extends Container
      */
     private resetViewsPositions()
     {
-        const x = this.anchor?.x ?? 0;
-        const y = this.anchor?.y ?? 0;
-        const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView, this.iconView];
+        const anchorX = this.anchor?.x ?? 0;
+        const anchorY = this.anchor?.y ?? 0;
+        const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView];
 
         views.forEach((view) =>
         {
@@ -380,8 +379,8 @@ export class FancyButton extends Container
 
             (view as Sprite).anchor?.set(0);
 
-            view.x = -view.width * x;
-            view.y = -view.height * y;
+            view.x = -view.width * anchorX;
+            view.y = -view.height * anchorY;
         });
     }
 

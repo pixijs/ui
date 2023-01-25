@@ -2,7 +2,7 @@ import { Graphics } from '@pixi/graphics';
 import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
@@ -23,6 +23,9 @@ const args = {
     hoverOffset: -1,
     pressedOffset: 5,
     disabledOffset: 0,
+    animationDuration: 100,
+    anchorX: 0.5,
+    anchorY: 0.5,
     disabled: false,
     action: action('button Event:')
 };
@@ -43,7 +46,10 @@ export const UseIcon = ({
     hoverOffset,
     pressedOffset,
     disabledOffset,
-    action
+    action,
+    anchorX,
+    anchorY,
+    animationDuration
 }: any) =>
 {
     color = Number(color.replace('#', '0x'));
@@ -75,14 +81,36 @@ export const UseIcon = ({
             icon,
             padding,
             offset: {
-                default: { y: defaultOffset },
-                hover: { y: hoverOffset },
-                pressed: { y: pressedOffset },
                 disabled: { y: disabledOffset }
             },
             iconOffset: {
                 x: iconOffsetX,
                 y: iconOffsetY
+            },
+            anchorX,
+            anchorY,
+            animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        y: defaultOffset
+                    },
+                    duration: animationDuration
+                },
+                hover: {
+                    props: {
+                        scale: { x: 1.03, y: 1.03 },
+                        y: hoverOffset
+                    },
+                    duration: animationDuration
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        y: pressedOffset
+                    },
+                    duration: animationDuration
+                }
             }
         });
 
@@ -90,8 +118,6 @@ export const UseIcon = ({
         {
             button.enabled = false;
         }
-
-        button.anchor.set(0);
 
         button.onPress.connect(() => action('onPress'));
         button.onDown.connect(() => action('onDown'));
@@ -102,10 +128,10 @@ export const UseIcon = ({
 
         view.addChild(button);
 
-        centerElement(view);
+        centerView(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return { view, resize: () => centerView(view) };
 };
 
 export default {

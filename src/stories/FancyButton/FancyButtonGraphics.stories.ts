@@ -4,7 +4,7 @@ import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
@@ -29,7 +29,10 @@ const args = {
     hoverOffset: -1,
     pressedOffset: 5,
     disabledOffset: 0,
+    anchorX: 0.5,
+    anchorY: 0.5,
     disabled: false,
+    animationDuration: 100,
     action: action('button Event:')
 };
 
@@ -44,6 +47,8 @@ export const UseGraphics = ({
     disabledColor,
     disabled,
     padding,
+    anchorX,
+    anchorY,
     textColor,
     iconOffsetX,
     iconOffsetY,
@@ -53,6 +58,7 @@ export const UseGraphics = ({
     hoverOffset,
     pressedOffset,
     disabledOffset,
+    animationDuration,
     action
 }: any) =>
 {
@@ -85,15 +91,14 @@ export const UseGraphics = ({
             pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
             disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
             icon,
+            anchorX,
+            anchorY,
             text: new Text(text, {
                 ...defaultTextStyle,
                 fill
             }),
             padding,
             offset: {
-                default: { y: defaultOffset },
-                hover: { y: hoverOffset },
-                pressed: { y: pressedOffset },
                 disabled: { y: disabledOffset }
             },
             textOffset: {
@@ -103,6 +108,29 @@ export const UseGraphics = ({
             iconOffset: {
                 x: iconOffsetX,
                 y: iconOffsetY
+            },
+            animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        y: defaultOffset
+                    },
+                    duration: animationDuration
+                },
+                hover: {
+                    props: {
+                        scale: { x: 1.03, y: 1.03 },
+                        y: hoverOffset
+                    },
+                    duration: animationDuration
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        y: pressedOffset
+                    },
+                    duration: animationDuration
+                }
             }
         });
 
@@ -110,8 +138,6 @@ export const UseGraphics = ({
         {
             button.enabled = false;
         }
-
-        button.anchor.set(0);
 
         button.onPress.connect(() => action('onPress'));
         button.onDown.connect(() => action('onDown'));
@@ -122,10 +148,10 @@ export const UseGraphics = ({
 
         view.addChild(button);
 
-        centerElement(view);
+        centerView(view);
     });
 
-    return { view, resize: () => centerElement(view) };
+    return { view, resize: () => centerView(view) };
 };
 
 export default {
