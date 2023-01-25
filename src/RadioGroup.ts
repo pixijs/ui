@@ -82,13 +82,8 @@ export class RadioGroup extends Container
 
         options.items.forEach((item, id) =>
         {
-            const unchecked
-        = typeof options.style.bg === 'string' ? Sprite.from(options.style.bg) : this.getGraphics(options.style.bg);
-
-            const checked
-        = typeof options.style.checked === 'string'
-            ? Sprite.from(options.style.checked)
-            : this.getGraphics(options.style.checked);
+            const unchecked = this.getView(options.style.bg);
+            const checked = this.getView(options.style.checked);
 
             const checkBox = new CheckBox({
                 text: item,
@@ -110,6 +105,16 @@ export class RadioGroup extends Container
         });
 
         this.onChange = new Signal();
+    }
+
+    private getView(view: string | GraphicsType): Container
+    {
+        if (view === 'string')
+        {
+            return Sprite.from(view);
+        }
+
+        return this.getGraphics(view as GraphicsType);
     }
 
     private getGraphics({ color, fillColor, width, height, radius, padding }: GraphicsType)

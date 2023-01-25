@@ -47,18 +47,18 @@ export class Switcher extends Container
         this.innerView = new Container();
         this.addChild(this.innerView);
 
+        this.active = activeViewID;
+
         views.map((stateView, id) =>
         {
             const view = getView(stateView);
 
             this.innerView.addChild(view);
 
-            view.visible = id === this.active;
+            view.visible = id === activeViewID;
 
             return view;
         });
-
-        this.active = activeViewID;
 
         this.onChange = new Signal();
 
