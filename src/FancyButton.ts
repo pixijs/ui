@@ -200,6 +200,7 @@ export class FancyButton extends Container
 
         this.textView.text = text;
         this.setState(this.state);
+        this.adjustTextView(this.state);
     }
 
     /** Returns the text string of the button text element. */
