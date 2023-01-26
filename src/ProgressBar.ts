@@ -36,6 +36,9 @@ export class ProgressBar extends Container
     /** Container, that holds all inner views. */
     public innerView: Container;
 
+    /** Start point of progress. */
+    public progressStart = 0;
+
     /** Current progress value. */
     public _progress = 0;
 
@@ -91,9 +94,10 @@ export class ProgressBar extends Container
     {
         this._progress = this.validate(progress);
 
-        const endPoint = (this.bg.width / 100) * this._progress;
+        const startPoint = (this.bg.width / 100) * this.progressStart;
+        const endPoint = ((this.bg.width / 100) * this._progress) - startPoint;
 
-        this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(0, 0, endPoint, this.fill.height);
+        this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
     }
 
     /** Returns current progress value. */
