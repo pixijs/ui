@@ -19,15 +19,19 @@ const args = {
     vertical: false
 };
 
-export const UseGraphics: StoryFn = (
-    { value, borderColor, backgroundColor, fillColor, width, height, radius, border, animate, vertical }: any,
-    context
-) =>
+export const UseGraphics: StoryFn = ({
+    value,
+    borderColor,
+    backgroundColor,
+    fillColor,
+    width,
+    height,
+    radius,
+    border,
+    animate,
+    vertical
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     fillColor = getColor(fillColor);

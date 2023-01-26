@@ -11,12 +11,8 @@ const args = {
     vertical: false
 };
 
-export const Sprite: StoryFn = ({ value, animate, vertical }, context) =>
+export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     const assets = ['slider_bg.png', 'slider_progress.png'];

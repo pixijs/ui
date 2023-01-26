@@ -23,25 +23,19 @@ const args = {
     onSelect: action('Item selected')
 };
 
-export const UseGraphics: StoryFn = (
-    {
-        fontColor,
-        fontSize,
-        width,
-        height,
-        radius,
-        itemsAmount,
-        backgroundColor,
-        dropDownBackgroundColor,
-        dropDownHoverColor,
-        onSelect
-    }: any,
-    context
-) =>
+export const UseGraphics: StoryFn = ({
+    fontColor,
+    fontSize,
+    width,
+    height,
+    radius,
+    itemsAmount,
+    backgroundColor,
+    dropDownBackgroundColor,
+    dropDownHoverColor,
+    onSelect
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
 
     backgroundColor = getColor(backgroundColor);

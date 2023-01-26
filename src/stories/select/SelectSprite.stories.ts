@@ -17,14 +17,15 @@ const args = {
     onSelect: action('Item selected')
 };
 
-export const UseSprite: StoryFn = (
-    { fontColor, fontSize, itemsAmount, backgroundColor, dropDownHoverColor, onSelect }: any,
-    context
-) =>
+export const UseSprite: StoryFn = ({
+    fontColor,
+    fontSize,
+    itemsAmount,
+    backgroundColor,
+    dropDownHoverColor,
+    onSelect
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
     const assets = [`select_closed.png`, `select_open.png`];
 

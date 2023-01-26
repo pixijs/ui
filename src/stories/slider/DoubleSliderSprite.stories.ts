@@ -18,15 +18,8 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Double: StoryFn = (
-    { min, max, value1, value2, fontSize, fontColor, showValue, onChange, showFill }: any,
-    context
-) =>
+export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange, showFill }: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Container();
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 

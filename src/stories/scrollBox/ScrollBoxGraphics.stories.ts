@@ -24,26 +24,20 @@ const args = {
     onPress: action('Button pressed')
 };
 
-export const UseGraphics: StoryFn = (
-    {
-        fontColor,
-        elementsMargin,
-        elementsPadding,
-        elementsWidth,
-        elementsHeight,
-        width,
-        height,
-        radius,
-        itemsAmount,
-        backgroundColor,
-        onPress
-    }: any,
-    context
-) =>
+export const UseGraphics: StoryFn = ({
+    fontColor,
+    elementsMargin,
+    elementsPadding,
+    elementsWidth,
+    elementsHeight,
+    width,
+    height,
+    radius,
+    itemsAmount,
+    backgroundColor,
+    onPress
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
 
     backgroundColor = getColor(backgroundColor);

@@ -91,7 +91,7 @@ export class SliderBase extends ProgressBar
         this.bg.interactive = true;
         this.bg
             .on('pointerdown', this.startUpdate, this)
-            .on('pointermove', this.update, this)
+            .on('globalpointermove', this.update, this)
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
 
@@ -101,7 +101,7 @@ export class SliderBase extends ProgressBar
 
             this.slider1
                 .on('pointerdown', this.startUpdate, this)
-                .on('pointermove', this.update, this)
+                .on('globalpointermove', this.update, this)
                 .on('pointerup', this.endUpdate, this)
                 .on('pointerupoutside', this.endUpdate, this);
         }
@@ -112,7 +112,7 @@ export class SliderBase extends ProgressBar
 
             this.slider2
                 .on('pointerdown', this.startUpdate, this)
-                .on('pointermove', this.update, this)
+                .on('globalpointermove', this.update, this)
                 .on('pointerup', this.endUpdate, this)
                 .on('pointerupoutside', this.endUpdate, this);
         }

@@ -18,11 +18,8 @@ const args = {
     onPress: action('Button pressed')
 };
 
-export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any, context) =>
+export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     fontColor = getColor(fontColor);
 
     const view = new Container();

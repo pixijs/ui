@@ -27,33 +27,26 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Single: StoryFn = (
-    {
-        min,
-        max,
-        value,
-        meshColor,
-        borderColor,
-        backgroundColor,
-        fillColor,
-        handleBorder,
-        width,
-        height,
-        radius,
-        fontSize,
-        fontColor,
-        border,
-        onChange,
-        showValue,
-        showFill
-    }: any,
-    context
-) =>
+export const Single: StoryFn = ({
+    min,
+    max,
+    value,
+    meshColor,
+    borderColor,
+    backgroundColor,
+    fillColor,
+    handleBorder,
+    width,
+    height,
+    radius,
+    fontSize,
+    fontColor,
+    border,
+    onChange,
+    showValue,
+    showFill
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = getColor(meshColor);
