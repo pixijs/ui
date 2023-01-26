@@ -39,12 +39,6 @@ export class ProgressBar extends Container
     /** Current progress value. */
     public _progress = 0;
 
-    /** Minimal value of the progress. */
-    public min = 0;
-
-    /** Maximal value of the progress. */
-    public max = 100;
-
     constructor({ bg, fill, fillOffset, progress }: ProgressBarOptions)
     {
         super();
@@ -57,60 +51,49 @@ export class ProgressBar extends Container
 
         this.innerView.addChild(this.bg);
 
-        if (fill)
-        {
-            this.fill = new Container();
-            this.fill.addChild(getView(fill));
+        this.fill = new Container();
+        this.fill.addChild(getView(fill));
 
-            const offsetX = fillOffset?.x ?? 0;
-            const offsetY = fillOffset?.y ?? 0;
+        const offsetX = fillOffset?.x ?? 0;
+        const offsetY = fillOffset?.y ?? 0;
 
-            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
+        this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
+        this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
 
-            this.fillMask = new Graphics();
-            this.fill.addChild(this.fillMask);
-            this.fill.mask = this.fillMask;
+        this.fillMask = new Graphics();
+        this.fill.addChild(this.fillMask);
+        this.fill.mask = this.fillMask;
 
-            this.addChild(this.fill);
-        }
+        this.addChild(this.fill);
 
         this.progress = progress;
     }
 
-    protected validate()
+    protected validate(progress: number): number
     {
-        if (this._progress < this.min)
+        progress = Math.round(progress);
+
+        if (progress < 0)
         {
-            this._progress = this.min;
+            return 0;
         }
 
-        if (this._progress > this.max)
+        if (progress > 100)
         {
-            this._progress = this.max;
+            return 100;
         }
 
-        this._progress = this._progress ?? this.min ?? 0;
+        return progress;
     }
 
     /** Sets current progress value. */
     set progress(progress: number)
     {
-        this._progress = progress;
+        this._progress = this.validate(progress);
 
-        this.validate();
-
-        const startPoint = 0;
         const endPoint = (this.bg.width / 100) * this._progress;
 
-        if (this.fillMask)
-        {
-            this.fillMask
-                .clear()
-                .lineStyle(0)
-                .beginFill(0xffffff)
-                .drawRect(startPoint, 0, endPoint - startPoint, this.fill.height);
-        }
+        this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(0, 0, endPoint, this.fill.height);
     }
 
     /** Returns current progress value. */

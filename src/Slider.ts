@@ -1,4 +1,3 @@
-import { Point } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Sprite } from '@pixi/sprite';
@@ -51,7 +50,7 @@ export type SliderOptions = {
  * });
  *
  * singleSlider.onChange.connect((value) => {
- *     onChange(`Slider changed > ${value}`);
+ *     console.log(`Slider changed to ${value}`);
  * });
  * ```
  */
@@ -62,6 +61,14 @@ export class Slider extends ProgressBar
 
     private dragging = 0;
     protected readonly options: SliderOptions;
+
+    private _value = 0;
+
+    /** Minimal value. */
+    public min = 0;
+
+    /** Maximal value. */
+    public max = 100;
 
     /** Signal that fires when value have changed. */
     public onChange: Signal<(value: number) => void> = new Signal();
@@ -78,18 +85,6 @@ export class Slider extends ProgressBar
             progress: options.value
         });
 
-        this.options = options;
-
-        if (options.min)
-        {
-            this.min = options.min;
-        }
-
-        if (options.max)
-        {
-            this.max = options.max;
-        }
-
         this.createSlider(options.slider);
 
         if (options.showValue)
@@ -98,6 +93,12 @@ export class Slider extends ProgressBar
             this.valueText.anchor.set(0.5);
             this.addChild(this.valueText);
         }
+
+        this.options = options;
+
+        this.min = options.min ?? 0;
+        this.max = options.max ?? 100;
+        this.value = options.value ?? 0;
 
         this.activate();
     }
@@ -125,23 +126,27 @@ export class Slider extends ProgressBar
     /** Returns value. */
     get value()
     {
-        return this._progress;
+        return this._value;
     }
 
     /** Sets value. */
     set value(value: number)
     {
-        value = Math.max(this.min, Math.min(this.max, value));
+        value = value;
 
-        if (this.progress === Math.round(value)) return;
+        if (value === this._value) return;
 
-        this.progress = Math.round(value);
+        if (value < this.min) value = this.min;
+        if (value > this.max) value = this.max;
+
+        this._value = value;
+        this.progress = ((this.max - this.min) / 100) * value;
 
         this.slider.x = ((this.bg.width - this.slider.width) / 100) * this.progress;
 
         if (this.options.showValue)
         {
-            this.valueText.text = this.progress;
+            this.valueText.text = value;
 
             const sliderPosX = this.slider.x + (this.slider.width / 2);
             const sliderPosY = this.slider.y;
@@ -150,7 +155,7 @@ export class Slider extends ProgressBar
             this.valueText.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
-        this.onUpdate?.emit(this.progress);
+        this.onUpdate?.emit(this.value);
     }
 
     protected createSlider(sliderData: Container | string)
@@ -185,12 +190,18 @@ export class Slider extends ProgressBar
         const obj = event.currentTarget as DragObject;
         const pos = obj.parent.worldTransform.applyInverse(event.global);
 
-        this.value = (pos.x / this.bg.width) * 100;
+        const progress = this.validate((pos.x / this.bg.width) * 100);
+
+        if (progress !== this.progress)
+        {
+            this.value = ((this.max - this.min) / 100) * progress;
+        }
     }
 
     private endUpdate()
     {
+        if (!this.dragging) return;
         this.dragging = 0;
-        this.onChange.emit(this.progress);
+        this.onChange.emit(this.value);
     }
 }

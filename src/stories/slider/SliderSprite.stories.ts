@@ -50,10 +50,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
             }
         });
 
-        singleSlider.onChange.connect((value) =>
-        {
-            onChange(value);
-        });
+        singleSlider.onChange.connect((value) => onChange(`${value}`));
 
         view.addChild(singleSlider);
 
