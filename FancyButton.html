@@ -871,7 +871,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="Slider.html">Class: Slider</h1>
+        <h1 class="page-title" data-filename="FancyButton.html">Class: FancyButton</h1>
         
 
 
@@ -880,14 +880,18 @@
 <header>
   <div class="header content-size">
       <h2>
-        Slider
+        FancyButton
 
         
       </h2>
 
       
+          <div class="class-description"><p>Button component with a lots of tweaks, to create a button fast.</p></div>
       
-          <div class="class-description"><p>Creates a slider to select a single value.</p></div>
+      
+          <div class="class-description"><p>By default text view and icon view are centered in the active view.</p>
+<p>If views are not the same size, offset property of the constructor
+can be used to adjust the position of the text, icon and the views.</p></div>
       
   </div>
 </header>
@@ -927,18 +931,14 @@
             <h3>Example</h3>
             
     <pre class="prettyprint"><code> ```
- new Slider({
-     bg: 'slider_bg.png',
-     fill: 'slider.png',
-     slider: 'slider.png',
-     min: 0,
-     max: 100,
-     value: 50,
+ const button = new Button({
+     defaultView: `button.png`,
+     hoverView: `button_hover.png`,
+     pressedView: `button_pressed.png`,
+     text: new Text('Click me!'),
  });
 
- singleSlider.onChange.connect((value) => {
-     console.log(`Slider changed to ${value}`);
- });
+ button.onPress.connect(() => console.log('Button pressed!'));
  ```</code></pre>
 
         
@@ -950,7 +950,7 @@
         <ul>
           
 
-            <li><a href=SliderBase.html>SliderBase</a></li>
+            <li>Container</li>
           
         </ul>
     
@@ -976,10 +976,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="onChange">
-            <a class="share-icon" href="#onChange"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onChange</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
+        <h4 class="name" id="anchor">
+            <a class="share-icon" href="#anchor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">anchor</span>
+            <span class="type-signature type">ObservablePoint</span>
             
             
             
@@ -989,7 +989,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Fires when value changed, only when slider is released.</p></p>
+      <p class="description"><p>Anchor point of the button.</p></p>
     
     
 
@@ -1026,381 +1026,20 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="onUpdate">
-            <a class="share-icon" href="#onUpdate"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onUpdate</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Fires when value is changing, on every move of slider.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Return selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Set selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <div>
-    <h3 class="subsection-title">Inherited Properties</h3>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#4">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="SliderBase.html">SliderBase</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="4">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#max">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Maximal value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#min">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Minimal value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-        </section>
-    </section>
-</div>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#5">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="5">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_progress">
-            <a class="share-icon" href="#_progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_progress</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#_progress">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Current progress value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="innerView">
-            <a class="share-icon" href="#innerView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">innerView</span>
+        <h4 class="name" id="defaultView">
+            <a class="share-icon" href="#defaultView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">defaultView</span>
             <span class="type-signature type">Container</span>
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#innerView">inherited</a></span>
-            
             
         </h4>
     </div>
 </dt>
 <dd>
     
-      <p class="description"><p>Container, that holds all inner views.</p></p>
+      <p class="description"><p>View that is shown when non of the button events are active.</p></p>
     
     
 
@@ -1433,18 +1072,118 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="progress">
-            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progress</span>
+        <h4 class="name" id="disabledView">
+            <a class="share-icon" href="#disabledView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">disabledView</span>
+            <span class="type-signature type">Container</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>View shown when the button is disabled.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="enabled">
+            <a class="share-icon" href="#enabled"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">enabled</span>
             <span class="type-signature"></span>
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#progress">inherited</a></span>
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Setter, that prevents all button events from firing.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="enabled">
+            <a class="share-icon" href="#enabled"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">enabled</span>
+            <span class="type-signature type">boolean</span>
+            
+            
             
             
         </h4>
@@ -1452,7 +1191,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Sets current progress value.</p></p>
+      <p class="description"><p>Getter that returns button state, that controls if button events are firing.</p></p>
     
     
 
@@ -1485,26 +1224,524 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="progressStart">
-            <a class="share-icon" href="#progressStart"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progressStart</span>
+        <h4 class="name" id="hoverView">
+            <a class="share-icon" href="#hoverView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">hoverView</span>
+            <span class="type-signature type">Container</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>View that is shown when the mouse hovers over the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="iconOffset">
+            <a class="share-icon" href="#iconOffset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">iconOffset</span>
+            <span class="type-signature type">Offset</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Offset of the icon view. Can be set to any state of the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="iconView">
+            <a class="share-icon" href="#iconView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">iconView</span>
+            <span class="type-signature type">Container</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>View for the button icon.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="offset">
+            <a class="share-icon" href="#offset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">offset</span>
+            <span class="type-signature type">Offset & Pos</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Offset of the button state views. If state views have different sizes, this option can help adjust them.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onDown">
+            <a class="share-icon" href="#onDown"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onDown</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when the button is down.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onHover">
+            <a class="share-icon" href="#onHover"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onHover</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when a mouse hovers the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onOut">
+            <a class="share-icon" href="#onOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onOut</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when a mouse leaves the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onPress">
+            <a class="share-icon" href="#onPress"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onPress</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when the button was pressed.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onUp">
+            <a class="share-icon" href="#onUp"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onUp</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when the down event happens inside the button and up event happened inside or outside of the button</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onUpOut">
+            <a class="share-icon" href="#onUpOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onUpOut</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event fired when the up event happens outside of the button, after the down event happened inside the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="padding">
+            <a class="share-icon" href="#padding"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">padding</span>
             <span class="type-signature type">number</span>
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#progressStart">inherited</a></span>
-            
             
         </h4>
     </div>
 </dt>
 <dd>
     
-      <p class="description"><p>Start point of progress.</p></p>
+      <p class="description"><p>Padding of the button text view. If button text does not fit active view + padding it will scale down to fit.</p></p>
     
     
 
@@ -1525,8 +1762,55 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="pressedView">
+            <a class="share-icon" href="#pressedView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">pressedView</span>
+            <span class="type-signature type">Container</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>View, shown when the mouse press on the component.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     
@@ -1540,13 +1824,396 @@
     
 </dd>
 
+        
             
-        </section>
-    </section>
-</div>
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="state">
+            <a class="share-icon" href="#state"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">state</span>
+            <span class="type-signature type">State</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled'</p></p>
+    
+    
 
     
-</div>
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="text">
+            <a class="share-icon" href="#text"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">text</span>
+            <span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the text of the button and updates its scaling basing on the new size.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="text">
+            <a class="share-icon" href="#text"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">text</span>
+            <span class="type-signature type">string</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Returns the text string of the button text element.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="textOffset">
+            <a class="share-icon" href="#textOffset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">textOffset</span>
+            <span class="type-signature type">Offset</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Offset of the text view. Can be set to any state of the button.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="textView">
+            <a class="share-icon" href="#textView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">textView</span>
+            <span class="type-signature type">Text</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>View for the button text.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setState">
+            <a class="share-icon" href="#setState"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  setState
+              
+            </span>
+            <span class="signature">(newState)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Updates button state and shows the according views.</p></p>
+    
+    
+    <div class="description">
+        <p>Updates positions and offsets of the views.</p>
+<p>Plays animations if they are set.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newState</code></td>
+            
+
+            <td class="type">
+            
+                State
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+    
+
+    
 
     
 

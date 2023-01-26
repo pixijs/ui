@@ -871,7 +871,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="Slider.html">Class: Slider</h1>
+        <h1 class="page-title" data-filename="SliderBase.html">Class: SliderBase</h1>
         
 
 
@@ -880,14 +880,14 @@
 <header>
   <div class="header content-size">
       <h2>
-        Slider
+        SliderBase
 
         
       </h2>
 
       
+          <div class="class-description"><p>Hepper class, used as a base for single or double slider creation.</p></div>
       
-          <div class="class-description"><p>Creates a slider to select a single value.</p></div>
       
   </div>
 </header>
@@ -924,24 +924,6 @@
 
 
         
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code> ```
- new Slider({
-     bg: 'slider_bg.png',
-     fill: 'slider.png',
-     slider: 'slider.png',
-     min: 0,
-     max: 100,
-     value: 50,
- });
-
- singleSlider.onChange.connect((value) => {
-     console.log(`Slider changed to ${value}`);
- });
- ```</code></pre>
-
-        
     </div>
 
     
@@ -950,7 +932,7 @@
         <ul>
           
 
-            <li><a href=SliderBase.html>SliderBase</a></li>
+            <li><a href=ProgressBar.html>ProgressBar</a></li>
           
         </ul>
     
@@ -976,241 +958,12 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="onChange">
-            <a class="share-icon" href="#onChange"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onChange</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Fires when value changed, only when slider is released.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onUpdate">
-            <a class="share-icon" href="#onUpdate"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onUpdate</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Fires when value is changing, on every move of slider.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Return selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Set selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <div>
-    <h3 class="subsection-title">Inherited Properties</h3>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#4">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="SliderBase.html">SliderBase</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="4">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="max">
             <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">max</span>
             <span class="type-signature type">number</span>
             
             
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#max">inherited</a></span>
             
             
         </h4>
@@ -1254,8 +1007,8 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
         <h4 class="name" id="min">
@@ -1264,8 +1017,6 @@
             <span class="type-signature type">number</span>
             
             
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#min">inherited</a></span>
             
             
         </h4>
@@ -1309,22 +1060,32 @@
     
 </dd>
 
-            
-        </section>
-    </section>
-</div>
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div>
+    <h3 class="subsection-title">Inherited Properties</h3>
 
     
         
 
 <div class="panel collapsible-group-container">
     <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#5">
+        <a class="btn" role="button" data-toggle="collapse" href="#6">
             <img src="icons/chevron-down.svg" />
         </a>
         <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
     </section>
-    <section class="panel-collapse collapse in" id="5">
+    <section class="panel-collapse collapse in" id="6">
         <section class="panel-body collapsible-group-body">
             
                 
@@ -1446,6 +1207,8 @@
             
                 <span class="access-signature inherited"><a href="ProgressBar.html#progress">inherited</a></span>
             
+            
+                <span class="access-signature overrides"><a href="ProgressBar.html#progress">overrides</a></span>
             
         </h4>
     </div>

@@ -871,7 +871,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="Slider.html">Class: Slider</h1>
+        <h1 class="page-title" data-filename="Switcher.html">Class: Switcher</h1>
         
 
 
@@ -880,14 +880,17 @@
 <header>
   <div class="header content-size">
       <h2>
-        Slider
+        Switcher
 
         
       </h2>
 
       
+          <div class="class-description"><p>Container based component that switches visibility of a given containers by any of the button events.</p></div>
       
-          <div class="class-description"><p>Creates a slider to select a single value.</p></div>
+      
+          <div class="class-description"><p>By default it switches on press.</p>
+<p>Can be used for creating tabs, radio buttons, checkboxes etc.</p></div>
       
   </div>
 </header>
@@ -895,6 +898,211 @@
 <article class="content-size">
     <div class="container-overview">
         
+              
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new Switcher
+              
+            </span>
+            <span class="signature">(views, triggerEvents, activeViewID)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+            <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>views</code></td>
+            
+
+            <td class="type">
+            
+                Array&lt;Container | string&gt;
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                    
+                </td>
+            
+
+            <td class="description last">
+                <p>Array of views or textures that will be switching.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>triggerEvents</code></td>
+            
+
+            <td class="type">
+            
+                ButtonEvent | ButtonEvent[]
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                    
+                </td>
+            
+
+            <td class="description last">
+                <p>Button events, to switch views (can be one event or an array of events).</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>activeViewID</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                    
+                        0
+                    
+                </td>
+            
+
+            <td class="description last">
+                <p>The id of the view, visible by default.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
         
 
         
@@ -927,18 +1135,14 @@
             <h3>Example</h3>
             
     <pre class="prettyprint"><code> ```
- new Slider({
-     bg: 'slider_bg.png',
-     fill: 'slider.png',
-     slider: 'slider.png',
-     min: 0,
-     max: 100,
-     value: 50,
- });
+ // switch on click
+ const switch = new Swich([`switch_off.png`, `switch_on.png`]);
 
- singleSlider.onChange.connect((value) => {
-     console.log(`Slider changed to ${value}`);
- });
+ // switch on hover
+ const button = new Swich([`button_default.png`, `button_hover.png`], ['onHover', 'onOut']);
+
+ button.events.onPress.connect(() => console.log('button pressed'));
+
  ```</code></pre>
 
         
@@ -950,7 +1154,7 @@
         <ul>
           
 
-            <li><a href=SliderBase.html>SliderBase</a></li>
+            <li>Container</li>
           
         </ul>
     
@@ -976,109 +1180,9 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="onChange">
-            <a class="share-icon" href="#onChange"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onChange</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Fires when value changed, only when slider is released.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onUpdate">
-            <a class="share-icon" href="#onUpdate"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onUpdate</span>
-            <span class="type-signature type">Signal&lt;(value: number) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Fires when value is changing, on every move of slider.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
+        <h4 class="name" id="active">
+            <a class="share-icon" href="#active"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">active</span>
             <span class="type-signature type">number</span>
             
             
@@ -1089,191 +1193,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Return selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Set selected value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <div>
-    <h3 class="subsection-title">Inherited Properties</h3>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#4">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="SliderBase.html">SliderBase</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="4">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#max">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Maximal value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="SliderBase.html#min">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Minimal value.</p></p>
+      <p class="description"><p>The id of the visible(active) view.</p></p>
     
     
 
@@ -1309,35 +1229,16 @@
     
 </dd>
 
-            
-        </section>
-    </section>
-</div>
-
-    
         
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#5">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="5">
-        <section class="panel-body collapsible-group-body">
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="_progress">
-            <a class="share-icon" href="#_progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_progress</span>
-            <span class="type-signature type">number</span>
+        <h4 class="name" id="activeView">
+            <a class="share-icon" href="#activeView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">activeView</span>
+            <span class="type-signature type">Container</span>
             
             
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#_progress">inherited</a></span>
             
             
         </h4>
@@ -1345,7 +1246,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Current progress value.</p></p>
+      <p class="description"><p>Returns the active view</p></p>
     
     
 
@@ -1366,8 +1267,55 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="events">
+            <a class="share-icon" href="#events"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">events</span>
+            <span class="type-signature type"><a href="Button.html">Button</a></span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Button events used to switch views.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     
@@ -1381,8 +1329,8 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
         <h4 class="name" id="innerView">
@@ -1392,15 +1340,13 @@
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#innerView">inherited</a></span>
-            
             
         </h4>
     </div>
 </dt>
 <dd>
     
-      <p class="description"><p>Container, that holds all inner views.</p></p>
+      <p class="description"><p>Container that holds all the content of the component.</p></p>
     
     
 
@@ -1433,18 +1379,16 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="progress">
-            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progress</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="onChange">
+            <a class="share-icon" href="#onChange"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onChange</span>
+            <span class="type-signature type">Signal&lt;(state: number | boolean) =&gt; void&gt;</span>
             
             
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#progress">inherited</a></span>
             
             
         </h4>
@@ -1452,7 +1396,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Sets current progress value.</p></p>
+      <p class="description"><p>Fired when active view changes.</p></p>
     
     
 
@@ -1485,18 +1429,16 @@
     
 </dd>
 
+        
             
-                
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="progressStart">
-            <a class="share-icon" href="#progressStart"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progressStart</span>
-            <span class="type-signature type">number</span>
+        <h4 class="name" id="views">
+            <a class="share-icon" href="#views"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">views</span>
+            <span class="type-signature type">Array&lt;Container&gt;</span>
             
             
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#progressStart">inherited</a></span>
             
             
         </h4>
@@ -1504,7 +1446,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Start point of progress.</p></p>
+      <p class="description"><p>Returns all the switchable views</p></p>
     
     
 
@@ -1525,9 +1467,6 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
 
@@ -1540,13 +1479,306 @@
     
 </dd>
 
-            
-        </section>
-    </section>
-</div>
+        
+    
 
     
-</div>
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="forceSwitch">
+            <a class="share-icon" href="#forceSwitch"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  forceSwitch
+              
+            </span>
+            <span class="signature">(id)</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Switches a view to a given one without triggering the onChange event.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="switch">
+            <a class="share-icon" href="#switch"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  switch
+              
+            </span>
+            <span class="signature">(id, event)</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Show a view by id, or to next one by order, if no ID provided.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>optional id of the view to show.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                ButtonEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>optional event to use to switch views.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+    
+
+    
 
     
 
