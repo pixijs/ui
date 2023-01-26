@@ -14,7 +14,7 @@ const args = {
     value2: 85,
     fontSize: 20,
     showValue: true,
-    onChange: action('Slider:')
+    onChange: action('Slider')
 };
 
 export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange }: any, context) =>

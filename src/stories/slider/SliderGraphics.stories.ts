@@ -23,7 +23,7 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
-    onChange: action('Slider:')
+    onChange: action('Slider')
 };
 
 export const Single: StoryFn = (
@@ -84,7 +84,6 @@ export const Single: StoryFn = (
         slider,
         min,
         max,
-        value,
         valueTextStyle: {
             fill: fontColor,
             fontSize
@@ -92,10 +91,9 @@ export const Single: StoryFn = (
         showValue
     });
 
-    singleSlider.onChange.connect((value) =>
-    {
-        onChange(value);
-    });
+    singleSlider.value = value;
+
+    singleSlider.onUpdate.connect((value) => onChange(`${value}`));
 
     view.addChild(singleSlider);
 

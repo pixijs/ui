@@ -162,14 +162,14 @@ export class DoubleSlider extends ProgressBar
             this.addChild(this.slider2Text);
         }
 
-        this.validateSettings();
+        this.validate();
 
         this.makeScrollable();
 
         this.update();
     }
 
-    override validateSettings()
+    override validate()
     {
         if (!this.min)
         {

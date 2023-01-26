@@ -322,7 +322,7 @@ export class ScrollBox extends Container
 
     private restoreChildrenInteractivity()
     {
-        // prevent clicks on buttons
+        // restore clicks on buttons
         this.items.forEach((item, itemID) =>
         {
             const wasItemInteractive

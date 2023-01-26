@@ -28,7 +28,7 @@ const args = {
     anchorX: 0.5,
     anchorY: 0.5,
     disabled: false,
-    action: action('button Event:')
+    action: action('Button')
 };
 
 export const UseIcon = ({

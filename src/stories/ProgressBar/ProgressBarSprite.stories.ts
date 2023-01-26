@@ -25,7 +25,6 @@ export const Sprite: StoryFn = (_, context) =>
         progressBar = new ProgressBar({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
-            progress,
             fillOffset: {
                 x: 0,
                 y: -2
@@ -47,11 +46,11 @@ export const Sprite: StoryFn = (_, context) =>
         {
             isFilling ? progress++ : progress--;
 
-            if (progress > 100)
+            if (progress > 150)
             {
                 isFilling = false;
             }
-            else if (progress < 0)
+            else if (progress < -50)
             {
                 isFilling = true;
             }

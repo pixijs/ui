@@ -34,7 +34,7 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
-    action: action('button Event:')
+    action: action('Button')
 };
 
 export const UseGraphics = ({

@@ -11,7 +11,7 @@ const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
     disabled: false,
-    action: action('button Event:')
+    action: action('Button')
 };
 
 export class SpriteButton extends Button

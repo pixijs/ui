@@ -43,10 +43,8 @@ export const UseGraphics: StoryFn = (
         .beginFill(fillColor)
         .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
-    const progressBar = new ProgressBar({
-        bg,
-        fill
-    });
+    // Component usage
+    const progressBar = new ProgressBar({ bg, fill });
 
     view.addChild(progressBar);
 
@@ -60,11 +58,11 @@ export const UseGraphics: StoryFn = (
         {
             isFilling ? progress++ : progress--;
 
-            if (progress > 100)
+            if (progress > 150)
             {
                 isFilling = false;
             }
-            else if (progress < 0)
+            else if (progress < -50)
             {
                 isFilling = true;
             }

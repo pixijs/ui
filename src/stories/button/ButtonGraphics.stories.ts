@@ -11,7 +11,7 @@ const args = {
     size: 150,
     radius: 150,
     disabled: false,
-    action: action('button Event:')
+    action: action('Button')
 };
 
 export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>

@@ -39,9 +39,6 @@ export class ProgressBar extends Container
     /** Current progress value. */
     public _progress = 0;
 
-    /** Current progress in percentage. In case if min and max of progress are not 0-100. */
-    public percent = 0;
-
     /** Minimal value of the progress. */
     public min = 0;
 
@@ -81,7 +78,7 @@ export class ProgressBar extends Container
         this.progress = progress;
     }
 
-    protected validateSettings()
+    protected validate()
     {
         if (this._progress < this.min)
         {
@@ -94,12 +91,6 @@ export class ProgressBar extends Container
         }
 
         this._progress = this._progress ?? this.min ?? 0;
-        this.percent = (this._progress * 100) / this.max;
-
-        const scale = this.max - this.min;
-        const scaledVal = this._progress - this.min;
-
-        this.percent = (scaledVal * 100) / scale;
     }
 
     /** Sets current progress value. */
@@ -107,7 +98,7 @@ export class ProgressBar extends Container
     {
         this._progress = progress;
 
-        this.validateSettings();
+        this.validate();
 
         const startPoint = 0;
         const endPoint = (this.bg.width / 100) * this._progress;
