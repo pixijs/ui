@@ -154,7 +154,7 @@ export class SliderBase extends ProgressBar
         this.dragging = 0;
     }
 
-    protected update(event: FederatedPointerEvent)
+    protected update(_event: FederatedPointerEvent)
     {
     // override me
     }

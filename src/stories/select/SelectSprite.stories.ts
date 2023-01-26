@@ -86,8 +86,7 @@ export const UseSprite: StoryFn = (
 
     return {
         view,
-        resize: () => centerElement(view, 0.5, 0),
-        update: () => select?.update()
+        resize: () => centerElement(view, 0.5, 0)
     };
 };
 

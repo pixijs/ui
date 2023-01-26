@@ -1,4 +1,3 @@
-import { Sprite } from '@pixi/sprite';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Layout } from '../../Layout';
