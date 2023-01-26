@@ -33,11 +33,8 @@ export const UseGraphics: StoryFn = ({
     dropDownBackgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any, context) =>
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
 
     backgroundColor = Number(backgroundColor.replace('#', '0x'));

@@ -180,7 +180,7 @@ export class Slider extends Container
 
         this.slider
             .on('pointerdown', onDragStart, this)
-            .on('pointermove', onDragMove, this)
+            .on('globalpointermove', onDragMove, this)
             .on('pointerup', onDragEnd, this)
             .on('pointerupoutside', onDragEnd, this);
         this.bg.on('pointerdown', onSetByClick, this);

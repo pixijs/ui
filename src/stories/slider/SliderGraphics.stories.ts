@@ -42,12 +42,8 @@ export const Single: StoryFn = ({
     border,
     onChange,
     showValue,
-}: any, context) =>
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = Number(meshColor.replace('#', '0x'));

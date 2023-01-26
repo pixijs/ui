@@ -25,8 +25,5 @@ To use any of the components you can go to it's page and copy/paste the example 
 
 ## Known Issues
 
-Dragging behaviour for components such as `select`, `slider`, and `scrollbox` need to have `moveOnAll` set to `true` in the pixi's `EventsSystem`
-
-```ts
-app.renderer.events.rootBoundary.moveOnAll = true;
-```
+This library requires Pixi `v7.1.1` or higher as this is when the `globalpointermove` event was added
+See [here](https://github.com/pixijs/pixijs/pull/9067) for details

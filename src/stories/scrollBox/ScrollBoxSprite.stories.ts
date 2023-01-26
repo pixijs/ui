@@ -22,11 +22,8 @@ export const UseSprite: StoryFn = ({
     elementsMargin,
     itemsCount,
     onPress,
-}: any, context) =>
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
     fontColor = Number(fontColor.replace('#', '0x'));
 
     const view = new Container();

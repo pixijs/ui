@@ -26,12 +26,8 @@ export const Double: StoryFn = ({
     fontColor,
     showValue,
     onChange,
-}: any, context) =>
+}: any) =>
 {
-    const { app } = context.parameters.pixi;
-
-    app.renderer.events.rootBoundary.moveOnAll = true;
-
     const view = new Container();
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
