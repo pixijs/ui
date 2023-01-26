@@ -51,8 +51,6 @@ export const UseSprite = ({
             }),
             padding,
             textOffset: { x: textOffsetX, y: textOffsetY },
-            anchorX,
-            anchorY,
             animations: {
                 hover: {
                     props: {
@@ -70,6 +68,8 @@ export const UseSprite = ({
                 }
             }
         });
+
+        button.anchor.set(anchorX, anchorY);
 
         if (disabled)
         {

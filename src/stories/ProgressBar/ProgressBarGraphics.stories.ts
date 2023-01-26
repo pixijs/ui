@@ -15,11 +15,12 @@ const args = {
     height: 35,
     radius: 25,
     border: 3,
-    animate: true
+    animate: true,
+    vertical: false
 };
 
 export const UseGraphics: StoryFn = (
-    { value, borderColor, backgroundColor, fillColor, width, height, radius, border, animate }: any,
+    { value, borderColor, backgroundColor, fillColor, width, height, radius, border, animate, vertical }: any,
     context
 ) =>
 {
@@ -52,13 +53,22 @@ export const UseGraphics: StoryFn = (
         progress: value
     });
 
+    if (vertical)
+    {
+        progressBar.rotation = -Math.PI / 2;
+    }
+
     view.addChild(progressBar);
 
     let isFilling = true;
 
     return {
         view,
-        resize: () => centerElement(view),
+        resize: () =>
+        {
+            centerElement(view);
+            view.y += view.height;
+        },
         update: () =>
         {
             if (!animate)

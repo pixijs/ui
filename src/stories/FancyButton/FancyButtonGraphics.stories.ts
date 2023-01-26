@@ -92,8 +92,6 @@ export const UseGraphics = ({
             pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
             disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
             icon,
-            anchorX,
-            anchorY,
             text: new Text(text, {
                 ...defaultTextStyle,
                 fill
@@ -133,6 +131,8 @@ export const UseGraphics = ({
         {
             button.enabled = false;
         }
+
+        button.anchor.set(anchorX, anchorY);
 
         button.onPress.connect(() => action('onPress'));
         button.onDown.connect(() => action('onDown'));

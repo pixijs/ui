@@ -89,8 +89,6 @@ export const UseIcon = ({
                 x: iconOffsetX,
                 y: iconOffsetY
             },
-            anchorX,
-            anchorY,
             animations: {
                 hover: {
                     props: {
@@ -108,6 +106,8 @@ export const UseIcon = ({
                 }
             }
         });
+
+        button.anchor.set(anchorX, anchorY);
 
         if (disabled)
         {

@@ -2,21 +2,22 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
-import { Container } from '@pixi/display';
 import type { StoryFn } from '@storybook/types';
+import { Layout } from '../../Layout';
 
 const args = {
     value: 50,
-    animate: true
+    animate: true,
+    vertical: false
 };
 
-export const Sprite: StoryFn = ({ value, animate }, context) =>
+export const Sprite: StoryFn = ({ value, animate, vertical }, context) =>
 {
     const { app } = context.parameters.pixi;
 
     app.renderer.events.rootBoundary.moveOnAll = true;
 
-    const view = new Container();
+    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
     const assets = ['slider_bg.png', 'slider_progress.png'];
 
@@ -37,14 +38,31 @@ export const Sprite: StoryFn = ({ value, animate }, context) =>
 
         view.addChild(progressBar);
 
-        centerElement(view);
+        // centerElement(view);
+
+        if (vertical)
+        {
+            progressBar.rotation = -Math.PI / 2;
+            view.y += view.height / 2;
+        }
+        else
+        {
+            view.x += -view.width / 2;
+        }
     });
 
     let isFilling = true;
 
     return {
         view,
-        resize: () => centerElement(view),
+        resize: () =>
+        {
+            centerElement(view);
+            if (vertical)
+            {
+                view.y += view.height;
+            }
+        },
         update: () =>
         {
             if (!animate)
