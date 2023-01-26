@@ -6,6 +6,7 @@ import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -31,10 +32,10 @@ export const UseSprite: StoryFn = (
 
     preloadAssets(assets).then(() =>
     {
-        backgroundColor = Number(backgroundColor.replace('#', '0x'));
-        const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
+        backgroundColor = getColor(backgroundColor);
+        const hoverColor = getColor(dropDownHoverColor);
 
-        fontColor = Number(fontColor.replace('#', '0x'));
+        fontColor = getColor(fontColor);
         const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
         const items = getItems(itemsAmount, 'Item');
@@ -72,7 +73,10 @@ export const UseSprite: StoryFn = (
 
         select.onSelect.connect((_, text) =>
         {
-            onSelect(select.value, text);
+            onSelect({
+                id: select.value,
+                text
+            });
         });
 
         view.addChild(select);

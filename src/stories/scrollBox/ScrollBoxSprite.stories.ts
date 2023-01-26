@@ -9,12 +9,13 @@ import { action } from '@storybook/addon-actions';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
     fontColor: '#000000',
     elementsMargin: 6,
     itemsAmount: 100,
-    onPress: action('Button was pressed > ')
+    onPress: action('Button pressed')
 };
 
 export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any, context) =>
@@ -22,7 +23,7 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
     const { app } = context.parameters.pixi;
 
     app.renderer.events.rootBoundary.moveOnAll = true;
-    fontColor = Number(fontColor.replace('#', '0x'));
+    fontColor = getColor(fontColor);
 
     const view = new Container();
 

@@ -9,6 +9,7 @@ import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Click me!',
@@ -31,8 +32,8 @@ const args = {
     disabledOffset: 0,
     anchorX: 0.5,
     anchorY: 0.5,
-    disabled: false,
     animationDuration: 100,
+    disabled: false,
     action: action('button Event:')
 };
 
@@ -62,10 +63,10 @@ export const UseGraphics = ({
     action
 }: any) =>
 {
-    color = Number(color.replace('#', '0x'));
-    hoverColor = Number(hoverColor.replace('#', '0x'));
-    pressedColor = Number(pressedColor.replace('#', '0x'));
-    disabledColor = Number(disabledColor.replace('#', '0x'));
+    color = getColor(color);
+    hoverColor = getColor(hoverColor);
+    pressedColor = getColor(pressedColor);
+    disabledColor = getColor(disabledColor);
 
     const view = new Container();
 
@@ -73,7 +74,7 @@ export const UseGraphics = ({
 
     preloadAssets(assets).then(() =>
     {
-        const fill = Number(textColor.replace('#', '0x'));
+        const fill = getColor(textColor);
         const target = Sprite.from(`avatar-01.png`);
 
         // Component usage !!!

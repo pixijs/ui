@@ -4,6 +4,7 @@ import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     color: '#A5E24D',
@@ -15,7 +16,7 @@ const args = {
 
 export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 {
-    color = Number(color.replace('#', '0x'));
+    color = getColor(color);
 
     const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
 

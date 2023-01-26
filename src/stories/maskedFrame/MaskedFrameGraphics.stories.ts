@@ -5,6 +5,7 @@ import { MaskedFrame } from '../../MaskedFrame';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     borderColor: '#FFFFFF',
@@ -21,7 +22,7 @@ export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
 
     preloadAssets(assets).then(() =>
     {
-        borderColor = Number(borderColor.replace('#', '0x'));
+        borderColor = getColor(borderColor);
 
         const target = Sprite.from(`avatar-01.png`);
 

@@ -5,12 +5,13 @@ import { DoubleSlider } from '../../DoubleSlider';
 import { Layout } from '../../Layout';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { getColor } from '../utils/color';
 
 const args = {
-    meshColor: '#35b600',
-    fillColor: '#ff4545',
+    meshColor: '#a5e34d',
+    fillColor: '#00b1dd',
     borderColor: '#FFFFFF',
-    backgroundColor: '#F1D583',
+    backgroundColor: '#fe6048',
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
@@ -23,62 +24,53 @@ const args = {
     border: 5,
     handleBorder: 3,
     showValue: true,
-    onChange: action('Slider changed'),
+    onChange: action('Slider')
 };
 
-export const Double: StoryFn = ({
-    min,
-    max,
-    value1,
-    value2,
-    meshColor,
-    borderColor,
-    backgroundColor,
-    fillColor,
-    width,
-    height,
-    radius,
-    fontSize,
-    fontColor,
-    border,
-    handleBorder,
-    showValue,
-    onChange,
-}: any, context) =>
+export const Double: StoryFn = (
+    {
+        min,
+        max,
+        value1,
+        value2,
+        meshColor,
+        borderColor,
+        backgroundColor,
+        fillColor,
+        width,
+        height,
+        radius,
+        fontSize,
+        fontColor,
+        border,
+        handleBorder,
+        showValue,
+        onChange
+    }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
     app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    meshColor = Number(meshColor.replace('#', '0x'));
-    fillColor = Number(fillColor.replace('#', '0x'));
-    borderColor = Number(borderColor.replace('#', '0x'));
-    backgroundColor = Number(backgroundColor.replace('#', '0x'));
+    meshColor = getColor(meshColor);
+    fillColor = getColor(fillColor);
+    borderColor = getColor(borderColor);
+    backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(backgroundColor)
-        .drawRoundedRect(
-            border,
-            border,
-            width - (border * 2),
-            height - (border * 2),
-            radius,
-        );
+        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const fill = new Graphics()
         .beginFill(borderColor)
         .drawRoundedRect(0, 0, width, height, radius)
         .beginFill(fillColor)
-        .drawRoundedRect(
-            border,
-            border,
-            width - (border * 2),
-            height - (border * 2),
-            radius,
-        );
+        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const slider1 = new Graphics()
         .beginFill(borderColor)
@@ -105,14 +97,14 @@ export const Double: StoryFn = ({
         value2,
         valueTextStyle: {
             fill: fontColor,
-            fontSize,
+            fontSize
         },
-        showValue,
+        showValue
     });
 
     doubleSlider.onChange.connect((value1, value2) =>
     {
-        onChange(`Slider changed > ${value1} - ${value2}`);
+        onChange(`${value1} - ${value2}`);
     });
 
     view.addChild(doubleSlider);
@@ -126,5 +118,5 @@ export const Double: StoryFn = ({
 export default {
     title: 'Components/Slider/Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

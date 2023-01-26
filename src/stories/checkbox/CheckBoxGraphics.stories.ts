@@ -5,6 +5,7 @@ import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Checkbox',
@@ -40,10 +41,10 @@ export const UseGraphics = ({
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    color = Number(color.replace('#', '0x'));
-    borderColor = Number(borderColor.replace('#', '0x'));
-    fillColor = Number(fillColor.replace('#', '0x'));
-    fillBorderColor = Number(fillBorderColor.replace('#', '0x'));
+    color = getColor(color);
+    borderColor = getColor(borderColor);
+    fillColor = getColor(fillColor);
+    fillBorderColor = getColor(fillBorderColor);
 
     for (let i = 0; i < amount; i++)
     {

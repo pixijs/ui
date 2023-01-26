@@ -12,8 +12,8 @@ const args = {
     max: 100,
     value: 50,
     fontSize: 20,
-    showValue: false,
-    onChange: action('Slider changed')
+    showValue: true,
+    onChange: action('Slider:')
 };
 
 export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue }: any, context) =>
@@ -52,7 +52,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
 
         singleSlider.onChange.connect((value) =>
         {
-            onChange(`Slider changed > ${value}`);
+            onChange(value);
         });
 
         view.addChild(singleSlider);

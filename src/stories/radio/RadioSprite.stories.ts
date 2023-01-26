@@ -5,7 +5,6 @@ import { Layout } from '../../Layout';
 import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-import { Sprite } from '@pixi/sprite';
 
 const args = {
     text: 'Radio',
@@ -49,7 +48,9 @@ export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
             }
         });
 
-        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) => onChange(selectedItemID, selectedVal));
+        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+            onChange({ id: selectedItemID, val: selectedVal })
+        );
 
         view.addChild(radioGroup.innerView);
 

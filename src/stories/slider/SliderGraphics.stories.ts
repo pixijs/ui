@@ -5,12 +5,13 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
-    meshColor: '#35b600',
-    fillColor: '#ff4545',
+    meshColor: '#a5e34d',
+    fillColor: '#00b1dd',
     borderColor: '#FFFFFF',
-    backgroundColor: '#F1D583',
+    backgroundColor: '#fe6048',
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
@@ -22,7 +23,7 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
-    onChange: action('Slider changed')
+    onChange: action('Slider:')
 };
 
 export const Single: StoryFn = (
@@ -53,10 +54,10 @@ export const Single: StoryFn = (
 
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    meshColor = Number(meshColor.replace('#', '0x'));
-    fillColor = Number(fillColor.replace('#', '0x'));
-    borderColor = Number(borderColor.replace('#', '0x'));
-    backgroundColor = Number(backgroundColor.replace('#', '0x'));
+    meshColor = getColor(meshColor);
+    fillColor = getColor(fillColor);
+    borderColor = getColor(borderColor);
+    backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
         .beginFill(borderColor)
@@ -93,7 +94,7 @@ export const Single: StoryFn = (
 
     singleSlider.onChange.connect((value) =>
     {
-        onChange(`Slider changed > ${value}`);
+        onChange(value);
     });
 
     view.addChild(singleSlider);

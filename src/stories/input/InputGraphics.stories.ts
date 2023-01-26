@@ -5,6 +5,7 @@ import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     text: '',
@@ -43,9 +44,9 @@ export const UseGraphics = ({
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    backgroundColor = backgroundColor.replace('#', '0x');
-    borderColor = Number(borderColor.replace('#', '0x'));
-    textColor = Number(textColor.replace('#', '0x'));
+    backgroundColor = getColor(backgroundColor);
+    borderColor = getColor(borderColor);
+    textColor = getColor(textColor);
 
     for (let i = 0; i < amount; i++)
     {

@@ -8,9 +8,9 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
-    type: ['vertical', 'horizontal'],
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
     width: 320,
@@ -21,12 +21,11 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    onPress: action('Button was pressed > ')
+    onPress: action('Button pressed')
 };
 
 export const UseGraphics: StoryFn = (
     {
-        type,
         fontColor,
         elementsMargin,
         elementsPadding,
@@ -47,8 +46,8 @@ export const UseGraphics: StoryFn = (
     app.renderer.events.rootBoundary.moveOnAll = true;
     const view = new Container();
 
-    backgroundColor = Number(backgroundColor.replace('#', '0x'));
-    fontColor = Number(fontColor.replace('#', '0x'));
+    backgroundColor = getColor(backgroundColor);
+    fontColor = getColor(fontColor);
 
     const items = [];
 
@@ -59,7 +58,7 @@ export const UseGraphics: StoryFn = (
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
-                fill: fontColor || defaultTextStyle.fill
+                fill: fontColor
             })
         });
 
@@ -72,7 +71,6 @@ export const UseGraphics: StoryFn = (
     // Component usage !!!
     const scrollBox = new ScrollBox({
         background: backgroundColor,
-        type,
         elementsMargin,
         width,
         height,

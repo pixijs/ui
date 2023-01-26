@@ -4,6 +4,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Radio',
@@ -16,7 +17,7 @@ const args = {
     radius: 25,
     amount: 3,
 
-    onChange: action('Radio')
+    onChange: action('Radio changed')
 };
 
 export const UseGraphics = ({
@@ -37,8 +38,8 @@ export const UseGraphics = ({
 {
     const view = new Container();
 
-    bgColor = bgColor.replace('#', '0x');
-    fillColor = fillColor.replace('#', '0x');
+    bgColor = getColor(bgColor);
+    fillColor = getColor(fillColor);
 
     const items = [];
 
@@ -77,7 +78,9 @@ export const UseGraphics = ({
         }
     });
 
-    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) => onChange(selectedItemID, selectedVal));
+    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+        onChange({ id: selectedItemID, val: selectedVal })
+    );
 
     view.addChild(radioGroup.innerView);
 

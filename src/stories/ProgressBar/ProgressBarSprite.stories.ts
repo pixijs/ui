@@ -5,11 +5,9 @@ import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import type { StoryFn } from '@storybook/types';
 
-const args = {
-    progress: 50
-};
+const args = {};
 
-export const Sprite: StoryFn = ({ progress }, context) =>
+export const Sprite: StoryFn = (_, context) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -19,10 +17,12 @@ export const Sprite: StoryFn = ({ progress }, context) =>
 
     const assets = ['slider_bg.png', 'slider_progress.png'];
 
+    let progressBar: ProgressBar;
+
     preloadAssets(assets).then(() =>
     {
     // Component usage !!!
-        const progressBar = new ProgressBar({
+        progressBar = new ProgressBar({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
             progress,
@@ -37,9 +37,30 @@ export const Sprite: StoryFn = ({ progress }, context) =>
         centerElement(view);
     });
 
+    let isFilling = true;
+    let progress = 0;
+
     return {
         view,
-        resize: () => centerElement(view)
+        resize: () => centerElement(view),
+        update: () =>
+        {
+            isFilling ? progress++ : progress--;
+
+            if (progress > 100)
+            {
+                isFilling = false;
+            }
+            else if (progress < 0)
+            {
+                isFilling = true;
+            }
+
+            if (progressBar)
+            {
+                progressBar.progress = progress;
+            }
+        }
     };
 };
 

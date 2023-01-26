@@ -4,12 +4,12 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
-    fillColor: '#ff4545',
+    fillColor: '#00b1dd',
     borderColor: '#FFFFFF',
-    backgroundColor: '#F1D583',
-    progress: 50,
+    backgroundColor: '#fe6048',
     width: 450,
     height: 35,
     radius: 25,
@@ -17,7 +17,7 @@ const args = {
 };
 
 export const UseGraphics: StoryFn = (
-    { progress, borderColor, backgroundColor, fillColor, width, height, radius, border }: any,
+    { borderColor, backgroundColor, fillColor, width, height, radius, border }: any,
     context
 ) =>
 {
@@ -27,9 +27,9 @@ export const UseGraphics: StoryFn = (
 
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    fillColor = Number(fillColor.replace('#', '0x'));
-    borderColor = Number(borderColor.replace('#', '0x'));
-    backgroundColor = Number(backgroundColor.replace('#', '0x'));
+    fillColor = getColor(fillColor);
+    borderColor = getColor(borderColor);
+    backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
         .beginFill(borderColor)
@@ -45,15 +45,32 @@ export const UseGraphics: StoryFn = (
 
     const progressBar = new ProgressBar({
         bg,
-        fill,
-        progress
+        fill
     });
 
     view.addChild(progressBar);
 
+    let isFilling = true;
+    let progress = 0;
+
     return {
         view,
-        resize: () => centerElement(view)
+        resize: () => centerElement(view),
+        update: () =>
+        {
+            isFilling ? progress++ : progress--;
+
+            if (progress > 100)
+            {
+                isFilling = false;
+            }
+            else if (progress < 0)
+            {
+                isFilling = true;
+            }
+
+            progressBar.progress = progress;
+        }
     };
 };
 

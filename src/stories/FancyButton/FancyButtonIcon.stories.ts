@@ -7,6 +7,7 @@ import { preloadAssets } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
+import { getColor } from '../utils/color';
 
 const args = {
     color: '#A5E24D',
@@ -52,10 +53,10 @@ export const UseIcon = ({
     animationDuration
 }: any) =>
 {
-    color = Number(color.replace('#', '0x'));
-    hoverColor = Number(hoverColor.replace('#', '0x'));
-    pressedColor = Number(pressedColor.replace('#', '0x'));
-    disabledColor = Number(disabledColor.replace('#', '0x'));
+    color = getColor(color);
+    hoverColor = getColor(hoverColor);
+    pressedColor = getColor(pressedColor);
+    disabledColor = getColor(disabledColor);
 
     const view = new Container();
 

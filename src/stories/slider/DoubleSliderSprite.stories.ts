@@ -13,20 +13,11 @@ const args = {
     value1: 15,
     value2: 85,
     fontSize: 20,
-    showValue: false,
-    onChange: action('Slider changed'),
+    showValue: true,
+    onChange: action('Slider:')
 };
 
-export const Double: StoryFn = ({
-    min,
-    max,
-    value1,
-    value2,
-    fontSize,
-    fontColor,
-    showValue,
-    onChange,
-}: any, context) =>
+export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange }: any, context) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -37,7 +28,7 @@ export const Double: StoryFn = ({
 
     preloadAssets(assets).then(() =>
     {
-        // Component usage !!!
+    // Component usage !!!
         const doubleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
@@ -49,21 +40,21 @@ export const Double: StoryFn = ({
             value2,
             valueTextStyle: {
                 fill: fontColor,
-                fontSize,
+                fontSize
             },
             showValue,
             valueTextOffset: {
-                y: -40,
+                y: -40
             },
             fillOffset: {
                 x: -1,
-                y: -2,
-            },
+                y: -2
+            }
         });
 
         doubleSlider.onChange.connect((value1, value2) =>
         {
-            onChange(`Slider changed > ${value1} - ${value2}`);
+            onChange(`${value1} - ${value2}`);
         });
 
         view.addChild(doubleSlider);
@@ -80,5 +71,5 @@ export const Double: StoryFn = ({
 export default {
     title: 'Components/Slider/Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };
