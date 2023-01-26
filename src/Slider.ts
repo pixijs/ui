@@ -66,7 +66,7 @@ export class Slider extends SliderBase
         super({
             bg: options.bg,
             slider1: options.slider,
-            fill: options.fill ?? options.bg,
+            fill: options.fill ?? '',
             min: options.min,
             max: options.max,
             value1: options.value,

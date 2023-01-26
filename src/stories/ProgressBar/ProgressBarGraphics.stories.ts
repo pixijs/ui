@@ -10,14 +10,16 @@ const args = {
     fillColor: '#00b1dd',
     borderColor: '#FFFFFF',
     backgroundColor: '#fe6048',
+    value: 50,
     width: 450,
     height: 35,
     radius: 25,
-    border: 3
+    border: 3,
+    animate: true
 };
 
 export const UseGraphics: StoryFn = (
-    { borderColor, backgroundColor, fillColor, width, height, radius, border }: any,
+    { value, borderColor, backgroundColor, fillColor, width, height, radius, border, animate }: any,
     context
 ) =>
 {
@@ -44,30 +46,38 @@ export const UseGraphics: StoryFn = (
         .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     // Component usage
-    const progressBar = new ProgressBar({ bg, fill });
+    const progressBar = new ProgressBar({
+        bg,
+        fill,
+        progress: value
+    });
 
     view.addChild(progressBar);
 
     let isFilling = true;
-    let progress = 0;
 
     return {
         view,
         resize: () => centerElement(view),
         update: () =>
         {
-            isFilling ? progress++ : progress--;
+            if (!animate)
+            {
+                return;
+            }
 
-            if (progress > 150)
+            isFilling ? value++ : value--;
+
+            if (value > 150)
             {
                 isFilling = false;
             }
-            else if (progress < -50)
+            else if (value < -50)
             {
                 isFilling = true;
             }
 
-            progressBar.progress = progress;
+            progressBar.progress = value;
         }
     };
 };

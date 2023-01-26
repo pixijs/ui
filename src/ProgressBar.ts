@@ -54,20 +54,23 @@ export class ProgressBar extends Container
 
         this.innerView.addChild(this.bg);
 
-        this.fill = new Container();
-        this.fill.addChild(getView(fill));
+        if (fill)
+        {
+            this.fill = new Container();
+            this.fill.addChild(getView(fill));
 
-        const offsetX = fillOffset?.x ?? 0;
-        const offsetY = fillOffset?.y ?? 0;
+            const offsetX = fillOffset?.x ?? 0;
+            const offsetY = fillOffset?.y ?? 0;
 
-        this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-        this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
+            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
+            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
 
-        this.fillMask = new Graphics();
-        this.fill.addChild(this.fillMask);
-        this.fill.mask = this.fillMask;
+            this.fillMask = new Graphics();
+            this.fill.addChild(this.fillMask);
+            this.fill.mask = this.fillMask;
 
-        this.addChild(this.fill);
+            this.addChild(this.fill);
+        }
 
         this.progress = progress;
     }
@@ -97,7 +100,10 @@ export class ProgressBar extends Container
         const startPoint = (this.bg.width / 100) * this.progressStart;
         const endPoint = ((this.bg.width / 100) * this._progress) - startPoint;
 
-        this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
+        if (this.fillMask)
+        {
+            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
+        }
     }
 
     /** Returns current progress value. */

@@ -24,6 +24,7 @@ const args = {
     border: 5,
     handleBorder: 3,
     showValue: true,
+    showFill: true,
     onChange: action('Slider')
 };
 
@@ -45,7 +46,8 @@ export const Double: StoryFn = (
         border,
         handleBorder,
         showValue,
-        onChange
+        onChange,
+        showFill
     }: any,
     context
 ) =>
@@ -88,7 +90,7 @@ export const Double: StoryFn = (
 
     const doubleSlider = new DoubleSlider({
         bg,
-        fill,
+        fill: showFill ? fill : '',
         slider1,
         slider2,
         min,

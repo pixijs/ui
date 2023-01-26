@@ -23,6 +23,7 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
+    showFill: true,
     onChange: action('Slider')
 };
 
@@ -43,7 +44,8 @@ export const Single: StoryFn = (
         fontColor,
         border,
         onChange,
-        showValue
+        showValue,
+        showFill
     }: any,
     context
 ) =>
@@ -78,9 +80,10 @@ export const Single: StoryFn = (
         .drawCircle(0, 0, 20)
         .endFill();
 
+    // Component usage
     const singleSlider = new Slider({
         bg,
-        fill,
+        fill: showFill ? fill : '',
         slider,
         min,
         max,

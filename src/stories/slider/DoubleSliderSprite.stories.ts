@@ -14,10 +14,14 @@ const args = {
     value2: 85,
     fontSize: 20,
     showValue: true,
+    showFill: true,
     onChange: action('Slider')
 };
 
-export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange }: any, context) =>
+export const Double: StoryFn = (
+    { min, max, value1, value2, fontSize, fontColor, showValue, onChange, showFill }: any,
+    context
+) =>
 {
     const { app } = context.parameters.pixi;
 
@@ -31,7 +35,7 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
     // Component usage !!!
         const doubleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
-            fill: 'slider_progress.png',
+            fill: showFill ? 'slider_progress.png' : '',
             slider1: 'slider.png',
             slider2: 'slider.png',
             min,
