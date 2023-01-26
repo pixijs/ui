@@ -8,6 +8,7 @@ import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { getColor } from '../utils/color';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -18,8 +19,8 @@ const args = {
     width: 250,
     height: 50,
     radius: 15,
-    itemsCount: 100,
-    onSelect: action('Item selected'),
+    itemsAmount: 100,
+    onSelect: action('Item selected')
 };
 
 export const UseGraphics: StoryFn = ({
@@ -28,24 +29,22 @@ export const UseGraphics: StoryFn = ({
     width,
     height,
     radius,
-    itemsCount,
+    itemsAmount,
     backgroundColor,
     dropDownBackgroundColor,
     dropDownHoverColor,
-    onSelect,
+    onSelect
 }: any) =>
 {
     const view = new Container();
 
-    backgroundColor = Number(backgroundColor.replace('#', '0x'));
-    fontColor = Number(fontColor.replace('#', '0x'));
-    dropDownBackgroundColor = Number(
-        dropDownBackgroundColor.replace('#', '0x'),
-    );
-    const hoverColor = Number(dropDownHoverColor.replace('#', '0x'));
+    backgroundColor = getColor(backgroundColor);
+    fontColor = getColor(fontColor);
+    dropDownBackgroundColor = getColor(dropDownBackgroundColor);
+    const hoverColor = getColor(dropDownHoverColor);
     const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
-    const items = getItems(itemsCount, 'Item');
+    const items = getItems(itemsAmount, 'Item');
 
     // Component usage !!!
     // Important: in order scroll to work, you have to call update() method in your game loop.
@@ -60,40 +59,35 @@ export const UseGraphics: StoryFn = ({
             width,
             height,
             textStyle,
-            radius,
+            radius
         },
         scrollBox: {
             height: height * 5,
-            radius,
-        },
+            radius
+        }
     });
 
     select.y = 10;
 
     select.onSelect.connect((_, text) =>
     {
-        onSelect(select.value, text);
+        onSelect({
+            id: select.value,
+            text
+        });
     });
 
     view.addChild(select);
 
     return {
         view,
-        resize: () => centerElement(view, 0.5, 0),
-        update: () => select.update()
+        resize: () => centerElement(view, 0.5, 0)
     };
 };
 
-function getClosedBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
+function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const closedBG = new Graphics()
-        .beginFill(backgroundColor)
-        .drawRoundedRect(0, 0, width, height, radius);
+    const closedBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
@@ -108,16 +102,9 @@ function getClosedBG(
     return closedBG;
 }
 
-function getOpenBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
+function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const openBG = new Graphics()
-        .beginFill(backgroundColor)
-        .drawRoundedRect(0, 0, width, height * 6, radius);
+    const openBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
 
     preloadAssets(['arrow_down.png']).then(() =>
     {
@@ -133,11 +120,11 @@ function getOpenBG(
     return openBG;
 }
 
-function getItems(itemsCount: number, text: string): string[]
+function getItems(itemsAmount: number, text: string): string[]
 {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsCount; i++)
+    for (let i = 0; i < itemsAmount; i++)
     {
         items.push(`${text} ${i + 1}`);
     }
@@ -148,5 +135,5 @@ function getItems(itemsCount: number, text: string): string[]
 export default {
     title: 'Components/Select/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

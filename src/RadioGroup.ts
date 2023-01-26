@@ -30,21 +30,17 @@ export type RadioBoxOptions = {
 };
 
 /**
- * Creates a container based group of checkbox elements that can be used as radio buttons
+ * Creates a container-based group of checkbox elements, that can be used as radio buttons.
+ *
+ * Only one checkbox can be selected at a time.
  * @example
  * ```
  * new RadioGroup({
  *     selectedItem: 0,
  *     items: ['Option 1', 'Option 2', 'Option 3'],
- *     type: 'vertical',
- *     elementsMargin: 10,
  *     style: {
  *         bg: 'radio.png',
- *         checked: 'radio_checked.png',
- *         textStyle: {
- *             fontSize: 22,
- *             fill: 0xFFFFFF,
- *         }
+ *         checked: 'radio_checked.png'
  *     },
  * });
  *
@@ -52,19 +48,20 @@ export type RadioBoxOptions = {
  */
 export class RadioGroup extends Container
 {
+    private readonly options: RadioBoxOptions;
     private items: CheckBox[] = [];
 
-    /** TODO */
+    /** {@link Layout}, that holds and control all inned checkboxes.S  */
+    public innerView: Layout;
+
+    /** Text value of the selected item. */
     public value: string;
-    /** TODO */
+
+    /** ID of the selected item. */
     public selected: number;
 
-    /** TODO */
+    /** Fires, when new item is selected. */
     public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
-    /** TODO */
-    public view: Layout;
-
-    private readonly options: RadioBoxOptions;
 
     constructor(options: RadioBoxOptions)
     {
@@ -75,20 +72,15 @@ export class RadioGroup extends Container
 
         this.selected = options.selectedItem;
 
-        this.view = new Layout({
+        this.innerView = new Layout({
             type: options.type,
-            elementsMargin: options.elementsMargin,
+            elementsMargin: options.elementsMargin
         });
 
         options.items.forEach((item, id) =>
         {
-            const unchecked = typeof options.style.bg === 'string'
-                ? Sprite.from(options.style.bg)
-                : this.getGraphics(options.style.bg);
-
-            const checked = typeof options.style.checked === 'string'
-                ? Sprite.from(options.style.checked)
-                : this.getGraphics(options.style.checked);
+            const unchecked = this.getView(options.style.bg);
+            const checked = this.getView(options.style.checked);
 
             const checkBox = new CheckBox({
                 text: item,
@@ -96,38 +88,46 @@ export class RadioGroup extends Container
                 style: {
                     unchecked,
                     checked,
-                    text: options.style.textStyle,
-                },
+                    text: options.style.textStyle
+                }
             });
 
-            this.view.addChild(checkBox);
+            this.innerView.addChild(checkBox);
 
             checkBox.onChange.connect(() => this.selectItem(id));
 
             this.items.push(checkBox);
 
-            this.view.addChild(checkBox);
+            this.innerView.addChild(checkBox);
         });
 
         this.onChange = new Signal();
     }
 
-    private getGraphics({
-        color,
-        fillColor,
-        width,
-        height,
-        radius,
-        padding,
-    }: GraphicsType)
+    private getView(view: string | GraphicsType): Container
+    {
+        if (typeof view === 'string')
+        {
+            return Sprite.from(view);
+        }
+
+        return this.getGraphics(view as GraphicsType);
+    }
+
+    private getGraphics({ color, fillColor, width, height, radius, padding }: GraphicsType)
     {
         const graphics = new Graphics().beginFill(color);
 
         const isCircle = width === height && radius >= width / 2;
 
-        isCircle
-            ? graphics.drawCircle(width / 2, width / 2, width / 2)
-            : graphics.drawRoundedRect(0, 0, width, height, radius);
+        if (isCircle)
+        {
+            graphics.drawCircle(width / 2, width / 2, width / 2);
+        }
+        else
+        {
+            graphics.drawRoundedRect(0, 0, width, height, radius);
+        }
 
         if (fillColor !== undefined)
         {
@@ -141,13 +141,7 @@ export class RadioGroup extends Container
             }
             else
             {
-                graphics.drawRoundedRect(
-                    padding,
-                    padding,
-                    width - (padding * 2),
-                    height - (padding * 2),
-                    radius,
-                );
+                graphics.drawRoundedRect(padding, padding, width - (padding * 2), height - (padding * 2), radius);
             }
         }
 
@@ -155,18 +149,23 @@ export class RadioGroup extends Container
     }
 
     /**
-     * TODO
+     * Select item by ID.
      * @param id
      */
     public selectItem(id: number)
     {
+        this.items.forEach((item, key) =>
+        {
+            item.forceCheck(key === id);
+        });
+
+        this.value = this.options.items[id];
+
+        if (this.selected !== id)
+        {
+            this.onChange.emit(id, this.value);
+        }
+
         this.selected = id;
-
-        this.items.map((item) => (item.checked = false));
-
-        this.items[id].checked = true;
-
-        this.value = this.options.items[this.selected];
-        this.onChange.emit(this.selected, this.value);
     }
 }

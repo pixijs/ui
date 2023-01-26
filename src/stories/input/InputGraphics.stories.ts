@@ -5,6 +5,7 @@ import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     text: '',
@@ -19,14 +20,14 @@ const args = {
     width: 320,
     height: 70,
     radius: 11,
-    count: 1,
+    amount: 1,
 
-    onChange: action('Input: '),
+    onChange: action('Input: ')
 };
 
 export const UseGraphics = ({
     text,
-    count,
+    amount,
     border,
     textColor,
     fontSize,
@@ -38,40 +39,34 @@ export const UseGraphics = ({
     maxLength,
     align,
     placeholder,
-    onChange,
+    onChange
 }: any) =>
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    backgroundColor = backgroundColor.replace('#', '0x');
-    borderColor = Number(borderColor.replace('#', '0x'));
-    textColor = Number(textColor.replace('#', '0x'));
+    backgroundColor = getColor(backgroundColor);
+    borderColor = getColor(borderColor);
+    textColor = getColor(textColor);
 
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < amount; i++)
     {
-        // Component usage
+    // Component usage
         const input = new Input({
             bg: new Graphics()
                 .beginFill(borderColor)
                 .drawRoundedRect(0, 0, width, height, radius + border)
                 .beginFill(backgroundColor)
-                .drawRoundedRect(
-                    border,
-                    border,
-                    width - (border * 2),
-                    height - (border * 2),
-                    radius,
-                ),
+                .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
             padding: border ? border + 3 : 0,
             textStyle: {
                 ...defaultTextStyle,
                 fill: textColor,
-                fontSize,
+                fontSize
             },
             maxLength,
             align,
             placeholder,
-            value: text,
+            value: text
         });
 
         input.onChange.connect(() => onChange(input.value));
@@ -85,5 +80,5 @@ export const UseGraphics = ({
 export default {
     title: 'Components/Input/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

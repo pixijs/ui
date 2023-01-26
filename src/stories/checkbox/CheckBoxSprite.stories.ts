@@ -1,4 +1,3 @@
-import { Sprite } from '@pixi/sprite';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Layout } from '../../Layout';
@@ -10,40 +9,40 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     text: '',
     textColor: '#FFFFFF',
-    count: 3,
+    amount: 3,
     checked: false,
-    onChange: action('Checkbox changed'),
+    onChange: action('Checkbox')
 };
 
-export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
+export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
-        elementsMargin: 5,
+        elementsMargin: 5
     });
 
     const assets = [`switch_off.png`, `switch_on.png`];
 
     preloadAssets(assets).then(() =>
     {
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < amount; i++)
         {
             // Component usage !!!
             const checkBox = new CheckBox({
                 text: text ?? `${text} ${i + 1}`,
                 checked,
                 style: {
-                    unchecked: Sprite.from(`switch_off.png`),
-                    checked: Sprite.from(`switch_on.png`),
+                    unchecked: `switch_off.png`,
+                    checked: `switch_on.png`,
                     text: {
                         ...defaultTextStyle,
                         fontSize: 22,
-                        fill: textColor,
-                    },
-                },
+                        fill: textColor
+                    }
+                }
             });
 
-            checkBox.onChange.connect(() => onChange(`${checkBox.checked}`));
+            checkBox.onChange.connect((checked) => onChange(`${i + 1} ${checked}`));
 
             view.addChild(checkBox);
         }
@@ -57,5 +56,5 @@ export const UseSprite = ({ checked, onChange, count, textColor, text }: any) =>
 export default {
     title: 'Components/Checkbox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

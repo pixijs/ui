@@ -24,17 +24,13 @@ export type ScrollBoxOptions = {
 };
 
 /**
- * Can be used for arranging a lists of pixi container based elements and make them scrollable.
+ * Scrollable view, for arranging lists of Pixi container-based elements.
+ *
+ * Items, that are out of the visible area, are not rendered.
  * @example
  * ```
  * new ScrollBox({
  *     background: 0XFFFFFF,
- *     type: 'vertical',
- *     elementsMargin: 10,
- *     width: 200,
- *     height: 300,
- *     radius: 10,
- *     padding: 10,
  *     items: [
  *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
  *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
@@ -143,7 +139,7 @@ export class ScrollBox extends Container
     }
 
     /**
-     * TODO
+     * Adds an item to a scrollable list.
      * @param {...any} items
      */
     public addItem<T extends Container[]>(...items: T): T[0]
@@ -191,7 +187,7 @@ export class ScrollBox extends Container
     }
 
     /**
-     * TODO
+     * Removes an item from a scrollable list.
      * @param itemID
      */
     public removeItem(itemID: number)
@@ -209,7 +205,7 @@ export class ScrollBox extends Container
     }
 
     /**
-     * TODO
+     * Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.
      * @param item
      */
     public isItemVisible(item: Container): boolean
@@ -243,7 +239,7 @@ export class ScrollBox extends Container
         return isVisible;
     }
 
-    /** TODO */
+    /** Returns all inner items in a list. */
     public get items(): Container[] | []
     {
         return this.layout?.children ?? [];
@@ -322,7 +318,7 @@ export class ScrollBox extends Container
 
     private restoreChildrenInteractivity()
     {
-        // prevent clicks on buttons
+        // restore clicks on buttons
         this.items.forEach((item, itemID) =>
         {
             const wasItemInteractive
@@ -352,7 +348,7 @@ export class ScrollBox extends Container
         return this.layout.width + (this.options.horPadding * 2);
     }
 
-    /** TODO */
+    /** Controls item positions and visibility. */
     public resize(): void
     {
         this.renderAllItems();
@@ -524,7 +520,7 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
     }
 
-    /** TODO */
+    /** Makes it scroll down to the last element. */
     public scrollBottom()
     {
         if (!this.interactive)
@@ -537,15 +533,14 @@ export class ScrollBox extends Container
         }
     }
 
-    /** TODO */
+    /** Makes it scroll up to the first element. */
     public scrollTop()
     {
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
 
-    /** TODO */
-    public renderAllItems()
+    private renderAllItems()
     {
         if (this.options.disableDynamicRendering)
         {
@@ -558,8 +553,7 @@ export class ScrollBox extends Container
         });
     }
 
-    /** TODO */
-    public stopRenderHiddenItems()
+    private stopRenderHiddenItems()
     {
         if (this.options.disableDynamicRendering)
         {
@@ -573,7 +567,7 @@ export class ScrollBox extends Container
     }
 
     /**
-     * TODO
+     * Scrolls to the element with the given ID.
      * @param elementID
      */
     public scrollTo(elementID: number)
@@ -607,20 +601,19 @@ export class ScrollBox extends Container
                 : 0;
     }
 
-    /** TODO */
+    /** Gets component height. */
     public override get height(): number
     {
         return this.__height;
     }
 
-    /** TODO */
+    /** Gets component width. */
     public override get width(): number
     {
         return this.__width;
     }
 
-    /** TODO */
-    public update()
+    private update()
     {
         this._trackpad.update();
 

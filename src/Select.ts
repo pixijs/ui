@@ -2,11 +2,11 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Text, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
-import { Button } from './Button';
+import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
-const defaultVisibleItems  = 5;
+const defaultVisibleItems = 5;
 
 type Offset = {
     y: number;
@@ -45,11 +45,9 @@ export type SelectOptions = {
 };
 
 /**
- * Container based component that gives us a selection dropdown.
- * It is a composition of a [[Button]] and a [[ScrollBox]].
+ * Container-based component that gives us a selection dropdown.
  *
- * !!! Important
- * In order scroll to work, you have to call update() method in your game loop.
+ * It is a composition of a {@link Button} and a {@link ScrollBox}.
  * @example
  * ```
  * new Select({
@@ -62,20 +60,11 @@ export type SelectOptions = {
  *         hoverColor: 0x000000,
  *         width: 200,
  *         height: 50,
- *         textStyle: { fill: 0xffffff, fontSize: 20 },,
- *         radius: 25,
- *     },
- *     selectedTextOffset: {
- *         y: -13,
  *     },
  *     scrollBox: {
  *         width: 200,
  *         height: 350,
  *         radius: 30,
- *         offset: {
- *             y: -16,
- *             x: 24,
- *         },
  *     },
  * });
  *
@@ -85,36 +74,24 @@ export type SelectOptions = {
 // TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly openButton: Button;
-    private readonly closeButton: Button;
+    private readonly openButton: FancyButton;
+    private readonly closeButton: FancyButton;
     private readonly openView: Container;
-
-    /** TODO */
-    public value: number;
-    /** TODO */
-    public onSelect: Signal<(value: number, text: string) => void>;
-
     private scrollBox: ScrollBox;
 
-    constructor({
-        closedBG,
-        textStyle,
-        items,
-        openBG,
-        selected,
-        selectedTextOffset,
-        scrollBox,
-        visibleItems,
-    }: SelectOptions)
+    /** Selected value ID. */
+    public value: number;
+
+    /** Fires when selected value is changed. */
+    public onSelect: Signal<(value: number, text: string) => void>;
+
+    constructor({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
     {
         super();
 
-        this.openButton = new Button({
+        this.openButton = new FancyButton({
             defaultView: getView(closedBG),
-            text: new Text(
-                items?.items ? items.items[0] : '',
-                textStyle,
-            ),
+            text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
         });
         this.openButton.onPress.connect(() => this.toggle());
@@ -124,13 +101,13 @@ export class Select extends Container
         this.openView.visible = false;
         this.addChild(this.openView);
 
-        this.closeButton = new Button({
-            defaultView:
-                new Graphics().beginFill(0x000000, 0.00001).drawRect(0, 0, this.openButton.width, this.openButton.height),
-            text: new Text(
-                items?.items ? items.items[0] : '',
-                textStyle,
-            ),
+        const defaultView = new Graphics()
+            .beginFill(0x000000, 0.00001)
+            .drawRect(0, 0, this.openButton.width, this.openButton.height);
+
+        this.closeButton = new FancyButton({
+            defaultView,
+            text: new Text(items?.items ? items.items[0] : '', textStyle),
             textOffset: selectedTextOffset
         });
         this.closeButton.onPress.connect(() => this.toggle());
@@ -143,7 +120,7 @@ export class Select extends Container
             height: this.openButton.height * (visibleItems ?? defaultVisibleItems),
             radius: 0,
             padding: 0,
-            ...scrollBox,
+            ...scrollBox
         });
         this.scrollBox.y = this.openButton.height;
         this.openView.addChild(this.scrollBox);
@@ -179,21 +156,21 @@ export class Select extends Container
         });
     }
 
-    /** TODO */
+    /** Toggle the select state (open if closed, closes - id open). */
     public toggle()
     {
         this.openView.visible = !this.openView.visible;
         this.openButton.visible = !this.openButton.visible;
     }
 
-    /** TODO */
+    /** Show dropdown. */
     public open()
     {
         this.openView.visible = true;
         this.openButton.visible = false;
     }
 
-    /** TODO */
+    /** Hide dropdown. */
     public close()
     {
         this.openView.visible = false;
@@ -207,34 +184,23 @@ export class Select extends Container
         width,
         height,
         textStyle,
-        radius,
-    }: SelectItemsOptions): Button[]
+        radius
+    }: SelectItemsOptions): FancyButton[]
     {
-        const buttons: Button[] = [];
+        const buttons: FancyButton[] = [];
 
         items.forEach((item) =>
         {
-            const defaultView = new Graphics()
-                .beginFill(backgroundColor)
-                .drawRoundedRect(0, 0, width, height, radius);
+            const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
-            const hoverView = new Graphics()
-                .beginFill(hoverColor ?? backgroundColor)
-                .drawRoundedRect(0, 0, width, height, radius);
-
+            const color = hoverColor ?? backgroundColor;
+            const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
             const text = new Text(item, textStyle);
-
-            const button = new Button({ defaultView, hoverView, text });
+            const button = new FancyButton({ defaultView, hoverView, text });
 
             buttons.push(button);
         });
 
         return buttons;
-    }
-
-    /** TODO */
-    public update()
-    {
-        this.scrollBox.update();
     }
 }

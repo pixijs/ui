@@ -60,6 +60,7 @@
     "docsKeyword": "PixiJS, UI, components, layout"
   },
   "dependencies": {
+    "tweedle.js": "^2.0.1",
     "typed-signals": "^2.5.0"
   },
   "devDependencies": {

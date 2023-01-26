@@ -9,15 +9,15 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     text: 'Radio',
     textColor: '#FFFFFF',
-    count: 3,
-    onChange: action('Radio changed'),
+    amount: 3,
+    onChange: action('Radio changed')
 };
 
-export const UseSprite = ({ count, text, textColor, onChange }: any) =>
+export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
 {
     const view = new Layout({
         type: 'vertical',
-        elementsMargin: 20,
+        elementsMargin: 20
     });
 
     const assets = [`radio.png`, `radio_checked.png`];
@@ -26,7 +26,7 @@ export const UseSprite = ({ count, text, textColor, onChange }: any) =>
     {
         const items = [];
 
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < amount; i++)
         {
             items.push(`${text} ${i + 1}`);
         }
@@ -43,17 +43,16 @@ export const UseSprite = ({ count, text, textColor, onChange }: any) =>
                 textStyle: {
                     ...defaultTextStyle,
                     fontSize: 22,
-                    fill: textColor,
-                },
-            },
+                    fill: textColor
+                }
+            }
         });
 
-        radioGroup.onChange.connect(
-            (selectedItemID: number, selectedVal: string) =>
-                onChange(selectedItemID, selectedVal),
+        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+            onChange({ id: selectedItemID, val: selectedVal })
         );
 
-        view.addChild(radioGroup.view);
+        view.addChild(radioGroup.innerView);
 
         centerElement(view);
     });
@@ -64,5 +63,5 @@ export const UseSprite = ({ count, text, textColor, onChange }: any) =>
 export default {
     title: 'Components/RadioGroup/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

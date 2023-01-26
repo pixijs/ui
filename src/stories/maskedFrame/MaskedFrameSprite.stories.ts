@@ -3,10 +3,11 @@ import { MaskedFrame } from '../../MaskedFrame';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preloadAssets } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     borderColor: '#FFFFFF',
-    borderWidth: 10,
+    borderWidth: 10
 };
 
 // TODO: implement preloading
@@ -18,14 +19,14 @@ export const UseSprite = ({ borderColor, borderWidth }: any) =>
 
     preloadAssets(assets).then(() =>
     {
-        borderColor = Number(borderColor.replace('#', '0x'));
+        borderColor = getColor(borderColor);
 
         // Component usage !!!
         const frame = new MaskedFrame({
             target: `avatar-01.png`,
             mask: `avatar_mask.png`,
             borderWidth,
-            borderColor,
+            borderColor
         });
 
         view.addChild(frame);
@@ -39,5 +40,5 @@ export const UseSprite = ({ borderColor, borderWidth }: any) =>
 export default {
     title: 'Components/MaskedFrame/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

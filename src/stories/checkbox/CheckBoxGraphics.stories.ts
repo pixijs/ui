@@ -5,6 +5,7 @@ import { Layout } from '../../Layout';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Checkbox',
@@ -16,14 +17,14 @@ const args = {
     width: 50,
     height: 50,
     radius: 11,
-    count: 3,
+    amount: 3,
     checked: false,
-    onPress: action('Checkbox: '),
+    onPress: action('Checkbox')
 };
 
 export const UseGraphics = ({
     text,
-    count,
+    amount,
     checked,
 
     textColor,
@@ -35,19 +36,19 @@ export const UseGraphics = ({
     height,
     radius,
 
-    onPress,
+    onPress
 }: any) =>
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
-    color = Number(color.replace('#', '0x'));
-    borderColor = Number(borderColor.replace('#', '0x'));
-    fillColor = Number(fillColor.replace('#', '0x'));
-    fillBorderColor = Number(fillBorderColor.replace('#', '0x'));
+    color = getColor(color);
+    borderColor = getColor(borderColor);
+    fillColor = getColor(fillColor);
+    fillBorderColor = getColor(fillBorderColor);
 
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < amount; i++)
     {
-        // Component usage !!!
+    // Component usage !!!
         const checkBox = new CheckBox({
             text: `${text} ${i + 1}`,
             checked,
@@ -69,9 +70,9 @@ export const UseGraphics = ({
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,
-                    fill: textColor,
-                },
-            },
+                    fill: textColor
+                }
+            }
         });
 
         checkBox.onCheck.connect((checked) =>
@@ -88,5 +89,5 @@ export const UseGraphics = ({
 export default {
     title: 'Components/Checkbox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

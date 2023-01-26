@@ -12,34 +12,37 @@ export type MaskedFrameOptions = {
 };
 
 /**
- * Applies mask to a container and draws a same shape border around it
+ * Draws a border or apply a mask of any shape to a container.
  * @example
  * ```
  * new MaskedFrame({
  *     target: `avatar.png`,
- *     mask: `avatar_mask.png`),
+ *     mask: `avatar_mask.png`,
  *     borderWidth: 5,
  *     borderColor: 0xFFFFFF,
  * });
  * ```
  */
-export class MaskedFrame extends Container
+export class MaskedFrame extends Graphics
 {
-    // private readonly borderMask: Graphics;
-    private border?: Graphics;
-    /** TODO */
+    /** Target container. */
     public target: Container;
-    /** TODO */
+
+    /** Mask to apply. */
     public targetMask: Container;
 
-    constructor({
-        target,
-        mask,
-        borderWidth,
-        borderColor,
-    }: MaskedFrameOptions)
+    /** Border color. */
+    public borderColor: number;
+
+    /** Border width. */
+    public borderWidth: number;
+
+    constructor({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
     {
         super();
+
+        this.borderColor = borderColor;
+        this.borderWidth = borderWidth;
 
         this.target = getView(target);
         this.targetMask = getView(mask);
@@ -48,14 +51,7 @@ export class MaskedFrame extends Container
 
         if (borderWidth)
         {
-            this.border = new Graphics()
-                .beginFill(borderColor)
-                .drawRect(
-                    0,
-                    0,
-                    this.target.width + (borderWidth * 2),
-                    this.target.height + (borderWidth * 2),
-                );
+            this.showBorder();
 
             this.target.x = borderWidth;
             this.target.y = borderWidth;
@@ -65,27 +61,26 @@ export class MaskedFrame extends Container
             borderMask.width += borderWidth * 2;
             borderMask.height += borderWidth * 2;
 
-            this.border.mask = borderMask;
-            this.border.addChild(borderMask);
-            this.addChild(this.border);
+            this.mask = borderMask;
+            this.addChild(borderMask);
         }
 
         this.addChild(this.target);
     }
 
-    /** TODO */
+    /** Shows a border. */
     public showBorder()
     {
-        if (!this.border) return;
+        this.beginFill(this.borderColor);
 
-        this.border.visible = true;
+        const width = this.borderWidth * 2;
+
+        this.drawRect(0, 0, this.target.width + width, this.target.height + width);
     }
 
-    /** TODO */
+    /** Hides a border. */
     public hideBorder()
     {
-        if (!this.border) return;
-
-        this.border.visible = false;
+        this.clear();
     }
 }

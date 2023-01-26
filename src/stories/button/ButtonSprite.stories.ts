@@ -2,82 +2,98 @@ import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { centerElement } from '../../utils/helpers/resize';
 import { preloadAssets } from '../utils/loader';
-import { centerView } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
 
 const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
-    padding: 11,
-    textOffsetX: 0,
-    textOffsetY: -7,
     disabled: false,
-    onPress: action('button was pressed! (tap or click!)'),
-    anchorX: 0.5,
-    anchorY: 0.5,
+    action: action('Button')
 };
 
-export const UseSprite = ({
-    text,
-    textColor,
-    disabled,
-    onPress,
-    padding,
-    textOffsetX,
-    textOffsetY,
-    anchorX,
-    anchorY,
-}: any) =>
+export class SpriteButton extends Button
 {
-    const view = new Container();
+    private buttonView: Sprite;
+    private textView: Text;
+    private action: (event: string) => void;
 
-    const assets = [
-        `button.png`,
-        `button_hover.png`,
-        `button_pressed.png`,
-        `button_disabled.png`,
-    ];
-
-    preloadAssets(assets).then(() =>
+    constructor(props: {
+        text: string,
+        textColor: string | number,
+        disabled: boolean,
+        action: (event: string) => void})
     {
-        // Component usage !!!
-        const button = new Button({
-            defaultView: `button.png`,
-            hoverView: `button_hover.png`,
-            pressedView: `button_pressed.png`,
-            disabledView: `button_disabled.png`,
-            text: new Text(text, {
-                ...defaultTextStyle,
-                fill: textColor || defaultTextStyle.fill,
-            }),
-            padding,
-            offset: {
-                pressed: { y: 5 },
-            },
-            textOffset: { x: textOffsetX, y: textOffsetY },
-            anchorX,
-            anchorY,
+        const sprite = new Sprite();
+
+        super(sprite);
+
+        this.buttonView = sprite;
+        this.view.addChild(this.buttonView);
+
+        this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
+        this.view.addChild(this.textView);
+
+        preloadAssets([`button.png`]).then(() =>
+        {
+            const texture = Texture.from('button.png');
+
+            this.buttonView.texture = texture;
+
+            this.textView.anchor.set(0.5);
+            this.textView.x = texture.width / 2;
+            this.textView.y = (texture.height / 2) - 12;
+
+            this.resize();
         });
 
-        if (disabled)
-        {
-            button.enabled = false;
-        }
+        this.enabled = !props.disabled;
 
-        button.onPress.connect(onPress);
+        this.action = props.action;
+    }
 
-        centerView(view);
+    override press()
+    {
+        this.action('onPress');
+    }
 
-        view.addChild(button);
-    });
+    override down()
+    {
+        this.action('down');
+    }
 
-    return { view, resize: () => centerView(view) };
-};
+    override up()
+    {
+        this.action('up');
+    }
+
+    override hover()
+    {
+        this.action('hover');
+    }
+
+    override out()
+    {
+        this.action('out');
+    }
+
+    override upOut()
+    {
+        this.action('upOut');
+    }
+
+    resize()
+    {
+        centerElement(this.view);
+    }
+}
+
+export const UseSprite = (params: any) => new SpriteButton(params);
 
 export default {
     title: 'Components/Button/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

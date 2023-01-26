@@ -4,6 +4,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Radio',
@@ -14,13 +15,13 @@ const args = {
     height: 50,
     padding: 5,
     radius: 25,
-    count: 3,
+    amount: 3,
 
-    onChange: action('Radio changed'),
+    onChange: action('Radio changed')
 };
 
 export const UseGraphics = ({
-    count,
+    amount,
     text,
 
     textColor,
@@ -32,17 +33,17 @@ export const UseGraphics = ({
     padding,
     radius,
 
-    onChange,
+    onChange
 }: any) =>
 {
     const view = new Container();
 
-    bgColor = bgColor.replace('#', '0x');
-    fillColor = fillColor.replace('#', '0x');
+    bgColor = getColor(bgColor);
+    fillColor = getColor(fillColor);
 
     const items = [];
 
-    for (let i = 0; i < count; i++)
+    for (let i = 0; i < amount; i++)
     {
         items.push(`${text} ${i + 1}`);
     }
@@ -59,7 +60,7 @@ export const UseGraphics = ({
                 width,
                 height,
                 padding,
-                radius,
+                radius
             },
             checked: {
                 color: bgColor,
@@ -67,21 +68,21 @@ export const UseGraphics = ({
                 width,
                 height,
                 padding,
-                radius,
+                radius
             },
             textStyle: {
                 ...defaultTextStyle,
                 fontSize: 22,
-                fill: textColor,
-            },
-        },
+                fill: textColor
+            }
+        }
     });
 
     radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-        onChange(selectedItemID, selectedVal),
+        onChange({ id: selectedItemID, val: selectedVal })
     );
 
-    view.addChild(radioGroup.view);
+    view.addChild(radioGroup.innerView);
 
     return { view, resize: () => centerElement(view) };
 };
@@ -89,5 +90,5 @@ export const UseGraphics = ({
 export default {
     title: 'Components/RadioGroup/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };

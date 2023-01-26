@@ -12,19 +12,12 @@ const args = {
     max: 100,
     value: 50,
     fontSize: 20,
-    showValue: false,
-    onChange: action('Slider changed'),
+    showValue: true,
+    showFill: true,
+    onChange: action('Slider')
 };
 
-export const Single: StoryFn = ({
-    min,
-    max,
-    value,
-    fontSize,
-    fontColor,
-    onChange,
-    showValue,
-}: any) =>
+export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, showFill }: any) =>
 {
     const view = new Container();
 
@@ -32,32 +25,29 @@ export const Single: StoryFn = ({
 
     preloadAssets(assets).then(() =>
     {
-        // Component usage !!!
+    // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
-            fill: 'slider_progress.png',
+            fill: showFill ? 'slider_progress.png' : '',
             slider: 'slider.png',
             min,
             max,
             value,
             valueTextStyle: {
                 fill: fontColor,
-                fontSize,
+                fontSize
             },
             showValue,
             valueTextOffset: {
-                y: -40,
+                y: -40
             },
             fillOffset: {
                 x: -1,
-                y: -2,
-            },
+                y: -2
+            }
         });
 
-        singleSlider.onChange.connect((value) =>
-        {
-            onChange(`Slider changed > ${value}`);
-        });
+        singleSlider.onChange.connect((value) => onChange(`${value}`));
 
         view.addChild(singleSlider);
 
@@ -66,12 +56,12 @@ export const Single: StoryFn = ({
 
     return {
         view,
-        resize: () => centerElement(view),
+        resize: () => centerElement(view)
     };
 };
 
 export default {
     title: 'Components/Slider/Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: getDefaultArgs(args)
 };
