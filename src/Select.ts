@@ -45,11 +45,9 @@ export type SelectOptions = {
 };
 
 /**
- * Container based component that gives us a selection dropdown.
- * It is a composition of a [[Button]] and a [[ScrollBox]].
+ * Container-based component that gives us a selection dropdown.
  *
- * !!! Important
- * In order scroll to work, you have to call update() method in your game loop.
+ * It is a composition of a {@link Button} and a {@link ScrollBox}.
  * @example
  * ```
  * new Select({
@@ -62,20 +60,11 @@ export type SelectOptions = {
  *         hoverColor: 0x000000,
  *         width: 200,
  *         height: 50,
- *         textStyle: { fill: 0xffffff, fontSize: 20 },,
- *         radius: 25,
- *     },
- *     selectedTextOffset: {
- *         y: -13,
  *     },
  *     scrollBox: {
  *         width: 200,
  *         height: 350,
  *         radius: 30,
- *         offset: {
- *             y: -16,
- *             x: 24,
- *         },
  *     },
  * });
  *
@@ -88,13 +77,13 @@ export class Select extends Container
     private readonly openButton: FancyButton;
     private readonly closeButton: FancyButton;
     private readonly openView: Container;
-
-    /** TODO */
-    public value: number;
-    /** TODO */
-    public onSelect: Signal<(value: number, text: string) => void>;
-
     private scrollBox: ScrollBox;
+
+    /** Selected value ID. */
+    public value: number;
+
+    /** Fires when selected value is changed. */
+    public onSelect: Signal<(value: number, text: string) => void>;
 
     constructor({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
     {
@@ -167,21 +156,21 @@ export class Select extends Container
         });
     }
 
-    /** TODO */
+    /** Toggle the select state (open if closed, closes - id open). */
     public toggle()
     {
         this.openView.visible = !this.openView.visible;
         this.openButton.visible = !this.openButton.visible;
     }
 
-    /** TODO */
+    /** Show dropdown. */
     public open()
     {
         this.openView.visible = true;
         this.openButton.visible = false;
     }
 
-    /** TODO */
+    /** Hide dropdown. */
     public close()
     {
         this.openView.visible = false;
@@ -213,11 +202,5 @@ export class Select extends Container
         });
 
         return buttons;
-    }
-
-    /** TODO */
-    public update()
-    {
-        this.scrollBox.update();
     }
 }

@@ -13,17 +13,13 @@ export type ProgressBarOptions = {
 };
 
 /**
- * Creates a ProgressBar
+ * Creates a ProgressBar.
  * @example
  * ```
  * new ProgressBar({
  *     bg: 'slider_bg.png',
  *     fill: 'slider.png',
  *     progress: 50,
- * });
- *
- * singleSlider.onChange.connect((value) => {
- *     onChange(`Slider changed > ${value}`);
  * });
  * ```
  */

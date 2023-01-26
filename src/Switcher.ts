@@ -5,15 +5,19 @@ import { Button } from './Button';
 import { ButtonEvent } from './utils/HelpTypes';
 
 /**
- * Container based component that switches visibility of containers by any of the button events.
+ * Container based component that switches visibility of a given containers by any of the button events.
  *
  * By default it switches on press.
  *
  * Can be used for creating tabs, radio buttons, checkboxes etc.
  * @example
  * ```
+ * // switch on click
  * const switch = new Swich([`switch_off.png`, `switch_on.png`]);
+ *
+ * // switch on hover
  * const button = new Swich([`button_default.png`, `button_hover.png`], ['onHover', 'onOut']);
+ *
  * button.events.onPress.connect(() => console.log('button pressed'));
  *
  * ```
@@ -22,23 +26,22 @@ export class Switcher extends Container
 {
     private triggerEvents: Set<ButtonEvent>;
 
-    /** Container that will hold all the content of the component. */
+    /** Container that holds all the content of the component. */
     public innerView: Container;
 
     /** The id of the visible(active) view. */
     public active = 0;
 
-    /** Event that is firing when active view changes (on click). */
+    /** Fired when active view changes. */
     public onChange: Signal<(state: number | boolean) => void>;
 
-    /** Button events that are used to switch views. */
-    public button: Button;
+    /** Button events used to switch views. */
+    public events: Button;
 
     /**
-     * @param {Array<Container | string>} views - Array of views that will be switched or textures,
-     * that will be used to create views.
-     * @param triggerEvents - Button events that will be used to switch views (can be 1 event or array of events).
-     * @param activeViewID - The id of the view that will be visible on start.
+     * @param {Array<Container | string>} views - Array of views or textures that will be switching.
+     * @param triggerEvents - Button events, to switch views (can be one event or an array of events).
+     * @param activeViewID - The id of the view, visible by default.
      */
     constructor(views: Array<Container | string>, triggerEvents?: ButtonEvent | ButtonEvent[], activeViewID = 0)
     {
@@ -78,14 +81,14 @@ export class Switcher extends Container
             this.triggerEvents = new Set(['onPress']);
         }
 
-        this.button = new Button(this);
+        this.events = new Button(this);
 
-        this.button.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
-        this.button.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
-        this.button.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
-        this.button.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
-        this.button.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
-        this.button.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
+        this.events.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
+        this.events.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
+        this.events.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
+        this.events.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
+        this.events.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
+        this.events.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
     }
 
     /** Returns the active view */
@@ -101,9 +104,9 @@ export class Switcher extends Container
     }
 
     /**
-     * Switches the view to the next one.
-     * @param {number} id - optional id of the view that will be switched to.
-     * @param {ButtonEvent} event - optional event that will be used to switch views.
+     * Show a view by id, or to next one by order, if no ID provided.
+     * @param {number} id - optional id of the view to show.
+     * @param {ButtonEvent} event - optional event to use to switch views.
      */
     public switch(id?: number, event?: ButtonEvent): void
     {
@@ -125,7 +128,7 @@ export class Switcher extends Container
     }
 
     /**
-     * Switches the view to a given one one without triggering the onChange event.
+     * Switches a view to a given one without triggering the onChange event.
      * @param {number} id
      */
     public forceSwitch(id: number): void
@@ -138,7 +141,7 @@ export class Switcher extends Container
         newState.visible = true;
     }
 
-    /** Returns the id of the next view to show. */
+    /** Returns the id of the next view in order. */
     private get nextActive(): number
     {
         return this.active < this.views.length - 1 ? this.active + 1 : 0;

@@ -1,4 +1,4 @@
-import { Texture, utils } from '@pixi/core';
+import { Texture, utils, Ticker } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
@@ -17,26 +17,15 @@ export type InputOptions = {
 };
 
 /**
- * Container based component that creates an input element, so we can read users input text.
+ * Container-based component that creates an input to read the user's text.
  * @example
  * ```
  * new Input({
- *     bg: Sprite.from('item.png'),
- *     padding,
- *     textStyle: {
- *         ...buttonTextStyle,
- *         fill: textColor,
- *         fontSize,
- *     },
- *     maxLength,
- *     align,
- *     placeholder,
- *     value: text,
+ *     bg: Sprite.from('input.png'),
+ *     placeholder: 'Enter text'
  * });
  * ```
  */
-
-// TODO: make this editable (read keys and move cursor, detect mouse click position)
 export class Input extends Container
 {
     private readonly bg: Container;
@@ -47,15 +36,15 @@ export class Input extends Container
     private editing = false;
     private tick = 0;
 
-    /** TODO */
-    public readonly onEnter: Signal<(text: string) => void>;
-    /** TODO */
-    public readonly onChange: Signal<(text: string) => void>;
-
     private activation = false;
     private readonly options: InputOptions;
 
-    // TODO: make cursor blink
+    /** Fires when input loses focus. */
+    public readonly onEnter: Signal<(text: string) => void>;
+
+    /** Fires every time input string is changed. */
+    public readonly onChange: Signal<(text: string) => void>;
+
     constructor(options: InputOptions)
     {
         super();
@@ -67,7 +56,7 @@ export class Input extends Container
 
         const defaultTextStyle = {
             fill: 0x000000,
-            align: 'center',
+            align: 'center'
         } as TextStyle;
 
         const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
@@ -76,12 +65,9 @@ export class Input extends Container
 
         this.inputMask = new Graphics()
             .beginFill(0xffffff)
-            .drawRect(
-                this.padding,
-                this.padding,
-                this.bg.width - (this.padding * 2),
-                this.bg.height - (this.padding * 2),
-            );
+            .drawRect(this.padding, this.padding, this.bg.width - (this.padding * 2), this.bg.height - (this.padding * 2));
+
+        this.inputField.mask = this.inputMask;
 
         this._cursor = new Sprite(Texture.WHITE);
         this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
@@ -89,25 +75,14 @@ export class Input extends Container
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
-
-        this.inputField.mask = this.inputMask;
         this._cursor.mask = this.inputMask;
 
-        this.placeholder = new Text(
-            options.placeholder,
-            textStyle ?? defaultTextStyle,
-        );
+        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
         this.placeholder.visible = !!options.placeholder;
 
         this.value = options.value ?? '';
 
-        this.addChild(
-            this.bg,
-            this.inputField,
-            this.placeholder,
-            this._cursor,
-            this.inputMask,
-        );
+        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask);
 
         this.align();
 
@@ -176,6 +151,8 @@ export class Input extends Container
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
+
+        Ticker.shared.add((delta) => this.update(delta));
     }
 
     private _add(key: string): void
@@ -237,8 +214,7 @@ export class Input extends Container
         }
     }
 
-    /** TODO */
-    public stopEditing(): void
+    private stopEditing(): void
     {
         this._cursor.alpha = 0;
         this.editing = false;
@@ -254,11 +230,7 @@ export class Input extends Container
         this.align();
     }
 
-    /**
-     * TODO
-     * @param dt
-     */
-    public update(dt: number): void
+    private update(dt: number): void
     {
         if (!this.editing) return;
         this.tick += dt * 0.1;
@@ -325,7 +297,7 @@ export class Input extends Container
         }
     }
 
-    /** TODO */
+    /** Sets the input text. */
     set value(text: string)
     {
         this.inputField.text = text;
@@ -342,7 +314,7 @@ export class Input extends Container
         this.align();
     }
 
-    /** TODO */
+    /** Return text of the input. */
     get value(): string
     {
         return this.inputField.text;

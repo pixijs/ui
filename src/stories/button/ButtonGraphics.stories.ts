@@ -19,27 +19,27 @@ export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
     color = getColor(color);
 
     const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
-
     const text = new Text('🤙', { fontSize: 70 });
 
     text.anchor.set(0.5);
     text.x = buttonView.width / 2;
     text.y = buttonView.height / 2;
+
     buttonView.addChild(text);
 
     // Component usage !!!
-    const buttonEvents = new Button(buttonView);
+    const button = new Button(buttonView);
 
-    buttonEvents.enabled = !disabled;
+    button.enabled = !disabled;
 
-    buttonEvents.onPress.connect(() => action('onPress'));
-    buttonEvents.onDown.connect(() => action('onDown'));
-    buttonEvents.onUp.connect(() => action('onUp'));
-    buttonEvents.onHover.connect(() => action('onHover'));
-    buttonEvents.onOut.connect(() => action('onOut'));
-    buttonEvents.onUpOut.connect(() => action('onUpOut'));
+    button.onPress.connect(() => action('onPress'));
+    button.onDown.connect(() => action('onDown'));
+    button.onUp.connect(() => action('onUp'));
+    button.onHover.connect(() => action('onHover'));
+    button.onOut.connect(() => action('onOut'));
+    button.onUpOut.connect(() => action('onUpOut'));
 
-    return { view: buttonView, resize: () => centerElement(buttonView) };
+    return { view: button.view, resize: () => centerElement(buttonView) };
 };
 
 export default {

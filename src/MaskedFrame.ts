@@ -12,7 +12,7 @@ export type MaskedFrameOptions = {
 };
 
 /**
- * Applies mask to a container and draws a same shape border around it
+ * Draws a border or apply a mask of any shape to a container.
  * @example
  * ```
  * new MaskedFrame({
@@ -25,12 +25,16 @@ export type MaskedFrameOptions = {
  */
 export class MaskedFrame extends Graphics
 {
-    /** TODO */
+    /** Target container. */
     public target: Container;
-    /** TODO */
+
+    /** Mask to apply. */
     public targetMask: Container;
 
+    /** Border color. */
     public borderColor: number;
+
+    /** Border width. */
     public borderWidth: number;
 
     constructor({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
@@ -64,7 +68,7 @@ export class MaskedFrame extends Graphics
         this.addChild(this.target);
     }
 
-    /** TODO */
+    /** Shows a border. */
     public showBorder()
     {
         this.beginFill(this.borderColor);
@@ -74,7 +78,7 @@ export class MaskedFrame extends Graphics
         this.drawRect(0, 0, this.target.width + width, this.target.height + width);
     }
 
-    /** TODO */
+    /** Hides a border. */
     public hideBorder()
     {
         this.clear();

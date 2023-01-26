@@ -2,52 +2,24 @@ import { FederatedPointerEvent } from '@pixi/events';
 import type { DragObject } from './utils/HelpTypes';
 import { BaseSliderOptions, SliderBase } from './SliderBase';
 import { Signal } from 'typed-signals';
-import { Container } from '@pixi/display';
 
 /**
- * Creates a slider with range selection option
+ * Creates a slider with range selection option.
  * @example
  * ```
- * const width = 250;
- * const height = 50;
+ * const doubleSlider = new DoubleSlider({
+ *      bg: 'slider_bg.png',
+ *      fill: 'slider_progress.png',
+ *      slider1: 'slider.png',
+ *      slider2: 'slider.png',
+ *  });
  *
- * const bg = new Graphics()
- *     .beginFill(0x000000).drawRoundedRect(0, 0, width, height, height/2)
- *     .beginFill(0x808080).drawRoundedRect(5, 5, width-10, height-10, height/2);
- *
- * const fill = new Graphics()
- *     .beginFill(0xFFFFFF).drawRoundedRect(0, 0, width-10, height-10, (height-10)/2);
- *
- * const slider1 = new Graphics()
- *     .beginFill(0xDCDCDC).drawCircle(0, 0, 23)
- *     .beginFill(0x000000).drawCircle(0, 0, 20);
- *
- * const slider2 = new Graphics()
- *     .beginFill(0xDCDCDC).drawCircle(0, 0, 23)
- *     .beginFill(0x000000).drawCircle(0, 0, 20);
- *
- * const slider = new DoubleSlider({
- *     bg,
- *     fill,
- *     slider1,
- *     slider2,
- *     min: 0,
- *     max: 100,
- *     value1: 10,
- *     value2: 90,
- *     valueTextStyle: {
- *         fill: 0xDCDCDC,
- *         fontSize: 14
- *     }
- * });
- *
- * slider.onChange.connect((value1, value2) =>{
- *     console.log(`New slider range ${value1} - ${value2}`);
- * });
+ * doubleSlider.onChange.connect((value1, value2) =>
+ *     console.log(`New slider range ${value1} - ${value2}`)
+ * );
  * ```
  */
 
-// TODO: make this fill to be draggable and move border values at the same time
 export class DoubleSlider extends SliderBase
 {
     protected options: BaseSliderOptions;
@@ -66,8 +38,8 @@ export class DoubleSlider extends SliderBase
 
         this.options = options;
 
-        this.value2 = options.value2;
-        this.value1 = options.value1;
+        this.value2 = options.value2 ?? this.max;
+        this.value1 = options.value1 ?? this.min;
     }
 
     /** Returns left value. */

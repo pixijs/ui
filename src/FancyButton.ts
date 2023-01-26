@@ -53,23 +53,22 @@ export type ButtonOptions = Views & {
 };
 
 /**
- * Button component with lots of settings, that can be used to create a button fast.
+ * Button component with a lots of tweaks, to create a button fast.
  *
- * Text view by default is centered in the active view.
+ *  By default text view and icon view are centered in the active view.
  *
  * If views are not the same size, offset property of the constructor
- * can be used to adjust the position of the text and the view.
+ * can be used to adjust the position of the text, icon and the views.
  * @example
  * ```
  * const button = new Button({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
- *     disabledView: `button_disabled.png`,
- *     text: new Text(text, { fill: 0xFFFFFF }),
- *     icon: `icon.png`,
+ *     text: new Text('Click me!'),
  * });
  *
+ * button.onPress.connect(() => console.log('Button pressed!'));
  * ```
  */
 export class FancyButton extends Container
@@ -93,16 +92,16 @@ export class FancyButton extends Container
     //* View that holds all button inner views */
     public innerView: Container;
 
-    /** View that is shown when non of button events is active. */
+    /** View that is shown when non of the button events are active. */
     public defaultView: Container;
 
-    /** View that is shown when mouse hovers the component. */
+    /** View that is shown when the mouse hovers over the button. */
     public hoverView!: Container;
 
-    /** View that is shown when mouse is pressed on the component. */
+    /** View, shown when the mouse press on the component. */
     public pressedView!: Container;
 
-    /** View that is shown when button is disabled. */
+    /** View shown when the button is disabled. */
     public disabledView!: Container;
 
     /** View for the button text. */
@@ -117,28 +116,22 @@ export class FancyButton extends Container
     /** Anchor point of the button. */
     public anchor: ObservablePoint;
 
-    /** Event that is fired when button is pressed. */
+    /** Event fired when the button was pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when button is down. */
+    /** Event fired when the button is down. */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /**
-     * Event that is fired when down event happened inside the button
-     * and up event happened inside or outside of the button
-     */
+    /** Event fired when the down event happens inside the button and up event happened inside or outside of the button */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when mouse hovers the button. */
+    /** Event fired when a mouse hovers the button. */
     public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when mouse leaves button view. */
+    /** Event fired when a mouse leaves the button. */
     public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /**
-     * Event that is fired when up event happens outside of the button
-     * when down event happened inside the button boundaries.
-     */
+    /** Event fired when the up event happens outside of the button, after the down event happened inside the button. */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     constructor({
@@ -188,8 +181,8 @@ export class FancyButton extends Container
     }
 
     /**
-     * Updates text of the text element of the button and updates text scaling basing one it's new size.
-     * @param {string | number} text - text to be set.
+     * Updates the text of the button and updates its scaling basing on the new size.
+     * @param {string | number} text
      */
     set text(text: string | number)
     {
@@ -227,7 +220,7 @@ export class FancyButton extends Container
     }
 
     /**
-     * Updates button state and shows according views.
+     * Updates button state and shows the according views.
      *
      * Updates positions and offsets of the views.
      *
@@ -258,8 +251,8 @@ export class FancyButton extends Container
 
     /**
      *
-     * Manages button text view.
-     * @param {string | Text} text - can be a string or a Text (Container based element).
+     * Manage button text view.
+     * @param {string | Text} text - can be a string or a Text (Container-based element).
      */
     private createTextView(text: string | number | Text)
     {
@@ -268,8 +261,8 @@ export class FancyButton extends Container
     }
 
     /**
-     * Manages button icon view.
-     * @param {string | Text} icon - can be a string or a Text (Container based element).
+     * Manage button icon view.
+     * @param {string | Text} icon - can be a string or a Text (Container-based element).
      */
     private createIconView(icon: string | Container)
     {
@@ -376,10 +369,10 @@ export class FancyButton extends Container
     }
 
     /**
-     * Resets views positions according to button anchor setting.
-     *  We have to set the anchor position for each view individually, as each of them
-     *  can be different type of view (container without anchor, sprite with anchor etc)
-     *  we have to reset all anchors to 0,0 and then set the position manually.
+     * Reset views positions according to the button anchor setting.
+     * We have to set the anchor position for each view individually, as each of them
+     * can be a different type of view (container without anchor, sprite with anchor, etc)
+     * we have to reset all anchors to 0,0 and then set the positions manually.
      */
     private resetViewsPositions()
     {
@@ -494,7 +487,7 @@ export class FancyButton extends Container
     }
 
     /**
-     * Starts animation for current button state if it's configured.
+     * Starts animation for the current button state if configured.
      * @param {State} state
      */
     private playAnimations(state: State)

@@ -9,17 +9,16 @@ export type LayoutOptions = {
     horPadding?: number;
 };
 
-// TODO: replace this with pixi-layout component
 /**
- * Container based element for arranging pixi containers inside it basing on their sizes
+ * Container-based element for arranging Pixi containers based on their sizes.
+ *
+ * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
  * ```
  * const layout = new Layout({
- *    type: 'horizontal',
- *    elementsMargin: 10,
  *    children: [
         new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50),
-        new Graphics().beginFill(0xFFFFFF).drawRect(0, 0, 100, 100),
+        new Graphics().beginFill(0xFFFFFF).drawRect(0, 0, 50, 50),
  *    ],
  * });
  *
@@ -28,20 +27,16 @@ export type LayoutOptions = {
  */
 export class Layout extends Container
 {
-    /** TODO */
+    private readonly options?: { type?: LayoutType } & LayoutOptions;
+
+    /** Container, that holds all inner elements. */
     public view: Container;
-    /** TODO */
+
+    /** Arrange direction. */
     public type: LayoutType;
 
-    /** TODO */
-    public w: number;
-    /** TODO */
-    public h: number;
-
-    /** TODO */
+    /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
-
-    private readonly options?: { type?: LayoutType } & LayoutOptions;
 
     constructor(options?: { type?: LayoutType } & LayoutOptions)
     {
@@ -76,8 +71,6 @@ export class Layout extends Container
 
                 child.x = x;
                 child.y = y;
-
-                this.h = y;
             }
             else
             {
@@ -89,73 +82,16 @@ export class Layout extends Container
             {
                 case 'horizontal':
                     x += elementsMargin + child.width;
-                    this.w = x;
-                    this.h = child.height;
                     break;
 
                 case 'vertical':
                     y += elementsMargin + child.height;
-                    this.h = y;
-                    this.w = child.width;
                     break;
 
                 default:
                     x += elementsMargin + child.width;
-                    this.w = x;
                     break;
             }
         });
     }
-}
-
-/**
- * Helper to generate horizontal Layout for arranging pixi containers horizontally basing on their sizes
- * @param elementsMargin
- * @param {...any} params
- * @example
- * ```
- * row(15, // margins between elements
- *     logo, // pregenerated Layout
- *     menu, // pregenerated Layout
- *     loginForm // pregenerated Layout
- * );
- * ```
- */
-export function row(elementsMargin: number, ...params: Container[]): Layout
-{
-    const children: Container[] = [];
-
-    params.forEach((param) => children.push(param));
-
-    return new Layout({
-        type: 'horizontal',
-        elementsMargin,
-        children,
-    });
-}
-
-/**
- * Helper to generate vertical Layout for arranging pixi containers vertically basing on their sizes
- * @param elementsMargin
- * @param {...any} params
- * @example
- * ```
- * col(15, // margins between elements
- *     logo, // pregenerated Layout
- *     menu, // pregenerated Layout
- *     loginForm // pregenerated Layout
- * );
- * ```
- */
-export function col(elementsMargin: number, ...params: Container[]): Layout
-{
-    const children: Container[] = [];
-
-    params.forEach((param) => children.push(param));
-
-    return new Layout({
-        type: 'vertical',
-        elementsMargin,
-        children,
-    });
 }

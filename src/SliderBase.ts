@@ -28,6 +28,7 @@ export type BaseSliderOptions = {
     };
 };
 
+/** Hepper class, used as a base for single or double slider creation. */
 export class SliderBase extends ProgressBar
 {
     protected slider1: Container;

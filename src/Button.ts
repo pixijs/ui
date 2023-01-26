@@ -4,19 +4,21 @@ import { FederatedPointerEvent } from '@pixi/events';
 import { Signal } from 'typed-signals';
 
 /**
- * Adds button events to a given container based view so you can subscribe to them
- * and use your container based instance as a button.
+ * Adds button events to a given container-based view
+ *
+ * so you can subscribe to them and use your container-based instance as a button.
  * @example
  * ```
+ * const container = new Container();
  * const button = new Button(
  *      new Graphics()
  *          .beginFill(0xFFFFFF)
- *          .drawRoundedRect(0, 0, width, height, radius)
+ *          .drawRoundedRect(0, 0, 100, 50, 15)
  * );
  *
  * buttonEvents.onPress.connect(() => console.log('onPress'));
  *
- * parrent.addChild(buttonEvents.view);
+ * container.addChild(buttonEvents.view);
  * ```
  */
 export class Button
@@ -24,27 +26,27 @@ export class Button
     /** Container, given as a constructor parameter that is a button view. */
     public view: Container;
 
-    /** Event that is fired when button is pressed. */
+    /** Event that is fired when the button is pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when button is down. */
+    /** Event that is fired when the button is down. */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /**
-     * Event that is fired when down event happened inside the button
+     * Event that fired when a down event happened inside the button
      * and up event happened inside or outside of the button
      */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when mouse hovers the button. */
+    /** Event that is fired when the mouse hovers the button. */
     public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when mouse leaves button view. */
+    /** Event that fired when the mouse is out of the view */
     public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /**
-     * Event that is fired when up event happens outside of the button
-     * when down event happened inside the button boundaries.
+     * Event that fired when mouse up event happens outside of the button
+     * after the down event happened inside the button boundaries.
      */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
@@ -53,8 +55,8 @@ export class Button
     private _enabled: boolean;
 
     /**
-     * Turns a given container based view into a button by adding all button events to it.
-     * @param {Container} view - Contained based view
+     * Turns a given container-based view into a button by adding all button events.
+     * @param {Container} view - Contained-based view
      */
     constructor(view: Container)
     {
@@ -66,8 +68,8 @@ export class Button
     }
 
     /**
-     * Method called when button is pressed down.
-     * To be override.
+     * Method called when the button pressed.
+     * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
     public down(_e?: FederatedPointerEvent)
@@ -76,8 +78,8 @@ export class Button
     }
 
     /**
-     * Method called when button is pressed up.
-     * To be override.
+     * Method called when the button is up.
+     * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
     public up(_e?: FederatedPointerEvent)
@@ -86,8 +88,8 @@ export class Button
     }
 
     /**
-     * Method called when mouse hovers the button.
-     * To be override.
+     * Method called when the mouse hovers the button.
+     * To be overridden.
      * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
@@ -97,8 +99,8 @@ export class Button
     }
 
     /**
-     * Method called when mouse hovers the button.
-     * To be override.
+     * Method called when the mouse press down the button.
+     * To be overridden.
      * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
@@ -108,8 +110,8 @@ export class Button
     }
 
     /**
-     * Method called when mouse leaves button view.
-     * To be override.
+     * Method called when the mouse leaves the button.
+     * To be overridden.
      * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
@@ -119,9 +121,9 @@ export class Button
     }
 
     /**
-     * Method called when when up event happens outside of the button
-     * when down event happened inside the button boundaries.
-     * To be override.
+     * Method called when the up event happens outside of the button,
+     * after the down event happened inside the button boundaries.
+     * To be overridden.
      * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
@@ -130,13 +132,14 @@ export class Button
     // override me!
     }
 
+    /** Getter that returns if the button is down. */
     get isDown(): boolean
     {
         return this._isDown;
     }
 
     /**
-     * Setter, that prevents all button events from firing.
+     * Swither, which prevents all button events from firing.
      * @param {boolean} enabled
      */
     set enabled(enabled: boolean)

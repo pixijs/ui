@@ -30,21 +30,17 @@ export type RadioBoxOptions = {
 };
 
 /**
- * Creates a container based group of checkbox elements that can be used as radio buttons
+ * Creates a container-based group of checkbox elements, that can be used as radio buttons.
+ *
+ * Only one checkbox can be selected at a time.
  * @example
  * ```
  * new RadioGroup({
  *     selectedItem: 0,
  *     items: ['Option 1', 'Option 2', 'Option 3'],
- *     type: 'vertical',
- *     elementsMargin: 10,
  *     style: {
  *         bg: 'radio.png',
- *         checked: 'radio_checked.png',
- *         textStyle: {
- *             fontSize: 22,
- *             fill: 0xFFFFFF,
- *         }
+ *         checked: 'radio_checked.png'
  *     },
  * });
  *
@@ -52,19 +48,20 @@ export type RadioBoxOptions = {
  */
 export class RadioGroup extends Container
 {
+    private readonly options: RadioBoxOptions;
     private items: CheckBox[] = [];
 
-    /** TODO */
-    public value: string;
-    /** TODO */
-    public selected: number;
-
-    /** TODO */
-    public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
-    /** TODO */
+    /** {@link Layout}, that holds and control all inned checkboxes.S  */
     public innerView: Layout;
 
-    private readonly options: RadioBoxOptions;
+    /** Text value of the selected item. */
+    public value: string;
+
+    /** ID of the selected item. */
+    public selected: number;
+
+    /** Fires, when new item is selected. */
+    public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
 
     constructor(options: RadioBoxOptions)
     {
@@ -152,7 +149,7 @@ export class RadioGroup extends Container
     }
 
     /**
-     * TODO
+     * Select item by ID.
      * @param id
      */
     public selectItem(id: number)

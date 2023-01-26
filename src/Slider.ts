@@ -26,7 +26,7 @@ export type SliderOptions = {
 };
 
 /**
- * Creates a slider
+ * Creates a slider to select a single value.
  * @example
  * ```
  * new Slider({
@@ -36,14 +36,6 @@ export type SliderOptions = {
  *     min: 0,
  *     max: 100,
  *     value: 50,
- *     valueTextStyle: {
- *         fill: 0xffffff,
- *         fontSize: 22,
- *     },
- *     showValue: true,
- *     valueTextOffset: {
- *         y: -40,
- *     },
  * });
  *
  * singleSlider.onChange.connect((value) => {
@@ -55,10 +47,10 @@ export class Slider extends SliderBase
 {
     private options: SliderOptions;
 
-    /** Signal that fires when value have changed. */
+    /** Fires when value changed, only when slider is released. */
     public onChange: Signal<(value: number) => void> = new Signal();
 
-    /** Signal that fires when value is changing. */
+    /** Fires when value is changing, on every move of slider. */
     public onUpdate: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)
@@ -81,13 +73,13 @@ export class Slider extends SliderBase
         this.value = options.value ?? 0;
     }
 
-    /** Return value. */
+    /** Return selected value. */
     get value(): number
     {
         return this._value1;
     }
 
-    /** Set value. {number} value */
+    /** Set selected value. */
     set value(value: number)
     {
         if (value === this._value1) return;

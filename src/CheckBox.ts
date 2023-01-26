@@ -17,11 +17,10 @@ export type CheckBoxOptions = {
 };
 
 /**
- * Creates a container based checkbox element.
+ * Creates a container-based checkbox element.
  * @example
  * ```
  *  new CheckBox({
- *     checked: false,
  *     style: {
  *         unchecked: `switch_off.png`,
  *         checked: `switch_on.png`,
@@ -57,13 +56,13 @@ export class CheckBox extends Switcher
         this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
-    /** Getter, that returns a checkbox state. */
+    /** Getter, which returns a checkbox state. */
     public get checked(): boolean
     {
         return this.active === 1;
     }
 
-    /** Setter, that sets a checkbox state. */
+    /** Setter, which sets a checkbox state. */
     public set checked(checked: boolean)
     {
         this.switch(checked ? 1 : 0, 'onPress');

@@ -40,8 +40,6 @@ export const Double: StoryFn = (
             slider2: 'slider.png',
             min,
             max,
-            value1,
-            value2,
             valueTextStyle: {
                 fill: fontColor,
                 fontSize
@@ -55,6 +53,9 @@ export const Double: StoryFn = (
                 y: -2
             }
         });
+
+        doubleSlider.value1 = value1;
+        doubleSlider.value2 = value2;
 
         doubleSlider.onChange.connect((value1, value2) =>
         {
