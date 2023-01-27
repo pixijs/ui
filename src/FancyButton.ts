@@ -393,6 +393,10 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
+        const { x, y, width, height } = this.defaultView;
+
+        this.hitArea = new Rectangle(x, y, width, height);
+
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
     }
@@ -444,10 +448,6 @@ export class FancyButton extends Container
     private addEvents()
     {
         this.events = new Button(this);
-
-        const { x, y, width, height } = this.defaultView;
-
-        this.hitArea = new Rectangle(x - (width / 2), y - (height / 2), width, height);
 
         this.onPress = new Signal();
         this.onDown = new Signal();
