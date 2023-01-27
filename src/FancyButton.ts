@@ -357,8 +357,6 @@ export class FancyButton extends Container
 
         const activeView = this.getStateView(state);
 
-        console.log(`adjustIconView`, this.iconView.width, this.iconView.height, activeView.width, activeView.height);
-
         fitToView(activeView, this.iconView, this.padding);
 
         (this.iconView as Sprite).anchor?.set(0);
@@ -383,8 +381,6 @@ export class FancyButton extends Container
 
         views.forEach((view) =>
         {
-            // console.log(`resetViewsPositions`, view);
-
             if (!view) return;
 
             (view as Sprite).anchor?.set(0);
