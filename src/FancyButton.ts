@@ -1,4 +1,4 @@
-import { ObservablePoint, Ticker } from '@pixi/core';
+import { ObservablePoint, Ticker, Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { Sprite } from '@pixi/sprite';
@@ -153,6 +153,9 @@ export class FancyButton extends Container
     {
         super();
 
+        this.anchor = new ObservablePoint(this.updateAnchors, this);
+        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
+
         this.createViews({
             defaultView,
             hoverView,
@@ -162,13 +165,11 @@ export class FancyButton extends Container
             icon
         });
 
-        this.anchor = new ObservablePoint(this.resetViewsPositions, this);
-        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-
         this.padding = padding ?? 0;
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+
         if (animations)
         {
             this.animations = animations;
@@ -186,13 +187,7 @@ export class FancyButton extends Container
      */
     set text(text: string | number)
     {
-        if (!this.textView)
-        {
-            this.createTextView(typeof text === 'number' ? text.toString() : text);
-        }
-
         this.textView.text = text;
-        this.setState(this.state);
         this.adjustTextView(this.state);
     }
 
@@ -242,9 +237,8 @@ export class FancyButton extends Container
 
         this.state = newState;
 
+        this.updateAnchors();
         this.setOffset(activeView, newState, this.offset);
-        this.adjustTextView(newState);
-        this.adjustIconView(newState);
 
         this.playAnimations(newState);
     }
@@ -257,7 +251,9 @@ export class FancyButton extends Container
     private createTextView(text: string | number | Text)
     {
         this.textView = getTextView(text);
+        this.innerView.addChild(this.textView);
         this.textView.anchor.set(0);
+        this.adjustTextView(this.state);
     }
 
     /**
@@ -267,6 +263,7 @@ export class FancyButton extends Container
     private createIconView(icon: string | Container)
     {
         this.iconView = getView(icon);
+        this.innerView.addChild(this.iconView);
     }
 
     /**
@@ -328,7 +325,9 @@ export class FancyButton extends Container
      */
     private adjustTextView(state: State)
     {
-        if (!this.textView)
+        this.textView.visible = this.textView.text !== '';
+
+        if (!this.textView.visible)
         {
             return;
         }
@@ -337,10 +336,10 @@ export class FancyButton extends Container
 
         fitToView(activeView, this.textView, this.padding);
 
-        activeView.addChild(this.textView);
+        this.textView.anchor.set(0.5);
 
-        this.textView.x = (activeView.width - this.textView.width) / 2;
-        this.textView.y = (activeView.height - this.textView.height) / 2;
+        this.textView.x = activeView.x + (activeView.width / 2);
+        this.textView.y = activeView.y + (activeView.height / 2);
 
         this.setOffset(this.textView, state, this.textOffset);
     }
@@ -356,14 +355,16 @@ export class FancyButton extends Container
             return;
         }
 
-        const activeView = this.getStateView(this.state);
+        const activeView = this.getStateView(state);
+
+        console.log(`adjustIconView`, this.iconView.width, this.iconView.height, activeView.width, activeView.height);
 
         fitToView(activeView, this.iconView, this.padding);
 
-        activeView.addChild(this.iconView);
+        (this.iconView as Sprite).anchor?.set(0);
 
-        this.iconView.x = (activeView.width / 2) - (this.iconView.width / 2);
-        this.iconView.y = (activeView.height / 2) - (this.iconView.height / 2);
+        this.iconView.x = activeView.x + (activeView.width / 2) - (this.iconView.width / 2);
+        this.iconView.y = activeView.y + (activeView.height / 2) - (this.iconView.height / 2);
 
         this.setOffset(this.iconView, state, this.iconOffset);
     }
@@ -374,14 +375,16 @@ export class FancyButton extends Container
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    private resetViewsPositions()
+    private updateAnchors()
     {
-        const anchorX = this.anchor?.x ?? 0;
-        const anchorY = this.anchor?.y ?? 0;
+        const anchorX = this.anchor.x ?? 0;
+        const anchorY = this.anchor.y ?? 0;
         const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView];
 
         views.forEach((view) =>
         {
+            // console.log(`resetViewsPositions`, view);
+
             if (!view) return;
 
             (view as Sprite).anchor?.set(0);
@@ -389,6 +392,9 @@ export class FancyButton extends Container
             view.x = -view.width * anchorX;
             view.y = -view.height * anchorY;
         });
+
+        this.adjustIconView(this.state);
+        this.adjustTextView(this.state);
     }
 
     /**
@@ -426,21 +432,22 @@ export class FancyButton extends Container
             this.disabledView.visible = false;
         }
 
-        if (text)
-        {
-            this.createTextView(text);
-        }
-
         if (icon)
         {
             this.createIconView(icon);
         }
+
+        this.createTextView(text);
     }
 
     /** Creates all button events */
     private addEvents()
     {
         this.events = new Button(this);
+
+        const { x, y, width, height } = this.defaultView;
+
+        this.hitArea = new Rectangle(x - (width / 2), y - (height / 2), width, height);
 
         this.onPress = new Signal();
         this.onDown = new Signal();
