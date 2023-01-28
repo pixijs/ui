@@ -569,7 +569,7 @@ export class FancyButton extends Container
      */
     private playAnimations(state: State)
     {
-        if (!this.originalInnerViewState)
+        if (state === 'default' && !this.originalInnerViewState)
         {
             this.originalInnerViewState = {
                 x: this.innerView.x,
@@ -581,6 +581,22 @@ export class FancyButton extends Container
                     y: this.innerView.scale.y
                 }
             };
+
+            // first animation state is default, so we don't need to animate it
+            // this part will run only once, during initialization
+            const defaultStateAnimation = this.animations.default;
+
+            if (defaultStateAnimation)
+            {
+                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
+                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
+                this.innerView.width = defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
+                this.innerView.height = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
+                this.innerView.scale.x = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
+                this.innerView.scale.y = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
+            }
+
+            return;
         }
 
         const stateAnimation = this.animations[state] ?? this.animations.default;
