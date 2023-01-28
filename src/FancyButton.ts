@@ -43,6 +43,7 @@ type StateAnimations = {
 
 export type ButtonOptions = Views & {
     padding?: number;
+    scale?: number;
     anchor?: number;
     anchorX?: number;
     anchorY?: number;
@@ -198,6 +199,8 @@ export class FancyButton extends Container
      * @param {Point} offset - Offset of the button state views.
      * @param {Point} textOffset - Offset of the text view.
      * @param {Point} iconOffset - Offset of the icon view.
+     * @param {number} scale - Scale of the button. Scale will be applied to a main container,
+     * when all animations scales will be applied to the inner view.
      * @param {number} anchor - Anchor point of the button.
      * @param {number} anchorX - Horizontal anchor point of the button.
      * @param {number} anchorY - Vertical anchor point of the button.
@@ -213,6 +216,7 @@ export class FancyButton extends Container
         offset,
         textOffset,
         iconOffset,
+        scale,
         anchor,
         anchorX,
         anchorY,
@@ -238,6 +242,7 @@ export class FancyButton extends Container
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+        this.scale.set(scale ?? 1);
 
         if (animations)
         {
