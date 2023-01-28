@@ -461,30 +461,35 @@ export class FancyButton extends Container
         this.events.onDown.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onDown.emit(this, e);
+            this.down();
             this.setState('pressed');
         });
 
         this.events.onUp.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onUp.emit(this, e);
+            this.up();
             this.setState('hover');
         });
 
         this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onHover.emit(this, e);
+            this.hover();
             this.setState('hover');
         });
 
         this.events.onOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onOut.emit(this, e);
+            this.out();
             this.setState('default');
         });
 
         this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onUpOut.emit(this, e);
+            this.upOut();
             this.setState('default');
         });
     }
@@ -519,5 +524,69 @@ export class FancyButton extends Container
         {
             new Tween(this.innerView).to(this.originalInnerViewState, 100).start();
         }
+    }
+    /**
+     * Method called when the button pressed.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public down(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the button is up.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public up(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse hovers the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public hover(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse press down the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public press(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse leaves the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public out(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the up event happens outside of the button,
+     * after the down event happened inside the button boundaries.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public upOut(_e?: FederatedPointerEvent)
+    {
+    // override me!
     }
 }
