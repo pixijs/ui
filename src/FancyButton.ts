@@ -514,7 +514,9 @@ export class FancyButton extends Container
             };
         }
 
-        if (this.animations && this.animations[state])
+        const stateAnimation = this.animations[state] ?? this.animations.default;
+
+        if (this.animations && stateAnimation)
         {
             const data = this.animations[state];
 
