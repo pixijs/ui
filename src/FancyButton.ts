@@ -61,11 +61,62 @@ export type ButtonOptions = Views & {
  * can be used to adjust the position of the text, icon and the views.
  * @example
  * ```
- * const button = new Button({
+ * const button = new FancyButton({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     text: new Text('Click me!'),
+ *     offset: {
+ *          default: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          },
+ *          hover: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          },
+ *          pressed: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          }
+ *     },
+ *     textOffset: {
+ *          x: 0.9,
+ *          y: 0.9,
+ *     },
+ *     iconOffset: {
+ *          x: 0.9,
+ *          y: 0.9,
+ *     },
+ *     animations: {
+ *          default: {
+ *              props: {
+ *                  scale: {
+ *                      x: 1,
+ *                      y: 1,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          },
+ *          hover: {
+ *              props: {
+ *                  scale: {
+ *                      x: 1.1,
+ *                      y: 1.1,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          },
+ *          pressed: {
+ *              props: {
+ *                  scale: {
+ *                      x: 0.9,
+ *                      y: 0.9,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          }
+ *      }
  * });
  *
  * button.onPress.connect(() => console.log('Button pressed!'));
@@ -134,6 +185,24 @@ export class FancyButton extends Container
     /** Event fired when the up event happens outside of the button, after the down event happened inside the button. */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
+    /**
+     * Turns a given container-based view into a button by adding all button events.
+     * @param {Container} defaultView - Container-based view that is shown when non of the button events are active.
+     * @param {Container} hoverView - Container-based view that is shown when the mouse hovers over the button.
+     * @param {Container} pressedView - Container-based view, shown when the mouse press on the component.
+     * @param {Container} disabledView - Container-based view shown when the button is disabled.
+     * @param {Container} icon - Container-based view for the button icon.
+     * @param {Text} text - Text-based view for the button text.
+     * @param {number} padding - Padding of the button text and icon views.
+     * If button text or icon does not fit active view + padding it will scale down to fit.
+     * @param {Point} offset - Offset of the button state views.
+     * @param {Point} textOffset - Offset of the text view.
+     * @param {Point} iconOffset - Offset of the icon view.
+     * @param {number} anchor - Anchor point of the button.
+     * @param {number} anchorX - Horizontal anchor point of the button.
+     * @param {number} anchorY - Vertical anchor point of the button.
+     * @param animations - Animations that will be played when the button state changes.
+     */
     constructor({
         defaultView,
         hoverView,
