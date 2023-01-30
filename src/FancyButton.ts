@@ -468,7 +468,7 @@ export class FancyButton extends Container
 
         if (this.defaultView)
         {
-            const { x, y, width, height } = this.defaultView;
+            const { x, y, width, height } = this.innerView;
 
             this.hitArea = new Rectangle(x, y, width, height);
         }
