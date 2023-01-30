@@ -1,4 +1,4 @@
-import { ObservablePoint, Ticker } from '@pixi/core';
+import { ObservablePoint, Ticker, Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { Sprite } from '@pixi/sprite';
@@ -43,6 +43,7 @@ type StateAnimations = {
 
 export type ButtonOptions = Views & {
     padding?: number;
+    scale?: number;
     anchor?: number;
     anchorX?: number;
     anchorY?: number;
@@ -61,11 +62,62 @@ export type ButtonOptions = Views & {
  * can be used to adjust the position of the text, icon and the views.
  * @example
  * ```
- * const button = new Button({
+ * const button = new FancyButton({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     text: new Text('Click me!'),
+ *     offset: {
+ *          default: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          },
+ *          hover: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          },
+ *          pressed: {
+ *              x: 0.9,
+ *              y: 0.9,
+ *          }
+ *     },
+ *     textOffset: {
+ *          x: 0.9,
+ *          y: 0.9,
+ *     },
+ *     iconOffset: {
+ *          x: 0.9,
+ *          y: 0.9,
+ *     },
+ *     animations: {
+ *          default: {
+ *              props: {
+ *                  scale: {
+ *                      x: 1,
+ *                      y: 1,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          },
+ *          hover: {
+ *              props: {
+ *                  scale: {
+ *                      x: 1.1,
+ *                      y: 1.1,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          },
+ *          pressed: {
+ *              props: {
+ *                  scale: {
+ *                      x: 0.9,
+ *                      y: 0.9,
+ *                  }
+ *              },
+ *              duration: 100,
+ *          }
+ *      }
  * });
  *
  * button.onPress.connect(() => console.log('Button pressed!'));
@@ -134,6 +186,27 @@ export class FancyButton extends Container
     /** Event fired when the up event happens outside of the button, after the down event happened inside the button. */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
+    /**
+     * Turns a given container-based view into a button by adding all button events.
+     * @param {object} options - Button options.
+     * @param {Container} options.defaultView - Container-based view that is shown when non of the button events are active.
+     * @param {Container} options.hoverView - Container-based view that is shown when the mouse hovers over the button.
+     * @param {Container} options.pressedView - Container-based view, shown when the mouse press on the component.
+     * @param {Container} options.disabledView - Container-based view shown when the button is disabled.
+     * @param {Container} options.icon - Container-based view for the button icon.
+     * @param {Text} options.text - Text-based view for the button text.
+     * @param {number} options.padding - Padding of the button text and icon views.
+     * If button text or icon does not fit active view + padding it will scale down to fit.
+     * @param {Point} options.offset - Offset of the button state views.
+     * @param {Point} options.textOffset - Offset of the text view.
+     * @param {Point} options.iconOffset - Offset of the icon view.
+     * @param {number} options.scale - Scale of the button. Scale will be applied to a main container,
+     * when all animations scales will be applied to the inner view.
+     * @param {number} options.anchor - Anchor point of the button.
+     * @param {number} options.anchorX - Horizontal anchor point of the button.
+     * @param {number} options.anchorY - Vertical anchor point of the button.
+     * @param options.animations - Animations that will be played when the button state changes.
+     */
     constructor({
         defaultView,
         hoverView,
@@ -144,6 +217,7 @@ export class FancyButton extends Container
         offset,
         textOffset,
         iconOffset,
+        scale,
         anchor,
         anchorX,
         anchorY,
@@ -152,6 +226,9 @@ export class FancyButton extends Container
     }: ButtonOptions)
     {
         super();
+
+        this.anchor = new ObservablePoint(this.updateAnchors, this);
+        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.createViews({
             defaultView,
@@ -162,13 +239,12 @@ export class FancyButton extends Container
             icon
         });
 
-        this.anchor = new ObservablePoint(this.resetViewsPositions, this);
-        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-
         this.padding = padding ?? 0;
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+        this.scale.set(scale ?? 1);
+
         if (animations)
         {
             this.animations = animations;
@@ -186,13 +262,7 @@ export class FancyButton extends Container
      */
     set text(text: string | number)
     {
-        if (!this.textView)
-        {
-            this.createTextView(typeof text === 'number' ? text.toString() : text);
-        }
-
         this.textView.text = text;
-        this.setState(this.state);
         this.adjustTextView(this.state);
     }
 
@@ -242,9 +312,8 @@ export class FancyButton extends Container
 
         this.state = newState;
 
+        this.updateAnchors();
         this.setOffset(activeView, newState, this.offset);
-        this.adjustTextView(newState);
-        this.adjustIconView(newState);
 
         this.playAnimations(newState);
     }
@@ -257,7 +326,9 @@ export class FancyButton extends Container
     private createTextView(text: string | number | Text)
     {
         this.textView = getTextView(text);
+        this.innerView.addChild(this.textView);
         this.textView.anchor.set(0);
+        this.adjustTextView(this.state);
     }
 
     /**
@@ -267,6 +338,7 @@ export class FancyButton extends Container
     private createIconView(icon: string | Container)
     {
         this.iconView = getView(icon);
+        this.innerView.addChild(this.iconView);
     }
 
     /**
@@ -328,7 +400,9 @@ export class FancyButton extends Container
      */
     private adjustTextView(state: State)
     {
-        if (!this.textView)
+        this.textView.visible = this.textView.text !== '';
+
+        if (!this.textView.visible)
         {
             return;
         }
@@ -337,10 +411,10 @@ export class FancyButton extends Container
 
         fitToView(activeView, this.textView, this.padding);
 
-        activeView.addChild(this.textView);
+        this.textView.anchor.set(0.5);
 
-        this.textView.x = (activeView.width - this.textView.width) / 2;
-        this.textView.y = (activeView.height - this.textView.height) / 2;
+        this.textView.x = activeView.x + (activeView.width / 2);
+        this.textView.y = activeView.y + (activeView.height / 2);
 
         this.setOffset(this.textView, state, this.textOffset);
     }
@@ -356,14 +430,14 @@ export class FancyButton extends Container
             return;
         }
 
-        const activeView = this.getStateView(this.state);
+        const activeView = this.getStateView(state);
 
         fitToView(activeView, this.iconView, this.padding);
 
-        activeView.addChild(this.iconView);
+        (this.iconView as Sprite).anchor?.set(0);
 
-        this.iconView.x = (activeView.width / 2) - (this.iconView.width / 2);
-        this.iconView.y = (activeView.height / 2) - (this.iconView.height / 2);
+        this.iconView.x = activeView.x + (activeView.width / 2) - (this.iconView.width / 2);
+        this.iconView.y = activeView.y + (activeView.height / 2) - (this.iconView.height / 2);
 
         this.setOffset(this.iconView, state, this.iconOffset);
     }
@@ -374,10 +448,10 @@ export class FancyButton extends Container
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    private resetViewsPositions()
+    private updateAnchors()
     {
-        const anchorX = this.anchor?.x ?? 0;
-        const anchorY = this.anchor?.y ?? 0;
+        const anchorX = this.anchor.x ?? 0;
+        const anchorY = this.anchor.y ?? 0;
         const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView];
 
         views.forEach((view) =>
@@ -389,6 +463,13 @@ export class FancyButton extends Container
             view.x = -view.width * anchorX;
             view.y = -view.height * anchorY;
         });
+
+        const { x, y, width, height } = this.defaultView;
+
+        this.hitArea = new Rectangle(x, y, width, height);
+
+        this.adjustIconView(this.state);
+        this.adjustTextView(this.state);
     }
 
     /**
@@ -426,15 +507,12 @@ export class FancyButton extends Container
             this.disabledView.visible = false;
         }
 
-        if (text)
-        {
-            this.createTextView(text);
-        }
-
         if (icon)
         {
             this.createIconView(icon);
         }
+
+        this.createTextView(text);
     }
 
     /** Creates all button events */
@@ -458,30 +536,35 @@ export class FancyButton extends Container
         this.events.onDown.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onDown.emit(this, e);
+            this.down();
             this.setState('pressed');
         });
 
         this.events.onUp.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onUp.emit(this, e);
+            this.up();
             this.setState('hover');
         });
 
         this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onHover.emit(this, e);
+            this.hover();
             this.setState('hover');
         });
 
         this.events.onOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onOut.emit(this, e);
+            this.out();
             this.setState('default');
         });
 
         this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onUpOut.emit(this, e);
+            this.upOut();
             this.setState('default');
         });
     }
@@ -492,7 +575,7 @@ export class FancyButton extends Container
      */
     private playAnimations(state: State)
     {
-        if (!this.originalInnerViewState)
+        if (state === 'default' && !this.originalInnerViewState)
         {
             this.originalInnerViewState = {
                 x: this.innerView.x,
@@ -504,9 +587,27 @@ export class FancyButton extends Container
                     y: this.innerView.scale.y
                 }
             };
+
+            // first animation state is default, so we don't need to animate it
+            // this part will run only once, during initialization
+            const defaultStateAnimation = this.animations.default;
+
+            if (defaultStateAnimation)
+            {
+                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
+                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
+                this.innerView.width = defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
+                this.innerView.height = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
+                this.innerView.scale.x = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
+                this.innerView.scale.y = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
+            }
+
+            return;
         }
 
-        if (this.animations && this.animations[state])
+        const stateAnimation = this.animations[state] ?? this.animations.default;
+
+        if (this.animations && stateAnimation)
         {
             const data = this.animations[state];
 
@@ -516,5 +617,69 @@ export class FancyButton extends Container
         {
             new Tween(this.innerView).to(this.originalInnerViewState, 100).start();
         }
+    }
+    /**
+     * Method called when the button pressed.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public down(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the button is up.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public up(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse hovers the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public hover(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse press down the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public press(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse leaves the button.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public out(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the up event happens outside of the button,
+     * after the down event happened inside the button boundaries.
+     * To be overridden.
+     * This is fired only on PC.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public upOut(_e?: FederatedPointerEvent)
+    {
+    // override me!
     }
 }
