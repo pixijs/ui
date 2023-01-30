@@ -466,9 +466,12 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
-        const { x, y, width, height } = this.innerView;
+        if (this.innerView)
+        {
+            const { x, y, width, height } = this.innerView;
 
-        this.hitArea = new Rectangle(x - (width * anchorX), y - (height * anchorY), width, height);
+            this.hitArea = new Rectangle(x - (width * anchorX), y - (height * anchorY), width, height);
+        }
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
