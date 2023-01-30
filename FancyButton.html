@@ -318,7 +318,19 @@
             
             <span class="subtitle">Methods</span>
             
+                <li class="parent  " data-name="FancyButton.down"><a href=FancyButton.html#down>down</a></li>
+            
+                <li class="parent  " data-name="FancyButton.hover"><a href=FancyButton.html#hover>hover</a></li>
+            
+                <li class="parent  " data-name="FancyButton.out"><a href=FancyButton.html#out>out</a></li>
+            
+                <li class="parent  " data-name="FancyButton.press"><a href=FancyButton.html#press>press</a></li>
+            
                 <li class="parent  " data-name="FancyButton.setState"><a href=FancyButton.html#setState>setState</a></li>
+            
+                <li class="parent  " data-name="FancyButton.up"><a href=FancyButton.html#up>up</a></li>
+            
+                <li class="parent  " data-name="FancyButton.upOut"><a href=FancyButton.html#upOut>upOut</a></li>
             
             </ul>
             
@@ -899,6 +911,457 @@ can be used to adjust the position of the text, icon and the views.</p></div>
 <article class="content-size">
     <div class="container-overview">
         
+              
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new FancyButton
+              
+            </span>
+            <span class="signature">(options)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Turns a given container-based view into a button by adding all button events.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                object
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Button options.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.defaultView</code></td>
+            
+
+            <td class="type">
+            
+                Container
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Container-based view that is shown when non of the button events are active.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.hoverView</code></td>
+            
+
+            <td class="type">
+            
+                Container
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Container-based view that is shown when the mouse hovers over the button.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.pressedView</code></td>
+            
+
+            <td class="type">
+            
+                Container
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Container-based view, shown when the mouse press on the component.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.disabledView</code></td>
+            
+
+            <td class="type">
+            
+                Container
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Container-based view shown when the button is disabled.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.icon</code></td>
+            
+
+            <td class="type">
+            
+                Container
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Container-based view for the button icon.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.text</code></td>
+            
+
+            <td class="type">
+            
+                Text
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Text-based view for the button text.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.padding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Padding of the button text and icon views.
+If button text or icon does not fit active view + padding it will scale down to fit.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.offset</code></td>
+            
+
+            <td class="type">
+            
+                Point
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Offset of the button state views.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.textOffset</code></td>
+            
+
+            <td class="type">
+            
+                Point
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Offset of the text view.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.iconOffset</code></td>
+            
+
+            <td class="type">
+            
+                Point
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Offset of the icon view.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.scale</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Scale of the button. Scale will be applied to a main container,
+when all animations scales will be applied to the inner view.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.anchor</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Anchor point of the button.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.anchorX</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Horizontal anchor point of the button.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.anchorY</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Vertical anchor point of the button.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.animations</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Animations that will be played when the button state changes.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
         
 
         
@@ -931,11 +1394,62 @@ can be used to adjust the position of the text, icon and the views.</p></div>
             <h3>Example</h3>
             
     <pre class="prettyprint"><code> ```
- const button = new Button({
+ const button = new FancyButton({
      defaultView: `button.png`,
      hoverView: `button_hover.png`,
      pressedView: `button_pressed.png`,
      text: new Text('Click me!'),
+     offset: {
+          default: {
+              x: 0.9,
+              y: 0.9,
+          },
+          hover: {
+              x: 0.9,
+              y: 0.9,
+          },
+          pressed: {
+              x: 0.9,
+              y: 0.9,
+          }
+     },
+     textOffset: {
+          x: 0.9,
+          y: 0.9,
+     },
+     iconOffset: {
+          x: 0.9,
+          y: 0.9,
+     },
+     animations: {
+          default: {
+              props: {
+                  scale: {
+                      x: 1,
+                      y: 1,
+                  }
+              },
+              duration: 100,
+          },
+          hover: {
+              props: {
+                  scale: {
+                      x: 1.1,
+                      y: 1.1,
+                  }
+              },
+              duration: 100,
+          },
+          pressed: {
+              props: {
+                  scale: {
+                      x: 0.9,
+                      y: 0.9,
+                  }
+              },
+              duration: 100,
+          }
+      }
  });
 
  button.onPress.connect(() => console.log('Button pressed!'));
@@ -2090,6 +2604,545 @@ can be used to adjust the position of the text, icon and the views.</p></div>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="down">
+            <a class="share-icon" href="#down"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  down
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the button pressed.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="hover">
+            <a class="share-icon" href="#hover"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  hover
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse hovers the button.
+To be overridden.
+This is fired only on PC.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="out">
+            <a class="share-icon" href="#out"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  out
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse leaves the button.
+To be overridden.
+This is fired only on PC.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="press">
+            <a class="share-icon" href="#press"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  press
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse press down the button.
+To be overridden.
+This is fired only on PC.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="setState">
             <a class="share-icon" href="#setState"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
@@ -2211,6 +3264,276 @@ can be used to adjust the position of the text, icon and the views.</p></div>
 </dd>
 
         
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="up">
+            <a class="share-icon" href="#up"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  up
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the button is up.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="upOut">
+            <a class="share-icon" href="#upOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  upOut
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the up event happens outside of the button,
+after the down event happened inside the button boundaries.
+To be overridden.
+This is fired only on PC.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
     
 
     
@@ -2232,7 +3555,7 @@ can be used to adjust the position of the text, icon and the views.</p></div>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Fri Jan 27 2023 10:14:58 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Mon Jan 30 2023 09:46:21 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
