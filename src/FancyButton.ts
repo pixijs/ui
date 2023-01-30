@@ -188,23 +188,24 @@ export class FancyButton extends Container
 
     /**
      * Turns a given container-based view into a button by adding all button events.
-     * @param {Container} defaultView - Container-based view that is shown when non of the button events are active.
-     * @param {Container} hoverView - Container-based view that is shown when the mouse hovers over the button.
-     * @param {Container} pressedView - Container-based view, shown when the mouse press on the component.
-     * @param {Container} disabledView - Container-based view shown when the button is disabled.
-     * @param {Container} icon - Container-based view for the button icon.
-     * @param {Text} text - Text-based view for the button text.
-     * @param {number} padding - Padding of the button text and icon views.
+     * @param {object} options - Container-based view that is shown when non of the button events are active.
+     * @param {Container} options.defaultView - Container-based view that is shown when non of the button events are active.
+     * @param {Container} options.hoverView - Container-based view that is shown when the mouse hovers over the button.
+     * @param {Container} options.pressedView - Container-based view, shown when the mouse press on the component.
+     * @param {Container} options.disabledView - Container-based view shown when the button is disabled.
+     * @param {Container} options.icon - Container-based view for the button icon.
+     * @param {Text} options.text - Text-based view for the button text.
+     * @param {number} options.padding - Padding of the button text and icon views.
      * If button text or icon does not fit active view + padding it will scale down to fit.
-     * @param {Point} offset - Offset of the button state views.
-     * @param {Point} textOffset - Offset of the text view.
-     * @param {Point} iconOffset - Offset of the icon view.
-     * @param {number} scale - Scale of the button. Scale will be applied to a main container,
+     * @param {Point} options.offset - Offset of the button state views.
+     * @param {Point} options.textOffset - Offset of the text view.
+     * @param {Point} options.iconOffset - Offset of the icon view.
+     * @param {number} options.scale - Scale of the button. Scale will be applied to a main container,
      * when all animations scales will be applied to the inner view.
-     * @param {number} anchor - Anchor point of the button.
-     * @param {number} anchorX - Horizontal anchor point of the button.
-     * @param {number} anchorY - Vertical anchor point of the button.
-     * @param animations - Animations that will be played when the button state changes.
+     * @param {number} options.anchor - Anchor point of the button.
+     * @param {number} options.anchorX - Horizontal anchor point of the button.
+     * @param {number} options.anchorY - Vertical anchor point of the button.
+     * @param options.animations - Animations that will be played when the button state changes.
      */
     constructor({
         defaultView,

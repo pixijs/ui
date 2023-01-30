@@ -30,7 +30,7 @@
     "clean": "xs clean",
     "deploy": "xs deploy",
     "docs": "xs docs && npm run storybook:build",
-    "lint": "xs lint",
+    "lint": "xs lint --max-warnings 0",
     "lint:fix": "xs lint --fix",
     "prepare": "husky install",
     "release": "xs bump,build,docs,publish,git-push",
