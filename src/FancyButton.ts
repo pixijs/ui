@@ -188,7 +188,7 @@ export class FancyButton extends Container
 
     /**
      * Turns a given container-based view into a button by adding all button events.
-     * @param {object} options - Container-based view that is shown when non of the button events are active.
+     * @param {object} options - Button options.
      * @param {Container} options.defaultView - Container-based view that is shown when non of the button events are active.
      * @param {Container} options.hoverView - Container-based view that is shown when the mouse hovers over the button.
      * @param {Container} options.pressedView - Container-based view, shown when the mouse press on the component.
