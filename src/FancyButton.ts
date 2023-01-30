@@ -400,6 +400,8 @@ export class FancyButton extends Container
      */
     private adjustTextView(state: State)
     {
+        if (!this.textView) return;
+
         this.textView.visible = this.textView.text !== '';
 
         if (!this.textView.visible)
@@ -464,9 +466,12 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
-        const { x, y, width, height } = this.defaultView;
+        if (this.defaultView)
+        {
+            const { x, y, width, height } = this.defaultView;
 
-        this.hitArea = new Rectangle(x, y, width, height);
+            this.hitArea = new Rectangle(x, y, width, height);
+        }
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
@@ -575,6 +580,8 @@ export class FancyButton extends Container
      */
     private playAnimations(state: State)
     {
+        if (!this.animations) return;
+
         if (state === 'default' && !this.originalInnerViewState)
         {
             this.originalInnerViewState = {
@@ -590,7 +597,7 @@ export class FancyButton extends Container
 
             // first animation state is default, so we don't need to animate it
             // this part will run only once, during initialization
-            const defaultStateAnimation = this.animations.default;
+            const defaultStateAnimation = this.animations?.default;
 
             if (defaultStateAnimation)
             {
