@@ -535,6 +535,7 @@ export class FancyButton extends Container
         this.events.onPress.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onPress.emit(this, e);
+            this.press();
             this.setState('hover');
         });
 
