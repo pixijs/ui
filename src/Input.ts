@@ -337,6 +337,12 @@ export class Input extends Container
         return this.inputField.text;
     }
 
+    /**
+     * Sets paddings
+     * @param value - number or array of numbers number - same val for all the sides.
+     * or : [top, right, bottom, left]
+     * or: [top&bottom, right&left]
+     */
     set padding(value: Padding)
     {
         if (typeof value === 'number')
@@ -354,10 +360,9 @@ export class Input extends Container
             this.paddingBottom = value[2] ?? value[0] ?? 0;
             this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
         }
-
-        console.log({ value, t: this.paddingTop, r: this.paddingRight, b: this.paddingBottom, l: this.paddingLeft });
     }
 
+    // Return array of paddings [top, right, bottom, left]
     get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
