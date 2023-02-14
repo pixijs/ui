@@ -70,7 +70,7 @@ export const UseGraphics = ({
             align,
             placeholder,
             value: text,
-            padding: [verticalPadding + (border ? border + 3 : 0), horizontalPadding + border ? border + 3 : 0]
+            padding: [verticalPadding + (border ? border + 3 : 0), horizontalPadding + (border ? border + 3 : 0)]
         });
 
         input.onChange.connect(() => onChange(input.value));
