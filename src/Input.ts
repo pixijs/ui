@@ -6,7 +6,16 @@ import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 
-export type Padding = number | [number, number] | [number, number, number, number];
+export type Padding =
+  | number
+  | [number, number]
+  | [number, number, number, number]
+  | {
+      left?: number;
+      right?: number;
+      top?: number;
+      bottom?: number;
+  };
 
 export type InputOptions = {
     bg?: Container | string;
@@ -24,7 +33,13 @@ export type InputOptions = {
  * ```
  * new Input({
  *     bg: Sprite.from('input.png'),
- *     placeholder: 'Enter text'
+ *     placeholder: 'Enter text',
+ *     padding: {
+ *      top: 11,
+ *      right: 11,
+ *      bottom: 11,
+ *      left: 11
+ *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
  * });
  * ```
  */
@@ -338,12 +353,18 @@ export class Input extends Container
     }
 
     /**
-     * Sets paddings
-     * @param value - number or array of numbers number - same val for all the sides.
-     * or : [top, right, bottom, left]
+     * Set paddings
+     * @param value - number, array of 4 numbers or object with keys: top, right, bottom, left
+     * or: [top, right, bottom, left]
      * or: [top&bottom, right&left]
+     * or: {
+     *  left: 10,
+     *  right: 10,
+     *  top: 10,
+     *  bottom: 10,
+     * }
      */
-    set padding(value: Padding)
+    public set padding(value: Padding)
     {
         if (typeof value === 'number')
         {
@@ -360,10 +381,17 @@ export class Input extends Container
             this.paddingBottom = value[2] ?? value[0] ?? 0;
             this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
         }
+        else if (typeof value === 'object')
+        {
+            this.paddingTop = value.top ?? 0;
+            this.paddingRight = value.right ?? 0;
+            this.paddingBottom = value.bottom ?? 0;
+            this.paddingLeft = value.left ?? 0;
+        }
     }
 
     // Return array of paddings [top, right, bottom, left]
-    get padding(): [number, number, number, number]
+    public get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
