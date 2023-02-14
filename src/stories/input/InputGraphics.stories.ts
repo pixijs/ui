@@ -21,6 +21,8 @@ const args = {
     height: 70,
     radius: 11,
     amount: 1,
+    horizontalPadding: 11,
+    verticalPadding: 11,
 
     onChange: action('Input: ')
 };
@@ -39,6 +41,8 @@ export const UseGraphics = ({
     maxLength,
     align,
     placeholder,
+    horizontalPadding,
+    verticalPadding,
     onChange
 }: any) =>
 {
@@ -57,7 +61,6 @@ export const UseGraphics = ({
                 .drawRoundedRect(0, 0, width, height, radius + border)
                 .beginFill(backgroundColor)
                 .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
-            padding: border ? border + 3 : 0,
             textStyle: {
                 ...defaultTextStyle,
                 fill: textColor,
@@ -66,7 +69,8 @@ export const UseGraphics = ({
             maxLength,
             align,
             placeholder,
-            value: text
+            value: text,
+            padding: [verticalPadding + (border ? border + 3 : 0), horizontalPadding + (border ? border + 3 : 0)]
         });
 
         input.onChange.connect(() => onChange(input.value));

@@ -6,6 +6,8 @@ import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 
+export type Padding = number | [number, number] | [number, number, number, number];
+
 export type InputOptions = {
     bg?: Container | string;
     textStyle?: Partial<TextStyle>;
@@ -13,7 +15,7 @@ export type InputOptions = {
     value?: string;
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
-    padding?: number;
+    padding?: Padding;
 };
 
 /**
@@ -45,6 +47,18 @@ export class Input extends Container
     /** Fires every time input string is changed. */
     public readonly onChange: Signal<(text: string) => void>;
 
+    /** Top side padding */
+    public paddingTop = 0;
+
+    /** Right side padding */
+    public paddingRight = 0;
+
+    /** Bottom side padding */
+    public paddingBottom = 0;
+
+    /** Left side padding */
+    public paddingLeft = 0;
+
     constructor(options: InputOptions)
     {
         super();
@@ -63,9 +77,16 @@ export class Input extends Container
 
         this.inputField = new Text('', textStyle);
 
+        this.padding = options.padding;
+
         this.inputMask = new Graphics()
             .beginFill(0xffffff)
-            .drawRect(this.padding, this.padding, this.bg.width - (this.padding * 2), this.bg.height - (this.padding * 2));
+            .drawRect(
+                this.paddingLeft,
+                this.paddingTop,
+                this.bg.width - this.paddingRight - this.paddingLeft,
+                this.bg.height - this.paddingBottom - this.paddingTop
+            );
 
         this.inputField.mask = this.inputMask;
 
@@ -242,26 +263,22 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
-        this.inputField.y = this.bg.height / 2;
+        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
+        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this.bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
         this._cursor.y = this.inputField.y;
     }
 
-    private get padding(): number
-    {
-        return this.options.padding | 0;
-    }
-
     private getAlign(): 0 | 1 | 0.5
     {
         const maxWidth = this.bg.width * 0.95;
-        const isOverflowed = this.inputField.width + (this.padding * 3) > maxWidth;
+        const paddings = this.paddingLeft + this.paddingRight - 10;
+        const isOverflowed = this.inputField.width + paddings > maxWidth;
 
         if (isOverflowed)
         {
@@ -318,5 +335,31 @@ export class Input extends Container
     get value(): string
     {
         return this.inputField.text;
+    }
+
+    set padding(value: Padding)
+    {
+        if (typeof value === 'number')
+        {
+            this.paddingTop = value;
+            this.paddingRight = value;
+            this.paddingBottom = value;
+            this.paddingLeft = value;
+        }
+
+        if (Array.isArray(value))
+        {
+            this.paddingTop = value[0] ?? 0;
+            this.paddingRight = value[1] ?? value[0] ?? 0;
+            this.paddingBottom = value[2] ?? value[0] ?? 0;
+            this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
+        }
+
+        console.log({ value, t: this.paddingTop, r: this.paddingRight, b: this.paddingBottom, l: this.paddingLeft });
+    }
+
+    get padding(): [number, number, number, number]
+    {
+        return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 }
