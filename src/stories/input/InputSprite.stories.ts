@@ -14,12 +14,28 @@ const args = {
     textColor: '#000000',
     maxLength: 100,
     fontSize: 24,
-    padding: 5,
+    paddingTop: 11,
+    paddingRight: 11,
+    paddingBottom: 11,
+    paddingLeft: 11,
     amount: 1,
     onChange: action('Input: ')
 };
 
-export const UseSprite = ({ text, amount, padding, textColor, fontSize, maxLength, align, placeholder, onChange }: any) =>
+export const UseSprite = ({
+    text,
+    amount,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    textColor,
+    fontSize,
+    maxLength,
+    align,
+    placeholder,
+    onChange
+}: any) =>
 {
     const view = new Layout({ type: 'vertical', elementsMargin: 10 });
 
@@ -32,7 +48,7 @@ export const UseSprite = ({ text, amount, padding, textColor, fontSize, maxLengt
             // Component usage
             const input = new Input({
                 bg: Sprite.from('input.png'),
-                padding,
+                padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                 textStyle: {
                     ...defaultTextStyle,
                     fill: textColor,

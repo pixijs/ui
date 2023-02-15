@@ -6,6 +6,17 @@ import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 
+export type Padding =
+  | number
+  | [number, number]
+  | [number, number, number, number]
+  | {
+      left?: number;
+      right?: number;
+      top?: number;
+      bottom?: number;
+  };
+
 export type InputOptions = {
     bg?: Container | string;
     textStyle?: Partial<TextStyle>;
@@ -13,7 +24,7 @@ export type InputOptions = {
     value?: string;
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
-    padding?: number;
+    padding?: Padding;
 };
 
 /**
@@ -22,7 +33,13 @@ export type InputOptions = {
  * ```
  * new Input({
  *     bg: Sprite.from('input.png'),
- *     placeholder: 'Enter text'
+ *     placeholder: 'Enter text',
+ *     padding: {
+ *      top: 11,
+ *      right: 11,
+ *      bottom: 11,
+ *      left: 11
+ *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
  * });
  * ```
  */
@@ -45,6 +62,18 @@ export class Input extends Container
     /** Fires every time input string is changed. */
     public readonly onChange: Signal<(text: string) => void>;
 
+    /** Top side padding */
+    public paddingTop = 0;
+
+    /** Right side padding */
+    public paddingRight = 0;
+
+    /** Bottom side padding */
+    public paddingBottom = 0;
+
+    /** Left side padding */
+    public paddingLeft = 0;
+
     constructor(options: InputOptions)
     {
         super();
@@ -63,9 +92,16 @@ export class Input extends Container
 
         this.inputField = new Text('', textStyle);
 
+        this.padding = options.padding;
+
         this.inputMask = new Graphics()
             .beginFill(0xffffff)
-            .drawRect(this.padding, this.padding, this.bg.width - (this.padding * 2), this.bg.height - (this.padding * 2));
+            .drawRect(
+                this.paddingLeft,
+                this.paddingTop,
+                this.bg.width - this.paddingRight - this.paddingLeft,
+                this.bg.height - this.paddingBottom - this.paddingTop
+            );
 
         this.inputField.mask = this.inputMask;
 
@@ -242,26 +278,22 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
-        this.inputField.y = this.bg.height / 2;
+        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.padding : this.padding);
+        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this.bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
         this._cursor.y = this.inputField.y;
     }
 
-    private get padding(): number
-    {
-        return this.options.padding | 0;
-    }
-
     private getAlign(): 0 | 1 | 0.5
     {
         const maxWidth = this.bg.width * 0.95;
-        const isOverflowed = this.inputField.width + (this.padding * 3) > maxWidth;
+        const paddings = this.paddingLeft + this.paddingRight - 10;
+        const isOverflowed = this.inputField.width + paddings > maxWidth;
 
         if (isOverflowed)
         {
@@ -318,5 +350,49 @@ export class Input extends Container
     get value(): string
     {
         return this.inputField.text;
+    }
+
+    /**
+     * Set paddings
+     * @param value - number, array of 4 numbers or object with keys: top, right, bottom, left
+     * or: [top, right, bottom, left]
+     * or: [top&bottom, right&left]
+     * or: {
+     *  left: 10,
+     *  right: 10,
+     *  top: 10,
+     *  bottom: 10,
+     * }
+     */
+    public set padding(value: Padding)
+    {
+        if (typeof value === 'number')
+        {
+            this.paddingTop = value;
+            this.paddingRight = value;
+            this.paddingBottom = value;
+            this.paddingLeft = value;
+        }
+
+        if (Array.isArray(value))
+        {
+            this.paddingTop = value[0] ?? 0;
+            this.paddingRight = value[1] ?? value[0] ?? 0;
+            this.paddingBottom = value[2] ?? value[0] ?? 0;
+            this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
+        }
+        else if (typeof value === 'object')
+        {
+            this.paddingTop = value.top ?? 0;
+            this.paddingRight = value.right ?? 0;
+            this.paddingBottom = value.bottom ?? 0;
+            this.paddingLeft = value.left ?? 0;
+        }
+    }
+
+    // Return array of paddings [top, right, bottom, left]
+    public get padding(): [number, number, number, number]
+    {
+        return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 }
