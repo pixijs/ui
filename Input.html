@@ -356,6 +356,16 @@
             
                 <li class="parent " data-name="Input.onEnter"><a href=Input.html#onEnter>onEnter</a></li>
             
+                <li class="parent " data-name="Input.padding"><a href=Input.html#padding>padding</a></li>
+            
+                <li class="parent " data-name="Input.paddingBottom"><a href=Input.html#paddingBottom>paddingBottom</a></li>
+            
+                <li class="parent " data-name="Input.paddingLeft"><a href=Input.html#paddingLeft>paddingLeft</a></li>
+            
+                <li class="parent " data-name="Input.paddingRight"><a href=Input.html#paddingRight>paddingRight</a></li>
+            
+                <li class="parent " data-name="Input.paddingTop"><a href=Input.html#paddingTop>paddingTop</a></li>
+            
                 <li class="parent " data-name="Input.value"><a href=Input.html#value>value</a></li>
             
                 <li class="parent " data-name="Input.value"><a href=Input.html#value>value</a></li>
@@ -941,7 +951,13 @@
     <pre class="prettyprint"><code>```
 new Input({
     bg: Sprite.from('input.png'),
-    placeholder: 'Enter text'
+    placeholder: 'Enter text',
+    padding: {
+     top: 11,
+     right: 11,
+     bottom: 11,
+     left: 11
+    } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
 });
 ```</code></pre>
 
@@ -1063,6 +1079,270 @@ new Input({
 
     
 
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="padding">
+            <a class="share-icon" href="#padding"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">padding</span>
+            <span class="type-signature type">[number, number, number, number]</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Set paddings</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingBottom">
+            <a class="share-icon" href="#paddingBottom"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingBottom</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Bottom side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingLeft">
+            <a class="share-icon" href="#paddingLeft"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingLeft</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Left side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingRight">
+            <a class="share-icon" href="#paddingRight"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingRight</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Right side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingTop">
+            <a class="share-icon" href="#paddingTop"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingTop</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Top side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -1204,7 +1484,7 @@ new Input({
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Fri Feb 03 2023 14:52:25 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Wed Feb 15 2023 07:45:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
