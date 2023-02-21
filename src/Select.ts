@@ -49,7 +49,6 @@ export type SelectOptions = {
  *
  * It is a composition of a {@link Button} and a {@link ScrollBox}.
  * @example
- * ```
  * new Select({
  *     closedBG: `select_closed.png`,
  *     openBG: `select_open.png`,
@@ -67,8 +66,6 @@ export type SelectOptions = {
  *         radius: 30,
  *     },
  * });
- *
- * ```
  */
 
 // TODO: rewrite this basing on Swich

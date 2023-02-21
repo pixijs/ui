@@ -28,7 +28,6 @@ export type SliderOptions = {
 /**
  * Creates a slider to select a single value.
  * @example
- * ```
  * new Slider({
  *     bg: 'slider_bg.png',
  *     fill: 'slider.png',
@@ -41,7 +40,6 @@ export type SliderOptions = {
  * singleSlider.onChange.connect((value) => {
  *     console.log(`Slider changed to ${value}`);
  * });
- * ```
  */
 export class Slider extends SliderBase
 {

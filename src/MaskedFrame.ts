@@ -14,14 +14,12 @@ export type MaskedFrameOptions = {
 /**
  * Draws a border or apply a mask of any shape to a container.
  * @example
- * ```
  * new MaskedFrame({
  *     target: `avatar.png`,
  *     mask: `avatar_mask.png`,
  *     borderWidth: 5,
  *     borderColor: 0xFFFFFF,
  * });
- * ```
  */
 export class MaskedFrame extends Graphics
 {

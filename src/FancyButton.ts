@@ -61,7 +61,6 @@ export type ButtonOptions = Views & {
  * If views are not the same size, offset property of the constructor
  * can be used to adjust the position of the text, icon and the views.
  * @example
- * ```
  * const button = new FancyButton({
  *     defaultView: `button.png`,
  *     hoverView: `button_hover.png`,
@@ -121,7 +120,6 @@ export type ButtonOptions = Views & {
  * });
  *
  * button.onPress.connect(() => console.log('Button pressed!'));
- * ```
  */
 export class FancyButton extends Container
 {

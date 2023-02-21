@@ -6,7 +6,6 @@ import { Signal } from 'typed-signals';
 /**
  * Creates a slider with range selection option.
  * @example
- * ```
  * const doubleSlider = new DoubleSlider({
  *      bg: 'slider_bg.png',
  *      fill: 'slider_progress.png',
@@ -17,7 +16,6 @@ import { Signal } from 'typed-signals';
  * doubleSlider.onChange.connect((value1, value2) =>
  *     console.log(`New slider range ${value1} - ${value2}`)
  * );
- * ```
  */
 
 export class DoubleSlider extends SliderBase

@@ -28,7 +28,6 @@ export type ScrollBoxOptions = {
  *
  * Items, that are out of the visible area, are not rendered.
  * @example
- * ```
  * new ScrollBox({
  *     background: 0XFFFFFF,
  *     items: [
@@ -41,7 +40,6 @@ export type ScrollBoxOptions = {
  *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
  *     ],
  * });
- * ```
  */
 
 export class ScrollBox extends Container
