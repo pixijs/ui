@@ -14,7 +14,6 @@ export type LayoutOptions = {
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
- * ```
  * const layout = new Layout({
  *    children: [
         new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50),
@@ -23,7 +22,6 @@ export type LayoutOptions = {
  * });
  *
  * layout.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
- * ```
  */
 export class Layout extends Container
 {

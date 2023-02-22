@@ -34,7 +34,6 @@ export type RadioBoxOptions = {
  *
  * Only one checkbox can be selected at a time.
  * @example
- * ```
  * new RadioGroup({
  *     selectedItem: 0,
  *     items: ['Option 1', 'Option 2', 'Option 3'],
@@ -43,8 +42,6 @@ export type RadioBoxOptions = {
  *         checked: 'radio_checked.png'
  *     },
  * });
- *
- * ```
  */
 export class RadioGroup extends Container
 {

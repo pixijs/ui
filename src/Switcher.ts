@@ -11,7 +11,6 @@ import { ButtonEvent } from './utils/HelpTypes';
  *
  * Can be used for creating tabs, radio buttons, checkboxes etc.
  * @example
- * ```
  * // switch on click
  * const switch = new Swich([`switch_off.png`, `switch_on.png`]);
  *
@@ -19,8 +18,6 @@ import { ButtonEvent } from './utils/HelpTypes';
  * const button = new Swich([`button_default.png`, `button_hover.png`], ['onHover', 'onOut']);
  *
  * button.events.onPress.connect(() => console.log('button pressed'));
- *
- * ```
  */
 export class Switcher extends Container
 {

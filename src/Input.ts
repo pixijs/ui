@@ -30,7 +30,6 @@ export type InputOptions = {
 /**
  * Container-based component that creates an input to read the user's text.
  * @example
- * ```
  * new Input({
  *     bg: Sprite.from('input.png'),
  *     placeholder: 'Enter text',
@@ -41,7 +40,6 @@ export type InputOptions = {
  *      left: 11
  *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
  * });
- * ```
  */
 export class Input extends Container
 {

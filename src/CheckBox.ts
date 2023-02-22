@@ -19,15 +19,12 @@ export type CheckBoxOptions = {
 /**
  * Creates a container-based checkbox element.
  * @example
- * ```
  *  new CheckBox({
  *     style: {
  *         unchecked: `switch_off.png`,
  *         checked: `switch_on.png`,
  *     }
  * });
- *
- * ```
  */
 export class CheckBox extends Switcher
 {

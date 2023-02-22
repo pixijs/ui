@@ -8,7 +8,6 @@ import { Signal } from 'typed-signals';
  *
  * so you can subscribe to them and use your container-based instance as a button.
  * @example
- * ```
  * const container = new Container();
  * const button = new Button(
  *      new Graphics()
@@ -19,7 +18,6 @@ import { Signal } from 'typed-signals';
  * buttonEvents.onPress.connect(() => console.log('onPress'));
  *
  * container.addChild(buttonEvents.view);
- * ```
  */
 export class Button
 {

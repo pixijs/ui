@@ -15,13 +15,11 @@ export type ProgressBarOptions = {
 /**
  * Creates a ProgressBar.
  * @example
- * ```
  * new ProgressBar({
  *     bg: 'slider_bg.png',
  *     fill: 'slider.png',
  *     progress: 50,
  * });
- * ```
  */
 export class ProgressBar extends Container
 {
