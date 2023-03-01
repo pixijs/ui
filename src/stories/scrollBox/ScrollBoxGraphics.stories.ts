@@ -17,17 +17,23 @@ const args = {
     height: 420,
     radius: 20,
     elementsMargin: 10,
-    elementsPadding: 10,
+    paddingTop: 11,
+    paddingRight: 11,
+    paddingBottom: 11,
+    paddingLeft: 11,
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    onPress: action('Button pressed')
+    onPress: action('Button pressed'),
 };
 
 export const UseGraphics: StoryFn = ({
     fontColor,
     elementsMargin,
-    elementsPadding,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
     elementsWidth,
     elementsHeight,
     width,
@@ -35,7 +41,7 @@ export const UseGraphics: StoryFn = ({
     radius,
     itemsAmount,
     backgroundColor,
-    onPress
+    onPress,
 }: any) =>
 {
     const view = new Container();
@@ -48,12 +54,16 @@ export const UseGraphics: StoryFn = ({
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            defaultView: new Graphics()
+                .beginFill(0xa5e24d)
+                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            hoverView: new Graphics()
+                .beginFill(0xfec230)
+                .drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
-                fill: fontColor
-            })
+                fill: fontColor,
+            }),
         });
 
         button.anchor.set(0);
@@ -69,7 +79,12 @@ export const UseGraphics: StoryFn = ({
         width,
         height,
         radius,
-        padding: elementsPadding
+        padding: {
+            top: paddingTop,
+            right: paddingRight,
+            bottom: paddingBottom,
+            left: paddingLeft,
+        },
     });
 
     items.forEach((item) => scrollBox.addItem(item));
@@ -78,12 +93,12 @@ export const UseGraphics: StoryFn = ({
 
     return {
         view,
-        resize: () => centerElement(view)
+        resize: () => centerElement(view),
     };
 };
 
 export default {
     title: 'Components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

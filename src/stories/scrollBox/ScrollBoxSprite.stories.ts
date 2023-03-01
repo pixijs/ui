@@ -15,7 +15,7 @@ const args = {
     fontColor: '#000000',
     elementsMargin: 6,
     itemsAmount: 100,
-    onPress: action('Button pressed')
+    onPress: action('Button pressed'),
 };
 
 export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any) =>
@@ -32,7 +32,9 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
         elementsMargin,
         width: 150,
         height: 318,
-        vertPadding: 18
+        padding: {
+            top: 20,
+        },
     });
 
     preloadAssets(assets).then(() =>
@@ -55,11 +57,15 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
 
     return {
         view,
-        resize: () => centerElement(view)
+        resize: () => centerElement(view),
     };
 };
 
-function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID: number) => void): FancyButton[]
+function createItems(
+    itemsAmount: number,
+    fontColor: number,
+    onPress: (buttonID: number) => void,
+): FancyButton[]
 {
     const items = [];
 
@@ -70,12 +76,12 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
             hoverView: `button_hover.png`,
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
-                fill: fontColor
+                fill: fontColor,
             }),
             textOffset: {
                 x: 0,
-                y: -7
-            }
+                y: -7,
+            },
         });
 
         button.anchor.set(0);
@@ -92,5 +98,5 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
 export default {
     title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

@@ -3,6 +3,7 @@ import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
+import { Padding } from './controllers/PaddingController';
 import type { LayoutType } from './Layout';
 import { Layout } from './Layout';
 import { removeHitBox } from './utils/helpers/hitbox';
@@ -18,9 +19,7 @@ export type ScrollBoxOptions = {
     elementsMargin?: number;
     items?: Container[];
     disableDynamicRendering?: boolean;
-    vertPadding?: number;
-    horPadding?: number;
-    padding?: number;
+    padding?: Padding;
 };
 
 /**
@@ -76,21 +75,10 @@ export class ScrollBox extends Container
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
 
-        if (!options.vertPadding)
-        {
-            options.vertPadding = options.padding ?? 0;
-        }
-
-        if (!options.horPadding)
-        {
-            options.horPadding = options.padding ?? 0;
-        }
-
         this.layout = new Layout({
             type: options.type,
             elementsMargin: options.elementsMargin,
-            vertPadding: options.vertPadding,
-            horPadding: options.horPadding,
+            padding: options.padding,
         });
 
         super.addChild(this.layout);
@@ -217,8 +205,8 @@ export class ScrollBox extends Container
             const posY = item.y + layout.y;
 
             if (
-                posY + item.height + this.options.vertPadding >= 0
-                && posY - this.options.vertPadding - this.options.elementsMargin <= this.options.height
+                posY + item.height + this.vertPadding >= 0
+                && posY - this.vertPadding - this.options.elementsMargin <= this.options.height
             )
             {
                 isVisible = true;
@@ -245,9 +233,10 @@ export class ScrollBox extends Container
 
     private addBackground()
     {
-        this.background = typeof this.options.background === 'string'
-            ? Sprite.from(this.options.background)
-            : new Graphics();
+        this.background
+            = typeof this.options.background === 'string'
+                ? Sprite.from(this.options.background)
+                : new Graphics();
 
         this.addChild(this.background);
 
@@ -306,8 +295,7 @@ export class ScrollBox extends Container
         {
             if (!this.childrenInteractiveStorage[itemID])
             {
-                this.childrenInteractiveStorage[itemID]
-                    = item.interactive === true;
+                this.childrenInteractiveStorage[itemID] = item.interactive === true;
             }
 
             item.interactive = false;
@@ -319,8 +307,7 @@ export class ScrollBox extends Container
         // restore clicks on buttons
         this.items.forEach((item, itemID) =>
         {
-            const wasItemInteractive
-                = this.childrenInteractiveStorage[itemID] === true;
+            const wasItemInteractive = this.childrenInteractiveStorage[itemID] === true;
 
             if (wasItemInteractive)
             {
@@ -338,12 +325,12 @@ export class ScrollBox extends Container
 
     private get layoutHeight(): number
     {
-        return this.layout.height + (this.options.vertPadding * 2);
+        return this.layout.height + (this.vertPadding * 2);
     }
 
     private get layoutWidth(): number
     {
-        return this.layout.width + (this.options.horPadding * 2);
+        return this.layout.width + (this.horPadding * 2);
     }
 
     /** Controls item positions and visibility. */
@@ -353,12 +340,11 @@ export class ScrollBox extends Container
 
         if (
             this.borderMask
-            && (this.lastWidth !== this.layoutWidth
-                || this.lastHeight !== this.layoutHeight)
+            && (this.lastWidth !== this.layoutWidth || this.lastHeight !== this.layoutHeight)
         )
         {
-            const verPadding = this.options.vertPadding;
-            const horPadding = this.options.horPadding;
+            const verPadding = this.vertPadding;
+            const horPadding = this.horPadding;
 
             if (!this.options.width)
             {
@@ -374,13 +360,7 @@ export class ScrollBox extends Container
                 .clear()
                 .lineStyle(0)
                 .beginFill(0xffffff)
-                .drawRoundedRect(
-                    0,
-                    0,
-                    this.__width,
-                    this.__height,
-                    this.options.radius | 0,
-                );
+                .drawRoundedRect(0, 0, this.__width, this.__height, this.options.radius | 0);
             removeHitBox(this.borderMask);
 
             if (
@@ -392,12 +372,7 @@ export class ScrollBox extends Container
                     .clear()
                     .lineStyle(0)
                     .beginFill(this.options.background)
-                    .drawRect(
-                        0,
-                        0,
-                        this.__width + horPadding,
-                        this.__height + verPadding,
-                    );
+                    .drawRect(0, 0, this.__width + horPadding, this.__height + verPadding);
             }
 
             if (this.options.type === 'horizontal')
@@ -415,15 +390,9 @@ export class ScrollBox extends Container
 
         if (this._trackpad)
         {
-            const maxWidth
-                = this.borderMask.width
-                - this.layout.width
-                - (this.options.horPadding * 2);
+            const maxWidth = this.borderMask.width - this.layout.width - (this.horPadding * 2);
 
-            const maxHeight
-                = this.borderMask.height
-                - this.layout.height
-                - (this.options.vertPadding * 2);
+            const maxHeight = this.borderMask.height - this.layout.height - (this.vertPadding * 2);
 
             if (this.options.type === 'vertical')
             {
@@ -456,10 +425,7 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
 
         document.removeEventListener('mousewheel', this.onMouseScrollBinded);
-        document.removeEventListener(
-            'DOMMouseScroll',
-            this.onMouseScrollBinded,
-        );
+        document.removeEventListener('DOMMouseScroll', this.onMouseScrollBinded);
     }
 
     private onMouseScroll(event: any): void
@@ -468,23 +434,18 @@ export class ScrollBox extends Container
 
         if (
             this.options.type === 'horizontal'
-            && (typeof event.deltaX !== 'undefined'
-                || typeof event.deltaY !== 'undefined')
+            && (typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined')
         )
         {
             const targetPos = event.deltaY
                 ? this.layout.x - event.deltaY
                 : this.layout.x - event.deltaX;
 
-            if (
-                targetPos < 0
-                && targetPos + this.layoutWidth + this.options.horPadding
-                    < this.__width
-            )
+            if (targetPos < 0 && targetPos + this.layoutWidth + this.horPadding < this.__width)
             {
                 this._trackpad.xAxis.value = this.__width - this.layoutWidth;
             }
-            else if (targetPos > this.options.horPadding)
+            else if (targetPos > this.horPadding)
             {
                 this._trackpad.xAxis.value = 0;
             }
@@ -497,15 +458,11 @@ export class ScrollBox extends Container
         {
             const targetPos = this.layout.y - event.deltaY;
 
-            if (
-                targetPos < 0
-                && targetPos + this.layoutHeight + this.options.vertPadding
-                    < this.__height
-            )
+            if (targetPos < 0 && targetPos + this.layoutHeight + this.vertPadding < this.__height)
             {
                 this._trackpad.yAxis.value = this.__height - this.layoutHeight;
             }
-            else if (targetPos > this.options.vertPadding)
+            else if (targetPos > this.vertPadding)
             {
                 this._trackpad.yAxis.value = 0;
             }
@@ -584,18 +541,12 @@ export class ScrollBox extends Container
 
         this._trackpad.xAxis.value
             = this.options.type === 'horizontal'
-                ? this.__width
-                  - target.x
-                  - target.width
-                  - this.options.horPadding
+                ? this.__width - target.x - target.width - this.horPadding
                 : 0;
 
         this._trackpad.yAxis.value
             = !this.options.type || this.options.type === 'vertical'
-                ? this.__height
-                  - target.y
-                  - target.height
-                  - this.options.vertPadding
+                ? this.__height - target.y - target.height - this.vertPadding
                 : 0;
     }
 
@@ -627,8 +578,7 @@ export class ScrollBox extends Container
                 this.stopRenderHiddenItems();
             }
         }
-        else
-        if (this.layout.y !== this._trackpad.y)
+        else if (this.layout.y !== this._trackpad.y)
         {
             this.renderAllItems();
             this.layout.y = this._trackpad.y;
@@ -637,5 +587,15 @@ export class ScrollBox extends Container
         {
             this.stopRenderHiddenItems();
         }
+    }
+
+    private get vertPadding(): number
+    {
+        return this.layout.padding.top + this.layout.padding.bottom;
+    }
+
+    private get horPadding(): number
+    {
+        return this.layout.padding.left + this.layout.padding.right;
     }
 }

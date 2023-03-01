@@ -1,12 +1,12 @@
 import { Container } from '@pixi/display';
+import { Padding, PaddingController } from './controllers/PaddingController';
 
 export type LayoutType = 'horizontal' | 'vertical';
 
 export type LayoutOptions = {
     elementsMargin?: number;
     children?: Container[];
-    vertPadding?: number;
-    horPadding?: number;
+    padding?: Padding;
 };
 
 /**
@@ -36,11 +36,16 @@ export class Layout extends Container
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
 
+    /** Store control flexible padding config */
+    public padding: PaddingController;
+
     constructor(options?: { type?: LayoutType } & LayoutOptions)
     {
         super();
 
         this.options = options;
+
+        this.padding = new PaddingController(options.padding ?? 0);
 
         if (options?.type)
         {
@@ -55,17 +60,19 @@ export class Layout extends Container
 
     protected override onChildrenChange()
     {
-        let x = this.options?.horPadding ?? 0;
-        let y = this.options?.vertPadding ?? 0;
+        const { left, right, top } = this.padding;
+
+        let x = left;
+        let y = top;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
 
         this.children.forEach((child) =>
         {
-            if (!this.type && x + child.width >= this.parent.width)
+            if (!this.type && x + child.width >= this.parent.width - right)
             {
                 y += elementsMargin + child.height;
-                x = this.options?.horPadding ?? 0;
+                x = left;
 
                 child.x = x;
                 child.y = y;
