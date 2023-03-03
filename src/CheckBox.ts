@@ -42,7 +42,7 @@ export class CheckBox extends Switcher
         super([unchecked, checked], ['onPress'], options.checked ? 1 : 0);
 
         this.label = new Text(options.text ?? '', options.style.text);
-        this.label.visible = options.text.length > 0;
+        this.label.visible = options.text?.length > 0;
         this.label.x = unchecked.width + 10;
         this.label.y = (unchecked.height - this.label.height) / 2;
 
