@@ -68,10 +68,7 @@ export class Slider extends SliderBase
 
         this.options = options;
 
-        if (options.value !== undefined)
-        {
-            this.progress = ((options.value ?? this.min) - this.min) / (this.max - this.min) * 100;
-        }
+        this.progress = ((options.value ?? this.min) - this.min) / (this.max - this.min) * 100;
 
         this.value = options.value ?? this.min;
     }
