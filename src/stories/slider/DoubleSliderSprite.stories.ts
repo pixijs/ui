@@ -33,6 +33,8 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
             slider2: 'slider.png',
             min,
             max,
+            value1,
+            value2,
             valueTextStyle: {
                 fill: fontColor,
                 fontSize

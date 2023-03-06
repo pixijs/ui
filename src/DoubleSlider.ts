@@ -35,9 +35,58 @@ export class DoubleSlider extends SliderBase
         super(options);
 
         this.options = options;
+        this.setInitialState();
+    }
 
-        this.value2 = options.value2 ?? this.max;
-        this.value1 = options.value1 ?? this.min;
+    private setInitialState()
+    {
+        this.validateValues();
+
+        const { value1, value2 } = this.options;
+
+        this.updateProgress(value1, value2);
+
+        this.value2 = value2;
+        this.value1 = value1;
+    }
+
+    private updateProgress(value1 = this.value1, value2 = this.value2)
+    {
+        this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
+        this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
+    }
+
+    private validateValues()
+    {
+        if (!this.options.value1)
+        {
+            this.options.value1 = this.min;
+        }
+
+        if (!this.options.value2)
+        {
+            this.options.value2 = this.options.max;
+        }
+
+        if (this.options.value2 < this.options.value1)
+        {
+            this.options.value2 = this.options.value1;
+        }
+
+        if (this.options.value1 < this.options.min)
+        {
+            this.options.value1 = this.options.min;
+        }
+
+        if (this.options.value1 > this.options.max)
+        {
+            this.options.value1 = this.options.max;
+        }
+
+        if (this.options.value2 > this.options.max)
+        {
+            this.options.value2 = this.options.max;
+        }
     }
 
     /** Returns left value. */
@@ -56,15 +105,16 @@ export class DoubleSlider extends SliderBase
 
         this._value1 = value1;
 
-        this.updateProgress();
+        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progressStart;
 
-        const progress = ((this.max - this.min) / 100) * value1;
-
-        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * progress;
+        if (this.slider1.x > this.slider2.x)
+        {
+            this.slider1.x = this.slider2.x;
+        }
 
         if (this.options.showValue)
         {
-            this.value1Text.text = `${value1}`;
+            this.value1Text.text = `${Math.round(value1)}`;
 
             const sliderPosX = this.slider1.x + (this.slider1.width / 2);
             const sliderPosY = this.slider1.y;
@@ -92,15 +142,16 @@ export class DoubleSlider extends SliderBase
 
         this._value2 = value2;
 
-        this.updateProgress();
+        this.slider2.x = ((this.bg.width - this.slider2.width) / 100) * this.progress;
 
-        const progress = ((this.max - this.min) / 100) * value2;
-
-        this.slider2.x = ((this.bg.width - this.slider2.width) / 100) * progress;
+        if (this.slider2.x < this.slider1.x)
+        {
+            this.slider2.x = this.slider1.x;
+        }
 
         if (this.options.showValue)
         {
-            this.value2Text.text = `${value2}`;
+            this.value2Text.text = `${Math.round(value2)}`;
 
             const sliderPosX = this.slider2.x + (this.slider2.width / 2);
             const sliderPosY = this.slider2.y;
@@ -131,11 +182,14 @@ export class DoubleSlider extends SliderBase
 
         if (this.activeValue === 'value1')
         {
-            this.value1 = ((this.max - this.min) / 100) * progress;
+            this.progressStart = progress;
+            this.value1 = this.min + (((this.max - this.min) / 100) * progress);
+            this.updateProgress(this.value1, this.value2);
         }
         else
         {
-            this.value2 = ((this.max - this.min) / 100) * progress;
+            this.progress = progress;
+            this.value2 = this.min + (((this.max - this.min) / 100) * progress);
         }
     }
 
@@ -146,13 +200,8 @@ export class DoubleSlider extends SliderBase
         this.activeValue = null;
     }
 
-    private updateProgress()
+    protected override change()
     {
-        this.progressStart = ((this.max - this.min) / 100) * this._value1;
-        this.progress = ((this.max - this.min) / 100) * this._value2;
-    }
-
-    protected override change() {
         this.onChange?.emit(this.value1, this.value2);
     }
 }
