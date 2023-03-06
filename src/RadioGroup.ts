@@ -4,7 +4,7 @@ import { Sprite } from '@pixi/sprite';
 import { ITextStyle, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { CheckBox } from './CheckBox';
-import { Layout, LayoutType } from './Layout';
+import { List, ListType } from './List';
 
 export type GraphicsType = {
     color: number;
@@ -23,7 +23,7 @@ export type RadioBoxStyle = {
 
 export type RadioBoxOptions = {
     items: string[];
-    type: LayoutType;
+    type: ListType;
     elementsMargin: number;
     style: RadioBoxStyle;
     selectedItem?: number;
@@ -48,8 +48,8 @@ export class RadioGroup extends Container
     private readonly options: RadioBoxOptions;
     private items: CheckBox[] = [];
 
-    /** {@link Layout}, that holds and control all inned checkboxes.S  */
-    public innerView: Layout;
+    /** {@link List}, that holds and control all inned checkboxes.S  */
+    public innerView: List;
 
     /** Text value of the selected item. */
     public value: string;
@@ -69,7 +69,7 @@ export class RadioGroup extends Container
 
         this.selected = options.selectedItem;
 
-        this.innerView = new Layout({
+        this.innerView = new List({
             type: options.type,
             elementsMargin: options.elementsMargin
         });

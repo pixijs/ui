@@ -1,5 +1,5 @@
 import { Graphics } from '@pixi/graphics';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
@@ -32,7 +32,7 @@ export const UseGraphics: StoryFn = ({
     vertical
 }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     fillColor = getColor(fillColor);
     borderColor = getColor(borderColor);

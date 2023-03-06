@@ -1,8 +1,8 @@
 import { Container } from '@pixi/display';
 
-export type LayoutType = 'horizontal' | 'vertical';
+export type ListType = 'horizontal' | 'vertical';
 
-export type LayoutOptions = {
+export type ListOptions = {
     elementsMargin?: number;
     children?: Container[];
     vertPadding?: number;
@@ -14,29 +14,29 @@ export type LayoutOptions = {
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
- * const layout = new Layout({
+ * const list = new List({
  *    children: [
         new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50),
         new Graphics().beginFill(0xFFFFFF).drawRect(0, 0, 50, 50),
  *    ],
  * });
  *
- * layout.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
+ * list.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
  */
-export class Layout extends Container
+export class List extends Container
 {
-    private readonly options?: { type?: LayoutType } & LayoutOptions;
+    private readonly options?: { type?: ListType } & ListOptions;
 
     /** Container, that holds all inner elements. */
     public view: Container;
 
     /** Arrange direction. */
-    public type: LayoutType;
+    public type: ListType;
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
 
-    constructor(options?: { type?: LayoutType } & LayoutOptions)
+    constructor(options?: { type?: ListType } & ListOptions)
     {
         super();
 

@@ -1,7 +1,7 @@
 import { Graphics } from '@pixi/graphics';
 import { CheckBox } from '../../CheckBox';
 import { action } from '@storybook/addon-actions';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
@@ -39,7 +39,7 @@ export const UseGraphics = ({
     onPress
 }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     color = getColor(color);
     borderColor = getColor(borderColor);

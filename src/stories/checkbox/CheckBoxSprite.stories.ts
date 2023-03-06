@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { CheckBox } from '../../CheckBox';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preloadAssets } from '../utils/loader';
@@ -16,7 +16,7 @@ const args = {
 
 export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =>
 {
-    const view = new Layout({
+    const view = new List({
         type: 'vertical',
         elementsMargin: 5
     });

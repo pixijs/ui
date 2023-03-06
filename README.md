@@ -18,7 +18,7 @@ npm install @pixi/ui
 There is no default export. The correct way to import pixi-ui is:
 
 ```js
-import { Button, Layout, ScrollBox } from '@pixi/ui';
+import { Button, ScrollBox } from '@pixi/ui';
 ```
 
 To use any of the components you can go to it's page and copy/paste the example code to your project.

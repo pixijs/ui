@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -46,7 +46,7 @@ export const UseGraphics = ({
     onChange
 }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     backgroundColor = getColor(backgroundColor);
     borderColor = getColor(borderColor);

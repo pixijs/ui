@@ -57,7 +57,7 @@
     "docsName": "PixiJS UI",
     "docsTitle": "PixiJS UI",
     "docsDescription": "API Documentation for UI components made with PixiJS",
-    "docsKeyword": "PixiJS, UI, components, layout"
+    "docsKeyword": "PixiJS, UI, components"
   },
   "dependencies": {
     "tweedle.js": "^2.0.1",

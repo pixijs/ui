@@ -1,7 +1,7 @@
 import { RadioGroup } from '../../RadioGroup';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { preloadAssets } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
@@ -15,7 +15,7 @@ const args = {
 
 export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
 {
-    const view = new Layout({
+    const view = new List({
         type: 'vertical',
         elementsMargin: 20
     });
