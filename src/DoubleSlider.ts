@@ -151,4 +151,8 @@ export class DoubleSlider extends SliderBase
         this.progressStart = ((this.max - this.min) / 100) * this._value1;
         this.progress = ((this.max - this.min) / 100) * this._value2;
     }
+
+    protected override change() {
+        this.onChange?.emit(this.value1, this.value2);
+    }
 }

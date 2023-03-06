@@ -6,6 +6,7 @@ import { removeHitBox } from './utils/helpers/hitbox';
 import { getView } from './utils/helpers/view';
 import { ProgressBar } from './ProgressBar';
 import { FederatedPointerEvent } from '@pixi/events';
+import { Signal } from 'typed-signals';
 
 export type BaseSliderOptions = {
     bg: Container | string;
@@ -47,6 +48,9 @@ export class SliderBase extends ProgressBar
 
     /** Maximal value. */
     public max = 100;
+
+    private startUpdateValue1!: number;
+    private startUpdateValue2!: number;
 
     constructor(options: BaseSliderOptions)
     {
@@ -145,6 +149,8 @@ export class SliderBase extends ProgressBar
     protected startUpdate(event: FederatedPointerEvent)
     {
         this.dragging = 1;
+        this.startUpdateValue1 = this._value1;
+        this.startUpdateValue2 = this._value2;
         this.update(event);
     }
 
@@ -152,9 +158,23 @@ export class SliderBase extends ProgressBar
     {
         if (!this.dragging) return;
         this.dragging = 0;
+        
+        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2) {
+            this.change();
+        }
+
+        this.startUpdateValue1 = null;
+        this.startUpdateValue2 = null;
     }
 
+    /* Called when dragging started and on every move. */
     protected update(_event: FederatedPointerEvent)
+    {
+    // override me
+    }
+
+    /** Called when dragging stopped. */
+    protected change()
     {
     // override me
     }

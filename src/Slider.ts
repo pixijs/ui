@@ -45,11 +45,11 @@ export class Slider extends SliderBase
 {
     private options: SliderOptions;
 
-    /** Fires when value changed, only when slider is released. */
-    public onChange: Signal<(value: number) => void> = new Signal();
-
     /** Fires when value is changing, on every move of slider. */
     public onUpdate: Signal<(value: number) => void> = new Signal();
+
+    /** Fires when value changed, only when slider is released. */
+    public onChange: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)
     {
@@ -117,5 +117,9 @@ export class Slider extends SliderBase
         {
             this.value = ((this.max - this.min) / 100) * progress;
         }
+    }
+    
+    protected override change() {
+        this.onChange?.emit(this.value);
     }
 }
