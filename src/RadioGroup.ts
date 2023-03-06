@@ -14,10 +14,9 @@ export type RadioBoxOptions = {
  * Creates a container-based group of checkbox elements, that can be used as radio buttons.
  *
  * Only one checkbox can be selected at a time.
- * 
- * List of items is passed as an array of {@link CheckBox} objects. 
+ *
+ * List of items is passed as an array of {@link CheckBox} objects.
  * That should be created before passing to the RadioGroup.
- * 
  * @example
  * new RadioGroup({
  *     selectedItem: 0,
@@ -44,9 +43,13 @@ export class RadioGroup extends Container
     /** Fires, when new item is selected. */
     public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
 
-    constructor(private options: RadioBoxOptions)
+    private options: RadioBoxOptions;
+
+    constructor(options: RadioBoxOptions)
     {
         super();
+
+        this.options = options;
 
         this.value = options.items[options.selectedItem || 0].label.text;
 
@@ -67,7 +70,7 @@ export class RadioGroup extends Container
         });
 
         this.selectItem(options.selectedItem || 0); // select first item by default
-        
+
         this.addChild(this.innerView);
 
         this.onChange = new Signal();
@@ -83,12 +86,12 @@ export class RadioGroup extends Container
         {
             item.forceCheck(key === id);
         });
-        
+
         if (this.selected !== id)
         {
             this.onChange.emit(id, this.items[id].label.text);
         }
-        
+
         this.value = this.options.items[id].label.text;
         this.selected = id;
     }
