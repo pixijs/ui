@@ -80,6 +80,7 @@ export const Single: StoryFn = ({
         slider,
         min,
         max,
+        value,
         valueTextStyle: {
             fill: fontColor,
             fontSize

@@ -6,7 +6,6 @@ import { removeHitBox } from './utils/helpers/hitbox';
 import { getView } from './utils/helpers/view';
 import { ProgressBar } from './ProgressBar';
 import { FederatedPointerEvent } from '@pixi/events';
-import { Signal } from 'typed-signals';
 
 export type BaseSliderOptions = {
     bg: Container | string;
@@ -158,8 +157,9 @@ export class SliderBase extends ProgressBar
     {
         if (!this.dragging) return;
         this.dragging = 0;
-        
-        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2) {
+
+        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2)
+        {
             this.change();
         }
 
