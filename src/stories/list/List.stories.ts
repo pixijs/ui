@@ -8,26 +8,23 @@ import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 
 const args = {
+    type: ['vertical', 'horizontal'],
     fontColor: '#000000',
-    backgroundColor: '#F5E3A9',
-    width: 320,
-    height: 420,
     radius: 20,
     elementsMargin: 10,
-    vertPadding: 10,
-    horPadding: 10,
-    elementsPadding: 10,
-    elementsWidth: 300,
-    elementsHeight: 80,
+    vertPadding: 0,
+    horPadding: 0,
+    elementsWidth: 200,
+    elementsHeight: 70,
     itemsAmount: 3,
-    type: ['vertical', 'horizontal'],
     onPress: action('Button pressed')
 };
 
-export const Vertical: StoryFn = ({
+export const UseGraphics: StoryFn = ({
+    type,
     fontColor,
     elementsMargin,
     vertPadding,
@@ -36,7 +33,6 @@ export const Vertical: StoryFn = ({
     elementsHeight,
     radius,
     itemsAmount,
-    type,
     onPress
 }: any) =>
 {
@@ -53,6 +49,7 @@ export const Vertical: StoryFn = ({
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
+                fontSize: 28,
                 fill: fontColor
             })
         });
@@ -64,7 +61,7 @@ export const Vertical: StoryFn = ({
     }
 
     // Component usage !!!
-    const layout = new Layout({
+    const layout = new List({
         elementsMargin,
         vertPadding,
         horPadding,
@@ -82,7 +79,7 @@ export const Vertical: StoryFn = ({
 };
 
 export default {
-    title: 'Components/Layout/Vertical',
+    title: 'Components/List/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

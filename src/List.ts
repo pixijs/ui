@@ -10,7 +10,7 @@ export type ListOptions = {
 };
 
 /**
- * Container-based element for arranging Pixi containers based on their sizes.
+ * Container-based component for arranging Pixi containers one after another based on their sizes.
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
@@ -62,7 +62,7 @@ export class List extends Container
 
         this.children.forEach((child) =>
         {
-            if (!this.type && x + child.width >= this.parent.width)
+            if (!!this.parent && !this.type && x + child.width >= this.parent.width)
             {
                 y += elementsMargin + child.height;
                 x = this.options?.horPadding ?? 0;
