@@ -21,9 +21,10 @@ const args = {
     height: 70,
     radius: 11,
     amount: 1,
-    horizontalPadding: 11,
-    verticalPadding: 11,
-
+    paddingTop: 0,
+    paddingRight: 0,
+    paddingBottom: 0,
+    paddingLeft: 0,
     onChange: action('Input: ')
 };
 
@@ -41,8 +42,10 @@ export const UseGraphics = ({
     maxLength,
     align,
     placeholder,
-    horizontalPadding,
-    verticalPadding,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
     onChange
 }: any) =>
 {
@@ -70,7 +73,7 @@ export const UseGraphics = ({
             align,
             placeholder,
             value: text,
-            padding: [verticalPadding + (border ? border + 3 : 0), horizontalPadding + (border ? border + 3 : 0)]
+            padding: [paddingTop, paddingRight, paddingBottom, paddingLeft]
         });
 
         input.onChange.connect(() => onChange(input.value));

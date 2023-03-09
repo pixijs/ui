@@ -14,10 +14,10 @@ const args = {
     textColor: '#000000',
     maxLength: 100,
     fontSize: 24,
-    paddingTop: 11,
-    paddingRight: 11,
-    paddingBottom: 11,
-    paddingLeft: 11,
+    paddingTop: 0,
+    paddingRight: 0,
+    paddingBottom: 0,
+    paddingLeft: 0,
     amount: 1,
     onChange: action('Input: ')
 };
