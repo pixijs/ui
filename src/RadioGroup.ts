@@ -11,27 +11,42 @@ export type RadioBoxOptions = {
 };
 
 /**
- * Creates a container-based group of checkbox elements, that can be used as radio buttons.
+ * Creates a container-based controlling wrapper for checkbox elements,
+ * for them top behave as radio buttons.
  *
- * Only one checkbox can be selected at a time.
+ * Only one checkbox/radio button can be selected at a time.
  *
  * List of items is passed as an array of {@link CheckBox} objects.
- * That should be created before passing to the RadioGroup.
  * @example
  * new RadioGroup({
- *     selectedItem: 0,
- *     items: ['Option 1', 'Option 2', 'Option 3'],
- *     style: {
- *         bg: 'radio.png',
- *         checked: 'radio_checked.png'
- *     },
+ *     items: [
+ *          new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *         new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *          new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *     ],
+ *     type: 'vertical'
  * });
  */
 export class RadioGroup extends Container
 {
     private items: CheckBox[] = [];
 
-    /** {@link List}, that holds and control all inned checkboxes.S  */
+    /** {@link List}, that holds and control all inned checkboxes.  */
     public innerView: List;
 
     /** Text value of the selected item. */
@@ -53,7 +68,7 @@ export class RadioGroup extends Container
 
         this.value = options.items[options.selectedItem || 0].label.text;
 
-        this.selected = options.selectedItem;
+        this.selected = options.selectedItem ?? 0; // first item by default
 
         this.innerView = new List({
             type: options.type,
@@ -69,7 +84,7 @@ export class RadioGroup extends Container
             this.innerView.addChild(checkBox);
         });
 
-        this.selectItem(options.selectedItem || 0); // select first item by default
+        this.selectItem(this.selected);
 
         this.addChild(this.innerView);
 
