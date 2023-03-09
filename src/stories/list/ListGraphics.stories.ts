@@ -1,5 +1,4 @@
 import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { FancyButton } from '../../FancyButton';
@@ -11,21 +10,27 @@ import { getColor } from '../utils/color';
 import { List } from '../../List';
 
 const args = {
-    type: ['vertical', 'horizontal'],
+    type: [null, 'horizontal', 'vertical'],
     fontColor: '#000000',
+    bgColor: '#FFFFFF',
+    width: 270,
+    height: 270,
     radius: 20,
     elementsMargin: 10,
-    vertPadding: 0,
-    horPadding: 0,
-    elementsWidth: 200,
+    vertPadding: 20,
+    horPadding: 20,
+    elementsWidth: 70,
     elementsHeight: 70,
-    itemsAmount: 3,
+    itemsAmount: 9,
     onPress: action('Button pressed')
 };
 
 export const UseGraphics: StoryFn = ({
     type,
     fontColor,
+    bgColor,
+    width,
+    height,
     elementsMargin,
     vertPadding,
     horPadding,
@@ -36,9 +41,10 @@ export const UseGraphics: StoryFn = ({
     onPress
 }: any) =>
 {
-    const view = new Container();
-
     fontColor = getColor(fontColor);
+    bgColor = getColor(bgColor);
+
+    const view = new Graphics().beginFill(bgColor).drawRoundedRect(0, 0, width, height, radius);
 
     const items = [];
 
@@ -47,7 +53,8 @@ export const UseGraphics: StoryFn = ({
         const button = new FancyButton({
             defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(`Item ${i + 1}`, {
+            pressedView: new Graphics().beginFill(0xfe6048).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            text: new Text(i + 1, {
                 ...defaultTextStyle,
                 fontSize: 28,
                 fill: fontColor
@@ -61,16 +68,15 @@ export const UseGraphics: StoryFn = ({
     }
 
     // Component usage !!!
-    const layout = new List({
+    const list = new List({
         elementsMargin,
         vertPadding,
         horPadding,
         type
     });
 
-    items.forEach((item) => layout.addChild(item));
-
-    view.addChild(layout);
+    view.addChild(list);
+    items.forEach((item) => list.addChild(item));
 
     return {
         view,

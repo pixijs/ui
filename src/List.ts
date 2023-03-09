@@ -12,6 +12,9 @@ export type ListOptions = {
 /**
  * Container-based component for arranging Pixi containers one after another based on their sizes.
  *
+ * If type is not specified, it will be set, items will be arranged to fit horizontally,
+ * after there is no space left, new line will be started, so items will be arranged like `inline-block` in css.
+ *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
  * const list = new List({
@@ -31,7 +34,7 @@ export class List extends Container
     public view: Container;
 
     /** Arrange direction. */
-    public type: ListType = 'vertical';
+    public type: ListType;
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
@@ -51,42 +54,54 @@ export class List extends Container
         {
             options.children.map((child) => this.addChild(child));
         }
+
+        this.on('added', () => this.arrangeChildren());
     }
 
     protected override onChildrenChange()
+    {
+        this.arrangeChildren();
+    }
+
+    private arrangeChildren()
     {
         let x = this.options?.horPadding ?? 0;
         let y = this.options?.vertPadding ?? 0;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
+        const maxWidth = this.parent?.width - this.options?.horPadding;
 
-        this.children.forEach((child) =>
+        this.children.forEach((child, id) =>
         {
-            if (!!this.parent && !this.type && x + child.width >= this.parent.width)
-            {
-                y += elementsMargin + child.height;
-                x = this.options?.horPadding ?? 0;
-
-                child.x = x;
-                child.y = y;
-            }
-            else
-            {
-                child.x = x;
-                child.y = y;
-            }
-
             switch (this.type)
             {
-                case 'horizontal':
-                    x += elementsMargin + child.width;
-                    break;
-
                 case 'vertical':
+                    child.y = y;
+                    child.x = x;
+
                     y += elementsMargin + child.height;
                     break;
 
-                default:
+                case 'horizontal':
+                    child.x = x;
+                    child.y = y;
+
+                    x += elementsMargin + child.width;
+                    break;
+
+                default: // bidirectional
+                    child.x = x;
+                    child.y = y;
+
+                    if (child.x + child.width >= maxWidth && id > 0)
+                    {
+                        y += elementsMargin + child.height;
+                        x = this.options?.horPadding ?? 0;
+
+                        child.x = x;
+                        child.y = y;
+                    }
+
                     x += elementsMargin + child.width;
                     break;
             }
