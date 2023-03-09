@@ -12,8 +12,8 @@ import { List } from '../../List';
 const args = {
     type: [null, 'horizontal', 'vertical'],
     fontColor: '#000000',
-    bgColor: '#FFFFFF',
-    width: 270,
+    bgColor: '#f5e3a9',
+    width: 271,
     height: 270,
     radius: 20,
     elementsMargin: 10,
