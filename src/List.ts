@@ -31,11 +31,7 @@ export class List extends Container
     public view: Container;
 
     /** Arrange direction. */
-<<<<<<< HEAD:src/List.ts
-    public type: ListType;
-=======
-    public type: LayoutType = 'vertical';
->>>>>>> main:src/Layout.ts
+    public type: ListType = 'vertical';
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
