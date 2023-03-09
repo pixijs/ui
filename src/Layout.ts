@@ -31,7 +31,7 @@ export class Layout extends Container
     public view: Container;
 
     /** Arrange direction. */
-    public type: LayoutType;
+    public type: LayoutType = 'vertical';
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
