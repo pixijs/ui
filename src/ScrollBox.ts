@@ -1,5 +1,5 @@
 import { Ticker } from '@pixi/core';
-import { Container } from '@pixi/display';
+import { Container, DisplayObject } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
@@ -62,7 +62,7 @@ export class ScrollBox extends Container
 
     private _trackpad: Trackpad;
     private isDragging = 0;
-    private childrenInteractiveStorage: boolean[] = [];
+    private interactiveStorage: DisplayObject[] = [];
     private ticker = Ticker.shared;
     private readonly options: ScrollBoxOptions;
 
@@ -274,14 +274,14 @@ export class ScrollBox extends Container
         {
             this.isDragging = 0;
             this._trackpad.pointerUp();
-            this.restoreChildrenInteractivity();
+            this.restoreInteractivity();
         });
 
         this.on('pointerupoutside', () =>
         {
             this.isDragging = 0;
             this._trackpad.pointerUp();
-            this.restoreChildrenInteractivity();
+            this.restoreInteractivity();
         });
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
@@ -290,7 +290,7 @@ export class ScrollBox extends Container
 
             if (this.isDragging)
             {
-                this.disableChildrenInteractivity();
+                this.recursiveDisableInteractivity(this.items);
             }
         });
 
@@ -299,35 +299,31 @@ export class ScrollBox extends Container
         this.on('mouseover', onMouseHover, this).on('mouseout', onMouseOut, this);
     }
 
-    private disableChildrenInteractivity()
+    // prevent interactivity on all children
+    private recursiveDisableInteractivity(items: DisplayObject[])
     {
-        // prevent clicks on buttons
-        this.items.forEach((item, itemID) =>
+        items.forEach((item) =>
         {
-            if (!this.childrenInteractiveStorage[itemID])
+            if (item.interactive)
             {
-                this.childrenInteractiveStorage[itemID]
-                    = item.interactive === true;
+                this.interactiveStorage.push(item);
+                item.interactive = false;
             }
 
-            item.interactive = false;
+            if (item instanceof Container)
+            {
+                this.recursiveDisableInteractivity(item.children);
+            }
         });
     }
 
-    private restoreChildrenInteractivity()
+    // restore interactivity on all children that had it
+    private restoreInteractivity()
     {
-        // restore clicks on buttons
-        this.items.forEach((item, itemID) =>
+        this.interactiveStorage.forEach((item, itemID) =>
         {
-            const wasItemInteractive
-                = this.childrenInteractiveStorage[itemID] === true;
-
-            if (wasItemInteractive)
-            {
-                item.interactive = wasItemInteractive;
-
-                delete this.childrenInteractiveStorage[itemID];
-            }
+            item.interactive = true;
+            delete this.interactiveStorage[itemID];
         });
     }
 
