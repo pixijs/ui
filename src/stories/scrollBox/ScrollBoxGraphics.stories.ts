@@ -47,6 +47,8 @@ export const UseGraphics: StoryFn = ({
 
     for (let i = 0; i < itemsAmount; i++)
     {
+        const buttonWrapper = new Container();
+
         const button = new FancyButton({
             defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
@@ -57,10 +59,12 @@ export const UseGraphics: StoryFn = ({
             })
         });
 
+        buttonWrapper.addChild(button);
+
         button.anchor.set(0);
         button.onPress.connect(() => onPress(i + 1));
 
-        items.push(button);
+        items.push(buttonWrapper);
     }
 
     // Component usage !!!
