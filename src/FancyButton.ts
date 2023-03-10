@@ -126,6 +126,7 @@ export class FancyButton extends Container
     private events: Button;
     private animations: StateAnimations;
     private originalInnerViewState: AnimationData;
+    private defaultDuration = 100;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     public padding: number;
@@ -464,13 +465,6 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
-        if (this.innerView)
-        {
-            const { x, y, width, height } = this.innerView;
-
-            this.hitArea = new Rectangle(x - (width * anchorX), y - (height * anchorY), width, height);
-        }
-
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
     }
@@ -488,6 +482,13 @@ export class FancyButton extends Container
 
         this.defaultView = getView(defaultView);
         this.innerView.addChild(this.defaultView);
+
+        this.hitArea = new Rectangle(
+            -this.defaultView.width / 2,
+            -this.defaultView.height / 2,
+            this.defaultView.width,
+            this.defaultView.height
+        );
 
         if (hoverView)
         {
@@ -581,18 +582,21 @@ export class FancyButton extends Container
     {
         if (!this.animations) return;
 
-        if (state === 'default' && !this.originalInnerViewState)
+        if (state === 'default')
         {
-            this.originalInnerViewState = {
-                x: this.innerView.x,
-                y: this.innerView.y,
-                width: this.innerView.width,
-                height: this.innerView.height,
-                scale: {
-                    x: this.innerView.scale.x,
-                    y: this.innerView.scale.y
-                }
-            };
+            if (!this.originalInnerViewState)
+            {
+                this.originalInnerViewState = {
+                    x: this.innerView.x,
+                    y: this.innerView.y,
+                    width: this.innerView.width,
+                    height: this.innerView.height,
+                    scale: {
+                        x: this.innerView.scale.x,
+                        y: this.innerView.scale.y
+                    }
+                };
+            }
 
             // first animation state is default, so we don't need to animate it
             // this part will run only once, during initialization
@@ -606,23 +610,26 @@ export class FancyButton extends Container
                 this.innerView.height = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
                 this.innerView.scale.x = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
                 this.innerView.scale.y = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
-            }
 
-            return;
+                return;
+            }
         }
 
         const stateAnimation = this.animations[state] ?? this.animations.default;
 
-        if (this.animations && stateAnimation)
+        if (stateAnimation)
         {
             const data = this.animations[state];
 
+            this.defaultDuration = data.duration;
+
             new Tween(this.innerView).to(data.props, data.duration).start();
+
+            return;
         }
-        else if (this.animations && state === 'default')
-        {
-            new Tween(this.innerView).to(this.originalInnerViewState, 100).start();
-        }
+
+        // if there is no animation for the current state, animate the button to the default state
+        new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
     /**
      * Method called when the button pressed.
