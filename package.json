@@ -76,6 +76,8 @@
     "@pixi/storybook-renderer": "^0.0.4",
     "@pixi/storybook-webpack5": "^0.0.4",
     "@pixi/text": "^7.1.1",
+    "@pixi/text-bitmap": "^7.1.4",
+    "@pixi/text-html": "^7.2.0-beta.2",
     "@storybook/addon-essentials": "7.0.0-beta.13",
     "@storybook/addon-interactions": "7.0.0-beta.13",
     "@storybook/addon-links": "7.0.0-beta.13",
