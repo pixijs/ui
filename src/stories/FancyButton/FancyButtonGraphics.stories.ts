@@ -150,7 +150,7 @@ export const UseGraphics = ({
 };
 
 export default {
-    title: 'Components/FancyButton/UseGraphics',
+    title: 'Components/FancyButton/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
