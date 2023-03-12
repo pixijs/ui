@@ -515,7 +515,10 @@ export class FancyButton extends Container
             this.createIconView(icon);
         }
 
-        this.createTextView(text);
+        if (text)
+        {
+            this.createTextView(text);
+        }
     }
 
     /** Creates all button events */

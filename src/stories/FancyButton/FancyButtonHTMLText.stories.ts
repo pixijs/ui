@@ -4,7 +4,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
-import { BitmapFont, BitmapText } from '@pixi/text-bitmap';
+import { HTMLText } from '@pixi/text-html';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 
 const args = {
@@ -20,7 +20,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UsingSpriteAndBitmapText = ({
+export const UsingSpriteAndHTMLText = ({
     text,
     textColor,
     disabled,
@@ -39,12 +39,10 @@ export const UsingSpriteAndBitmapText = ({
 
     preload(assets).then(() =>
     {
-        BitmapFont.from('TitleFont', {
+        const title = new HTMLText(text, {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill
         });
-
-        const title = new BitmapText(text, { fontName: 'TitleFont' });
 
         // Component usage !!!
         const button = new FancyButton({
@@ -91,7 +89,7 @@ export const UsingSpriteAndBitmapText = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Using Sprite And  BitmapText',
+    title: 'Components/FancyButton/Using Sprite And HTMLText',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
