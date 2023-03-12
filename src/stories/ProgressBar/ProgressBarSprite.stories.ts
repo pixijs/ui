@@ -1,7 +1,7 @@
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import type { StoryFn } from '@storybook/types';
 import { List } from '../../List';
 
@@ -19,7 +19,7 @@ export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 
     let progressBar: ProgressBar;
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
     // Component usage !!!
         progressBar = new ProgressBar({

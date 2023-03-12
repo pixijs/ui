@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { MaskedFrame } from '../../MaskedFrame';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 import { getColor } from '../utils/color';
 
@@ -17,7 +17,7 @@ export const UseSprite = ({ borderColor, borderWidth }: any) =>
 
     const assets = [`avatar-01.png`, `avatar_mask.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         borderColor = getColor(borderColor);
 

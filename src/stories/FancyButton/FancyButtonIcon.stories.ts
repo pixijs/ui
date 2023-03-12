@@ -3,7 +3,7 @@ import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerView } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
@@ -62,7 +62,7 @@ export const UseIcon = ({
 
     const assets = [`avatar-01.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         const target = Sprite.from(`avatar-01.png`);
 

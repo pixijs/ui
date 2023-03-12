@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
@@ -31,7 +31,7 @@ export const UseSprite: StoryFn = ({
 
     let select: Select;
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         backgroundColor = getColor(backgroundColor);
         const hoverColor = getColor(dropDownHoverColor);

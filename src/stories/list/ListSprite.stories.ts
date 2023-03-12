@@ -5,7 +5,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { FancyButton } from '../../FancyButton';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
@@ -27,7 +27,7 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
 
     const assets = [`window.png`, `SmallButton.png`, `SmallButton-hover.png`, `SmallButton-pressed.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         const window = Sprite.from(`window.png`);
         const title = new Text(`Levels`, { fill: 0x000000, fontSize: 40 });

@@ -4,7 +4,7 @@ import { List } from '../../List';
 import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
@@ -41,7 +41,7 @@ export const UseSprite = ({
 
     const assets = [`input.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         for (let i = 0; i < amount; i++)
         {

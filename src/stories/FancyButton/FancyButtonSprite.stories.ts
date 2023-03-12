@@ -3,7 +3,7 @@ import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
 
@@ -37,7 +37,7 @@ export const UseSprite = ({
 
     const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
     // Component usage !!!
         const button = new FancyButton({

@@ -1,9 +1,8 @@
 import { ObservablePoint, Ticker, Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
 import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
-import { getTextView } from './utils/helpers/text';
+import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { Button } from './Button';
 import { Signal } from 'typed-signals';
 import { FederatedPointerEvent } from '@pixi/events';
@@ -23,7 +22,7 @@ type Views = {
     hoverView?: string | Container;
     pressedView?: string | Container;
     disabledView?: string | Container;
-    text?: string | number | Text;
+    text?: AnyText;
     icon?: string | Container;
 };
 type AnimationData = {
@@ -156,7 +155,7 @@ export class FancyButton extends Container
     public disabledView!: Container;
 
     /** View for the button text. */
-    public textView!: Text;
+    public textView!: PixiText;
 
     /** View for the button icon. */
     public iconView!: Container;
@@ -320,9 +319,9 @@ export class FancyButton extends Container
     /**
      *
      * Manage button text view.
-     * @param {string | Text} text - can be a string or a Text (Container-based element).
+     * @param {string | Text} text - can be a string, Text, BitmapText ot HTMLText (Container-based element).
      */
-    private createTextView(text: string | number | Text)
+    private createTextView(text: AnyText)
     {
         this.textView = getTextView(text);
         this.innerView.addChild(this.textView);
