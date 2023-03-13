@@ -45,11 +45,14 @@ export class Input extends Container
 {
     private readonly bg: Container;
     private readonly inputField: Text;
+    private readonly _shadowInput: Text;
     private readonly inputMask: Graphics;
     private readonly placeholder: Text;
     private _cursor: Sprite;
     private editing = false;
     private tick = 0;
+    private _cursorPosition = 0;
+    private textStyle: TextStyle;
 
     private activation = false;
     private readonly options: InputOptions;
@@ -86,9 +89,10 @@ export class Input extends Container
             align: 'center'
         } as TextStyle;
 
-        const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
+        this.textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
 
-        this.inputField = new Text('', textStyle);
+        this.inputField = new Text('', this.textStyle);
+        this._shadowInput = new Text('', this.textStyle);
 
         this.padding = options.padding;
 
@@ -111,12 +115,12 @@ export class Input extends Container
         this._cursor.alpha = 0;
         this._cursor.mask = this.inputMask;
 
-        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
+        this.placeholder = new Text(options.placeholder, this.textStyle ?? defaultTextStyle);
         this.placeholder.visible = !!options.placeholder;
 
         this.value = options.value ?? '';
 
-        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask);
+        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask, this._shadowInput);
 
         this.align();
 
@@ -166,21 +170,7 @@ export class Input extends Container
                 this.onEnter.emit(this.value);
             });
 
-            window.addEventListener('keydown', (e) =>
-            {
-                const key = e.key;
-
-                if (key === 'Backspace')
-                {
-                    this._delete();
-                }
-                else if (key === 'Escape' || key === 'Enter')
-                {
-                    this.stopEditing();
-                    this.onEnter.emit(this.value);
-                }
-                else if (key.length === 1) this._add(key);
-            });
+            window.addEventListener('keydown', (e) => this.readKey(e));
         }
 
         this.onEnter = new Signal();
@@ -189,7 +179,7 @@ export class Input extends Container
         Ticker.shared.add((delta) => this.update(delta));
     }
 
-    private _add(key: string): void
+    private add(key: string): void
     {
         if (!this.editing)
         {
@@ -201,17 +191,41 @@ export class Input extends Container
             return;
         }
 
-        this.value = this.value + key;
+        this.insert(key);
 
         this.onChange.emit(this.value);
     }
 
-    private _delete(): void
+    private insert(string: string): void
     {
-        if (!this.editing || this.value.length === 0) return;
+        const prevText = this.value.substring(0, this.cursorPosition);
+        const postText = this.value.substring(this.cursorPosition, this.value.length);
+
+        this.cursorPosition++;
+
+        this.value = prevText + string + postText;
+    }
+
+    private backspace(): void
+    {
+        if (!this.editing || this.value.length === 0 || this.cursorPosition === 0) return;
+
         const array = this.value.split('');
 
-        array.pop();
+        array.splice(this.cursorPosition - 1, 1);
+        this.value = array.join('');
+        this.cursorPosition--;
+
+        this.onChange.emit(this.value);
+    }
+
+    private delete(): void
+    {
+        if (!this.editing || this.value.length === 0 || this.cursorPosition === this.value.length) return;
+
+        const array = this.value.split('');
+
+        array.splice(this.cursorPosition, 1);
         this.value = array.join('');
 
         this.onChange.emit(this.value);
@@ -234,6 +248,49 @@ export class Input extends Container
         }
 
         this.align();
+    }
+
+    private readKey(e: KeyboardEvent)
+    {
+        if (!this.editing) return;
+
+        const key = e.key;
+
+        console.log(key, this.cursorPosition);
+
+        switch (key)
+        {
+            case 'Backspace':
+                this.backspace();
+                break;
+            case 'Delete':
+                this.delete();
+                break;
+            case 'Escape':
+            case 'Enter':
+            case 'Tab':
+                this.stopEditing();
+                this.onEnter.emit(this.value);
+                break;
+            case 'ArrowLeft':
+                this.cursorPosition = Math.max(0, this.cursorPosition - 1);
+                break;
+            case 'ArrowRight':
+                this.cursorPosition = Math.min(this.value.length, this.cursorPosition + 1);
+                break;
+            case 'Home':
+                this.cursorPosition = 0;
+                break;
+            case 'End':
+                this.cursorPosition = this.value.length;
+                break;
+            default:
+                if (key.length === 1) this.add(key);
+                break;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     private handleActivation()
@@ -279,12 +336,16 @@ export class Input extends Container
         this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.inputField.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom;
 
+        this._shadowInput.anchor.set(align, 0.5);
+        this._shadowInput.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this._shadowInput.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom + 50;
+
         this.placeholder.anchor.set(align, 0.5);
         this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this.bg.height / 2;
 
-        this._cursor.x = this.getCursorPosX();
         this._cursor.y = this.inputField.y;
+        this.alignCursor();
     }
 
     private getAlign(): 0 | 1 | 0.5
@@ -305,23 +366,6 @@ export class Input extends Container
                 return 0.5;
             case 'right':
                 return 1;
-            default:
-                return 0;
-        }
-    }
-
-    private getCursorPosX()
-    {
-        const align = this.getAlign();
-
-        switch (align)
-        {
-            case 0:
-                return this.inputField.x + this.inputField.width;
-            case 0.5:
-                return this.inputField.x + (this.inputField.width * 0.5);
-            case 1:
-                return this.inputField.x;
             default:
                 return 0;
         }
@@ -392,5 +436,39 @@ export class Input extends Container
     public get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
+    }
+
+    private getCursorPosX()
+    {
+        const align = this.getAlign();
+
+        switch (align)
+        {
+            case 0:
+                return this.inputField.x - this.inputField.width;
+            case 0.5:
+                return this.inputField.x - (this.inputField.width * 0.5);
+            case 1:
+                return this.inputField.x;
+            default:
+                return 0;
+        }
+    }
+
+    private set cursorPosition(value: number)
+    {
+        this._cursorPosition = value;
+        this.alignCursor();
+    }
+
+    private get cursorPosition(): number
+    {
+        return this._cursorPosition;
+    }
+
+    private alignCursor()
+    {
+        this._shadowInput.text = this.value.slice(0, this._cursorPosition);
+        this._cursor.x = this.getCursorPosX() + (this._cursorPosition > 0 ? this._shadowInput.width : 0);
     }
 }
