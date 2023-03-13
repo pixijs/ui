@@ -25,6 +25,8 @@ export type InputOptions = {
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
+    selectionColor?: number;
+    selectionOpacity?: number;
 };
 
 /**
@@ -50,9 +52,11 @@ export class Input extends Container
     private readonly placeholder: Text;
     private _cursor: Sprite;
     private editing = false;
+    private selectStart!: number;
     private tick = 0;
     private _cursorPosition = 0;
     private textStyle: TextStyle;
+    private selectionPointer: Sprite;
 
     private activation = false;
     private readonly options: InputOptions;
@@ -96,6 +100,12 @@ export class Input extends Container
 
         this.padding = options.padding;
 
+        this.selectionPointer = new Sprite(Texture.WHITE);
+        this.selectionPointer.width = 0;
+        this.selectionPointer.height = this.inputField.height;
+        this.selectionPointer.tint = options.selectionColor ?? 0x000000;
+        this.selectionPointer.alpha = options.selectionOpacity ?? 0.5;
+
         this.inputMask = new Graphics()
             .beginFill(0xffffff)
             .drawRect(
@@ -120,7 +130,15 @@ export class Input extends Container
 
         this.value = options.value ?? '';
 
-        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask, this._shadowInput);
+        this.addChild(
+            this.bg,
+            this.inputField,
+            this.placeholder,
+            this._cursor,
+            this.inputMask,
+            this._shadowInput,
+            this.selectionPointer
+        );
 
         this.align();
 
@@ -170,7 +188,7 @@ export class Input extends Container
                 this.onEnter.emit(this.value);
             });
 
-            window.addEventListener('keydown', (e) => this.readKey(e));
+            window.addEventListener('keydown', (e) => this.onKeyDown(e));
         }
 
         this.onEnter = new Signal();
@@ -250,13 +268,11 @@ export class Input extends Container
         this.align();
     }
 
-    private readKey(e: KeyboardEvent)
+    private onKeyDown(e: KeyboardEvent)
     {
         if (!this.editing) return;
 
         const key = e.key;
-
-        console.log(key, this.cursorPosition);
 
         switch (key)
         {
@@ -273,15 +289,19 @@ export class Input extends Container
                 this.onEnter.emit(this.value);
                 break;
             case 'ArrowLeft':
+                this.detectSelection(e);
                 this.cursorPosition = Math.max(0, this.cursorPosition - 1);
                 break;
             case 'ArrowRight':
+                this.detectSelection(e);
                 this.cursorPosition = Math.min(this.value.length, this.cursorPosition + 1);
                 break;
             case 'Home':
+                this.detectSelection(e);
                 this.cursorPosition = 0;
                 break;
             case 'End':
+                this.detectSelection(e);
                 this.cursorPosition = this.value.length;
                 break;
             default:
@@ -309,6 +329,7 @@ export class Input extends Container
     {
         this._cursor.alpha = 0;
         this.editing = false;
+        this.selectStart = null;
 
         if (this.inputField.text === '')
         {
@@ -438,7 +459,7 @@ export class Input extends Container
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 
-    private getCursorPosX()
+    private inputFieldLeftPos()
     {
         const align = this.getAlign();
 
@@ -468,7 +489,63 @@ export class Input extends Container
 
     private alignCursor()
     {
-        this._shadowInput.text = this.value.slice(0, this._cursorPosition);
-        this._cursor.x = this.getCursorPosX() + (this._cursorPosition > 0 ? this._shadowInput.width : 0);
+        const cursorOffset = this.getTextWidth(this.textBeforeCursor);
+
+        if (this.selectStart)
+        {
+            const top = this.inputField.y - (this.inputField.height * 0.5);
+            const bottom = this.inputField.height;
+
+            const selectStartOffset = this.getTextWidth(this.textBeforeSelection);
+
+            this.selectionPointer.y = top;
+            this.selectionPointer.height = bottom;
+
+            this.selectionPointer.x = this.inputFieldLeftPos() + Math.min(cursorOffset, selectStartOffset);
+            this.selectionPointer.width = Math.abs(cursorOffset - selectStartOffset);
+        }
+
+        this._cursor.x = this.inputFieldLeftPos() + cursorOffset;
+    }
+
+    private detectSelection(e: KeyboardEvent)
+    {
+        if (e.shiftKey)
+        {
+            if (!this.selectStart)
+            {
+                this.selectStart = this.cursorPosition;
+            }
+        }
+        else
+        {
+            this.selectionPointer.width = 0;
+            this.selectStart = null;
+        }
+    }
+
+    private getTextWidth(text: string): number
+    {
+        if (text.length === 0) return 0;
+
+        this._shadowInput.text = text;
+
+        return this._shadowInput.width;
+    }
+
+    private get textBeforeSelection(): string
+    {
+        return this.value.slice(0, this.selectStart);
+    }
+
+    private get textBeforeCursor(): string
+    {
+        return this.value.slice(0, this._cursorPosition);
+    }
+
+    /** Return selected text. */
+    public get selectedText(): string
+    {
+        return this.value.slice(this.selectStart, this._cursorPosition - this.selectStart);
     }
 }
