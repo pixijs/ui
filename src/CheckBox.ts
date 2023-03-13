@@ -34,6 +34,8 @@ export class CheckBox extends Switcher
     /** Signal emitted when checkbox state changes. */
     public onCheck: Signal<(state: boolean) => void>;
 
+    private _style: CheckBoxStyle;
+
     constructor(options: CheckBoxOptions)
     {
         const unchecked = getView(options.style.unchecked);
@@ -51,6 +53,31 @@ export class CheckBox extends Switcher
         this.onCheck = new Signal();
 
         this.onChange.connect(() => this.onCheck.emit(this.checked));
+    }
+
+    /** Setter, which sets a checkbox style settings. */
+    set style(style: CheckBoxStyle)
+    {
+        if (style.text)
+        {
+            this.label.style = style.text;
+        }
+
+        if (style.unchecked)
+        {
+            this.children[0] = getView(style.unchecked);
+        }
+
+        if (style.checked)
+        {
+            this.children[1] = getView(style.checked);
+        }
+    }
+
+    /** Getter, which returns a checkbox style settings. */
+    get style(): CheckBoxStyle
+    {
+        return this._style;
     }
 
     /** Getter, which returns a checkbox state. */
