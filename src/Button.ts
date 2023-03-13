@@ -57,11 +57,14 @@ export class Button
     constructor(view: Container)
     {
         this._view = view;
+        this.init();
+    }
 
+    /** Creates and connect interaction events. */
+    init()
+    {
         this.createEvents();
         this.connectEvents();
-
-        this.enabled = true;
     }
 
     /** Set button view, thar all the interaction events are applied to. */
@@ -83,10 +86,9 @@ export class Button
     /**
      * Method called when the button pressed.
      * To be overridden.
-     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public down(_btn?: this, _e?: FederatedPointerEvent)
+    public down(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -94,10 +96,9 @@ export class Button
     /**
      * Method called when the button is up.
      * To be overridden.
-     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public up(_btn?: this, _e?: FederatedPointerEvent)
+    public up(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -106,10 +107,9 @@ export class Button
      * Method called when the mouse hovers the button.
      * To be overridden.
      * This is fired only on PC.
-     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public hover(_btn?: this, _e?: FederatedPointerEvent)
+    public hover(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -205,14 +205,14 @@ export class Button
         }
     }
 
-    private _upOut(_btn?: this, _e?: FederatedPointerEvent)
+    private _upOut(_e?: FederatedPointerEvent)
     {
-        _btn.upOut(_e);
+        this.upOut(_e);
     }
 
-    private _out(_btn?: this, _e?: FederatedPointerEvent)
+    private _out(_e?: FederatedPointerEvent)
     {
-        _btn.out(_e);
+        this.out(_e);
     }
 
     private _processOver(_e: FederatedPointerEvent)
@@ -253,14 +253,14 @@ export class Button
         this.view.on('pointertap', this._processTap, this);
         this.view.on('pointerover', this._processOver, this);
 
-        this.onDown.connect(this.down);
-        this.onUp.connect(this.up);
-        this.onUpOut.connect(this._upOut);
-        this.onOut.connect(this._out);
+        this.onDown.connect(() => this.down());
+        this.onUp.connect(() => this.up());
+        this.onUpOut.connect(() => this._upOut());
+        this.onOut.connect(() => this._out());
 
         if (!utils.isMobile.any)
         {
-            this.onHover.connect(this.hover);
+            this.onHover.connect(() => this.hover());
         }
     }
 
@@ -273,14 +273,29 @@ export class Button
         this.view.off('pointertap', this._processTap, this);
         this.view.off('pointerover', this._processOver, this);
 
-        this.onDown.disconnect(this.down);
-        this.onUp.disconnect(this.up);
-        this.onUpOut.disconnect(this._upOut);
-        this.onOut.disconnect(this._out);
+        this.onDown.disconnectAll();
+        this.onUp.disconnectAll();
+        this.onUpOut.disconnectAll();
+        this.onOut.disconnectAll();
 
         if (!utils.isMobile.any)
         {
-            this.onHover.disconnect(this.hover);
+            this.onHover.disconnectAll();
         }
+    }
+
+    /** Disconnects nad deletes all interaction events. */
+    destroy()
+    {
+        this.disconnectEvents();
+
+        delete this.onPress;
+        delete this.onDown;
+        delete this.onUp;
+        delete this.onHover;
+        delete this.onOut;
+        delete this.onUpOut;
+
+        this._view = null;
     }
 }
