@@ -21,8 +21,10 @@ import { Signal } from 'typed-signals';
  */
 export class Button
 {
-    /** Container, given as a constructor parameter that is a button view. */
-    public view: Container;
+    private _view: Container;
+    private _isDown: boolean;
+    private _isMouseIn: boolean;
+    private _enabled = true;
 
     /** Event that is fired when the button is pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -48,29 +50,43 @@ export class Button
      */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    private _isDown: boolean;
-    private _isMouseIn: boolean;
-    private _enabled: boolean;
-
     /**
      * Turns a given container-based view into a button by adding all button events.
      * @param {Container} view - Contained-based view
      */
     constructor(view: Container)
     {
-        this.view = view;
+        this._view = view;
 
         this.createEvents();
+        this.connectEvents();
 
         this.enabled = true;
+    }
+
+    /** Set button view, thar all the interaction events are applied to. */
+    set view(view: Container)
+    {
+        this.disconnectEvents();
+
+        this._view = view;
+
+        this.connectEvents();
+    }
+
+    /** Get button view, thar all the interaction events are applied to. */
+    get view(): Container
+    {
+        return this._view;
     }
 
     /**
      * Method called when the button pressed.
      * To be overridden.
+     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public down(_e?: FederatedPointerEvent)
+    public down(_btn?: this, _e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -78,9 +94,10 @@ export class Button
     /**
      * Method called when the button is up.
      * To be overridden.
+     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public up(_e?: FederatedPointerEvent)
+    public up(_btn?: this, _e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -89,9 +106,10 @@ export class Button
      * Method called when the mouse hovers the button.
      * To be overridden.
      * This is fired only on PC.
+     * @param _btn - this context
      * @param {FederatedPointerEvent} _e - event data
      */
-    public hover(_e?: FederatedPointerEvent)
+    public hover(_btn?: this, _e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -137,7 +155,7 @@ export class Button
     }
 
     /**
-     * Swither, which prevents all button events from firing.
+     * Switcher, which prevents all button events from firing.
      * @param {boolean} enabled
      */
     set enabled(enabled: boolean)
@@ -158,43 +176,62 @@ export class Button
         return this._enabled;
     }
 
-    private _processUp(e?: FederatedPointerEvent)
+    private _processUp(_e?: FederatedPointerEvent)
     {
         if (this._isDown)
         {
-            this.onUp.emit(this, e);
+            this.onUp.emit(this, _e);
         }
         this._isDown = false;
     }
 
-    private _processUpOut(e?: FederatedPointerEvent)
+    private _processUpOut(_e?: FederatedPointerEvent)
     {
         if (this._isDown)
         {
-            this.onUp.emit(this, e);
-            this.onUpOut.emit(this, e);
+            this.onUp.emit(this, _e);
+            this.onUpOut.emit(this, _e);
         }
 
         this._isDown = false;
     }
 
-    private _processOut(e?: FederatedPointerEvent)
+    private _processOut(_e?: FederatedPointerEvent)
     {
         if (this._isMouseIn)
         {
             this._isMouseIn = false;
-            this.onOut.emit(this, e);
+            this.onOut.emit(this, _e);
         }
     }
 
-    private _upOut(e?: FederatedPointerEvent)
+    private _upOut(_btn?: this, _e?: FederatedPointerEvent)
     {
-        this.upOut(e);
+        _btn.upOut(_e);
     }
 
-    private _out(e?: FederatedPointerEvent)
+    private _out(_btn?: this, _e?: FederatedPointerEvent)
     {
-        this.out(e);
+        _btn.out(_e);
+    }
+
+    private _processOver(_e: FederatedPointerEvent)
+    {
+        this._isMouseIn = true;
+        this.onHover.emit(this, _e);
+    }
+
+    private _processTap(_e: FederatedPointerEvent)
+    {
+        this._isDown = false;
+        this.onPress.emit(this, _e);
+        this.press(_e);
+    }
+
+    private _processDown(_e: FederatedPointerEvent): void
+    {
+        this._isDown = true;
+        this.onDown.emit(this, _e);
     }
 
     private createEvents()
@@ -205,67 +242,45 @@ export class Button
         this.onHover = new Signal();
         this.onOut = new Signal();
         this.onUpOut = new Signal();
+    }
 
-        this.view.on('pointerdown', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = true;
-            this.onDown.emit(this, e);
-        });
+    private connectEvents()
+    {
+        this.view.on('pointerdown', this._processDown, this);
+        this.view.on('pointerup', this._processUp, this);
+        this.view.on('pointerupoutside', this._processUpOut, this);
+        this.view.on('pointerout', this._processOut, this);
+        this.view.on('pointertap', this._processTap, this);
+        this.view.on('pointerover', this._processOver, this);
 
-        this.view.on('pointerup', (e: FederatedPointerEvent) =>
-        {
-            this._processUp(e);
-        });
-
-        this.view.on('pointerupoutside', (e: FederatedPointerEvent) =>
-        {
-            this._processUpOut(e);
-        });
-
-        this.view.on('pointerout', (e: FederatedPointerEvent) =>
-        {
-            this._processOut(e);
-        });
-
-        this.view.on('pointertap', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = false;
-            this.onPress.emit(this, e);
-            this.press(e);
-        });
-
-        this.view.on('pointerover', (e: FederatedPointerEvent) =>
-        {
-            this._isMouseIn = true;
-            this.onHover.emit(this, e);
-        });
-
-        this.onDown.connect((_btn, e) =>
-        {
-            this.down(e);
-        });
-
-        this.onUp.connect((_btn, e) =>
-        {
-            this.up(e);
-        });
-
-        this.onUpOut.connect((_bth, e) =>
-        {
-            this._upOut(e);
-        });
+        this.onDown.connect(this.down);
+        this.onUp.connect(this.up);
+        this.onUpOut.connect(this._upOut);
+        this.onOut.connect(this._out);
 
         if (!utils.isMobile.any)
         {
-            this.onHover.connect((_bth, e) =>
-            {
-                this.hover(e);
-            });
+            this.onHover.connect(this.hover);
         }
+    }
 
-        this.onOut.connect((_bth, e) =>
+    private disconnectEvents()
+    {
+        this.view.off('pointerdown', this._processDown, this);
+        this.view.off('pointerup', this._processUp, this);
+        this.view.off('pointerupoutside', this._processUpOut, this);
+        this.view.off('pointerout', this._processOut, this);
+        this.view.off('pointertap', this._processTap, this);
+        this.view.off('pointerover', this._processOver, this);
+
+        this.onDown.disconnect(this.down);
+        this.onUp.disconnect(this.up);
+        this.onUpOut.disconnect(this._upOut);
+        this.onOut.disconnect(this._out);
+
+        if (!utils.isMobile.any)
         {
-            this._out(e);
-        });
+            this.onHover.disconnect(this.hover);
+        }
     }
 }
