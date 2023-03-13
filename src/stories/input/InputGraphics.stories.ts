@@ -65,9 +65,9 @@ export const UseGraphics = ({
                 .beginFill(backgroundColor)
                 .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
             textStyle: {
-                ...defaultTextStyle,
                 fill: textColor,
-                fontSize
+                fontSize,
+                fontWeight: 'bold'
             },
             maxLength,
             align,

@@ -50,9 +50,9 @@ export const UseSprite = ({
                 bg: Sprite.from('input.png'),
                 padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                 textStyle: {
-                    ...defaultTextStyle,
                     fill: textColor,
-                    fontSize
+                    fontSize,
+                    fontWeight: 'bold'
                 },
                 maxLength,
                 align,
