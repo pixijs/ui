@@ -58,6 +58,8 @@ export class Button
     {
         this._view = view;
         this.init();
+
+        this.enabled = true;
     }
 
     /** Creates and connect interaction events. */
