@@ -1,12 +1,11 @@
 import { Texture, utils, Ticker } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
-import { DragObject, Padding } from './utils/HelpTypes';
+import { Padding } from './utils/HelpTypes';
 
 export type InputOptions = {
     bg?: Container | string;
@@ -166,9 +165,9 @@ export class Input extends Container
         }
         else
         {
-            window.addEventListener('click', (e) =>
+            window.addEventListener('click', () =>
             {
-                this.handleActivation(e);
+                this.handleActivation();
                 this.onEnter.emit(this.value);
             });
 
@@ -261,7 +260,7 @@ export class Input extends Container
         this.onChange.emit(this.value);
     }
 
-    private _startEditing(e: FederatedPointerEvent | TouchEvent): void
+    private _startEditing(): void
     {
         this.tick = 0;
         this.editing = true;
@@ -276,17 +275,6 @@ export class Input extends Container
             keyboard.click();
             keyboard.value = this.value;
         }
-
-        const obj = e.currentTarget as DragObject;
-        // const { x } = obj.parent.worldTransform.applyInverse(e.global);
-
-        console.log({
-            obj,
-            x: e.x,
-            start: this.inputFieldLeftPos,
-            width: this.inputField.width
-            // x
-        });
 
         this.cursorPosition = this.value.length;
 
@@ -393,13 +381,13 @@ export class Input extends Container
         e.stopPropagation();
     }
 
-    private handleActivation(e: FederatedPointerEvent | TouchEvent)
+    private handleActivation()
     {
         this.stopEditing();
 
         if (this.activation)
         {
-            this._startEditing(e);
+            this._startEditing();
 
             this.activation = false;
         }
