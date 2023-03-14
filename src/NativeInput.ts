@@ -120,7 +120,6 @@ export class NativeInput extends Container
         this.nativeElement.style.backgroundColor = 'transparent';
         this.nativeElement.style.border = 'none';
         this.nativeElement.style.outline = 'none';
-        this.nativeElement.style.place;
     }
 
     public setStyles(styles?: Partial<CSSStyleDeclaration>)
