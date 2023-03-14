@@ -13,7 +13,7 @@ const args = {
     paddingBottom: 11,
     paddingLeft: 11,
     placeholder: 'Enter text',
-    onChange: action('Input: ')
+    onChange: action('onChange')
 };
 
 export const Native = ({
@@ -42,6 +42,9 @@ export const Native = ({
                 value: text,
                 placeholder,
                 bg: 'input.png',
+                styles: {
+                    fontSize: '20px'
+                },
                 padding: {
                     top: paddingTop,
                     right: paddingRight,
@@ -50,7 +53,7 @@ export const Native = ({
                 }
             });
 
-            input.onChange.connect(() => onChange(input.value));
+            input.onChange.connect((val) => onChange(`Input${i}: ${val}`));
 
             view.addChild(input);
         }

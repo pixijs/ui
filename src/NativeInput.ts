@@ -10,7 +10,7 @@ export type NativeInputOptions = {
     bg: Container | string;
     placeholder?: string;
     value?: string;
-    styles?: CSSStyleDeclaration;
+    styles?: Partial<CSSStyleDeclaration>;
     padding?: Padding;
 };
 
@@ -37,6 +37,9 @@ export class NativeInput extends Container
     /** Fires every time input string is changed. */
     public readonly onChange: Signal<(text: string) => void>;
 
+    /** Fires when input loses focus. */
+    public readonly onEnter: Signal<(text: string) => void>;
+
     private ticker = Ticker.shared;
     private bg: Container;
 
@@ -55,6 +58,8 @@ export class NativeInput extends Container
     /** Left side padding */
     public paddingLeft = 0;
 
+    public id: string;
+
     constructor(options: NativeInputOptions)
     {
         super();
@@ -62,6 +67,8 @@ export class NativeInput extends Container
         this.canvas = options.canvas;
 
         this.padding = options.padding;
+
+        this.id = options.id;
 
         this.bg = getView(options.bg);
 
@@ -86,6 +93,7 @@ export class NativeInput extends Container
         this.canvas.parentElement?.appendChild(this.nativeElement);
 
         this.onChange = new Signal();
+        this.onEnter = new Signal();
 
         this.ticker.add(this.update, this);
 
@@ -95,7 +103,8 @@ export class NativeInput extends Container
             this.ticker.remove(this.update, this);
         });
 
-        this.nativeElement.addEventListener('input', () => this.onChange.emit(this.nativeElement.value));
+        this.nativeElement.addEventListener('input', () => this.onEnter.emit(this.nativeElement.value));
+        this.nativeElement.addEventListener('blur', () => this.onChange.emit(this.nativeElement.value));
     }
 
     private setDefaultStyles()
@@ -111,11 +120,11 @@ export class NativeInput extends Container
         this.nativeElement.style.outline = 'none';
     }
 
-    public setStyles(styles?: CSSStyleDeclaration)
+    public setStyles(styles?: Partial<CSSStyleDeclaration>)
     {
         for (const prop in styles)
         {
-            if (Object.hasOwn(this.nativeElement, prop))
+            if (Object.hasOwn(this.nativeElement.style, prop))
             {
                 this.nativeElement.style[prop as any] = styles[prop];
             }
