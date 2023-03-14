@@ -4,6 +4,7 @@ import { NativeInput } from '../../NativeInput';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { Container } from '@pixi/display';
 
 const args = {
     text: '',
@@ -55,17 +56,31 @@ export const Native = ({
             view.addChild(input);
         }
 
-        centerElement(view);
+        resizeCanvas(view);
     });
 
     return {
         view,
-        resize: () =>
-        {
-            centerElement(view);
-        }
+        resize: () => resizeCanvas(view)
     };
 };
+
+function resizeCanvas(view: Container)
+{
+    const canvasWrapper = document.getElementById('storybook-root');
+    const canvas = canvasWrapper.getElementsByTagName('canvas')[0];
+
+    canvas.style.position = 'absolute';
+    canvas.style.top = '50%';
+    canvas.style.left = '50%';
+    // canvas.style.width = '50%';
+    // canvas.style.height = '50%';
+    canvas.style.marginLeft = `-${canvas.width / 4}px`;
+    canvas.style.marginTop = `-${canvas.height / 4}px`;
+
+    // view.x = canvas.offsetWidth / 2;
+    // view.y = canvas.offsetHeight / 2;
+}
 
 export default {
     title: 'Components/Input/Native',
