@@ -129,10 +129,6 @@ export class NativeInput extends Container
         // const canvasTop = this.canvas.offsetTop;
         const canvasStyle = this.canvas.getBoundingClientRect();
 
-        console.log({
-            canvasStyle
-        });
-
         this.nativeElement.style.left = `${canvasStyle.x + bgPos.x + this.paddingLeft}px`;
         this.nativeElement.style.top = `${canvasStyle.y + bgPos.y + this.paddingTop}px`;
 
