@@ -9,6 +9,7 @@ export type NativeInputOptions = {
     canvas: HTMLCanvasElement;
     bg: Container | string;
     placeholder?: string;
+    maxLength?: number;
     value?: string;
     styles?: Partial<CSSStyleDeclaration>;
     padding?: Padding;
@@ -82,6 +83,7 @@ export class NativeInput extends Container
         }
 
         this.nativeElement = document.createElement('input');
+        this.nativeElement.maxLength = options.maxLength ?? 100;
         this.nativeElement.type = 'text';
         this.nativeElement.id = options.id;
         this.nativeElement.value = options.value ?? '';
@@ -110,7 +112,7 @@ export class NativeInput extends Container
     private setDefaultStyles()
     {
         this.nativeElement.style.color = 'black';
-        this.nativeElement.style.fontSize = '3vh';
+        this.nativeElement.style.fontSize = '7vh';
         this.nativeElement.style.position = 'absolute';
         this.nativeElement.style.top = '0';
         this.nativeElement.style.left = '0';
@@ -118,6 +120,7 @@ export class NativeInput extends Container
         this.nativeElement.style.backgroundColor = 'transparent';
         this.nativeElement.style.border = 'none';
         this.nativeElement.style.outline = 'none';
+        this.nativeElement.style.place;
     }
 
     public setStyles(styles?: Partial<CSSStyleDeclaration>)

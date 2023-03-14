@@ -7,12 +7,16 @@ import { preload } from '../utils/loader';
 
 const args = {
     text: '',
-    amount: 1,
+    placeholder: 'Enter text',
+    align: ['center', 'left', 'right'],
+    textColor: '#000000',
+    maxLength: 100,
+    fontSize: 24,
     paddingTop: 11,
     paddingRight: 11,
     paddingBottom: 11,
     paddingLeft: 11,
-    placeholder: 'Enter text',
+    amount: 1,
     onChange: action('onChange')
 };
 
@@ -24,7 +28,11 @@ export const Native = ({
     paddingTop,
     paddingRight,
     paddingBottom,
-    paddingLeft
+    paddingLeft,
+    fontSize,
+    align,
+    textColor,
+    maxLength
 }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
@@ -43,8 +51,12 @@ export const Native = ({
                 placeholder,
                 bg: 'input.png',
                 styles: {
-                    fontSize: '20px'
+                    fontSize,
+                    textAlign: align,
+                    color: textColor,
+                    fontWeight: 'bold'
                 },
+                maxLength,
                 padding: {
                     top: paddingTop,
                     right: paddingRight,
