@@ -1,21 +1,12 @@
 import { Texture, utils, Ticker } from '@pixi/core';
 import { Container } from '@pixi/display';
+import { FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
-
-export type Padding =
-  | number
-  | [number, number]
-  | [number, number, number, number]
-  | {
-      left?: number;
-      right?: number;
-      top?: number;
-      bottom?: number;
-  };
+import { DragObject, Padding } from './utils/HelpTypes';
 
 export type InputOptions = {
     bg?: Container | string;
@@ -25,6 +16,8 @@ export type InputOptions = {
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
+    cursorColor?: number;
+    cursorWidth?: number;
     selectionColor?: number;
     selectionOpacity?: number;
 };
@@ -47,16 +40,16 @@ export class Input extends Container
 {
     private readonly bg: Container;
     private readonly inputField: Text;
-    private readonly _shadowInput: Text;
+    private readonly _textMeasureHelper: Text;
     private readonly inputMask: Graphics;
     private readonly placeholder: Text;
-    private _cursor: Sprite;
     private editing = false;
     private selectStart!: number;
     private tick = 0;
-    private _cursorPosition = 0;
     private textStyle: TextStyle;
     private selectionPointer: Sprite;
+    private _cursorPosition = 0;
+    private _cursor: Sprite;
 
     private activation = false;
     private readonly options: InputOptions;
@@ -96,13 +89,12 @@ export class Input extends Container
         this.textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
 
         this.inputField = new Text('', this.textStyle);
-        this._shadowInput = new Text('', this.textStyle);
+        this._textMeasureHelper = new Text('', this.textStyle);
 
         this.padding = options.padding;
 
         this.selectionPointer = new Sprite(Texture.WHITE);
         this.selectionPointer.width = 0;
-        this.selectionPointer.height = this.inputField.height;
         this.selectionPointer.tint = options.selectionColor ?? 0x000000;
         this.selectionPointer.alpha = options.selectionOpacity ?? 0.5;
 
@@ -118,9 +110,9 @@ export class Input extends Container
         this.inputField.mask = this.inputMask;
 
         this._cursor = new Sprite(Texture.WHITE);
-        this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
+        this._cursor.tint = options.cursorColor || 0x000000;
         this._cursor.anchor.set(0.5);
-        this._cursor.width = 2;
+        this._cursor.width = options.cursorWidth || 2;
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
         this._cursor.mask = this.inputMask;
@@ -130,17 +122,9 @@ export class Input extends Container
 
         this.value = options.value ?? '';
 
-        this.addChild(
-            this.bg,
-            this.inputField,
-            this.placeholder,
-            this._cursor,
-            this.inputMask,
-            this._shadowInput,
-            this.selectionPointer
-        );
+        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask, this.selectionPointer);
 
-        this.align();
+        this.alignElements();
 
         this.cursor = 'text';
         this.interactive = true;
@@ -149,7 +133,7 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            window.addEventListener('touchstart', () => this.handleActivation());
+            window.addEventListener('touchstart', (e) => this.handleActivation(e));
 
             let keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
 
@@ -182,9 +166,9 @@ export class Input extends Container
         }
         else
         {
-            window.addEventListener('click', () =>
+            window.addEventListener('click', (e) =>
             {
-                this.handleActivation();
+                this.handleActivation(e);
                 this.onEnter.emit(this.value);
             });
 
@@ -226,7 +210,21 @@ export class Input extends Container
 
     private backspace(): void
     {
-        if (!this.editing || this.value.length === 0 || this.cursorPosition === 0) return;
+        if (!this.editing || this.value.length === 0) return;
+
+        if (this.cursorPosition === 0 && this.selectedText === '') return;
+
+        if (this.selectedText !== '')
+        {
+            this.value = this.value.replace(this.selectedText, '');
+            this.cursorPosition = this.selectStart;
+            this.selectStart = null;
+            this.alignCursor();
+
+            this.onChange.emit(this.value);
+
+            return;
+        }
 
         const array = this.value.split('');
 
@@ -239,7 +237,21 @@ export class Input extends Container
 
     private delete(): void
     {
-        if (!this.editing || this.value.length === 0 || this.cursorPosition === this.value.length) return;
+        if (!this.editing || this.value.length === 0) return;
+
+        if (this.cursorPosition === this.value.length && this.selectedText === '') return;
+
+        if (this.selectedText !== '')
+        {
+            this.value = this.value.replace(this.selectedText, '');
+            this.cursorPosition = this.selectStart;
+            this.selectStart = null;
+            this.alignCursor();
+
+            this.onChange.emit(this.value);
+
+            return;
+        }
 
         const array = this.value.split('');
 
@@ -249,7 +261,7 @@ export class Input extends Container
         this.onChange.emit(this.value);
     }
 
-    private _startEditing(): void
+    private _startEditing(e: FederatedPointerEvent | TouchEvent): void
     {
         this.tick = 0;
         this.editing = true;
@@ -265,7 +277,20 @@ export class Input extends Container
             keyboard.value = this.value;
         }
 
-        this.align();
+        const obj = e.currentTarget as DragObject;
+        // const { x } = obj.parent.worldTransform.applyInverse(e.global);
+
+        console.log({
+            obj,
+            x: e.x,
+            start: this.inputFieldLeftPos,
+            width: this.inputField.width
+            // x
+        });
+
+        this.cursorPosition = this.value.length;
+
+        this.alignElements();
     }
 
     private onKeyDown(e: KeyboardEvent)
@@ -273,6 +298,42 @@ export class Input extends Container
         if (!this.editing) return;
 
         const key = e.key;
+
+        if (e.metaKey)
+        {
+            switch (key.toLowerCase())
+            {
+                case 'a':
+                    this.selectAll();
+                    break;
+                case 'x':
+                    this.cutText();
+                    break;
+                case 'c':
+                    this.copyText();
+                    break;
+                case 'v':
+                    this.pasteText();
+                    break;
+            }
+
+            return;
+        }
+
+        if (e.altKey)
+        {
+            switch (key)
+            {
+                case 'ArrowLeft':
+                    this.onHomeKey(e);
+                    break;
+                case 'ArrowRight':
+                    this.onEndKey(e);
+                    break;
+            }
+
+            return;
+        }
 
         switch (key)
         {
@@ -297,29 +358,48 @@ export class Input extends Container
                 this.cursorPosition = Math.min(this.value.length, this.cursorPosition + 1);
                 break;
             case 'Home':
-                this.detectSelection(e);
-                this.cursorPosition = 0;
+                this.onHomeKey(e);
                 break;
             case 'End':
-                this.detectSelection(e);
-                this.cursorPosition = this.value.length;
+                this.onEndKey(e);
                 break;
             default:
-                if (key.length === 1) this.add(key);
+                if (key.length === 1)
+                {
+                    this.add(key);
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
                 break;
         }
+    }
+
+    private onHomeKey(e: KeyboardEvent)
+    {
+        this.detectSelection(e);
+        this.cursorPosition = 0;
 
         e.preventDefault();
         e.stopPropagation();
     }
 
-    private handleActivation()
+    private onEndKey(e: KeyboardEvent)
+    {
+        this.detectSelection(e);
+        this.cursorPosition = this.value.length;
+
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    private handleActivation(e: FederatedPointerEvent | TouchEvent)
     {
         this.stopEditing();
 
         if (this.activation)
         {
-            this._startEditing();
+            this._startEditing(e);
 
             this.activation = false;
         }
@@ -339,27 +419,23 @@ export class Input extends Container
         if (this.value.length === 0) this.placeholder.visible = true;
         if (utils.isMobile.any) document.getElementById('v-keyboard')?.blur();
 
-        this.align();
+        this.alignElements();
     }
 
     private update(dt: number): void
     {
-        if (!this.editing) return;
+        if (!this.editing || this.selectedText !== '') return;
         this.tick += dt * 0.1;
         this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
     }
 
-    private align()
+    private alignElements()
     {
-        const align = this.getAlign();
+        const align = this.getInputAlign();
 
         this.inputField.anchor.set(align, 0.5);
         this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.inputField.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom;
-
-        this._shadowInput.anchor.set(align, 0.5);
-        this._shadowInput.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this._shadowInput.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom + 50;
 
         this.placeholder.anchor.set(align, 0.5);
         this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
@@ -369,7 +445,7 @@ export class Input extends Container
         this.alignCursor();
     }
 
-    private getAlign(): 0 | 1 | 0.5
+    private getInputAlign(): 0 | 1 | 0.5
     {
         const maxWidth = this.bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
@@ -406,7 +482,7 @@ export class Input extends Container
             this.placeholder.visible = !this.editing;
         }
 
-        this.align();
+        this.alignElements();
     }
 
     /** Return text of the input. */
@@ -459,9 +535,9 @@ export class Input extends Container
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 
-    private inputFieldLeftPos()
+    private get inputFieldLeftPos()
     {
-        const align = this.getAlign();
+        const align = this.getInputAlign();
 
         switch (align)
         {
@@ -490,29 +566,31 @@ export class Input extends Container
     private alignCursor()
     {
         const cursorOffset = this.getTextWidth(this.textBeforeCursor);
+        const inputX = this.inputFieldLeftPos;
 
-        if (this.selectStart)
+        if (typeof this.selectStart === 'number')
         {
             const top = this.inputField.y - (this.inputField.height * 0.5);
             const bottom = this.inputField.height;
 
             const selectStartOffset = this.getTextWidth(this.textBeforeSelection);
 
+            this.selectionPointer.x = inputX + Math.min(cursorOffset, selectStartOffset);
             this.selectionPointer.y = top;
             this.selectionPointer.height = bottom;
-
-            this.selectionPointer.x = this.inputFieldLeftPos() + Math.min(cursorOffset, selectStartOffset);
             this.selectionPointer.width = Math.abs(cursorOffset - selectStartOffset);
         }
 
-        this._cursor.x = this.inputFieldLeftPos() + cursorOffset;
+        this._cursor.visible = this.selectedText.length === 0;
+
+        this._cursor.x = inputX + cursorOffset;
     }
 
     private detectSelection(e: KeyboardEvent)
     {
         if (e.shiftKey)
         {
-            if (!this.selectStart)
+            if (typeof this.selectStart !== 'number')
             {
                 this.selectStart = this.cursorPosition;
             }
@@ -528,14 +606,14 @@ export class Input extends Container
     {
         if (text.length === 0) return 0;
 
-        this._shadowInput.text = text;
+        this._textMeasureHelper.text = text;
 
-        return this._shadowInput.width;
+        return this._textMeasureHelper.width;
     }
 
     private get textBeforeSelection(): string
     {
-        return this.value.slice(0, this.selectStart);
+        return typeof this.selectStart === 'number' ? this.value.slice(0, this.selectStart) : '';
     }
 
     private get textBeforeCursor(): string
@@ -546,6 +624,59 @@ export class Input extends Container
     /** Return selected text. */
     public get selectedText(): string
     {
-        return this.value.slice(this.selectStart, this._cursorPosition - this.selectStart);
+        const startPos = Math.min(this.selectStart, this.cursorPosition);
+        const endPos = Math.max(this.selectStart, this.cursorPosition);
+
+        return typeof this.selectStart === 'number' ? this.value.slice(startPos, endPos) : '';
+    }
+
+    private cutText()
+    {
+        if (this.selectedText.length === 0)
+        {
+            return;
+        }
+
+        navigator.clipboard.writeText(this.selectedText);
+        this.delete();
+    }
+
+    private copyText()
+    {
+        if (this.selectedText.length === 0)
+        {
+            return;
+        }
+
+        navigator.clipboard.writeText(this.selectedText);
+    }
+
+    private pasteText()
+    {
+        navigator.clipboard.readText().then((text) =>
+        {
+            if ((typeof text === 'string' || typeof text === 'number') && text.length > 0)
+            {
+                this.insertText(text);
+            }
+        });
+    }
+
+    private insertText(text: string)
+    {
+        if (this.selectedText.length > 0)
+        {
+            this.delete();
+        }
+
+        this.value = this.value.slice(0, this.cursorPosition) + text + this.value.slice(this.cursorPosition);
+        this.cursorPosition += text.length;
+    }
+
+    private selectAll()
+    {
+        this.selectStart = 0;
+        this.cursorPosition = this.value.length;
+        this.alignCursor();
     }
 }
