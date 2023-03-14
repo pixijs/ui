@@ -14,6 +14,24 @@ export type NativeInputOptions = {
     padding?: Padding;
 };
 
+/**
+ * Container-based component that creates an HTMLInputElement to read the user's text.
+ * It is positioning on top of the canvas tries to bind the position over the container background.
+ * @example
+ * new Input({
+ *     id: `input-1`, // unique id to avoid duplications and recreation of the same element
+ *     canvas, // pixi Application canvas, required to bind the input position relatively to the canvas position
+ *     value: '',
+ *     placeholder: 'Enter text',
+ *     bg: 'input.png',
+ *     padding: {
+ *         top: 5,
+ *         right: 5,
+ *         bottom: 5,
+ *         left: 5
+ *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
+ * });
+ */
 export class NativeInput extends Container
 {
     /** Fires every time input string is changed. */
@@ -107,9 +125,17 @@ export class NativeInput extends Container
     private update()
     {
         const bgPos = this.bg.getGlobalPosition();
+        // const canvasLeft = this.canvas.offsetLeft;
+        // const canvasTop = this.canvas.offsetTop;
+        const canvasStyle = this.canvas.getBoundingClientRect();
 
-        this.nativeElement.style.left = `${bgPos.x + this.paddingLeft}px`;
-        this.nativeElement.style.top = `${bgPos.y + this.paddingTop}px`;
+        console.log({
+            canvasStyle
+        });
+
+        this.nativeElement.style.left = `${canvasStyle.x + bgPos.x + this.paddingLeft}px`;
+        this.nativeElement.style.top = `${canvasStyle.y + bgPos.y + this.paddingTop}px`;
+
         this.nativeElement.style.width = `${this.bg.width - this.paddingLeft - this.paddingRight}px`;
         this.nativeElement.style.height = `${this.bg.height - this.paddingTop - this.paddingBottom}px`;
     }
