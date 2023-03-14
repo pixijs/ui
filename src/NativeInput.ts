@@ -129,15 +129,16 @@ export class NativeInput extends Container
         // const canvasTop = this.canvas.offsetTop;
         const canvasStyle = this.canvas.getBoundingClientRect();
 
-        console.log({
-            canvasStyle
-        });
-
         this.nativeElement.style.left = `${canvasStyle.x + bgPos.x + this.paddingLeft}px`;
         this.nativeElement.style.top = `${canvasStyle.y + bgPos.y + this.paddingTop}px`;
 
         this.nativeElement.style.width = `${this.bg.width - this.paddingLeft - this.paddingRight}px`;
         this.nativeElement.style.height = `${this.bg.height - this.paddingTop - this.paddingBottom}px`;
+        // this.nativeElement.style.left = `${canvasStyle.x + bgPos.x + this.paddingLeft}px`;
+        // this.nativeElement.style.top = `${canvasStyle.y + bgPos.y + this.paddingTop}px`;
+
+    // this.nativeElement.style.width = `${this.bg.width - this.paddingLeft - this.paddingRight}px`;
+    // this.nativeElement.style.height = `${this.bg.height - this.paddingTop - this.paddingBottom}px`;
     }
 
     /**
