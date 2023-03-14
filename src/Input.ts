@@ -132,7 +132,7 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            window.addEventListener('touchstart', (e) => this.handleActivation(e));
+            window.addEventListener('touchstart', () => this.handleActivation());
 
             let keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
 
