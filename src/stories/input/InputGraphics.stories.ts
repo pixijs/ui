@@ -3,7 +3,6 @@ import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
 import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { getColor } from '../utils/color';
 
