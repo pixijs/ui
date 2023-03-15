@@ -1,11 +1,10 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
-import { removeHitBox } from './utils/helpers/hitbox';
 
-import { getView } from './utils/helpers/view';
-import { ProgressBar } from './ProgressBar';
 import { FederatedPointerEvent } from '@pixi/events';
+import { ProgressBar } from './ProgressBar';
+import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
     bg: Container | string;
@@ -91,7 +90,7 @@ export class SliderBase extends ProgressBar
 
     protected activate()
     {
-        this.bg.interactive = true;
+        this.bg.eventMode = 'static';
         this.bg
             .on('pointerdown', this.startUpdate, this)
             .on('globalpointermove', this.update, this)
@@ -100,7 +99,7 @@ export class SliderBase extends ProgressBar
 
         if (this.slider1)
         {
-            this.slider1.interactive = true;
+            this.slider1.eventMode = 'static';
 
             this.slider1
                 .on('pointerdown', this.startUpdate, this)
@@ -111,7 +110,7 @@ export class SliderBase extends ProgressBar
 
         if (this.slider2)
         {
-            this.slider2.interactive = true;
+            this.slider2.eventMode = 'static';
 
             this.slider2
                 .on('pointerdown', this.startUpdate, this)
@@ -120,7 +119,7 @@ export class SliderBase extends ProgressBar
                 .on('pointerupoutside', this.endUpdate, this);
         }
 
-        removeHitBox(this.fill, this.value1Text, this.value2Text);
+        this.fill.eventMode = this.value1Text.eventMode = this.value2Text.eventMode = 'none';
     }
 
     protected createSlider(sliderData: Container | string): Container

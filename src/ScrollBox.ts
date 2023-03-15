@@ -5,7 +5,6 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import type { ListType } from './List';
 import { List } from './List';
-import { removeHitBox } from './utils/helpers/hitbox';
 import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
@@ -307,7 +306,7 @@ export class ScrollBox extends Container
             if (item.interactive)
             {
                 this.interactiveStorage.push(item);
-                item.interactive = false;
+                item.eventMode = 'auto';
             }
 
             if (item instanceof Container)
@@ -322,14 +321,14 @@ export class ScrollBox extends Container
     {
         this.interactiveStorage.forEach((item, itemID) =>
         {
-            item.interactive = true;
+            item.eventMode = 'static';
             delete this.interactiveStorage[itemID];
         });
     }
 
     private setInteractive(interactive: boolean)
     {
-        this.interactive = interactive;
+        this.eventMode = interactive ? 'static' : 'auto';
     }
 
     private get listHeight(): number
@@ -377,7 +376,7 @@ export class ScrollBox extends Container
                     this.__height,
                     this.options.radius | 0,
                 );
-            removeHitBox(this.borderMask);
+            this.borderMask.eventMode = 'none';
 
             if (
                 this.background instanceof Graphics
