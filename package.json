@@ -70,13 +70,13 @@
     "@pixi/extension-scripts": "^1.3.0",
     "@pixi/storybook-renderer": "^0.0.4",
     "@pixi/storybook-webpack5": "^0.0.4",
-    "@pixi/core": "^7.1.1",
-    "@pixi/display": "^7.1.1",
-    "@pixi/events": "^7.1.1",
-    "@pixi/graphics": "^7.1.1",
-    "@pixi/text": "^7.1.1",
-    "@pixi/sprite": "^7.1.1",
-    "@pixi/text-bitmap": "^7.1.1",
+    "@pixi/core": "^7.2.0",
+    "@pixi/display": "^7.2.0",
+    "@pixi/events": "^7.2.0",
+    "@pixi/graphics": "^7.2.0",
+    "@pixi/sprite": "^7.2.0",
+    "@pixi/text": "^7.2.0",
+    "@pixi/text-bitmap": "^7.2.0",
     "@storybook/addon-essentials": "7.0.0-beta.13",
     "@storybook/addon-interactions": "7.0.0-beta.13",
     "@storybook/addon-links": "7.0.0-beta.13",
@@ -97,12 +97,13 @@
     "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "@pixi/core": "^7.1.1",
-    "@pixi/display": "^7.1.1",
-    "@pixi/events": "^7.1.1",
-    "@pixi/graphics": "^7.1.1",
-    "@pixi/sprite": "^7.1.1",
-    "@pixi/text": "^7.1.1"
+    "@pixi/core": "^7.2.0",
+    "@pixi/display": "^7.2.0",
+    "@pixi/events": "^7.2.0",
+    "@pixi/graphics": "^7.2.0",
+    "@pixi/sprite": "^7.2.0",
+    "@pixi/text": "^7.2.0",
+    "@pixi/text-bitmap": "^7.2.0"
   },
   "publishConfig": {
     "access": "public"
