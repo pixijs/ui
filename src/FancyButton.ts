@@ -225,9 +225,6 @@ export class FancyButton extends Container
     {
         super();
 
-        this.anchor = new ObservablePoint(this.updateAnchors, this);
-        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-
         this.createViews({
             defaultView,
             hoverView,
@@ -236,6 +233,9 @@ export class FancyButton extends Container
             text,
             icon
         });
+
+        this.anchor = new ObservablePoint(this.updateAnchor, this);
+        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;
         this.offset = offset;
@@ -310,7 +310,7 @@ export class FancyButton extends Container
 
         this.state = newState;
 
-        this.updateAnchors();
+        this.updateAnchor();
         this.setOffset(activeView, newState, this.offset);
 
         this.playAnimations(newState);
@@ -448,7 +448,7 @@ export class FancyButton extends Container
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    private updateAnchors()
+    private updateAnchor()
     {
         const anchorX = this.anchor.x ?? 0;
         const anchorY = this.anchor.y ?? 0;
@@ -463,6 +463,10 @@ export class FancyButton extends Container
             view.x = -view.width * anchorX;
             view.y = -view.height * anchorY;
         });
+
+        const { x, y, width, height } = this.defaultView;
+
+        this.hitArea = new Rectangle(x, y, width, height);
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
@@ -481,13 +485,6 @@ export class FancyButton extends Container
 
         this.defaultView = getView(defaultView);
         this.innerView.addChild(this.defaultView);
-
-        this.hitArea = new Rectangle(
-            -this.defaultView.width / 2,
-            -this.defaultView.height / 2,
-            this.defaultView.width,
-            this.defaultView.height
-        );
 
         if (hoverView)
         {

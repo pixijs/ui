@@ -83,7 +83,6 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
             }
         });
 
-        button.anchor.set(0);
         button.scale.set(0.5);
 
         button.onPress.connect(() => onPress(i + 1));
