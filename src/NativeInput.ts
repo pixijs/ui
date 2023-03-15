@@ -112,7 +112,7 @@ export class NativeInput extends Container
     private setDefaultStyles()
     {
         this.nativeElement.style.color = 'black';
-        this.nativeElement.style.fontSize = '7vh';
+        this.nativeElement.style.fontSize = '22px';
         this.nativeElement.style.position = 'absolute';
         this.nativeElement.style.top = '0';
         this.nativeElement.style.left = '0';
