@@ -119,7 +119,10 @@ export class SliderBase extends ProgressBar
                 .on('pointerupoutside', this.endUpdate, this);
         }
 
-        this.fill.eventMode = 'none';
+        if (this.value1Text)
+        {
+            this.fill.eventMode = 'none';
+        }
 
         if (this.value1Text)
         {
