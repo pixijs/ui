@@ -119,7 +119,17 @@ export class SliderBase extends ProgressBar
                 .on('pointerupoutside', this.endUpdate, this);
         }
 
-        this.fill.eventMode = this.value1Text.eventMode = this.value2Text.eventMode = 'none';
+        this.fill.eventMode = 'none';
+
+        if (this.value1Text)
+        {
+            this.value1Text.eventMode = 'none';
+        }
+
+        if (this.value2Text)
+        {
+            this.value2Text.eventMode = 'none';
+        }
     }
 
     protected createSlider(sliderData: Container | string): Container
