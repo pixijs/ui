@@ -1,9 +1,8 @@
 import { ObservablePoint, Ticker, Rectangle } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
 import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
-import { getTextView } from './utils/helpers/text';
+import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { Button } from './Button';
 import { Signal } from 'typed-signals';
 import { FederatedPointerEvent } from '@pixi/events';
@@ -23,7 +22,7 @@ type Views = {
     hoverView?: string | Container;
     pressedView?: string | Container;
     disabledView?: string | Container;
-    text?: string | number | Text;
+    text?: AnyText;
     icon?: string | Container;
 };
 type AnimationData = {
@@ -126,6 +125,7 @@ export class FancyButton extends Container
     private events: Button;
     private animations: StateAnimations;
     private originalInnerViewState: AnimationData;
+    private defaultDuration = 100;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     public padding: number;
@@ -155,7 +155,7 @@ export class FancyButton extends Container
     public disabledView!: Container;
 
     /** View for the button text. */
-    public textView!: Text;
+    public textView!: PixiText;
 
     /** View for the button icon. */
     public iconView!: Container;
@@ -225,9 +225,6 @@ export class FancyButton extends Container
     {
         super();
 
-        this.anchor = new ObservablePoint(this.updateAnchors, this);
-        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
-
         this.createViews({
             defaultView,
             hoverView,
@@ -236,6 +233,9 @@ export class FancyButton extends Container
             text,
             icon
         });
+
+        this.anchor = new ObservablePoint(this.updateAnchor, this);
+        this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;
         this.offset = offset;
@@ -310,7 +310,7 @@ export class FancyButton extends Container
 
         this.state = newState;
 
-        this.updateAnchors();
+        this.updateAnchor();
         this.setOffset(activeView, newState, this.offset);
 
         this.playAnimations(newState);
@@ -319,9 +319,9 @@ export class FancyButton extends Container
     /**
      *
      * Manage button text view.
-     * @param {string | Text} text - can be a string or a Text (Container-based element).
+     * @param {string | Text} text - can be a string, Text, BitmapText ot HTMLText (Container-based element).
      */
-    private createTextView(text: string | number | Text)
+    private createTextView(text: AnyText)
     {
         this.textView = getTextView(text);
         this.innerView.addChild(this.textView);
@@ -448,7 +448,7 @@ export class FancyButton extends Container
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    private updateAnchors()
+    private updateAnchor()
     {
         const anchorX = this.anchor.x ?? 0;
         const anchorY = this.anchor.y ?? 0;
@@ -464,12 +464,9 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
-        if (this.innerView)
-        {
-            const { x, y, width, height } = this.innerView;
+        const { x, y, width, height } = this.defaultView;
 
-            this.hitArea = new Rectangle(x - (width * anchorX), y - (height * anchorY), width, height);
-        }
+        this.hitArea = new Rectangle(x, y, width, height);
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
@@ -515,7 +512,10 @@ export class FancyButton extends Container
             this.createIconView(icon);
         }
 
-        this.createTextView(text);
+        if (text)
+        {
+            this.createTextView(text);
+        }
     }
 
     /** Creates all button events */
@@ -581,18 +581,21 @@ export class FancyButton extends Container
     {
         if (!this.animations) return;
 
-        if (state === 'default' && !this.originalInnerViewState)
+        if (state === 'default')
         {
-            this.originalInnerViewState = {
-                x: this.innerView.x,
-                y: this.innerView.y,
-                width: this.innerView.width,
-                height: this.innerView.height,
-                scale: {
-                    x: this.innerView.scale.x,
-                    y: this.innerView.scale.y
-                }
-            };
+            if (!this.originalInnerViewState)
+            {
+                this.originalInnerViewState = {
+                    x: this.innerView.x,
+                    y: this.innerView.y,
+                    width: this.innerView.width,
+                    height: this.innerView.height,
+                    scale: {
+                        x: this.innerView.scale.x,
+                        y: this.innerView.scale.y
+                    }
+                };
+            }
 
             // first animation state is default, so we don't need to animate it
             // this part will run only once, during initialization
@@ -606,23 +609,26 @@ export class FancyButton extends Container
                 this.innerView.height = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
                 this.innerView.scale.x = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
                 this.innerView.scale.y = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
-            }
 
-            return;
+                return;
+            }
         }
 
         const stateAnimation = this.animations[state] ?? this.animations.default;
 
-        if (this.animations && stateAnimation)
+        if (stateAnimation)
         {
             const data = this.animations[state];
 
+            this.defaultDuration = data.duration;
+
             new Tween(this.innerView).to(data.props, data.duration).start();
+
+            return;
         }
-        else if (this.animations && state === 'default')
-        {
-            new Tween(this.innerView).to(this.originalInnerViewState, 100).start();
-        }
+
+        // if there is no animation for the current state, animate the button to the default state
+        new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
     /**
      * Method called when the button pressed.

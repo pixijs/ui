@@ -1,9 +1,9 @@
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import type { StoryFn } from '@storybook/types';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 
 const args = {
     value: 50,
@@ -13,13 +13,13 @@ const args = {
 
 export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     const assets = ['slider_bg.png', 'slider_progress.png'];
 
     let progressBar: ProgressBar;
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
     // Component usage !!!
         progressBar = new ProgressBar({

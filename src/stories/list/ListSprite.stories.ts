@@ -2,7 +2,6 @@ import { Sprite } from '@pixi/sprite';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { ScrollBox } from '../../ScrollBox';
 import { FancyButton } from '../../FancyButton';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
@@ -10,15 +9,17 @@ import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
+import { List } from '../../List';
 
 const args = {
+    type: [null, 'horizontal', 'vertical'],
     fontColor: '#000000',
-    elementsMargin: 6,
-    itemsAmount: 100,
+    elementsMargin: 29,
+    itemsAmount: 10,
     onPress: action('Button pressed')
 };
 
-export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any) =>
+export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress, type }: any) =>
 {
     fontColor = getColor(fontColor);
 
@@ -41,22 +42,16 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
         const items: Container[] = createItems(itemsAmount, fontColor, onPress);
 
         // Component usage !!!
-        const scrollBox = new ScrollBox({
-            // type: 'vertical',
-            elementsMargin,
-            width: window.width - 80,
-            height: window.height - 90,
-            vertPadding: 18,
-            radius: 5
-            // items
+        const list = new List({
+            type,
+            vertPadding: 70,
+            horPadding: 50,
+            elementsMargin
         });
 
-        items.forEach((item) => scrollBox.addItem(item));
+        items.forEach((item) => list.addChild(item));
 
-        scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
-        scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
-
-        window.addChild(scrollBox);
+        window.addChild(list);
 
         centerElement(view);
     });
@@ -88,7 +83,6 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
             }
         });
 
-        button.anchor.set(0);
         button.scale.set(0.5);
 
         button.onPress.connect(() => onPress(i + 1));
@@ -100,7 +94,7 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
 }
 
 export default {
-    title: 'Components/ScrollBox/Use Sprite',
+    title: 'Components/List/Use Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

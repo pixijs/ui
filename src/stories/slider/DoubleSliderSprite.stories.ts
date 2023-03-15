@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import type { StoryFn } from '@storybook/types';
 
 const args = {
@@ -23,7 +23,7 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
     const view = new Container();
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
     // Component usage !!!
         const doubleSlider = new DoubleSlider({
@@ -33,6 +33,8 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
             slider2: 'slider.png',
             min,
             max,
+            value1,
+            value2,
             valueTextStyle: {
                 fill: fontColor,
                 fontSize

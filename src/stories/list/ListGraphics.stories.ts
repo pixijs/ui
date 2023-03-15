@@ -1,5 +1,4 @@
 import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { FancyButton } from '../../FancyButton';
@@ -8,27 +7,30 @@ import { action } from '@storybook/addon-actions';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 
 const args = {
+    type: [null, 'horizontal', 'vertical'],
     fontColor: '#000000',
-    backgroundColor: '#F5E3A9',
-    width: 320,
-    height: 420,
+    bgColor: '#f5e3a9',
+    width: 271,
+    height: 270,
     radius: 20,
     elementsMargin: 10,
-    vertPadding: 10,
-    horPadding: 10,
-    elementsPadding: 10,
-    elementsWidth: 300,
-    elementsHeight: 80,
-    itemsAmount: 3,
-    type: ['vertical', 'horizontal'],
+    vertPadding: 20,
+    horPadding: 20,
+    elementsWidth: 70,
+    elementsHeight: 70,
+    itemsAmount: 9,
     onPress: action('Button pressed')
 };
 
-export const Vertical: StoryFn = ({
+export const UseGraphics: StoryFn = ({
+    type,
     fontColor,
+    bgColor,
+    width,
+    height,
     elementsMargin,
     vertPadding,
     horPadding,
@@ -36,13 +38,13 @@ export const Vertical: StoryFn = ({
     elementsHeight,
     radius,
     itemsAmount,
-    type,
     onPress
 }: any) =>
 {
-    const view = new Container();
-
     fontColor = getColor(fontColor);
+    bgColor = getColor(bgColor);
+
+    const view = new Graphics().beginFill(bgColor).drawRoundedRect(0, 0, width, height, radius);
 
     const items = [];
 
@@ -51,8 +53,10 @@ export const Vertical: StoryFn = ({
         const button = new FancyButton({
             defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
             hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(`Item ${i + 1}`, {
+            pressedView: new Graphics().beginFill(0xfe6048).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            text: new Text(i + 1, {
                 ...defaultTextStyle,
+                fontSize: 28,
                 fill: fontColor
             })
         });
@@ -64,16 +68,15 @@ export const Vertical: StoryFn = ({
     }
 
     // Component usage !!!
-    const layout = new Layout({
+    const list = new List({
         elementsMargin,
         vertPadding,
         horPadding,
         type
     });
 
-    items.forEach((item) => layout.addChild(item));
-
-    view.addChild(layout);
+    view.addChild(list);
+    items.forEach((item) => list.addChild(item));
 
     return {
         view,
@@ -82,7 +85,7 @@ export const Vertical: StoryFn = ({
 };
 
 export default {
-    title: 'Components/Layout/Vertical',
+    title: 'Components/List/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

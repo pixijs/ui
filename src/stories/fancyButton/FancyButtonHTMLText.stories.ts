@@ -1,11 +1,11 @@
-import { Text } from '@pixi/text';
 import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
+import { HTMLText } from '@pixi/text-html';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 
 const args = {
     text: 'Click me!',
@@ -20,7 +20,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UseSprite = ({
+export const UsingSpriteAndHTMLText = ({
     text,
     textColor,
     disabled,
@@ -37,18 +37,20 @@ export const UseSprite = ({
 
     const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
-    // Component usage !!!
+        const title = new HTMLText(text, {
+            ...defaultTextStyle,
+            fill: textColor || defaultTextStyle.fill
+        });
+
+        // Component usage !!!
         const button = new FancyButton({
             defaultView: `button.png`,
             hoverView: `button_hover.png`,
             pressedView: `button_pressed.png`,
             disabledView: `button_disabled.png`,
-            text: new Text(text, {
-                ...defaultTextStyle,
-                fill: textColor || defaultTextStyle.fill
-            }),
+            text: title,
             padding,
             textOffset: { x: textOffsetX, y: textOffsetY },
             animations: {
@@ -87,7 +89,7 @@ export const UseSprite = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Use Sprite',
+    title: 'Components/FancyButton/Using Sprite And HTMLText',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

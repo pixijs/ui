@@ -3,7 +3,7 @@ import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
 import { Texture } from '@pixi/core';
 
@@ -36,7 +36,7 @@ export class SpriteButton extends Button
         this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
         this.view.addChild(this.textView);
 
-        preloadAssets([`button.png`]).then(() =>
+        preload([`button.png`]).then(() =>
         {
             const texture = Texture.from('button.png');
 

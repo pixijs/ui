@@ -45,11 +45,11 @@ export class Slider extends SliderBase
 {
     private options: SliderOptions;
 
-    /** Fires when value changed, only when slider is released. */
-    public onChange: Signal<(value: number) => void> = new Signal();
-
     /** Fires when value is changing, on every move of slider. */
     public onUpdate: Signal<(value: number) => void> = new Signal();
+
+    /** Fires when value changed, only when slider is released. */
+    public onChange: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)
     {
@@ -68,7 +68,9 @@ export class Slider extends SliderBase
 
         this.options = options;
 
-        this.value = options.value ?? 0;
+        this.progress = ((options.value ?? this.min) - this.min) / (this.max - this.min) * 100;
+
+        this.value = options.value ?? this.min;
     }
 
     /** Return selected value. */
@@ -86,13 +88,12 @@ export class Slider extends SliderBase
         if (value > this.max) value = this.max;
 
         this._value1 = value;
-        this.progress = ((this.max - this.min) / 100) * value;
 
         this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progress;
 
         if (this.options.showValue)
         {
-            this.value1Text.text = `${value}`;
+            this.value1Text.text = `${Math.round(this.value)}`;
 
             const sliderPosX = this.slider1.x + (this.slider1.width / 2);
             const sliderPosY = this.slider1.y;
@@ -111,11 +112,12 @@ export class Slider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        const progress = this.validate((x / this.bg.width) * 100);
+        this.progress = this.validate((x / this.bg.width) * 100);
+        this.value = this.min + (((this.max - this.min) / 100) * this.progress);
+    }
 
-        if (progress !== this.progress)
-        {
-            this.value = ((this.max - this.min) / 100) * progress;
-        }
+    protected override change()
+    {
+        this.onChange?.emit(this.value);
     }
 }

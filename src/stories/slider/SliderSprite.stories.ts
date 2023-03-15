@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { Container } from '@pixi/display';
 import type { StoryFn } from '@storybook/types';
 
@@ -23,7 +23,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
 
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
     // Component usage !!!
         const singleSlider = new Slider({

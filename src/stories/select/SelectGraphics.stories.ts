@@ -4,7 +4,7 @@ import { Sprite } from '@pixi/sprite';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
@@ -89,7 +89,7 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
 {
     const closedBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
 
-    preloadAssets(['arrow_down.png']).then(() =>
+    preload(['arrow_down.png']).then(() =>
     {
         const arrowDown = Sprite.from('arrow_down.png');
 
@@ -106,7 +106,7 @@ function getOpenBG(backgroundColor: number, width: number, height: number, radiu
 {
     const openBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
 
-    preloadAssets(['arrow_down.png']).then(() =>
+    preload(['arrow_down.png']).then(() =>
     {
         const arrowUp = Sprite.from('arrow_down.png');
 

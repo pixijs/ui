@@ -3,7 +3,7 @@ export * from './CheckBox';
 export * from './DoubleSlider';
 export * from './FancyButton';
 export * from './Input';
-export * from './Layout';
+export * from './List';
 export * from './MaskedFrame';
 export * from './ProgressBar';
 export * from './RadioGroup';

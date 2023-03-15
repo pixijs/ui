@@ -1,10 +1,11 @@
 import { RadioGroup } from '../../RadioGroup';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from '../../Layout';
-import { preloadAssets } from '../utils/loader';
+import { List } from '../../List';
+import { preload } from '../utils/loader';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { CheckBox } from '../../CheckBox';
 
 const args = {
     text: 'Radio',
@@ -15,20 +16,33 @@ const args = {
 
 export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
 {
-    const view = new Layout({
+    const view = new List({
         type: 'vertical',
         elementsMargin: 20
     });
 
     const assets = [`radio.png`, `radio_checked.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         const items = [];
 
         for (let i = 0; i < amount; i++)
         {
-            items.push(`${text} ${i + 1}`);
+            items.push(
+                new CheckBox({
+                    text: `${text} ${i + 1}`,
+                    style: {
+                        unchecked: 'radio.png',
+                        checked: 'radio_checked.png',
+                        text: {
+                            ...defaultTextStyle,
+                            fontSize: 22,
+                            fill: textColor
+                        }
+                    }
+                })
+            );
         }
 
         // Component usage
@@ -36,16 +50,7 @@ export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
             selectedItem: 0,
             items,
             type: 'vertical',
-            elementsMargin: 10,
-            style: {
-                bg: 'radio.png',
-                checked: 'radio_checked.png',
-                textStyle: {
-                    ...defaultTextStyle,
-                    fontSize: 22,
-                    fill: textColor
-                }
-            }
+            elementsMargin: 10
         });
 
         radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
