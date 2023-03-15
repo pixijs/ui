@@ -78,7 +78,7 @@ export class Input extends Container
         this.options = options;
         this.bg = getView(options.bg);
         this.bg.cursor = 'text';
-        this.bg.interactive = true;
+        this.bg.eventMode = 'static';
 
         const defaultTextStyle = {
             fill: 0x000000,
@@ -126,7 +126,7 @@ export class Input extends Container
         this.alignElements();
 
         this.cursor = 'text';
-        this.interactive = true;
+        this.eventMode = 'static';
 
         this.on('pointertap', () => (this.activation = true));
 
