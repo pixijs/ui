@@ -1,11 +1,16 @@
 import { Text } from '@pixi/text';
+import { BitmapText } from '@pixi/text-bitmap';
+import { HTMLText } from '@pixi/text-html';
 
-export function getTextView(text: string | number | Text): Text
+export type PixiText = Text | BitmapText | HTMLText;
+export type AnyText = string | number | PixiText;
+
+export function getTextView(text: AnyText): Text | BitmapText | HTMLText
 {
-    if (text instanceof Text)
+    if (typeof text === 'string' || typeof text === 'number')
     {
-        return text;
+        return new Text(String(text));
     }
 
-    return new Text(text);
+    return text;
 }

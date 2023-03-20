@@ -1,9 +1,9 @@
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { CheckBox } from '../../CheckBox';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
 
 const args = {
@@ -16,14 +16,14 @@ const args = {
 
 export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =>
 {
-    const view = new Layout({
+    const view = new List({
         type: 'vertical',
         elementsMargin: 5
     });
 
     const assets = [`switch_off.png`, `switch_on.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
         for (let i = 0; i < amount; i++)
         {

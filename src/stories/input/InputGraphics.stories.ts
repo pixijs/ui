@@ -1,9 +1,8 @@
 import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { Input } from '../../Input';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import { getColor } from '../utils/color';
 
@@ -21,9 +20,10 @@ const args = {
     height: 70,
     radius: 11,
     amount: 1,
-    horizontalPadding: 11,
-    verticalPadding: 11,
-
+    paddingTop: 0,
+    paddingRight: 0,
+    paddingBottom: 0,
+    paddingLeft: 0,
     onChange: action('Input: ')
 };
 
@@ -41,12 +41,14 @@ export const UseGraphics = ({
     maxLength,
     align,
     placeholder,
-    horizontalPadding,
-    verticalPadding,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
     onChange
 }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     backgroundColor = getColor(backgroundColor);
     borderColor = getColor(borderColor);
@@ -62,15 +64,15 @@ export const UseGraphics = ({
                 .beginFill(backgroundColor)
                 .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
             textStyle: {
-                ...defaultTextStyle,
                 fill: textColor,
-                fontSize
+                fontSize,
+                fontWeight: 'bold'
             },
             maxLength,
             align,
             placeholder,
             value: text,
-            padding: [verticalPadding + (border ? border + 3 : 0), horizontalPadding + (border ? border + 3 : 0)]
+            padding: [paddingTop, paddingRight, paddingBottom, paddingLeft]
         });
 
         input.onChange.connect(() => onChange(input.value));

@@ -5,17 +5,7 @@ import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
-
-export type Padding =
-  | number
-  | [number, number]
-  | [number, number, number, number]
-  | {
-      left?: number;
-      right?: number;
-      top?: number;
-      bottom?: number;
-  };
+import { Padding } from './utils/HelpTypes';
 
 export type InputOptions = {
     bg?: Container | string;

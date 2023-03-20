@@ -1,55 +1,53 @@
 import { Container } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
-import { Sprite } from '@pixi/sprite';
-import { ITextStyle, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { CheckBox } from './CheckBox';
-import { Layout, LayoutType } from './Layout';
-
-export type GraphicsType = {
-    color: number;
-    fillColor?: number;
-    width?: number;
-    height?: number;
-    radius?: number;
-    padding?: number;
-};
-
-export type RadioBoxStyle = {
-    bg: string | GraphicsType;
-    checked: string | GraphicsType;
-    textStyle?: TextStyle | Partial<ITextStyle>;
-};
+import { List, ListType } from './List';
 
 export type RadioBoxOptions = {
-    items: string[];
-    type: LayoutType;
+    items: CheckBox[];
+    type: ListType;
     elementsMargin: number;
-    style: RadioBoxStyle;
     selectedItem?: number;
 };
 
 /**
- * Creates a container-based group of checkbox elements, that can be used as radio buttons.
+ * Creates a container-based controlling wrapper for checkbox elements,
+ * for them top behave as radio buttons.
  *
- * Only one checkbox can be selected at a time.
+ * Only one checkbox/radio button can be selected at a time.
+ *
+ * List of items is passed as an array of {@link CheckBox} objects.
  * @example
  * new RadioGroup({
- *     selectedItem: 0,
- *     items: ['Option 1', 'Option 2', 'Option 3'],
- *     style: {
- *         bg: 'radio.png',
- *         checked: 'radio_checked.png'
- *     },
+ *     items: [
+ *          new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *         new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *          new CheckBox({
+ *              style: {
+ *                  unchecked: `switch_off.png`,
+ *                  checked: `switch_on.png`,
+ *              }
+ *          }),
+ *     ],
+ *     type: 'vertical'
  * });
  */
 export class RadioGroup extends Container
 {
-    private readonly options: RadioBoxOptions;
     private items: CheckBox[] = [];
 
-    /** {@link Layout}, that holds and control all inned checkboxes.S  */
-    public innerView: Layout;
+    /** {@link List}, that holds and control all inned checkboxes.  */
+    public innerView: List;
 
     /** Text value of the selected item. */
     public value: string;
@@ -60,37 +58,25 @@ export class RadioGroup extends Container
     /** Fires, when new item is selected. */
     public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
 
+    private options: RadioBoxOptions;
+
     constructor(options: RadioBoxOptions)
     {
         super();
 
         this.options = options;
-        this.value = options.items[options.selectedItem];
 
-        this.selected = options.selectedItem;
+        this.value = options.items[options.selectedItem || 0].label.text;
 
-        this.innerView = new Layout({
+        this.selected = options.selectedItem ?? 0; // first item by default
+
+        this.innerView = new List({
             type: options.type,
             elementsMargin: options.elementsMargin
         });
 
-        options.items.forEach((item, id) =>
+        options.items.forEach((checkBox, id) =>
         {
-            const unchecked = this.getView(options.style.bg);
-            const checked = this.getView(options.style.checked);
-
-            const checkBox = new CheckBox({
-                text: item,
-                checked: options.selectedItem === id,
-                style: {
-                    unchecked,
-                    checked,
-                    text: options.style.textStyle
-                }
-            });
-
-            this.innerView.addChild(checkBox);
-
             checkBox.onChange.connect(() => this.selectItem(id));
 
             this.items.push(checkBox);
@@ -98,51 +84,11 @@ export class RadioGroup extends Container
             this.innerView.addChild(checkBox);
         });
 
+        this.selectItem(this.selected);
+
+        this.addChild(this.innerView);
+
         this.onChange = new Signal();
-    }
-
-    private getView(view: string | GraphicsType): Container
-    {
-        if (typeof view === 'string')
-        {
-            return Sprite.from(view);
-        }
-
-        return this.getGraphics(view as GraphicsType);
-    }
-
-    private getGraphics({ color, fillColor, width, height, radius, padding }: GraphicsType)
-    {
-        const graphics = new Graphics().beginFill(color);
-
-        const isCircle = width === height && radius >= width / 2;
-
-        if (isCircle)
-        {
-            graphics.drawCircle(width / 2, width / 2, width / 2);
-        }
-        else
-        {
-            graphics.drawRoundedRect(0, 0, width, height, radius);
-        }
-
-        if (fillColor !== undefined)
-        {
-            graphics.beginFill(fillColor);
-
-            const center = width / 2;
-
-            if (isCircle)
-            {
-                graphics.drawCircle(center, center, center - padding);
-            }
-            else
-            {
-                graphics.drawRoundedRect(padding, padding, width - (padding * 2), height - (padding * 2), radius);
-            }
-        }
-
-        return graphics;
     }
 
     /**
@@ -156,13 +102,12 @@ export class RadioGroup extends Container
             item.forceCheck(key === id);
         });
 
-        this.value = this.options.items[id];
-
         if (this.selected !== id)
         {
-            this.onChange.emit(id, this.value);
+            this.onChange.emit(id, this.items[id].label.text);
         }
 
+        this.value = this.options.items[id].label.text;
         this.selected = id;
     }
 }

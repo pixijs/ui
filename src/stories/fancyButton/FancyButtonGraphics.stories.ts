@@ -1,56 +1,66 @@
 import { Graphics } from '@pixi/graphics';
+import { Text } from '@pixi/text';
 import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerView } from '../../utils/helpers/resize';
-import { preloadAssets } from '../utils/loader';
+import { preload } from '../utils/loader';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { MaskedFrame } from '../../MaskedFrame';
 import { getColor } from '../utils/color';
 
 const args = {
+    text: 'Click me!',
+    textColor: '#FFFFFF',
     color: '#A5E24D',
     hoverColor: '#FEC230',
     pressedColor: '#FE6048',
     disabledColor: '#6E6E6E',
-    width: 250,
-    height: 250,
-    padding: 30,
-    radius: 200,
+    width: 350,
+    height: 350,
+    padding: 11,
+    radius: 50,
     iconOffsetX: 0,
-    iconOffsetY: 0,
+    iconOffsetY: -30,
+    textOffsetX: 0,
+    textOffsetY: 140,
     defaultOffset: 0,
     hoverOffset: -1,
     pressedOffset: 5,
     disabledOffset: 0,
-    animationDuration: 100,
     anchorX: 0.5,
     anchorY: 0.5,
+    animationDuration: 100,
     disabled: false,
     action: action('Button')
 };
 
-export const UseIcon = ({
+export const UseGraphics = ({
     width,
     height,
     radius,
+    text,
     color,
     hoverColor,
     pressedColor,
     disabledColor,
     disabled,
     padding,
+    anchorX,
+    anchorY,
+    textColor,
     iconOffsetX,
     iconOffsetY,
+    textOffsetX,
+    textOffsetY,
     defaultOffset,
     hoverOffset,
     pressedOffset,
     disabledOffset,
-    action,
-    anchorX,
-    anchorY,
-    animationDuration
+    animationDuration,
+    action
 }: any) =>
 {
     color = getColor(color);
@@ -62,15 +72,17 @@ export const UseIcon = ({
 
     const assets = [`avatar-01.png`];
 
-    preloadAssets(assets).then(() =>
+    preload(assets).then(() =>
     {
+        const fill = getColor(textColor);
         const target = Sprite.from(`avatar-01.png`);
 
+        // Component usage !!!
         const icon = new MaskedFrame({
             target,
             mask: new Graphics().beginFill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
-            borderWidth: 5,
-            borderColor: 0xffffff
+            borderWidth: 10,
+            borderColor: fill
         });
 
         // Component usage !!!
@@ -80,10 +92,18 @@ export const UseIcon = ({
             pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
             disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
             icon,
+            text: new Text(text, {
+                ...defaultTextStyle,
+                fill
+            }),
             padding,
             offset: {
                 default: { y: defaultOffset },
                 disabled: { y: disabledOffset }
+            },
+            textOffset: {
+                x: textOffsetX,
+                y: textOffsetY
             },
             iconOffset: {
                 x: iconOffsetX,
@@ -107,12 +127,12 @@ export const UseIcon = ({
             }
         });
 
-        button.anchor.set(anchorX, anchorY);
-
         if (disabled)
         {
             button.enabled = false;
         }
+
+        button.anchor.set(anchorX, anchorY);
 
         button.onPress.connect(() => action('onPress'));
         button.onDown.connect(() => action('onDown'));
@@ -130,7 +150,7 @@ export const UseIcon = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Use Icon',
+    title: 'Components/FancyButton/Use Graphics',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

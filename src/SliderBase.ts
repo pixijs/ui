@@ -1,11 +1,10 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
-import { removeHitBox } from './utils/helpers/hitbox';
 
-import { getView } from './utils/helpers/view';
-import { ProgressBar } from './ProgressBar';
 import { FederatedPointerEvent } from '@pixi/events';
+import { ProgressBar } from './ProgressBar';
+import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
     bg: Container | string;
@@ -48,6 +47,9 @@ export class SliderBase extends ProgressBar
     /** Maximal value. */
     public max = 100;
 
+    private startUpdateValue1!: number;
+    private startUpdateValue2!: number;
+
     constructor(options: BaseSliderOptions)
     {
         super({
@@ -88,7 +90,7 @@ export class SliderBase extends ProgressBar
 
     protected activate()
     {
-        this.bg.interactive = true;
+        this.bg.eventMode = 'static';
         this.bg
             .on('pointerdown', this.startUpdate, this)
             .on('globalpointermove', this.update, this)
@@ -97,7 +99,7 @@ export class SliderBase extends ProgressBar
 
         if (this.slider1)
         {
-            this.slider1.interactive = true;
+            this.slider1.eventMode = 'static';
 
             this.slider1
                 .on('pointerdown', this.startUpdate, this)
@@ -108,7 +110,7 @@ export class SliderBase extends ProgressBar
 
         if (this.slider2)
         {
-            this.slider2.interactive = true;
+            this.slider2.eventMode = 'static';
 
             this.slider2
                 .on('pointerdown', this.startUpdate, this)
@@ -117,7 +119,20 @@ export class SliderBase extends ProgressBar
                 .on('pointerupoutside', this.endUpdate, this);
         }
 
-        removeHitBox(this.fill, this.value1Text, this.value2Text);
+        if (this.value1Text)
+        {
+            this.fill.eventMode = 'none';
+        }
+
+        if (this.value1Text)
+        {
+            this.value1Text.eventMode = 'none';
+        }
+
+        if (this.value2Text)
+        {
+            this.value2Text.eventMode = 'none';
+        }
     }
 
     protected createSlider(sliderData: Container | string): Container
@@ -145,6 +160,8 @@ export class SliderBase extends ProgressBar
     protected startUpdate(event: FederatedPointerEvent)
     {
         this.dragging = 1;
+        this.startUpdateValue1 = this._value1;
+        this.startUpdateValue2 = this._value2;
         this.update(event);
     }
 
@@ -152,9 +169,24 @@ export class SliderBase extends ProgressBar
     {
         if (!this.dragging) return;
         this.dragging = 0;
+
+        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2)
+        {
+            this.change();
+        }
+
+        this.startUpdateValue1 = null;
+        this.startUpdateValue2 = null;
     }
 
+    /* Called when dragging started and on every move. */
     protected update(_event: FederatedPointerEvent)
+    {
+    // override me
+    }
+
+    /** Called when dragging stopped. */
+    protected change()
     {
     // override me
     }

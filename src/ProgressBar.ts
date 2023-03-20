@@ -86,7 +86,7 @@ export class ProgressBar extends Container
         return progress;
     }
 
-    /** Sets current progress value. */
+    /** Sets current progress percentage value. */
     set progress(progress: number)
     {
         this._progress = this.validate(progress);
@@ -100,7 +100,7 @@ export class ProgressBar extends Container
         }
     }
 
-    /** Returns current progress value. */
+    /** Returns current progress percentage value. */
     get progress(): number
     {
         return this._progress;

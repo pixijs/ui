@@ -163,7 +163,7 @@ export class Button
     set enabled(enabled: boolean)
     {
         this._enabled = enabled;
-        this.view.interactive = enabled;
+        this.view.eventMode = enabled ? 'static' : 'auto';
         this.view.cursor = enabled ? 'pointer' : 'default';
 
         if (!enabled)

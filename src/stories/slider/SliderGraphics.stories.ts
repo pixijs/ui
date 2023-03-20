@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics';
 import { action } from '@storybook/addon-actions';
-import { Layout } from '../../Layout';
+import { List } from '../../List';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
@@ -47,7 +47,7 @@ export const Single: StoryFn = ({
     showFill
 }: any) =>
 {
-    const view = new Layout({ type: 'vertical', elementsMargin: 10 });
+    const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     meshColor = getColor(meshColor);
     fillColor = getColor(fillColor);
@@ -80,6 +80,7 @@ export const Single: StoryFn = ({
         slider,
         min,
         max,
+        value,
         valueTextStyle: {
             fill: fontColor,
             fontSize
