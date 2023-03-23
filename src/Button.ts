@@ -21,10 +21,8 @@ import { Signal } from 'typed-signals';
  */
 export class Button
 {
+    /** Container, given as a constructor parameter that is a button view. */
     private _view: Container;
-    private _enabled = true;
-    private isDown: boolean;
-    private isMouseIn: boolean;
 
     /** Event that is fired when the button is pressed. */
     public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
@@ -50,9 +48,13 @@ export class Button
      */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
+    private _isDown: boolean;
+    private _isMouseIn: boolean;
+    private _enabled = true;
+
     /**
      * Turns a given container-based view into a button by adding all button events.
-     * @param {Container} view - instance of container, to be turned into button
+     * @param {Container} view - instance of container, to be turned into button.
      */
     constructor(view?: Container)
     {
@@ -155,6 +157,12 @@ export class Button
     // override me!
     }
 
+    /** Getter that returns if the button is down. */
+    get isDown(): boolean
+    {
+        return this._isDown;
+    }
+
     /**
      * Switcher, which prevents all button events from firing if off.
      * @param {boolean} enabled
@@ -187,29 +195,29 @@ export class Button
 
     private _processUp(_e?: FederatedPointerEvent)
     {
-        if (this.isDown)
+        if (this._isDown)
         {
             this.onUp.emit(this, _e);
         }
-        this.isDown = false;
+        this._isDown = false;
     }
 
     private _processUpOut(_e?: FederatedPointerEvent)
     {
-        if (this.isDown)
+        if (this._isDown)
         {
             this.onUp.emit(this, _e);
             this.onUpOut.emit(this, _e);
         }
 
-        this.isDown = false;
+        this._isDown = false;
     }
 
     private _processOut(_e?: FederatedPointerEvent)
     {
-        if (this.isMouseIn)
+        if (this._isMouseIn)
         {
-            this.isMouseIn = false;
+            this._isMouseIn = false;
             this.onOut.emit(this, _e);
         }
     }
@@ -226,20 +234,20 @@ export class Button
 
     private _processOver(_e: FederatedPointerEvent)
     {
-        this.isMouseIn = true;
+        this._isMouseIn = true;
         this.onHover.emit(this, _e);
     }
 
     private _processTap(_e: FederatedPointerEvent)
     {
-        this.isDown = false;
+        this._isDown = false;
         this.onPress.emit(this, _e);
         this.press(_e);
     }
 
     private _processDown(_e: FederatedPointerEvent): void
     {
-        this.isDown = true;
+        this._isDown = true;
         this.onDown.emit(this, _e);
     }
 
