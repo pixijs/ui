@@ -26,7 +26,7 @@ export const Sprites = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }:
 
         swich.onChange.connect((state) => action(`state ${state}`));
 
-        view.addChild(swich);
+        view.addChild(swich.view);
 
         centerElement(view);
     });
