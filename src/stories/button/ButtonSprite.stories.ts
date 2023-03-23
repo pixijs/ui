@@ -6,6 +6,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
 import { Container } from '@pixi/display';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 
 const args = {
     text: 'Click me!',
@@ -37,8 +38,8 @@ export class SpriteButton extends Button
 
             this.view.addChild(buttonView);
 
-            this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
-
+            this.textView = new Text(props.text, { ...defaultTextStyle, fontSize: 40 });
+            this.textView.y = -10;
             this.textView.anchor.set(0.5);
 
             buttonView.addChild(this.textView);
