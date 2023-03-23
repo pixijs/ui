@@ -50,7 +50,7 @@ export class Button
 
     private _isDown: boolean;
     private _isMouseIn: boolean;
-    private _enabled = true;
+    private _enabled: boolean;
 
     /**
      * Turns a given container-based view into a button by adding all button events.
