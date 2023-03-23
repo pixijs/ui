@@ -2,10 +2,10 @@ import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
-import { Texture } from '@pixi/core';
+import { Container } from '@pixi/display';
 
 const args = {
     text: 'Click me!',
@@ -16,7 +16,6 @@ const args = {
 
 export class SpriteButton extends Button
 {
-    private buttonView: Sprite;
     private textView: Text;
     private action: (event: string) => void;
 
@@ -26,30 +25,28 @@ export class SpriteButton extends Button
         disabled: boolean,
         action: (event: string) => void})
     {
-        const sprite = new Sprite();
+        super(/* we can set a view for button later */);
 
-        super(sprite);
-
-        this.buttonView = sprite;
-        this.view.addChild(this.buttonView);
-
-        this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
-        this.view.addChild(this.textView);
+        this.view = new Container();
 
         preload([`button.png`]).then(() =>
         {
-            const texture = Texture.from('button.png');
+            const buttonView = Sprite.from('button.png');
 
-            this.buttonView.texture = texture;
+            buttonView.anchor.set(0.5);
+
+            this.view.addChild(buttonView);
+
+            this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
 
             this.textView.anchor.set(0.5);
-            this.textView.x = texture.width / 2;
-            this.textView.y = (texture.height / 2) - 12;
+
+            buttonView.addChild(this.textView);
+
+            this.enabled = !props.disabled;
 
             this.resize();
         });
-
-        this.enabled = !props.disabled;
 
         this.action = props.action;
     }
@@ -86,7 +83,7 @@ export class SpriteButton extends Button
 
     resize()
     {
-        centerElement(this.view);
+        centerView(this.view);
     }
 }
 
