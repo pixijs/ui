@@ -47,7 +47,7 @@ export class Switcher extends Container
 
         if (views) this.views = views;
         if (triggerEvents) this.triggerEvents = triggerEvents;
-        if (activeViewID) this.active = activeViewID;
+        if (activeViewID && this.views.length > 0) this.active = activeViewID;
 
         this.setInteractionEvents();
     }
