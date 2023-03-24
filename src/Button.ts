@@ -24,29 +24,24 @@ export class Button
     /** Container, given as a constructor parameter that is a button view. */
     private _view: Container;
 
-    /** Event that is fired when the button is pressed. */
-    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
     /** Event that is fired when the button is down. */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
     /**
      * Event that fired when a down event happened inside the button
      * and up event happened inside or outside of the button
      */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
-    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event that fired when the mouse is out of the view */
-    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
     /**
      * Event that fired when mouse up event happens outside of the button
      * after the down event happened inside the button boundaries.
      */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that fired when the mouse is out of the view */
+    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that is fired when the button is pressed. */
+    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
+    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     private _isDown: boolean;
     private _isMouseIn: boolean;
