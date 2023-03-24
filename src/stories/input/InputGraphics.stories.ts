@@ -24,8 +24,7 @@ const args = {
     paddingRight: 0,
     paddingBottom: 0,
     paddingLeft: 0,
-    onChange: action('Change'),
-    onEnter: action('Enter')
+    onChange: action('Change')
 };
 
 export const UseGraphics = ({
