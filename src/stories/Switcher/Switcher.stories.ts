@@ -22,9 +22,7 @@ export const Sprites = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }:
     preload(assets).then(() =>
     {
     // Component usage !!!
-        const swich = new Switcher(assets);
-
-        swich.triggerEvents = [triggerEvent1, triggerEvent2, triggerEvent3];
+        const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
 
         swich.onChange.connect((state) => action(`state ${state}`));
 
