@@ -112,7 +112,6 @@ export class Input extends Container
             window.addEventListener('click', () =>
             {
                 this.handleActivation();
-                this.onEnter.emit(this.value);
             });
 
             window.addEventListener('keydown', (e) =>
@@ -126,7 +125,6 @@ export class Input extends Container
                 else if (key === 'Escape' || key === 'Enter')
                 {
                     this.stopEditing();
-                    this.onEnter.emit(this.value);
                 }
                 else if (key.length === 1) this._add(key);
             });
@@ -278,6 +276,8 @@ export class Input extends Container
 
     private stopEditing(): void
     {
+        if (!this.editing) return;
+
         this._cursor.alpha = 0;
         this.editing = false;
 
@@ -290,6 +290,8 @@ export class Input extends Container
         if (utils.isMobile.any) document.getElementById('v-keyboard')?.blur();
 
         this.align();
+
+        this.onEnter.emit(this.value);
     }
 
     private update(dt: number): void
