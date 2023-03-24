@@ -5,7 +5,6 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { centerView } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
-import { Container } from '@pixi/display';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { Texture } from '@pixi/core';
 
@@ -75,7 +74,10 @@ export class SpriteButton extends Button
 
     override out()
     {
-        this.buttonView.texture = Texture.from('button.png');
+        if (!this.isDown)
+        {
+            this.buttonView.texture = Texture.from('button.png');
+        }
         this.action('out');
     }
 
@@ -86,7 +88,10 @@ export class SpriteButton extends Button
 
     override hover()
     {
-        this.buttonView.texture = Texture.from('button_hover.png');
+        if (!this.isDown)
+        {
+            this.buttonView.texture = Texture.from('button_hover.png');
+        }
         this.action('hover');
     }
 

@@ -78,15 +78,12 @@ export class Button
     {
         const wasItInitiated = !!this._view;
 
-        this.disconnectEvents();
+        if (wasItInitiated) this.disconnectEvents();
 
         this._view = view;
         this.connectEvents();
 
-        if (!wasItInitiated)
-        {
-            this.enabled = true;
-        }
+        if (!wasItInitiated) this.enabled = true;
     }
 
     /** Get button view, thar all the interaction events are applied to. */
