@@ -8,8 +8,8 @@ import { BUTTON_EVENTS } from '../../utils/HelpTypes';
 
 const args = {
     triggerEvent1: BUTTON_EVENTS,
-    triggerEvent2: ['', ...BUTTON_EVENTS],
-    triggerEvent3: ['', ...BUTTON_EVENTS],
+    triggerEvent2: ['onHover', ...BUTTON_EVENTS],
+    triggerEvent3: ['onOut', ...BUTTON_EVENTS],
     action: action('swich: ')
 };
 
@@ -22,11 +22,13 @@ export const Sprites = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }:
     preload(assets).then(() =>
     {
     // Component usage !!!
-        const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
+        const swich = new Switcher(assets);
+
+        swich.triggerEvents = [triggerEvent1, triggerEvent2, triggerEvent3];
 
         swich.onChange.connect((state) => action(`state ${state}`));
 
-        view.addChild(swich.view);
+        view.addChild(swich);
 
         centerElement(view);
     });
