@@ -136,10 +136,6 @@ export const UseGraphics = ({
             }
         });
 
-        // button.views = {
-        //     text: null
-        // };
-
         if (disabled)
         {
             button.enabled = false;

@@ -91,7 +91,7 @@ export const UsingSpriteAndBitmapText = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Using Sprite And  BitmapText',
+    title: 'Components/FancyButton/Using Sprite And BitmapText',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

@@ -658,21 +658,18 @@ export class FancyButton extends Container
     {
         if (!this.animations) return;
 
-        if (state === 'default')
+        if (state === 'default' && !this.originalInnerViewState)
         {
-            if (!this.originalInnerViewState)
-            {
-                this.originalInnerViewState = {
-                    x: this.innerView.x,
-                    y: this.innerView.y,
-                    width: this.innerView.width,
-                    height: this.innerView.height,
-                    scale: {
-                        x: this.innerView.scale.x,
-                        y: this.innerView.scale.y
-                    }
-                };
-            }
+            this.originalInnerViewState = {
+                x: this.innerView.x,
+                y: this.innerView.y,
+                width: this.innerView.width,
+                height: this.innerView.height,
+                scale: {
+                    x: this.innerView.scale.x,
+                    y: this.innerView.scale.y
+                }
+            };
 
             // first animation state is default, so we don't need to animate it
             // this part will run only once, during initialization
@@ -695,7 +692,7 @@ export class FancyButton extends Container
 
         if (stateAnimation)
         {
-            const data = this.animations[state];
+            const data = stateAnimation;
 
             this.defaultDuration = data.duration;
 
