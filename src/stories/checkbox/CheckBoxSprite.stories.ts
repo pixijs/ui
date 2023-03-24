@@ -42,7 +42,7 @@ export const UseSprite = ({ checked, onChange, amount, textColor, text }: any) =
                 }
             });
 
-            checkBox.onChange.connect((checked) => onChange(`${i + 1} ${checked}`));
+            checkBox.onCheck.connect((checked) => onChange(`${i + 1} ${checked}`));
 
             view.addChild(checkBox);
         }
