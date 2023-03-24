@@ -7,6 +7,7 @@ import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
 import { Container } from '@pixi/display';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { Texture } from '@pixi/core';
 
 const args = {
     text: 'Click me!',
@@ -18,6 +19,7 @@ const args = {
 export class SpriteButton extends Button
 {
     private textView: Text;
+    private buttonView = new Sprite();
     private action: (event: string) => void;
 
     constructor(props: {
@@ -28,15 +30,13 @@ export class SpriteButton extends Button
     {
         super(/* we can set a view for button later */);
 
-        this.view = new Container();
+        this.view = this.buttonView;
 
-        preload([`button.png`]).then(() =>
+        preload([`button.png`, `button_hover.png`, `button_pressed`]).then(() =>
         {
-            const buttonView = Sprite.from('button.png');
+            this.buttonView.texture = Texture.from('button.png');
 
-            buttonView.anchor.set(0.5);
-
-            this.view.addChild(buttonView);
+            this.buttonView.anchor.set(0.5);
 
             this.textView = new Text(props.text, {
                 ...defaultTextStyle,
@@ -45,7 +45,7 @@ export class SpriteButton extends Button
             this.textView.y = -10;
             this.textView.anchor.set(0.5);
 
-            buttonView.addChild(this.textView);
+            this.buttonView.addChild(this.textView);
 
             this.enabled = !props.disabled;
 
@@ -57,21 +57,25 @@ export class SpriteButton extends Button
 
     override down()
     {
+        this.buttonView.texture = Texture.from('button_pressed.png');
         this.action('down');
     }
 
     override up()
     {
+        this.buttonView.texture = Texture.from('button_hover.png');
         this.action('up');
     }
 
     override upOut()
     {
+        this.buttonView.texture = Texture.from('button.png');
         this.action('upOut');
     }
 
     override out()
     {
+        this.buttonView.texture = Texture.from('button.png');
         this.action('out');
     }
 
@@ -82,6 +86,7 @@ export class SpriteButton extends Button
 
     override hover()
     {
+        this.buttonView.texture = Texture.from('button_hover.png');
         this.action('hover');
     }
 
