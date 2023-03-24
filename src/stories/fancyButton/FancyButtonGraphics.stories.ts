@@ -26,10 +26,10 @@ const args = {
     iconOffsetY: -30,
     textOffsetX: 0,
     textOffsetY: 140,
-    defaultOffset: 0,
-    hoverOffset: -1,
-    pressedOffset: 5,
-    disabledOffset: 0,
+    defaultOffsetY: 0,
+    hoverOffsetY: -1,
+    pressedOffsetY: 5,
+    disabledOffsetY: 0,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -55,10 +55,10 @@ export const UseGraphics = ({
     iconOffsetY,
     textOffsetX,
     textOffsetY,
-    defaultOffset,
-    hoverOffset,
-    pressedOffset,
-    disabledOffset,
+    defaultOffsetY,
+    hoverOffsetY,
+    pressedOffsetY,
+    disabledOffsetY,
     animationDuration,
     action
 }: any) =>
@@ -98,8 +98,10 @@ export const UseGraphics = ({
             }),
             padding,
             offset: {
-                default: { y: defaultOffset },
-                disabled: { y: disabledOffset }
+                default: { y: defaultOffsetY },
+                hover: { y: hoverOffsetY },
+                pressed: { y: pressedOffsetY },
+                disabled: { y: disabledOffsetY }
             },
             textOffset: {
                 x: textOffsetX,
@@ -110,22 +112,33 @@ export const UseGraphics = ({
                 y: iconOffsetY
             },
             animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        y: defaultOffsetY
+                    },
+                    duration: animationDuration
+                },
                 hover: {
                     props: {
                         scale: { x: 1.03, y: 1.03 },
-                        y: hoverOffset
+                        y: hoverOffsetY
                     },
                     duration: animationDuration
                 },
                 pressed: {
                     props: {
                         scale: { x: 0.9, y: 0.9 },
-                        y: pressedOffset
+                        y: pressedOffsetY
                     },
                     duration: animationDuration
                 }
             }
         });
+
+        // button.views = {
+        //     text: null
+        // };
 
         if (disabled)
         {

@@ -18,13 +18,23 @@ type PosList = { [K in State]?: Pos };
 export type Offset = Pos & PosList;
 
 type Views = {
-    defaultView: string | Container;
+    defaultView?: string | Container;
     hoverView?: string | Container;
     pressedView?: string | Container;
     disabledView?: string | Container;
     text?: AnyText;
     icon?: string | Container;
 };
+
+type ButtonViews = {
+    default?: Container;
+    hover?: Container;
+    pressed?: Container;
+    disabled?: Container;
+    text?: PixiText;
+    icon?: Container;
+};
+
 type AnimationData = {
     x?: number;
     y?: number;
@@ -142,23 +152,7 @@ export class FancyButton extends Container
     //* View that holds all button inner views */
     public innerView: Container;
 
-    /** View that is shown when non of the button events are active. */
-    public defaultView: Container;
-
-    /** View that is shown when the mouse hovers over the button. */
-    public hoverView!: Container;
-
-    /** View, shown when the mouse press on the component. */
-    public pressedView!: Container;
-
-    /** View shown when the button is disabled. */
-    public disabledView!: Container;
-
-    /** View for the button text. */
-    public textView!: PixiText;
-
-    /** View for the button icon. */
-    public iconView!: Container;
+    private _views: ButtonViews = {};
 
     /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
     public state: State;
@@ -166,23 +160,24 @@ export class FancyButton extends Container
     /** Anchor point of the button. */
     public anchor: ObservablePoint;
 
-    /** Event fired when the button was pressed. */
-    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event fired when the button is down. */
+    /** Event that is fired when the button is down. */
     public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event fired when the down event happens inside the button and up event happened inside or outside of the button */
+    /**
+     * Event that fired when a down event happened inside the button
+     * and up event happened inside or outside of the button
+     */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event fired when a mouse hovers the button. */
-    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event fired when a mouse leaves the button. */
-    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event fired when the up event happens outside of the button, after the down event happened inside the button. */
+    /**
+     * Event that fired when mouse up event happens outside of the button
+     * after the down event happened inside the button boundaries.
+     */
     public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that fired when the mouse is out of the view */
+    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that is fired when the button is pressed. */
+    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
+    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /**
      * Turns a given container-based view into a button by adding all button events.
@@ -225,14 +220,8 @@ export class FancyButton extends Container
     {
         super();
 
-        this.createViews({
-            defaultView,
-            hoverView,
-            pressedView,
-            disabledView,
-            text,
-            icon
-        });
+        this.innerView = new Container();
+        this.addChild(this.innerView);
 
         this.anchor = new ObservablePoint(this.updateAnchor, this);
         this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
@@ -249,6 +238,15 @@ export class FancyButton extends Container
             Ticker.shared.add(() => Group.shared.update());
         }
 
+        this.views = {
+            defaultView,
+            hoverView,
+            pressedView,
+            disabledView,
+            text,
+            icon
+        };
+
         this.setState('default');
 
         this.addEvents();
@@ -258,16 +256,30 @@ export class FancyButton extends Container
      * Updates the text of the button and updates its scaling basing on the new size.
      * @param {string | number} text
      */
-    set text(text: string | number)
+    set text(text: string | number | null)
     {
-        this.textView.text = text;
-        this.adjustTextView(this.state);
+        if (!text || text === 0)
+        {
+            this.innerView.removeChild(this._views.text);
+            this._views.text = null;
+
+            return;
+        }
+
+        if (!this._views.text)
+        {
+            this.createTextView(text);
+
+            return;
+        }
+
+        this._views.text.text = text.toString();
     }
 
     /** Returns the text string of the button text element. */
-    get text(): string
+    get text(): string | undefined
     {
-        return this.textView?.text;
+        return this._views.text?.text;
     }
 
     /**
@@ -305,13 +317,17 @@ export class FancyButton extends Container
         const currentView = this.getStateView(this.state);
         const activeView = this.getStateView(newState);
 
-        currentView.visible = false;
-        activeView.visible = true;
+        if (currentView) currentView.visible = false;
 
         this.state = newState;
 
+        if (activeView)
+        {
+            this.setOffset(activeView, newState, this.offset);
+            activeView.visible = true;
+        }
+
         this.updateAnchor();
-        this.setOffset(activeView, newState, this.offset);
 
         this.playAnimations(newState);
     }
@@ -323,20 +339,15 @@ export class FancyButton extends Container
      */
     private createTextView(text: AnyText)
     {
-        this.textView = getTextView(text);
-        this.innerView.addChild(this.textView);
-        this.textView.anchor.set(0);
-        this.adjustTextView(this.state);
-    }
+        this._views.text = getTextView(text);
+        this._views.text.anchor.set(0);
 
-    /**
-     * Manage button icon view.
-     * @param {string | Text} icon - can be a string or a Text (Container-based element).
-     */
-    private createIconView(icon: string | Container)
-    {
-        this.iconView = getView(icon);
-        this.innerView.addChild(this.iconView);
+        if (!this._views.text.parent)
+        {
+            this.innerView.addChild(this._views.text);
+        }
+
+        this.adjustTextView(this.state);
     }
 
     /**
@@ -353,6 +364,7 @@ export class FancyButton extends Container
                 x: 0,
                 y: 0
             };
+
         const defaultStateOffset = offset?.default;
 
         if (stateOffset)
@@ -376,19 +388,22 @@ export class FancyButton extends Container
      * Returns active view for the state.
      * @param state
      */
-    private getStateView(state: State): Container
+    private getStateView(state: State): Container | undefined
     {
+        const { default: defaultView, hover, pressed, disabled } = this._views;
+
         switch (state)
         {
             case 'hover':
-                return this.hoverView ?? this.defaultView;
+                return hover ?? defaultView;
             case 'pressed':
-                return this.pressedView ?? this.defaultView;
+                return pressed ?? hover ?? defaultView;
             case 'disabled':
-                return this.disabledView ?? this.defaultView;
+                return disabled ?? defaultView;
             case 'default':
+                return defaultView;
             default:
-                return this.defaultView;
+                return undefined;
         }
     }
 
@@ -398,25 +413,21 @@ export class FancyButton extends Container
      */
     private adjustTextView(state: State)
     {
-        if (!this.textView) return;
-
-        this.textView.visible = this.textView.text !== '';
-
-        if (!this.textView.visible)
-        {
-            return;
-        }
+        if (!this.text) return;
 
         const activeView = this.getStateView(this.state);
 
-        fitToView(activeView, this.textView, this.padding);
+        if (activeView)
+        {
+            fitToView(activeView, this._views.text, this.padding);
 
-        this.textView.anchor.set(0.5);
+            this._views.text.x = activeView.x + (activeView.width / 2);
+            this._views.text.y = activeView.y + (activeView.height / 2);
+        }
 
-        this.textView.x = activeView.x + (activeView.width / 2);
-        this.textView.y = activeView.y + (activeView.height / 2);
+        this._views.text.anchor.set(0.5);
 
-        this.setOffset(this.textView, state, this.textOffset);
+        this.setOffset(this._views.text, state, this.textOffset);
     }
 
     /**
@@ -425,21 +436,21 @@ export class FancyButton extends Container
      */
     private adjustIconView(state: State)
     {
-        if (!this.iconView)
+        if (!this._views.icon)
         {
             return;
         }
 
         const activeView = this.getStateView(state);
 
-        fitToView(activeView, this.iconView, this.padding);
+        fitToView(activeView, this._views.icon, this.padding);
 
-        (this.iconView as Sprite).anchor?.set(0);
+        (this._views.icon as Sprite).anchor?.set(0);
 
-        this.iconView.x = activeView.x + (activeView.width / 2) - (this.iconView.width / 2);
-        this.iconView.y = activeView.y + (activeView.height / 2) - (this.iconView.height / 2);
+        this._views.icon.x = activeView.x + (activeView.width / 2) - (this._views.icon.width / 2);
+        this._views.icon.y = activeView.y + (activeView.height / 2) - (this._views.icon.height / 2);
 
-        this.setOffset(this.iconView, state, this.iconOffset);
+        this.setOffset(this._views.icon, state, this.iconOffset);
     }
 
     /**
@@ -452,7 +463,7 @@ export class FancyButton extends Container
     {
         const anchorX = this.anchor.x ?? 0;
         const anchorY = this.anchor.y ?? 0;
-        const views = [this.defaultView, this.hoverView, this.pressedView, this.disabledView];
+        const views = [this._views.default, this._views.hover, this._views.pressed, this._views.disabled];
 
         views.forEach((view) =>
         {
@@ -464,57 +475,115 @@ export class FancyButton extends Container
             view.y = -view.height * anchorY;
         });
 
-        const { x, y, width, height } = this.defaultView;
+        if (this._views.default)
+        {
+            const { x, y, width, height } = this._views.default;
 
-        this.hitArea = new Rectangle(x, y, width, height);
+            this.hitArea = new Rectangle(x, y, width, height);
+        }
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
     }
 
     /**
-     * Button views manager. Adds or creates all button views according to the config.
+     * Set button views according to the config.
      * @param {Views} views
      */
-    private createViews(views: Views)
+    // eslint-disable-next-line accessor-pairs
+    set views(views: Views)
     {
         const { defaultView, hoverView, pressedView, disabledView, text, icon } = views;
 
-        this.innerView = new Container();
-        this.addChild(this.innerView);
-
-        this.defaultView = getView(defaultView);
-        this.innerView.addChild(this.defaultView);
+        if (defaultView)
+        {
+            this._views.default = getView(defaultView);
+            this.setOffset(this._views.default, 'default', this.offset);
+            if (!this._views.default.parent)
+            {
+                this.innerView.addChild(this._views.default);
+            }
+        }
+        else if (defaultView === null && this._views.default)
+        {
+            this.innerView.removeChild(this._views.default);
+            this._views.default = null;
+        }
 
         if (hoverView)
         {
-            this.hoverView = getView(hoverView);
-            this.innerView.addChild(this.hoverView);
-            this.hoverView.visible = false;
+            this._views.hover = getView(hoverView);
+
+            if (!this._views.hover.parent)
+            {
+                this.innerView.addChild(this._views.hover);
+            }
+
+            this._views.hover.visible = false;
+        }
+        else if (hoverView === null && this._views.hover)
+        {
+            this.innerView.removeChild(this._views.hover);
+            this._views.hover = null;
         }
 
         if (pressedView)
         {
-            this.pressedView = getView(pressedView);
-            this.innerView.addChild(this.pressedView);
-            this.pressedView.visible = false;
+            this._views.pressed = getView(pressedView);
+
+            if (!this._views.pressed.parent)
+            {
+                this.innerView.addChild(this._views.pressed);
+            }
+
+            this._views.pressed.visible = false;
+        }
+        else if (pressedView === null && this._views.pressed)
+        {
+            this.innerView.removeChild(this._views.pressed);
+            this._views.pressed = null;
         }
 
         if (disabledView)
         {
-            this.disabledView = getView(disabledView);
-            this.innerView.addChild(this.disabledView);
-            this.disabledView.visible = false;
+            this._views.disabled = getView(disabledView);
+
+            if (!this._views.disabled.parent)
+            {
+                this.innerView.addChild(this._views.disabled);
+            }
+
+            this._views.disabled.visible = false;
+        }
+        else if (disabledView === null && this._views.disabled)
+        {
+            this.innerView.removeChild(this._views.disabled);
+            this._views.disabled = null;
         }
 
         if (icon)
         {
-            this.createIconView(icon);
+            this._views.icon = getView(icon);
+
+            if (!this._views.icon.parent)
+            {
+                this.innerView.addChild(this._views.icon);
+            }
+        }
+        else if (icon === null && this._views.icon)
+        {
+            this.innerView.removeChild(this._views.icon);
+            this._views.icon = null;
         }
 
         if (text)
         {
             this.createTextView(text);
+        }
+        else if (text === null && this._views.text)
+        {
+            this.innerView.removeChild(this._views.text);
+            this._views.text = null;
         }
     }
 
@@ -523,19 +592,12 @@ export class FancyButton extends Container
     {
         this.events = new Button(this);
 
-        this.onPress = new Signal();
         this.onDown = new Signal();
         this.onUp = new Signal();
-        this.onHover = new Signal();
-        this.onOut = new Signal();
         this.onUpOut = new Signal();
-
-        this.events.onPress.connect((_bth, e?: FederatedPointerEvent) =>
-        {
-            this.onPress.emit(this, e);
-            this.press();
-            this.setState('hover');
-        });
+        this.onOut = new Signal();
+        this.onPress = new Signal();
+        this.onHover = new Signal();
 
         this.events.onDown.connect((_bth, e?: FederatedPointerEvent) =>
         {
@@ -551,25 +613,40 @@ export class FancyButton extends Container
             this.setState('hover');
         });
 
-        this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
+        this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
-            this.onHover.emit(this, e);
-            this.hover();
-            this.setState('hover');
+            this.onUpOut.emit(this, e);
+            this.upOut();
+            this.setState('default');
         });
 
         this.events.onOut.connect((_bth, e?: FederatedPointerEvent) =>
         {
             this.onOut.emit(this, e);
             this.out();
-            this.setState('default');
+
+            if (!this.events.isDown)
+            {
+                this.setState('default');
+            }
         });
 
-        this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
+        this.events.onPress.connect((_bth, e?: FederatedPointerEvent) =>
         {
-            this.onUpOut.emit(this, e);
-            this.upOut();
-            this.setState('default');
+            this.onPress.emit(this, e);
+            this.press();
+            this.setState('hover');
+        });
+
+        this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
+        {
+            this.onHover.emit(this, e);
+            this.hover();
+
+            if (!this.events.isDown)
+            {
+                this.setState('hover');
+            }
         });
     }
 
@@ -630,6 +707,7 @@ export class FancyButton extends Container
         // if there is no animation for the current state, animate the button to the default state
         new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
+
     /**
      * Method called when the button pressed.
      * To be overridden.
@@ -651,23 +729,12 @@ export class FancyButton extends Container
     }
 
     /**
-     * Method called when the mouse hovers the button.
+     * Method called when the up event happens outside of the button,
+     * after the down event happened inside the button boundaries.
      * To be overridden.
-     * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public hover(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse press down the button.
-     * To be overridden.
-     * This is fired only on PC.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public press(_e?: FederatedPointerEvent)
+    public upOut(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -675,7 +742,6 @@ export class FancyButton extends Container
     /**
      * Method called when the mouse leaves the button.
      * To be overridden.
-     * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
     public out(_e?: FederatedPointerEvent)
@@ -684,13 +750,22 @@ export class FancyButton extends Container
     }
 
     /**
-     * Method called when the up event happens outside of the button,
-     * after the down event happened inside the button boundaries.
+     * Method called when the mouse press down the button.
      * To be overridden.
-     * This is fired only on PC.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public upOut(_e?: FederatedPointerEvent)
+    public press(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse hovers the button.
+     * To be overridden.
+     * Fired only if device is not mobile.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public hover(_e?: FederatedPointerEvent)
     {
     // override me!
     }
