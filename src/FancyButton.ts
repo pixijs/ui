@@ -75,38 +75,7 @@ export type ButtonOptions = Views & {
  *     hoverView: `button_hover.png`,
  *     pressedView: `button_pressed.png`,
  *     text: new Text('Click me!'),
- *     offset: {
- *          default: {
- *              x: 0.9,
- *              y: 0.9,
- *          },
- *          hover: {
- *              x: 0.9,
- *              y: 0.9,
- *          },
- *          pressed: {
- *              x: 0.9,
- *              y: 0.9,
- *          }
- *     },
- *     textOffset: {
- *          x: 0.9,
- *          y: 0.9,
- *     },
- *     iconOffset: {
- *          x: 0.9,
- *          y: 0.9,
- *     },
  *     animations: {
- *          default: {
- *              props: {
- *                  scale: {
- *                      x: 1,
- *                      y: 1,
- *                  }
- *              },
- *              duration: 100,
- *          },
  *          hover: {
  *              props: {
  *                  scale: {
@@ -488,6 +457,10 @@ export class FancyButton extends Container
 
     /**
      * Set button views according to the config.
+     * If state view is not set (undefined), it will not be changed,
+     * so if it was set before, it will remain the same.
+     * If state view is set to null, it will be removed from the button.
+     * If state view is set it will be updated or added to a button.
      * @param {Views} views
      */
     // eslint-disable-next-line accessor-pairs
