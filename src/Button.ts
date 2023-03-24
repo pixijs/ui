@@ -116,7 +116,7 @@ export class Button
         this.view.eventMode = enabled ? 'static' : 'auto';
         this.view.cursor = enabled ? 'pointer' : 'default';
 
-        if (!enabled)
+        if (!enabled && this._isDown)
         {
             this.processUp();
         }
