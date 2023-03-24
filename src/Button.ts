@@ -1,4 +1,4 @@
-import { utils } from '@pixi/core';
+import { isMobile } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
 import { Signal } from 'typed-signals';
@@ -36,7 +36,7 @@ export class Button
      */
     public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    /** Event that is fired when the mouse hovers the button. */
+    /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
     public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /** Event that fired when the mouse is out of the view */
@@ -95,68 +95,6 @@ export class Button
         return this._view;
     }
 
-    /**
-     * Method called when the button pressed.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public down(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the button is up.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public up(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse hovers the button.
-     * To be overridden.
-     * This is fired only if device is not mobile.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public hover(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse press down the button.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public press(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse leaves the button.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public out(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the up event happens outside of the button,
-     * after the down event happened inside the button boundaries.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public upOut(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
     /** Getter that returns if the button is down. */
     get isDown(): boolean
     {
@@ -183,7 +121,7 @@ export class Button
 
         if (!enabled)
         {
-            this._processUp();
+            this.processUp();
         }
     }
 
@@ -191,64 +129,6 @@ export class Button
     get enabled(): boolean
     {
         return this._enabled;
-    }
-
-    private _processUp(_e?: FederatedPointerEvent)
-    {
-        if (this._isDown)
-        {
-            this.onUp.emit(this, _e);
-        }
-        this._isDown = false;
-    }
-
-    private _processUpOut(_e?: FederatedPointerEvent)
-    {
-        if (this._isDown)
-        {
-            this.onUp.emit(this, _e);
-            this.onUpOut.emit(this, _e);
-        }
-
-        this._isDown = false;
-    }
-
-    private _processOut(_e?: FederatedPointerEvent)
-    {
-        if (this._isMouseIn)
-        {
-            this._isMouseIn = false;
-            this.onOut.emit(this, _e);
-        }
-    }
-
-    private _upOut(_e?: FederatedPointerEvent)
-    {
-        this.upOut(_e);
-    }
-
-    private _out(_e?: FederatedPointerEvent)
-    {
-        this.out(_e);
-    }
-
-    private _processOver(_e: FederatedPointerEvent)
-    {
-        this._isMouseIn = true;
-        this.onHover.emit(this, _e);
-    }
-
-    private _processTap(_e: FederatedPointerEvent)
-    {
-        this._isDown = false;
-        this.onPress.emit(this, _e);
-        this.press(_e);
-    }
-
-    private _processDown(_e: FederatedPointerEvent): void
-    {
-        this._isDown = true;
-        this.onDown.emit(this, _e);
     }
 
     /** Creates Signal events to be fired. */
@@ -265,45 +145,143 @@ export class Button
     /** Adds all events to be used on a view. */
     private connectEvents()
     {
-        this.view.on('pointerdown', this._processDown, this);
-        this.view.on('pointerup', this._processUp, this);
-        this.view.on('pointerupoutside', this._processUpOut, this);
-        this.view.on('pointerout', this._processOut, this);
-        this.view.on('pointertap', this._processTap, this);
-        this.view.on('pointerover', this._processOver, this);
-
-        this.onDown.connect(() => this.down());
-        this.onUp.connect(() => this.up());
-        this.onUpOut.connect(() => this._upOut());
-        this.onOut.connect(() => this._out());
-
-        if (!utils.isMobile.any)
-        {
-            this.onHover.connect(() => this.hover());
-        }
+        this.view.on('pointerdown', this.processDown, this);
+        this.view.on('pointerup', this.processUp, this);
+        this.view.on('pointerupoutside', this.processUpOut, this);
+        this.view.on('pointerout', this.processOut, this);
+        this.view.on('pointertap', this.processTap, this);
+        this.view.on('pointerover', this.processOver, this);
     }
 
     /** Removes all events, added to a view. */
     private disconnectEvents()
     {
-        if (this.view)
+        if (!this.view) return;
+
+        this.view.off('pointerdown', this.processDown, this);
+        this.view.off('pointerup', this.processUp, this);
+        this.view.off('pointerupoutside', this.processUpOut, this);
+        this.view.off('pointerout', this.processOut, this);
+        this.view.off('pointertap', this.processTap, this);
+        this.view.off('pointerover', this.processOver, this);
+    }
+
+    private processDown(e: FederatedPointerEvent): void
+    {
+        this._isDown = true;
+        this.onDown.emit(this, e);
+        this.down(e);
+    }
+
+    private processUp(e?: FederatedPointerEvent)
+    {
+        if (this._isDown)
         {
-            this.view.off('pointerdown', this._processDown, this);
-            this.view.off('pointerup', this._processUp, this);
-            this.view.off('pointerupoutside', this._processUpOut, this);
-            this.view.off('pointerout', this._processOut, this);
-            this.view.off('pointertap', this._processTap, this);
-            this.view.off('pointerover', this._processOver, this);
+            this.onUp.emit(this, e);
+            this.up(e);
         }
 
-        this.onDown.disconnectAll();
-        this.onUp.disconnectAll();
-        this.onUpOut.disconnectAll();
-        this.onOut.disconnectAll();
+        this._isDown = false;
+    }
 
-        if (!utils.isMobile.any)
+    private processUpOut(e?: FederatedPointerEvent)
+    {
+        if (this._isDown)
         {
-            this.onHover.disconnectAll();
+            this.onUp.emit(this, e);
+            this.onUpOut.emit(this, e);
+            this.up(e);
+            this.upOut(e);
         }
+
+        this._isDown = false;
+    }
+
+    private processOut(e?: FederatedPointerEvent)
+    {
+        if (this._isMouseIn)
+        {
+            this._isMouseIn = false;
+            this.onOut.emit(this, e);
+            this.out(e);
+        }
+    }
+
+    private processTap(e: FederatedPointerEvent)
+    {
+        this._isDown = false;
+        this.onPress.emit(this, e);
+        this.press(e);
+    }
+
+    private processOver(e: FederatedPointerEvent)
+    {
+        if (isMobile.any) return;
+
+        this._isMouseIn = true;
+        this.onHover.emit(this, e);
+        this.hover(e);
+    }
+
+    /**
+     * Method called when the button pressed.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public down(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the button is up.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public up(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the up event happens outside of the button,
+     * after the down event happened inside the button boundaries.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public upOut(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse leaves the button.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public out(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse press down the button.
+     * To be overridden.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public press(_e?: FederatedPointerEvent)
+    {
+    // override me!
+    }
+
+    /**
+     * Method called when the mouse hovers the button.
+     * To be overridden.
+     * Fired only if device is not mobile.
+     * @param {FederatedPointerEvent} _e - event data
+     */
+    public hover(_e?: FederatedPointerEvent)
+    {
+    // override me!
     }
 }

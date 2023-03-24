@@ -22,7 +22,7 @@ export class SpriteButton extends Button
 
     constructor(props: {
         text: string,
-        textColor: string | number,
+        textColor: string,
         disabled: boolean,
         action: (event: string) => void})
     {
@@ -38,7 +38,10 @@ export class SpriteButton extends Button
 
             this.view.addChild(buttonView);
 
-            this.textView = new Text(props.text, { ...defaultTextStyle, fontSize: 40 });
+            this.textView = new Text(props.text, {
+                ...defaultTextStyle,
+                fontSize: 40,
+                fill: props.textColor });
             this.textView.y = -10;
             this.textView.anchor.set(0.5);
 
@@ -52,11 +55,6 @@ export class SpriteButton extends Button
         this.action = props.action;
     }
 
-    override press()
-    {
-        this.action('onPress');
-    }
-
     override down()
     {
         this.action('down');
@@ -67,9 +65,9 @@ export class SpriteButton extends Button
         this.action('up');
     }
 
-    override hover()
+    override upOut()
     {
-        this.action('hover');
+        this.action('upOut');
     }
 
     override out()
@@ -77,9 +75,14 @@ export class SpriteButton extends Button
         this.action('out');
     }
 
-    override upOut()
+    override press()
     {
-        this.action('upOut');
+        this.action('onPress');
+    }
+
+    override hover()
+    {
+        this.action('hover');
     }
 
     resize()
