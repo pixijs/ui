@@ -146,7 +146,7 @@ export class Button
         this.view.on('pointerup', this.processUp, this);
         this.view.on('pointerupoutside', this.processUpOut, this);
         this.view.on('pointerout', this.processOut, this);
-        this.view.on('pointertap', this.processTap, this);
+        this.view.on('pointertap', this.processPress, this);
         this.view.on('pointerover', this.processOver, this);
     }
 
@@ -159,7 +159,7 @@ export class Button
         this.view.off('pointerup', this.processUp, this);
         this.view.off('pointerupoutside', this.processUpOut, this);
         this.view.off('pointerout', this.processOut, this);
-        this.view.off('pointertap', this.processTap, this);
+        this.view.off('pointertap', this.processPress, this);
         this.view.off('pointerover', this.processOver, this);
     }
 
@@ -204,7 +204,7 @@ export class Button
         }
     }
 
-    private processTap(e: FederatedPointerEvent)
+    private processPress(e: FederatedPointerEvent)
     {
         this._isDown = false;
         this.onPress.emit(this, e);
