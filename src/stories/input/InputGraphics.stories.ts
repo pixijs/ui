@@ -24,7 +24,7 @@ const args = {
     paddingRight: 0,
     paddingBottom: 0,
     paddingLeft: 0,
-    onChange: action('Input: ')
+    onChange: action('Input')
 };
 
 export const UseGraphics = ({
@@ -75,7 +75,7 @@ export const UseGraphics = ({
             padding: [paddingTop, paddingRight, paddingBottom, paddingLeft]
         });
 
-        input.onChange.connect(() => onChange(input.value));
+        input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
 
         view.addChild(input);
     }

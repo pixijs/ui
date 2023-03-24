@@ -18,7 +18,7 @@ const args = {
     paddingBottom: 0,
     paddingLeft: 0,
     amount: 1,
-    onChange: action('Input: ')
+    onChange: action('Input')
 };
 
 export const UseSprite = ({
@@ -59,7 +59,7 @@ export const UseSprite = ({
                 value: text
             });
 
-            input.onChange.connect(() => onChange(input.value));
+            input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
 
             view.addChild(input);
         }
