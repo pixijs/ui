@@ -56,11 +56,7 @@ export class List extends Container
         }
 
         this.on('added', () => this.arrangeChildren());
-    }
-
-    protected override onChildrenChange()
-    {
-        this.arrangeChildren();
+        this.on('childAdded', () => this.arrangeChildren());
     }
 
     private arrangeChildren()
