@@ -5,8 +5,8 @@ import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
-    target: string | Container;
-    mask: string | Graphics;
+    target?: string | Container;
+    mask?: string | Graphics;
     borderWidth?: number;
     borderColor?: number;
 };
@@ -26,59 +26,99 @@ export class MaskedFrame extends Graphics
     /** Target container. */
     public target: Container;
 
-    /** Mask to apply. */
-    public targetMask: Container;
+    private _targetMask: Container;
+    private maskData: string | Graphics;
+    private borderWidth: number;
+    private borderColor: number;
 
-    /** Border color. */
-    public borderColor: number;
-
-    /** Border width. */
-    public borderWidth: number;
-
-    constructor({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
+    constructor(options?: MaskedFrameOptions)
     {
         super();
 
-        this.borderColor = borderColor;
-        this.borderWidth = borderWidth;
-
-        this.target = getView(target);
-        this.targetMask = getView(mask);
-        this.target.addChild(this.targetMask);
-        this.target.mask = this.targetMask;
-
-        if (borderWidth)
+        if (options?.target)
         {
-            this.showBorder();
-
-            this.target.x = borderWidth;
-            this.target.y = borderWidth;
-
-            const borderMask = typeof mask === 'string' ? new Sprite(Texture.from(mask)) : mask.clone();
-
-            borderMask.width += borderWidth * 2;
-            borderMask.height += borderWidth * 2;
-
-            this.mask = borderMask;
-            this.addChild(borderMask);
+            this.init(options);
         }
-
-        this.addChild(this.target);
     }
 
-    /** Shows a border. */
-    public showBorder()
+    /**
+     * Initializes a component.
+     * @param root0
+     * @param root0.target - Container to apply a mask or a border.
+     * @param root0.mask - Mask.
+     * @param root0.borderWidth - Border width.
+     * @param root0.borderColor - Border color.
+     */
+    init({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
     {
-        this.beginFill(this.borderColor);
+        this.cleanup(this.target);
 
-        const width = this.borderWidth * 2;
+        this.target = getView(target);
+        this.addChild(this.target);
 
-        this.drawRect(0, 0, this.target.width + width, this.target.height + width);
+        if (mask) this.setMask(mask);
+        if (borderWidth) this.setBorder(borderWidth, borderColor);
+    }
+
+    /**
+     * Applies a mask to a target container.
+     * @param mask
+     */
+    setMask(mask: string | Graphics)
+    {
+        this.maskData = mask;
+
+        this._targetMask = getView(mask);
+        this.target.addChild(this._targetMask);
+        this.target.mask = this._targetMask;
+    }
+
+    /**
+     * Shows a border around the target Container, same shape as the mask.
+     * @param borderWidth
+     * @param borderColor
+     */
+    public setBorder(borderWidth: number, borderColor: number)
+    {
+        this.borderWidth = borderWidth;
+        this.borderColor = borderColor;
+
+        this.showBorder();
+
+        const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone();
+
+        borderMask.width += borderWidth * 2;
+        borderMask.height += borderWidth * 2;
+
+        this.mask = borderMask;
+        this.addChild(borderMask);
     }
 
     /** Hides a border. */
-    public hideBorder()
+    showBorder()
+    {
+        const width = this.borderWidth * 2;
+
+        this.clear()
+            .beginFill(this.borderColor)
+            .drawRect(0, 0, this.target.width + width, this.target.height + width);
+
+        this.target.x = this.borderWidth;
+        this.target.y = this.borderWidth;
+    }
+
+    /** Hides a border. */
+    hideBorder()
     {
         this.clear();
+    }
+
+    private cleanup(element: Container)
+    {
+        if (!element) return;
+
+        this.removeChild(this.target);
+        this.target.destroy();
+        this.target = null;
     }
 }
