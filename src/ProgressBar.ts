@@ -1,15 +1,18 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
+import { cleanup } from './utils/helpers/cleanup';
 import { getView } from './utils/helpers/view';
+
+type FillOffset = {
+    x?: number;
+    y?: number;
+};
 
 export type ProgressBarOptions = {
     bg: Container | string;
     fill: Container | string;
     progress?: number;
-    fillOffset?: {
-        x?: number;
-        y?: number;
-    };
+    fillOffset?: FillOffset;
 };
 
 /**
@@ -23,9 +26,9 @@ export type ProgressBarOptions = {
  */
 export class ProgressBar extends Container
 {
-    protected readonly bg: Container;
-    protected readonly fill?: Container;
-    protected readonly fillMask?: Graphics;
+    protected bg!: Container;
+    protected fill!: Container;
+    protected fillMask!: Graphics;
 
     /** Container, that holds all inner views. */
     public innerView: Container;
@@ -36,35 +39,48 @@ export class ProgressBar extends Container
     /** Current progress value. */
     public _progress = 0;
 
-    constructor({ bg, fill, fillOffset, progress }: ProgressBarOptions)
+    constructor(params?: ProgressBarOptions)
     {
         super();
 
         this.innerView = new Container();
         this.addChild(this.innerView);
 
-        this.bg = new Container();
-        this.bg.addChild(getView(bg));
-
-        this.innerView.addChild(this.bg);
-
-        if (fill)
+        if (params?.bg && params?.fill)
         {
-            this.fill = new Container();
-            this.fill.addChild(getView(fill));
-
-            const offsetX = fillOffset?.x ?? 0;
-            const offsetY = fillOffset?.y ?? 0;
-
-            this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-            this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
-
-            this.fillMask = new Graphics();
-            this.fill.addChild(this.fillMask);
-            this.fill.mask = this.fillMask;
-
-            this.addChild(this.fill);
+            this.init(params);
         }
+    }
+
+    /**
+     * Initializes ProgressBar.
+     * @param root0
+     * @param root0.bg - Background texture.
+     * @param root0.fill - Fill texture.
+     * @param root0.fillOffset - Fill offset.
+     * @param root0.progress - Initial progress value.
+     */
+    init({ bg, fill, fillOffset, progress }: ProgressBarOptions)
+    {
+        cleanup(this.bg);
+        cleanup(this.fill);
+        cleanup(this.fillMask);
+
+        this.bg = getView(bg);
+        if (!this.bg.parent) this.innerView.addChild(this.bg);
+
+        this.fill = getView(fill);
+        if (!this.fill.parent) this.innerView.addChild(this.fill);
+
+        const offsetX = fillOffset?.x ?? 0;
+        const offsetY = fillOffset?.y ?? 0;
+
+        this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
+        this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
+
+        this.fillMask = new Graphics();
+        this.fill.addChild(this.fillMask);
+        this.fill.mask = this.fillMask;
 
         this.progress = progress;
     }
@@ -89,6 +105,8 @@ export class ProgressBar extends Container
     /** Sets current progress percentage value. */
     set progress(progress: number)
     {
+        if (!this.bg) return;
+
         this._progress = this.validate(progress);
 
         const startPoint = (this.bg.width / 100) * this.progressStart;
