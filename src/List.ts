@@ -28,7 +28,7 @@ export type ListOptions = {
  */
 export class List extends Container
 {
-    private readonly options?: { type?: ListType } & ListOptions;
+    private options?: { type?: ListType } & ListOptions;
 
     /** Container, that holds all inner elements. */
     public view: Container;
@@ -43,6 +43,21 @@ export class List extends Container
     {
         super();
 
+        if (options)
+        {
+            this.init(options);
+        }
+
+        this.on('added', () => this.arrangeChildren());
+        this.on('childAdded', () => this.arrangeChildren());
+    }
+
+    /**
+     * Initiates list component.
+     * @param options
+     */
+    init(options?: { type?: ListType } & ListOptions)
+    {
         this.options = options;
 
         if (options?.type)
@@ -54,9 +69,6 @@ export class List extends Container
         {
             options.children.forEach((child) => this.addChild(child));
         }
-
-        this.on('added', () => this.arrangeChildren());
-        this.on('childAdded', () => this.arrangeChildren());
     }
 
     /**
