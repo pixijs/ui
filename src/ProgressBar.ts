@@ -110,11 +110,12 @@ export class ProgressBar extends Container
 
         this._progress = this.validate(progress);
 
-        const percentage = (this.fill.width / 100) * this._progress;
+        const startPoint = (this.fill.width / 100) * this.progressStart;
+        const endPoint = ((this.fill.width / 100) * this._progress) - startPoint;
 
         if (this.fillMask)
         {
-            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(0, 0, percentage, this.fill.height);
+            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
         }
     }
 
