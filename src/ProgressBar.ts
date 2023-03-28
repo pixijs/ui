@@ -1,5 +1,6 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
+import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 
 type FillOffset = {
@@ -66,6 +67,11 @@ export class ProgressBar extends Container
 
         this.bg = getView(bg);
         this.innerView.addChild(this.bg);
+
+        if (bg instanceof Sprite && fill === bg)
+        {
+            fill = Sprite.from(bg.texture);
+        }
 
         this.fill = getView(fill);
         this.innerView.addChild(this.fill);

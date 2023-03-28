@@ -105,19 +105,19 @@ export class DoubleSlider extends SliderBase
 
         this._value1 = value1;
 
-        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progressStart;
+        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progressStart;
 
-        if (this.slider1.x > this.slider2.x)
+        if (this._slider1.x > this._slider2.x)
         {
-            this.slider1.x = this.slider2.x;
+            this._slider1.x = this._slider2.x;
         }
 
         if (this.options.showValue)
         {
             this.value1Text.text = `${Math.round(value1)}`;
 
-            const sliderPosX = this.slider1.x + (this.slider1.width / 2);
-            const sliderPosY = this.slider1.y;
+            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosY = this._slider1.y;
 
             this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
             this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
@@ -142,19 +142,19 @@ export class DoubleSlider extends SliderBase
 
         this._value2 = value2;
 
-        this.slider2.x = ((this.bg.width - this.slider2.width) / 100) * this.progress;
+        this._slider2.x = ((this.bg.width - this._slider2.width) / 100) * this.progress;
 
-        if (this.slider2.x < this.slider1.x)
+        if (this._slider2.x < this._slider1.x)
         {
-            this.slider2.x = this.slider1.x;
+            this._slider2.x = this._slider1.x;
         }
 
         if (this.options.showValue)
         {
             this.value2Text.text = `${Math.round(value2)}`;
 
-            const sliderPosX = this.slider2.x + (this.slider2.width / 2);
-            const sliderPosY = this.slider2.y;
+            const sliderPosX = this._slider2.x + (this._slider2.width / 2);
+            const sliderPosY = this._slider2.y;
 
             this.value2Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
             this.value2Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
@@ -170,8 +170,8 @@ export class DoubleSlider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        const slider1Dist = Math.abs(x - this.slider1.x - this.slider1.width);
-        const slider2Dist = Math.abs(x - this.slider2.x);
+        const slider1Dist = Math.abs(x - this._slider1.x - this._slider1.width);
+        const slider2Dist = Math.abs(x - this._slider2.x);
 
         if (!this.activeValue)
         {

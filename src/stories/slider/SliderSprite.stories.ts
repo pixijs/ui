@@ -28,7 +28,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
     // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
-            fill: showFill ? 'slider_progress.png' : '',
+            fill: showFill ? 'slider_progress.png' : null,
             slider: 'slider.png',
             min,
             max,
@@ -46,6 +46,8 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
                 y: -2
             }
         });
+
+        singleSlider.setBackground('slider_bg.png');
 
         singleSlider.onChange.connect((value) => onChange(`${value}`));
 

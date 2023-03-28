@@ -89,20 +89,27 @@ export class Slider extends SliderBase
 
         this._value1 = value;
 
-        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progress;
+        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
 
         if (this.options.showValue)
         {
             this.value1Text.text = `${Math.round(this.value)}`;
 
-            const sliderPosX = this.slider1.x + (this.slider1.width / 2);
-            const sliderPosY = this.slider1.y;
+            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosY = this._slider1.y;
 
             this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
             this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
         }
 
         this.onUpdate?.emit(this.value);
+    }
+
+    /** Set slider instance ot texture. */
+    // eslint-disable-next-line accessor-pairs
+    set slider(value: Container | string)
+    {
+        this.slider1 = value;
     }
 
     protected override update(event: FederatedPointerEvent)
