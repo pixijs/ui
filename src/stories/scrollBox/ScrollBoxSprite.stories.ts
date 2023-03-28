@@ -91,7 +91,6 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
         button.scale.set(0.5);
 
         button.onPress.connect(() => onPress(i + 1));
-        button.onUpOut.connect(() => console.log('up out'));
 
         items.push(button);
     }
