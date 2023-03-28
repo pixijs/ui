@@ -1,6 +1,7 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
+import { cleanup } from './utils/helpers/cleanup';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
@@ -50,7 +51,7 @@ export class MaskedFrame extends Graphics
      */
     init({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
     {
-        this.cleanup(this.target);
+        cleanup(this.target);
 
         this.target = getView(target);
         this.addChild(this.target);
@@ -110,14 +111,5 @@ export class MaskedFrame extends Graphics
     hideBorder()
     {
         this.clear();
-    }
-
-    private cleanup(element: Container)
-    {
-        if (!element) return;
-
-        this.removeChild(this.target);
-        this.target.destroy();
-        this.target = null;
     }
 }

@@ -2,6 +2,7 @@ import { Container } from '@pixi/display';
 import { TextStyle, ITextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
+import { cleanup } from './utils/helpers/cleanup';
 
 type LabelStyle = TextStyle | Partial<ITextStyle>;
 
@@ -77,7 +78,7 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            this.removeChild(this.label);
+            cleanup(this.label);
 
             return;
         }
