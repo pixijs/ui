@@ -34,7 +34,7 @@ export class List extends Container
     public view: Container;
 
     /** Arrange direction. */
-    public type: ListType;
+    private _type: ListType;
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
@@ -57,6 +57,64 @@ export class List extends Container
 
         this.on('added', () => this.arrangeChildren());
         this.on('childAdded', () => this.arrangeChildren());
+    }
+
+    /**
+     * Set items arrange direction.
+     * @param type - Arrange direction.
+     */
+    set type(type: ListType)
+    {
+        this._type = type;
+        this.arrangeChildren();
+    }
+
+    /**
+     * Get items arrange direction.
+     * @returns Arrange direction.
+     */
+    get type(): ListType
+    {
+        return this._type;
+    }
+
+    /** Set element margin. */
+    set elementsMargin(margin: number)
+    {
+        this.options.elementsMargin = margin;
+        this.arrangeChildren();
+    }
+
+    /** Get element margin. */
+    get elementsMargin(): number
+    {
+        return this.options.elementsMargin;
+    }
+
+    /** Set vertical padding. */
+    set vertPadding(padding: number)
+    {
+        this.options.vertPadding = padding;
+        this.arrangeChildren();
+    }
+
+    /** Get vertical padding. */
+    get vertPadding(): number
+    {
+        return this.options.vertPadding;
+    }
+
+    /** Set horizontal padding. */
+    set horPadding(padding: number)
+    {
+        this.options.horPadding = padding;
+        this.arrangeChildren();
+    }
+
+    /** Get horizontal padding. */
+    get horPadding(): number
+    {
+        return this.options.horPadding;
     }
 
     private arrangeChildren()
