@@ -1,6 +1,5 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
-import { cleanup } from './utils/helpers/cleanup';
 import { getView } from './utils/helpers/view';
 
 type FillOffset = {
@@ -62,15 +61,14 @@ export class ProgressBar extends Container
      */
     init({ bg, fill, fillOffset, progress }: ProgressBarOptions)
     {
-        cleanup(this.bg);
-        cleanup(this.fill);
-        cleanup(this.fillMask);
+        this.innerView.removeChild(this.bg);
+        this.innerView.removeChild(this.fill);
 
         this.bg = getView(bg);
-        if (!this.bg.parent) this.innerView.addChild(this.bg);
+        this.innerView.addChild(this.bg);
 
         this.fill = getView(fill);
-        if (!this.fill.parent) this.innerView.addChild(this.fill);
+        this.innerView.addChild(this.fill);
 
         const offsetX = fillOffset?.x ?? 0;
         const offsetY = fillOffset?.y ?? 0;
@@ -78,9 +76,12 @@ export class ProgressBar extends Container
         this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
         this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
 
-        this.fillMask = new Graphics();
-        this.fill.addChild(this.fillMask);
-        this.fill.mask = this.fillMask;
+        if (!this.fillMask)
+        {
+            this.fillMask = new Graphics();
+            this.fill.addChild(this.fillMask);
+            this.fill.mask = this.fillMask;
+        }
 
         this.progress = progress;
     }
@@ -109,12 +110,11 @@ export class ProgressBar extends Container
 
         this._progress = this.validate(progress);
 
-        const startPoint = (this.bg.width / 100) * this.progressStart;
-        const endPoint = ((this.bg.width / 100) * this._progress) - startPoint;
+        const percentage = (this.fill.width / 100) * this._progress;
 
         if (this.fillMask)
         {
-            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
+            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(0, 0, percentage, this.fill.height);
         }
     }
 
