@@ -52,7 +52,7 @@ export class ScrollBox extends Container
 
     private readonly onMouseScrollBinded: (event: any) => void;
 
-    private readonly list: List;
+    private list: List;
 
     private readonly freeSlot = {
         x: 0,
@@ -63,36 +63,57 @@ export class ScrollBox extends Container
     private isDragging = 0;
     private interactiveStorage: Map<number, DisplayObject> = new Map();
     private ticker = Ticker.shared;
-    private readonly options: ScrollBoxOptions;
+    private options: ScrollBoxOptions;
 
-    constructor(options: ScrollBoxOptions)
+    constructor(options?: ScrollBoxOptions)
     {
         super();
 
+        if (options)
+        {
+            this.init(options);
+        }
+
+        const spring = new ScrollSpring();
+
+        this._trackpad = new Trackpad({
+            constrain: true,
+            yEase: spring,
+        });
+
+        this.ticker.add(this.update, this);
+
+        this.onMouseScrollBinded = this.onMouseScroll.bind(this);
+    }
+
+    /**
+     * Initiates ScrollBox.
+     * @param options
+     */
+    init(options: ScrollBoxOptions)
+    {
         this.options = options;
         this.setBackground(options.background);
 
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
 
-        if (!options.vertPadding)
+        options.vertPadding = options.vertPadding ?? options.padding ?? 0;
+        options.horPadding = options.horPadding ?? options.padding ?? 0;
+
+        if (!this.list)
         {
-            options.vertPadding = options.padding ?? 0;
+            this.list = new List();
+
+            super.addChild(this.list);
         }
 
-        if (!options.horPadding)
-        {
-            options.horPadding = options.padding ?? 0;
-        }
-
-        this.list = new List({
+        this.list.init({
             type: options.type,
             elementsMargin: options.elementsMargin,
             vertPadding: options.vertPadding,
             horPadding: options.horPadding,
         });
-
-        super.addChild(this.list);
 
         this.addItems(options.items);
 
@@ -102,21 +123,10 @@ export class ScrollBox extends Container
             this.makeScrollable();
         }
 
-        this.onMouseScrollBinded = this.onMouseScroll.bind(this);
-
-        const spring = new ScrollSpring();
-
-        this._trackpad = new Trackpad({
-            constrain: true,
-            yEase: spring,
-        });
-
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
 
         this.resize();
-
-        this.ticker.add(this.update, this);
     }
 
     private get hasBounds(): boolean
@@ -138,6 +148,15 @@ export class ScrollBox extends Container
         if (!items?.length) return;
 
         items.forEach((item) => this.addItem(item));
+    }
+
+    /**
+     * Remove all items from a scrollable list.
+     * @param {...any} items
+     */
+    removeItems()
+    {
+        this.list.removeChildren();
     }
 
     /**
@@ -275,9 +294,13 @@ export class ScrollBox extends Container
 
     private addMask()
     {
-        this.borderMask = new Graphics();
-        super.addChild(this.borderMask);
-        this.mask = this.borderMask;
+        if (!this.borderMask)
+        {
+            this.borderMask = new Graphics();
+            super.addChild(this.borderMask);
+            this.mask = this.borderMask;
+        }
+
         this.resize();
     }
 
@@ -378,6 +401,8 @@ export class ScrollBox extends Container
     /** Controls item positions and visibility. */
     public resize(): void
     {
+        if (!this.hasBounds) return;
+
         this.renderAllItems();
 
         if (
@@ -644,6 +669,8 @@ export class ScrollBox extends Container
 
     private update()
     {
+        if (!this.list) return;
+
         this._trackpad.update();
 
         if (this.options.type === 'horizontal')
