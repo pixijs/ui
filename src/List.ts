@@ -52,7 +52,7 @@ export class List extends Container
 
         if (options?.children)
         {
-            options.children.map((child) => this.addChild(child));
+            options.children.forEach((child) => this.addChild(child));
         }
 
         this.on('added', () => this.arrangeChildren());
@@ -78,40 +78,58 @@ export class List extends Container
         return this._type;
     }
 
-    /** Set element margin. */
+    /**
+     * Set element margin.
+     * @param margin - Margin between elements.
+     */
     set elementsMargin(margin: number)
     {
         this.options.elementsMargin = margin;
         this.arrangeChildren();
     }
 
-    /** Get element margin. */
+    /**
+     * Get element margin.
+     * @returns Margin between elements.
+     */
     get elementsMargin(): number
     {
         return this.options.elementsMargin;
     }
 
-    /** Set vertical padding. */
+    /**
+     * Set vertical padding.
+     * @param padding - Vertical padding between list border and its elements.
+     */
     set vertPadding(padding: number)
     {
         this.options.vertPadding = padding;
         this.arrangeChildren();
     }
 
-    /** Get vertical padding. */
+    /**
+     * Get vertical padding.
+     * @returns Vertical padding between list border and its elements.
+     */
     get vertPadding(): number
     {
         return this.options.vertPadding;
     }
 
-    /** Set horizontal padding. */
+    /**
+     * Set horizontal padding.
+     * @param padding - Horizontal padding between list border and its elements.
+     */
     set horPadding(padding: number)
     {
         this.options.horPadding = padding;
         this.arrangeChildren();
     }
 
-    /** Get horizontal padding. */
+    /**
+     * Get horizontal padding.
+     * @returns Horizontal padding between list border and its elements.
+     */
     get horPadding(): number
     {
         return this.options.horPadding;
