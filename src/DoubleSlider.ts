@@ -175,7 +175,18 @@ export class DoubleSlider extends SliderBase
 
         if (!this.activeValue)
         {
-            this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
+            if (x < this.slider1.x)
+            {
+                this.activeValue = 'value1';
+            }
+            else if (x > this.slider2.x)
+            {
+                this.activeValue = 'value2';
+            }
+            else
+            {
+                this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
+            }
         }
 
         const progress = this.validate((x / this.bg.width) * 100);
