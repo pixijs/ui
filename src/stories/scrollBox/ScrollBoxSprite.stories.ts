@@ -48,10 +48,9 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
             height: window.height - 90,
             vertPadding: 18,
             radius: 5
-            // items
         });
 
-        items.forEach((item) => scrollBox.addItem(item));
+        scrollBox.addItems(items);
 
         scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
         scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
@@ -92,6 +91,7 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
         button.scale.set(0.5);
 
         button.onPress.connect(() => onPress(i + 1));
+        button.onUpOut.connect(() => console.log('up out'));
 
         items.push(button);
     }

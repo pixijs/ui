@@ -61,7 +61,7 @@ export class ScrollBox extends Container
 
     private _trackpad: Trackpad;
     private isDragging = 0;
-    private interactiveStorage: DisplayObject[] = [];
+    private interactiveStorage: Map<number, DisplayObject> = new Map();
     private ticker = Ticker.shared;
     private readonly options: ScrollBoxOptions;
 
@@ -307,9 +307,11 @@ export class ScrollBox extends Container
         {
             this._trackpad.pointerMove(e.global);
 
-            if (this.isDragging)
+            if (!this.isDragging) return;
+
+            if (this.interactiveStorage.size === 0)
             {
-                this.recursiveDisableInteractivity(this.items);
+                this.disableInteractivity(this.items);
             }
         });
 
@@ -319,31 +321,31 @@ export class ScrollBox extends Container
     }
 
     // prevent interactivity on all children
-    private recursiveDisableInteractivity(items: DisplayObject[])
+    private disableInteractivity(items: DisplayObject[])
     {
-        items.forEach((item) =>
+        items.forEach((item, id) =>
         {
+            this.emitPointerOpOutside(item);
+
             if (item.interactive)
             {
-                this.interactiveStorage.push(item);
+                this.interactiveStorage.set(id, item);
                 item.eventMode = 'auto';
                 item.interactiveChildren = false;
             }
-
-            this.emitPointerOpOutside(item);
         });
     }
 
-    private emitPointerOpOutside(container: DisplayObject)
+    private emitPointerOpOutside(item: DisplayObject)
     {
-        if (container.eventMode !== 'auto')
+        if (item.eventMode !== 'auto')
         {
-            container.emit('pointerupoutside', null);
+            item.emit('pointerupoutside', null);
         }
 
-        if (container instanceof Container && container.children)
+        if (item instanceof Container && item.children)
         {
-            container.children.forEach((child) => this.emitPointerOpOutside(child));
+            item.children.forEach((child) => this.emitPointerOpOutside(child));
         }
     }
 
@@ -354,7 +356,7 @@ export class ScrollBox extends Container
         {
             item.eventMode = 'static';
             item.interactiveChildren = false;
-            delete this.interactiveStorage[itemID];
+            this.interactiveStorage.delete(itemID);
         });
     }
 
