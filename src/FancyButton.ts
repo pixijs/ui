@@ -308,11 +308,10 @@ export class FancyButton extends Container
      */
     private createTextView(text: AnyText)
     {
-        this._views.text = getTextView(text);
-        this._views.text.anchor.set(0);
-
-        if (!this._views.text.parent)
+        if (!this._views.text)
         {
+            this._views.text = getTextView(text);
+            this._views.text.anchor.set(0);
             this.innerView.addChild(this._views.text);
         }
 
