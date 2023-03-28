@@ -4,8 +4,8 @@ import { CheckBox } from './CheckBox';
 import { List, ListType } from './List';
 
 export type RadioBoxOptions = {
-    items?: CheckBox[];
-    type?: ListType;
+    items: CheckBox[];
+    type: ListType;
     elementsMargin: number;
     selectedItem?: number;
 };
@@ -86,14 +86,16 @@ export class RadioGroup extends Container
 
         if (this.innerView)
         {
-            this.removeChild(this.innerView);
-            this.innerView.destroy();
+            this.innerView.type = options.type;
+            this.innerView.elementsMargin = options.elementsMargin;
         }
-
-        this.innerView = new List({
-            type: options.type,
-            elementsMargin: options.elementsMargin
-        });
+        else
+        {
+            this.innerView = new List({
+                type: options.type,
+                elementsMargin: options.elementsMargin
+            });
+        }
 
         this.addItems(options.items);
 
