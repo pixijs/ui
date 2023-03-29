@@ -1,5 +1,6 @@
 <div align="center">
-    <h1>PIXI-UI</h1>
+    <h1><img src="https://user-images.githubusercontent.com/11766115/228632186-ea0caf7d-f829-4b38-b005-bc9141b0190b.png" />
+</h1>
     <h3>It is a library that contains commonly used UI components, that are extensible to allow them to be used in any project</h3>
 </div>
 
