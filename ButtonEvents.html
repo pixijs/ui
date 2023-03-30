@@ -1091,7 +1091,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="ScrollBox.html">Class: ScrollBox</h1>
+        <h1 class="page-title" data-filename="ButtonEvents.html">Class: ButtonEvents</h1>
         
 
 
@@ -1100,16 +1100,14 @@
 <header>
   <div class="header content-size">
       <h2>
-        ScrollBox
+        ButtonEvents
 
         
       </h2>
 
       
-          <div class="class-description"><p>Scrollable view, for arranging lists of Pixi container-based elements.</p></div>
+          <div class="class-description"><p>Events controller used for <a href=Button.html>Button</a>.</p></div>
       
-      
-          <div class="class-description"><p>Items, that are out of the visible area, are not rendered.</p></div>
       
   </div>
 </header>
@@ -1146,33 +1144,8 @@
 
 
         
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>new ScrollBox({
-    background: 0XFFFFFF,
-    items: [
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
-    ],
-});</code></pre>
-
-        
     </div>
 
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-          
-
-            <li>Container</li>
-          
-        </ul>
     
 
     
@@ -1196,10 +1169,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="height">
-            <a class="share-icon" href="#height"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">height</span>
-            <span class="type-signature type">number</span>
+        <h4 class="name" id="isDown">
+            <a class="share-icon" href="#isDown"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">isDown</span>
+            <span class="type-signature type">boolean</span>
             
             
             
@@ -1209,7 +1182,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Gets component height.</p></p>
+      <p class="description"><p>Getter that returns if the button is down.</p></p>
     
     
 
@@ -1246,10 +1219,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="items">
-            <a class="share-icon" href="#items"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">items</span>
-            <span class="type-signature type">Container[] | []</span>
+        <h4 class="name" id="onDown">
+            <a class="share-icon" href="#onDown"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onDown</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
             
             
             
@@ -1259,7 +1232,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Returns all inner items in a list.</p></p>
+      <p class="description"><p>Event that is fired when the button is down.</p></p>
     
     
 
@@ -1296,10 +1269,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="width">
-            <a class="share-icon" href="#width"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">width</span>
-            <span class="type-signature type">number</span>
+        <h4 class="name" id="onHover">
+            <a class="share-icon" href="#onHover"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onHover</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
             
             
             
@@ -1309,8 +1282,214 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Gets component width.</p></p>
+      <p class="description"><p>Event that is fired when the mouse hovers the button. Fired only if device is not mobile.</p></p>
     
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onOut">
+            <a class="share-icon" href="#onOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onOut</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event that fired when the mouse is out of the view</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onPress">
+            <a class="share-icon" href="#onPress"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onPress</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Event that is fired when the button is pressed.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onUp">
+            <a class="share-icon" href="#onUp"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onUp</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Event that fired when a down event happened inside the button
+and up event happened inside or outside of the button</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onUpOut">
+            <a class="share-icon" href="#onUpOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onUpOut</span>
+            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Event that fired when mouse up event happens outside of the button
+after the down event happened inside the button boundaries.</p>
+    </div>
     
 
     
@@ -1356,14 +1535,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="addItem">
-            <a class="share-icon" href="#addItem"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="down">
+            <a class="share-icon" href="#down"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  addItem
+                  down
               
             </span>
-            <span class="signature">(&hellip;items)</span><span class="type-signature"> T[0]</span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
             
             
             
@@ -1377,1079 +1556,8 @@
     
     
     <div class="description">
-        <p>Adds an item to a scrollable list.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>items</code></td>
-            
-
-            <td class="type">
-            
-                any
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h5>Returns:</h5>
-      
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                    T[0]
-            
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addItems">
-            <a class="share-icon" href="#addItems"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  addItems
-              
-            </span>
-            <span class="signature">(items)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Add an items to a scrollable list.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>items</code></td>
-            
-
-            <td class="type">
-            
-                any
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="init">
-            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  init
-              
-            </span>
-            <span class="signature">(options)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Initiates ScrollBox.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                ScrollBoxOptions
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="isItemVisible">
-            <a class="share-icon" href="#isItemVisible"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  isItemVisible
-              
-            </span>
-            <span class="signature">(item)</span><span class="type-signature"> boolean</span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>item</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h5>Returns:</h5>
-      
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                    boolean
-            
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="removeItem">
-            <a class="share-icon" href="#removeItem"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  removeItem
-              
-            </span>
-            <span class="signature">(itemID)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Removes an item from a scrollable list.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>itemID</code></td>
-            
-
-            <td class="type">
-            
-                number
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="removeItems">
-            <a class="share-icon" href="#removeItems"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  removeItems
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Remove all items from a scrollable list.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="resize">
-            <a class="share-icon" href="#resize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  resize
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"> void</span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Controls item positions and visibility.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="scrollBottom">
-            <a class="share-icon" href="#scrollBottom"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  scrollBottom
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Makes it scroll down to the last element.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="scrollTo">
-            <a class="share-icon" href="#scrollTo"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  scrollTo
-              
-            </span>
-            <span class="signature">(elementID)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Scrolls to the element with the given ID.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>elementID</code></td>
-            
-
-            <td class="type">
-            
-                number
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="scrollTop">
-            <a class="share-icon" href="#scrollTop"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  scrollTop
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Makes it scroll up to the first element.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="setBackground">
-            <a class="share-icon" href="#setBackground"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  setBackground
-              
-            </span>
-            <span class="signature">(background)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set ScrollBox background.</p>
+        <p>Method called when the button pressed.
+To be overridden.</p>
     </div>
     
 
@@ -2484,12 +1592,12 @@
 
         <tr>
             
-                <td class="name"><code>background</code></td>
+                <td class="name"><code>_e</code></td>
             
 
             <td class="type">
             
-                number | string
+                FederatedPointerEvent
             
             </td>
 
@@ -2508,7 +1616,679 @@
             
 
             <td class="description last">
-                <p>background color or texture.</p>
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="hover">
+            <a class="share-icon" href="#hover"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  hover
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse hovers the button.
+To be overridden.
+Fired only if device is not mobile.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="out">
+            <a class="share-icon" href="#out"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  out
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse leaves the button.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="press">
+            <a class="share-icon" href="#press"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  press
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the mouse press down the button.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="up">
+            <a class="share-icon" href="#up"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  up
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the button is up.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="upOut">
+            <a class="share-icon" href="#upOut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  upOut
+              
+            </span>
+            <span class="signature">(_e)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Method called when the up event happens outside of the button,
+after the down event happened inside the button boundaries.
+To be overridden.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_e</code></td>
+            
+
+            <td class="type">
+            
+                FederatedPointerEvent
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>event data</p>
                 
             </td>
         </tr>
