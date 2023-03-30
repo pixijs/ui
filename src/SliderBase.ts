@@ -7,7 +7,7 @@ import { ProgressBar } from './ProgressBar';
 import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
-    bg?: Container | string;
+    bg: Container | string;
     fill?: Container | string;
     min?: number;
     max?: number;
@@ -58,11 +58,14 @@ export class SliderBase extends ProgressBar
 
     constructor(options: DoubleSliderOptions)
     {
-        super({
-            bg: options.bg,
-            fill: options.fill ? options.fill : options.bg,
-            fillOffset: options.fill ? options.fillOffset : undefined
-        });
+        super();
+
+        this.setBackground(options.bg);
+
+        if (options.fill)
+        {
+            this.setFill(options.fill, options.fillOffset);
+        }
 
         this.settings = options;
 
