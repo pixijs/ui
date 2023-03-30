@@ -74,13 +74,6 @@ export class ScrollBox extends Container
             this.init(options);
         }
 
-        const spring = new ScrollSpring();
-
-        this._trackpad = new Trackpad({
-            constrain: true,
-            yEase: spring,
-        });
-
         this.ticker.add(this.update, this);
 
         this.onMouseScrollBinded = this.onMouseScroll.bind(this);
@@ -303,6 +296,14 @@ export class ScrollBox extends Container
 
     private makeScrollable()
     {
+        if (!this._trackpad)
+        {
+            this._trackpad = new Trackpad({
+                constrain: true,
+                yEase: new ScrollSpring(),
+            });
+        }
+
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this.isDragging = 1;
