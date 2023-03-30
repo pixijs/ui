@@ -64,12 +64,6 @@ export class ProgressBar extends Container
     {
         this.setBackground(bg);
 
-        // in case if user is trying to use same instance for bg and fill
-        if (bg instanceof Sprite && fill === bg)
-        {
-            fill = Sprite.from(bg.texture);
-        }
-
         this.setFill(fill, fillOffset);
 
         this.progress = progress;
@@ -100,6 +94,13 @@ export class ProgressBar extends Container
         if (this.fill)
         {
             this.innerView.removeChild(this.fill);
+            this.fill.destroy();
+        }
+
+        // in case if user is trying to use same instance for bg and fill
+        if (this.bg instanceof Sprite && fill === this.bg)
+        {
+            fill = Sprite.from(this.bg.texture);
         }
 
         this.fill = getView(fill);
@@ -114,11 +115,9 @@ export class ProgressBar extends Container
         if (!this.fillMask)
         {
             this.fillMask = new Graphics();
-            this.innerView.addChild(this.fillMask);
-            this.fillMask.x = this.fill.x;
-            this.fillMask.y = this.fill.y;
         }
 
+        this.fill.addChild(this.fillMask);
         this.fill.mask = this.fillMask;
     }
 
