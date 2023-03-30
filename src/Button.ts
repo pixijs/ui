@@ -14,9 +14,10 @@ import { Mixin } from 'ts-mixer';
  *          .drawRoundedRect(0, 0, 100, 50, 15)
  * );
  *
- * buttonEvents.onPress.connect(() => console.log('onPress'));
+ * button.onPress.connect(() => console.log('onPress'));
  *
- * container.addChild(buttonEvents.view);
+ * container.addChild(button.view);
+ * // or container.addChild(container); which is the same
  */
 export class Button extends ButtonEvents
 {
@@ -92,5 +93,40 @@ export class Button extends ButtonEvents
     }
 }
 
-/** Button based on container. You can use it same {Button} but without `.view` */
-export class ButtonContainer extends Mixin(Container, Button) {}
+/**
+ * Button based on container. You can use it same {@link Button}
+ * but without need to pre create a container and interact with it through `.view` accessor.
+ * @example
+ * const button = new ButtonContainer(
+ *      new Graphics()
+ *          .beginFill(0xFFFFFF)
+ *          .drawRoundedRect(0, 0, 100, 50, 15)
+ * );
+ *
+ * button.onPress.connect(() => console.log('onPress'));
+ *
+ * container.addChild(button);
+ */
+export class ButtonContainer extends Mixin(Container, Button)
+{
+    constructor(view?: Container)
+    {
+        super();
+
+        if (view)
+        {
+            this.init(view);
+        }
+    }
+
+    /**
+     * Initialize button.
+     * @param {Container} view
+     */
+    override init(view: Container)
+    {
+        this.addChild(view);
+        this.view = view;
+        this.enabled = true;
+    }
+}
