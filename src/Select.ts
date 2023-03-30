@@ -15,7 +15,7 @@ type Offset = {
 
 export type SelectItemsOptions = {
     items: string[];
-    backgroundColor: number;
+    backgroundColor: number | string;
     hoverColor?: number;
     width?: number;
     height?: number;
