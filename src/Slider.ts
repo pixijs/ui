@@ -89,18 +89,7 @@ export class Slider extends SliderBase
 
         this._value1 = value;
 
-        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
-
-        if (this.options.showValue)
-        {
-            this.value1Text.text = `${Math.round(this.value)}`;
-
-            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
-            const sliderPosY = this._slider1.y;
-
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
-        }
+        this.updateSlider();
 
         this.onUpdate?.emit(this.value);
     }
@@ -110,6 +99,7 @@ export class Slider extends SliderBase
     set slider(value: Container | string)
     {
         this.slider1 = value;
+        this.updateSlider();
     }
 
     protected override update(event: FederatedPointerEvent)
@@ -126,5 +116,21 @@ export class Slider extends SliderBase
     protected override change()
     {
         this.onChange?.emit(this.value);
+    }
+
+    protected updateSlider()
+    {
+        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
+
+        if (this.options.showValue)
+        {
+            this.value1Text.text = `${Math.round(this.value)}`;
+
+            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosY = this._slider1.y;
+
+            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+        }
     }
 }
