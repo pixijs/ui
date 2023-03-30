@@ -150,10 +150,7 @@ export class ScrollBox extends Container
         items.forEach((item) => this.addItem(item));
     }
 
-    /**
-     * Remove all items from a scrollable list.
-     * @param {...any} items
-     */
+    /** Remove all items from a scrollable list. */
     removeItems()
     {
         this.list.removeChildren();
