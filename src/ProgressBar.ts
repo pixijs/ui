@@ -53,7 +53,7 @@ export class ProgressBar extends Container
     }
 
     /**
-     * Initializes ProgressBar.
+     * Initialize ProgressBar.
      * @param root0
      * @param root0.bg - Background texture.
      * @param root0.fill - Fill texture.
@@ -62,12 +62,22 @@ export class ProgressBar extends Container
      */
     init({ bg, fill, fillOffset, progress }: ProgressBarOptions)
     {
-        this.innerView.removeChild(this.bg);
-        this.innerView.removeChild(this.fill);
+        if (this.bg)
+        {
+            this.innerView.removeChild(this.bg);
+            this.bg.destroy();
+        }
+
+        if (this.fill)
+        {
+            this.innerView.removeChild(this.fill);
+            this.fill.destroy();
+        }
 
         this.bg = getView(bg);
         this.innerView.addChild(this.bg);
 
+        // in case if user is trying to use same instance for bg and fill
         if (bg instanceof Sprite && fill === bg)
         {
             fill = Sprite.from(bg.texture);
@@ -85,9 +95,12 @@ export class ProgressBar extends Container
         if (!this.fillMask)
         {
             this.fillMask = new Graphics();
-            this.fill.addChild(this.fillMask);
-            this.fill.mask = this.fillMask;
+            this.innerView.addChild(this.fillMask);
+            this.fillMask.x = this.fill.x;
+            this.fillMask.y = this.fill.y;
         }
+
+        this.fill.mask = this.fillMask;
 
         this.progress = progress;
     }
@@ -109,10 +122,10 @@ export class ProgressBar extends Container
         return progress;
     }
 
-    /** Sets current progress percentage value. */
+    /** Set current progress percentage value. */
     set progress(progress: number)
     {
-        if (!this.bg) return;
+        if (!this.fill) return;
 
         this._progress = this.validate(progress);
 
@@ -125,7 +138,7 @@ export class ProgressBar extends Container
         }
     }
 
-    /** Returns current progress percentage value. */
+    /** Return current progress percentage value. */
     get progress(): number
     {
         return this._progress;
