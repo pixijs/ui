@@ -62,20 +62,7 @@ export class ProgressBar extends Container
      */
     init({ bg, fill, fillOffset, progress }: ProgressBarOptions)
     {
-        if (this.bg)
-        {
-            this.innerView.removeChild(this.bg);
-            this.bg.destroy();
-        }
-
-        if (this.fill)
-        {
-            this.innerView.removeChild(this.fill);
-            this.fill.destroy();
-        }
-
-        this.bg = getView(bg);
-        this.innerView.addChild(this.bg);
+        this.setBackground(bg);
 
         // in case if user is trying to use same instance for bg and fill
         if (bg instanceof Sprite && fill === bg)
@@ -83,8 +70,40 @@ export class ProgressBar extends Container
             fill = Sprite.from(bg.texture);
         }
 
+        this.setFill(fill, fillOffset);
+
+        this.progress = progress;
+    }
+
+    /**
+     * Set bg.
+     * @param bg
+     */
+    setBackground(bg: Container | string)
+    {
+        if (this.bg)
+        {
+            this.innerView.removeChild(this.bg);
+        }
+
+        this.bg = getView(bg);
+        this.innerView.addChildAt(this.bg, 0);
+    }
+
+    /**
+     * Set fill.
+     * @param fill
+     * @param fillOffset
+     */
+    setFill(fill: Container | string, fillOffset?: FillOffset)
+    {
+        if (this.fill)
+        {
+            this.innerView.removeChild(this.fill);
+        }
+
         this.fill = getView(fill);
-        this.innerView.addChild(this.fill);
+        this.innerView.addChildAt(this.fill, 1);
 
         const offsetX = fillOffset?.x ?? 0;
         const offsetY = fillOffset?.y ?? 0;
@@ -101,8 +120,6 @@ export class ProgressBar extends Container
         }
 
         this.fill.mask = this.fillMask;
-
-        this.progress = progress;
     }
 
     protected validate(progress: number): number
