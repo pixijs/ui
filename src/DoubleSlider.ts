@@ -23,13 +23,13 @@ export class DoubleSlider extends SliderBase
 {
     protected options: DoubleSliderOptions;
 
-    private activeValue: 'value1' | 'value2';
+    protected activeValue: 'value1' | 'value2';
 
     /** Signal that fires when value have changed. */
-    public onChange: Signal<(value1: number, value2: number) => void> = new Signal();
+    onChange: Signal<(value1: number, value2: number) => void> = new Signal();
 
     /** Signal that fires when value is changing. */
-    public onUpdate: Signal<(value1: number, value2: number) => void> = new Signal();
+    onUpdate: Signal<(value1: number, value2: number) => void> = new Signal();
 
     constructor(options: DoubleSliderOptions)
     {
@@ -39,7 +39,7 @@ export class DoubleSlider extends SliderBase
         this.setInitialState();
     }
 
-    private setInitialState()
+    protected setInitialState()
     {
         this.validateValues();
 
@@ -51,13 +51,13 @@ export class DoubleSlider extends SliderBase
         this.value1 = value1;
     }
 
-    private updateProgress(value1 = this.value1, value2 = this.value2)
+    protected updateProgress(value1 = this.value1, value2 = this.value2)
     {
         this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
         this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
     }
 
-    private validateValues()
+    protected validateValues()
     {
         if (!this.options.value1)
         {

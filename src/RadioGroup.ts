@@ -44,21 +44,21 @@ export type RadioBoxOptions = {
  */
 export class RadioGroup extends Container
 {
-    private items: CheckBox[] = [];
+    protected items: CheckBox[] = [];
 
     /** {@link List}, that holds and control all inned checkboxes.  */
-    public innerView: List;
+    innerView: List;
 
     /** Text value of the selected item. */
-    public value: string;
+    value: string;
 
     /** ID of the selected item. */
-    public selected: number;
+    selected: number;
 
     /** Fires, when new item is selected. */
-    public onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
+    onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
 
-    private options: RadioBoxOptions;
+    protected options: RadioBoxOptions;
 
     constructor(options?: RadioBoxOptions)
     {
@@ -144,7 +144,7 @@ export class RadioGroup extends Container
      * Select item by ID.
      * @param id
      */
-    public selectItem(id: number)
+    selectItem(id: number)
     {
         this.items.forEach((item, key) =>
         {

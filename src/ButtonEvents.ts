@@ -6,8 +6,8 @@ import { Container } from '@pixi/display';
 /** Events controller used for {@link Button}. */
 export class ButtonEvents
 {
-    private _isMouseIn: boolean;
-    private _isDown: boolean;
+    protected _isMouseIn: boolean;
+    protected _isDown: boolean;
 
     /** Event that is fired when the button is down. */
     onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;

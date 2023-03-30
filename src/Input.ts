@@ -33,34 +33,34 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    private _bg?: Container;
-    private _cursor: Sprite;
-    private inputMask: Graphics;
-    private inputField: Text;
-    private placeholder: Text;
-    private editing = false;
-    private tick = 0;
+    protected _bg?: Container;
+    protected _cursor: Sprite;
+    protected inputMask: Graphics;
+    protected inputField: Text;
+    protected placeholder: Text;
+    protected editing = false;
+    protected tick = 0;
 
-    private activation = false;
-    private readonly options: InputOptions;
+    protected activation = false;
+    protected readonly options: InputOptions;
 
     /** Fires when input loses focus. */
-    public onEnter: Signal<(text: string) => void>;
+    onEnter: Signal<(text: string) => void>;
 
     /** Fires every time input string is changed. */
-    public onChange: Signal<(text: string) => void>;
+    onChange: Signal<(text: string) => void>;
 
     /** Top side padding */
-    public paddingTop = 0;
+    paddingTop = 0;
 
     /** Right side padding */
-    public paddingRight = 0;
+    paddingRight = 0;
 
     /** Bottom side padding */
-    public paddingBottom = 0;
+    paddingBottom = 0;
 
     /** Left side padding */
-    public paddingLeft = 0;
+    paddingLeft = 0;
 
     constructor(options: InputOptions)
     {
@@ -145,7 +145,7 @@ export class Input extends Container
         }
     }
 
-    private init()
+    protected init()
     {
         const options = this.options;
 
@@ -215,7 +215,7 @@ export class Input extends Container
         return this._bg;
     }
 
-    private _add(key: string): void
+    protected _add(key: string): void
     {
         if (!this.editing)
         {
@@ -232,7 +232,7 @@ export class Input extends Container
         this.onChange.emit(this.value);
     }
 
-    private _delete(): void
+    protected _delete(): void
     {
         if (!this.editing || this.value.length === 0) return;
         const array = this.value.split('');
@@ -243,7 +243,7 @@ export class Input extends Container
         this.onChange.emit(this.value);
     }
 
-    private _startEditing(): void
+    protected _startEditing(): void
     {
         this.tick = 0;
         this.editing = true;
@@ -262,7 +262,7 @@ export class Input extends Container
         this.align();
     }
 
-    private handleActivation()
+    protected handleActivation()
     {
         this.stopEditing();
 
@@ -274,7 +274,7 @@ export class Input extends Container
         }
     }
 
-    private stopEditing(): void
+    protected stopEditing(): void
     {
         if (!this.editing) return;
 
@@ -294,14 +294,14 @@ export class Input extends Container
         this.onEnter.emit(this.value);
     }
 
-    private update(dt: number): void
+    protected update(dt: number): void
     {
         if (!this.editing) return;
         this.tick += dt * 0.1;
         this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
     }
 
-    private align()
+    protected align()
     {
         if (!this._bg) return;
 
@@ -319,7 +319,7 @@ export class Input extends Container
         this._cursor.y = this.inputField.y;
     }
 
-    private getAlign(): 0 | 1 | 0.5
+    protected getAlign(): 0 | 1 | 0.5
     {
         const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
@@ -342,7 +342,7 @@ export class Input extends Container
         }
     }
 
-    private getCursorPosX()
+    protected getCursorPosX()
     {
         const align = this.getAlign();
 
@@ -394,7 +394,7 @@ export class Input extends Container
      *  bottom: 10,
      * }
      */
-    public set padding(value: Padding)
+    set padding(value: Padding)
     {
         if (typeof value === 'number')
         {
@@ -421,7 +421,7 @@ export class Input extends Container
     }
 
     // Return array of paddings [top, right, bottom, left]
-    public get padding(): [number, number, number, number]
+    get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }

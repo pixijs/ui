@@ -22,7 +22,7 @@ import { Mixin } from 'ts-mixer';
 export class Button extends ButtonEvents
 {
     /** Container, given as a constructor parameter that is a button view. */
-    private _view: Container;
+    protected _view: Container;
 
     /**
      * Turns a given container-based view into a button by adding all button events.

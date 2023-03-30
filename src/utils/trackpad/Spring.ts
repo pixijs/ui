@@ -7,12 +7,12 @@ export interface SpringOptions
 
 export class Spring
 {
-    public x: number;
-    public ax: number;
-    public dx: number;
-    public tx: number;
+    x: number;
+    ax: number;
+    dx: number;
+    tx: number;
 
-    private _options: SpringOptions;
+    protected _options: SpringOptions;
 
     constructor(options: SpringOptions = {})
     {

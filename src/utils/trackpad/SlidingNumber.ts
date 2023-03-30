@@ -2,9 +2,9 @@ import ScrollSpring from './ScrollSpring';
 
 export interface SlidingNumberOptions
 {
-    constrain?: boolean
+    constrain?: boolean;
     maxSpeed?: number;
-    ease?: ConstrainEase
+    ease?: ConstrainEase;
 }
 
 export interface ConstrainEase
@@ -17,23 +17,23 @@ export interface ConstrainEase
 
 export class SlidingNumber
 {
-    public position = 0;
-    public constrain = true;
-    public min = 0; // the window width of the drag
-    public max = 0; // the window width of the drag
-    public maxSpeed = 400;
+    position = 0;
+    constrain = true;
+    min = 0; // the window width of the drag
+    max = 0; // the window width of the drag
+    maxSpeed = 400;
 
-    private _ease: ConstrainEase;
+    protected _ease: ConstrainEase;
 
-    private _offset = 0;
-    private _prev = 0;
-    private _speed = 0;
-    private _hasStopped: boolean;
+    protected _offset = 0;
+    protected _prev = 0;
+    protected _speed = 0;
+    protected _hasStopped: boolean;
 
-    private _targetSpeed = 0;
-    private _speedChecker = 0;
-    private _grab = 0;
-    private _activeEase: ConstrainEase;
+    protected _targetSpeed = 0;
+    protected _speedChecker = 0;
+    protected _grab = 0;
+    protected _activeEase: ConstrainEase;
 
     constructor(options: SlidingNumberOptions = {})
     {
@@ -53,7 +53,7 @@ export class SlidingNumber
         return this.position;
     }
 
-    public grab(offset: number): void
+    grab(offset: number): void
     {
         this._grab = offset;
         this._offset = this.position - offset;
@@ -62,7 +62,7 @@ export class SlidingNumber
         this._hasStopped = false;
     }
 
-    public hold(newPosition: number): void
+    hold(newPosition: number): void
     {
         this._speedChecker++;
 
@@ -95,7 +95,7 @@ export class SlidingNumber
         }
     }
 
-    public slide(): void
+    slide(): void
     {
         if (this._hasStopped) return;
 
@@ -114,7 +114,7 @@ export class SlidingNumber
         return -(this.position - this._offset - this._grab);
     }
 
-    private _updateDefault(): void
+    protected _updateDefault(): void
     {
         this._speed *= 0.9;
         this.position += this._speed;
@@ -125,7 +125,7 @@ export class SlidingNumber
         }
     }
 
-    private _updateConstrain(): void
+    protected _updateConstrain(): void
     {
         const max: number = this.max;
 

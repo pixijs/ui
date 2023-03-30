@@ -70,16 +70,16 @@ export type SelectOptions = {
 
 export class Select extends Container
 {
-    private openButton!: FancyButton;
-    private closeButton!: FancyButton;
-    private openView!: Container;
-    private scrollBox: ScrollBox;
+    protected openButton!: FancyButton;
+    protected closeButton!: FancyButton;
+    protected openView!: Container;
+    protected scrollBox: ScrollBox;
 
     /** Selected value ID. */
-    public value: number;
+    value: number;
 
     /** Fires when selected value is changed. */
-    public onSelect: Signal<(value: number, text: string) => void>;
+    onSelect: Signal<(value: number, text: string) => void>;
 
     constructor(options?: SelectOptions)
     {
@@ -220,27 +220,27 @@ export class Select extends Container
     }
 
     /** Toggle the select state (open if closed, closes - id open). */
-    public toggle()
+    toggle()
     {
         this.openView.visible = !this.openView.visible;
         this.openButton.visible = !this.openButton.visible;
     }
 
     /** Show dropdown. */
-    public open()
+    open()
     {
         this.openView.visible = true;
         this.openButton.visible = false;
     }
 
     /** Hide dropdown. */
-    public close()
+    close()
     {
         this.openView.visible = false;
         this.openButton.visible = true;
     }
 
-    private convertItemsToButtons({
+    protected convertItemsToButtons({
         items,
         backgroundColor,
         hoverColor,

@@ -28,13 +28,13 @@ export type SliderOptions = BaseSliderOptions & {
  */
 export class Slider extends SliderBase
 {
-    private options: SliderOptions;
+    protected options: SliderOptions;
 
     /** Fires when value is changing, on every move of slider. */
-    public onUpdate: Signal<(value: number) => void> = new Signal();
+    onUpdate: Signal<(value: number) => void> = new Signal();
 
     /** Fires when value changed, only when slider is released. */
-    public onChange: Signal<(value: number) => void> = new Signal();
+    onChange: Signal<(value: number) => void> = new Signal();
 
     constructor(options: SliderOptions)
     {

@@ -30,16 +30,16 @@ export type ListOptions = {
  */
 export class List extends Container
 {
-    private options?: { type?: ListType } & ListOptions;
+    protected options?: { type?: ListType } & ListOptions;
 
     /** Container, that holds all inner elements. */
-    public view: Container;
+    view: Container;
 
     /** Arrange direction. */
-    private _type: ListType;
+    protected _type: ListType;
 
     /** Returns all arranged elements. */
-    public override readonly children: Container[] = [];
+    override readonly children: Container[] = [];
 
     constructor(options?: { type?: ListType } & ListOptions)
     {
@@ -149,7 +149,7 @@ export class List extends Container
         return this.options.horPadding;
     }
 
-    private arrangeChildren()
+    protected arrangeChildren()
     {
         let x = this.options?.horPadding ?? 0;
         let y = this.options?.vertPadding ?? 0;
