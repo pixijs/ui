@@ -29,15 +29,11 @@ export class ProgressBar extends Container
     protected bg!: Container;
     protected fill!: Container;
     protected fillMask!: Graphics;
+    protected progressStart = 0;
+    protected _progress = 0;
 
     /** Container, that holds all inner views. */
     public innerView: Container;
-
-    /** Start point of progress. */
-    protected progressStart = 0;
-
-    /** Current progress value. */
-    protected _progress = 0;
 
     constructor(params?: ProgressBarOptions)
     {
