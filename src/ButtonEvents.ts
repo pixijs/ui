@@ -3,6 +3,7 @@ import { isMobile } from '@pixi/core';
 import { Signal } from 'typed-signals';
 import { Container } from '@pixi/display';
 
+/** Events controller used for {@link Button}. */
 export class ButtonEvents
 {
     private _isMouseIn: boolean;
