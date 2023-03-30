@@ -57,7 +57,7 @@ export class SliderBase extends ProgressBar
         super({
             bg: options.bg,
             fill: options.fill ? options.fill : options.bg,
-            fillOffset: options.fillOffset
+            fillOffset: options.fill ? options.fillOffset : undefined
         });
 
         this.settings = options;
@@ -151,26 +151,18 @@ export class SliderBase extends ProgressBar
 
     /**
      * Set bg.
-     * @param value
+     * @param bg
      */
-    setBackground(value: Container)
+    override setBackground(bg: Container | string)
     {
-        super.init({
-            bg: value,
-            fill: this.settings.fill
-        });
-    }
+        if (this.bg)
+        {
+            this.bg.removeAllListeners();
+        }
 
-    /**
-     * Set bg.
-     * @param value
-     */
-    setFill(value: Container)
-    {
-        super.init({
-            bg: this.settings.bg,
-            fill: value
-        });
+        super.setBackground(bg);
+
+        this.activate();
     }
 
     protected activate()
