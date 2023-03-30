@@ -77,7 +77,7 @@ export const UseGraphics: StoryFn = ({
         padding: elementsPadding
     });
 
-    items.forEach((item) => scrollBox.addItem(item));
+    scrollBox.addItems(items);
 
     view.addChild(scrollBox);
 

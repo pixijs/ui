@@ -12,7 +12,9 @@ export type ListOptions = {
 /**
  * Container-based component for arranging Pixi containers one after another based on their sizes.
  *
- * If type is not specified, it will be set, items will be arranged to fit horizontally,
+ * Type option is used to set the direction of the arrangement.
+ *
+ * If type is not specified, it will be acting like a bidirectional, items will be arranged to fit horizontally,
  * after there is no space left, new line will be started, so items will be arranged like `inline-block` in css.
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
@@ -28,13 +30,13 @@ export type ListOptions = {
  */
 export class List extends Container
 {
-    private readonly options?: { type?: ListType } & ListOptions;
+    private options?: { type?: ListType } & ListOptions;
 
     /** Container, that holds all inner elements. */
     public view: Container;
 
     /** Arrange direction. */
-    public type: ListType;
+    private _type: ListType;
 
     /** Returns all arranged elements. */
     public override readonly children: Container[] = [];
@@ -43,6 +45,21 @@ export class List extends Container
     {
         super();
 
+        if (options)
+        {
+            this.init(options);
+        }
+
+        this.on('added', () => this.arrangeChildren());
+        this.on('childAdded', () => this.arrangeChildren());
+    }
+
+    /**
+     * Initiates list component.
+     * @param options
+     */
+    init(options?: { type?: ListType } & ListOptions)
+    {
         this.options = options;
 
         if (options?.type)
@@ -52,15 +69,84 @@ export class List extends Container
 
         if (options?.children)
         {
-            options.children.map((child) => this.addChild(child));
+            options.children.forEach((child) => this.addChild(child));
         }
-
-        this.on('added', () => this.arrangeChildren());
     }
 
-    protected override onChildrenChange()
+    /**
+     * Set items arrange direction.
+     * @param type - Arrange direction.
+     */
+    set type(type: ListType)
     {
+        this._type = type;
         this.arrangeChildren();
+    }
+
+    /**
+     * Get items arrange direction.
+     * @returns Arrange direction.
+     */
+    get type(): ListType
+    {
+        return this._type;
+    }
+
+    /**
+     * Set element margin.
+     * @param margin - Margin between elements.
+     */
+    set elementsMargin(margin: number)
+    {
+        this.options.elementsMargin = margin;
+        this.arrangeChildren();
+    }
+
+    /**
+     * Get element margin.
+     * @returns Margin between elements.
+     */
+    get elementsMargin(): number
+    {
+        return this.options.elementsMargin;
+    }
+
+    /**
+     * Set vertical padding.
+     * @param padding - Vertical padding between list border and its elements.
+     */
+    set vertPadding(padding: number)
+    {
+        this.options.vertPadding = padding;
+        this.arrangeChildren();
+    }
+
+    /**
+     * Get vertical padding.
+     * @returns Vertical padding between list border and its elements.
+     */
+    get vertPadding(): number
+    {
+        return this.options.vertPadding;
+    }
+
+    /**
+     * Set horizontal padding.
+     * @param padding - Horizontal padding between list border and its elements.
+     */
+    set horPadding(padding: number)
+    {
+        this.options.horPadding = padding;
+        this.arrangeChildren();
+    }
+
+    /**
+     * Get horizontal padding.
+     * @returns Horizontal padding between list border and its elements.
+     */
+    get horPadding(): number
+    {
+        return this.options.horPadding;
     }
 
     private arrangeChildren()

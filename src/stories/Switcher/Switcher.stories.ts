@@ -8,8 +8,8 @@ import { BUTTON_EVENTS } from '../../utils/HelpTypes';
 
 const args = {
     triggerEvent1: BUTTON_EVENTS,
-    triggerEvent2: ['', ...BUTTON_EVENTS],
-    triggerEvent3: ['', ...BUTTON_EVENTS],
+    triggerEvent2: ['onHover', ...BUTTON_EVENTS],
+    triggerEvent3: ['onOut', ...BUTTON_EVENTS],
     action: action('swich: ')
 };
 

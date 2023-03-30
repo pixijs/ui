@@ -1,7 +1,6 @@
-import { utils } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
-import { Signal } from 'typed-signals';
+import { ButtonEvents } from './ButtonEvents';
+import { Mixin } from 'ts-mixer';
 
 /**
  * Adds button events to a given container-based view
@@ -15,257 +14,119 @@ import { Signal } from 'typed-signals';
  *          .drawRoundedRect(0, 0, 100, 50, 15)
  * );
  *
- * buttonEvents.onPress.connect(() => console.log('onPress'));
+ * button.onPress.connect(() => console.log('onPress'));
  *
- * container.addChild(buttonEvents.view);
+ * container.addChild(button.view);
+ * // or container.addChild(container); which is the same
  */
-export class Button
+export class Button extends ButtonEvents
 {
     /** Container, given as a constructor parameter that is a button view. */
-    public view: Container;
-
-    /** Event that is fired when the button is pressed. */
-    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event that is fired when the button is down. */
-    public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /**
-     * Event that fired when a down event happened inside the button
-     * and up event happened inside or outside of the button
-     */
-    public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event that is fired when the mouse hovers the button. */
-    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /** Event that fired when the mouse is out of the view */
-    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    /**
-     * Event that fired when mouse up event happens outside of the button
-     * after the down event happened inside the button boundaries.
-     */
-    public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
-
-    private _isDown: boolean;
-    private _isMouseIn: boolean;
-    private _enabled: boolean;
+    private _view: Container;
 
     /**
      * Turns a given container-based view into a button by adding all button events.
-     * @param {Container} view - Contained-based view
+     * @param {Container} view - instance of container, to be turned into button.
      */
-    constructor(view: Container)
+    constructor(view?: Container)
+    {
+        super();
+
+        if (view) this.init(view);
+    }
+
+    /**
+     * Creates and connect interaction events.
+     * @param {Container} view - instance of container, to be turned into button
+     */
+    init(view: Container)
     {
         this.view = view;
-
-        this.createEvents();
-
         this.enabled = true;
     }
 
-    /**
-     * Method called when the button pressed.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public down(_e?: FederatedPointerEvent)
+    /** Set button view, thar all the interaction events are applied to. */
+    set view(view: Container)
     {
-    // override me!
+        const wasItInitiated = !!this._view;
+
+        if (wasItInitiated) this.disconnectEvents(view);
+
+        this._view = view;
+        this.connectEvents(view);
+
+        if (!wasItInitiated) this.enabled = true;
+    }
+
+    /** Get button view, thar all the interaction events are applied to. */
+    get view(): Container
+    {
+        return this._view;
     }
 
     /**
-     * Method called when the button is up.
-     * To be overridden.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public up(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse hovers the button.
-     * To be overridden.
-     * This is fired only on PC.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public hover(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse press down the button.
-     * To be overridden.
-     * This is fired only on PC.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public press(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the mouse leaves the button.
-     * To be overridden.
-     * This is fired only on PC.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public out(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /**
-     * Method called when the up event happens outside of the button,
-     * after the down event happened inside the button boundaries.
-     * To be overridden.
-     * This is fired only on PC.
-     * @param {FederatedPointerEvent} _e - event data
-     */
-    public upOut(_e?: FederatedPointerEvent)
-    {
-    // override me!
-    }
-
-    /** Getter that returns if the button is down. */
-    get isDown(): boolean
-    {
-        return this._isDown;
-    }
-
-    /**
-     * Swither, which prevents all button events from firing.
+     * Switcher, which prevents all button events from firing if off.
      * @param {boolean} enabled
      */
     set enabled(enabled: boolean)
     {
-        this._enabled = enabled;
+        if (!this.view)
+        {
+            console.error('Button view is not set. Please set it before enabling the button.');
+
+            return;
+        }
+
         this.view.eventMode = enabled ? 'static' : 'auto';
         this.view.cursor = enabled ? 'pointer' : 'default';
 
-        if (!enabled)
+        if (!enabled && this.isDown)
         {
-            this._processUp();
+            this.processUp();
         }
     }
 
-    /** Getter that returns button state, that controls if button events are firing. */
+    /** Getter that returns button state. */
     get enabled(): boolean
     {
-        return this._enabled;
+        return this.view.eventMode === 'static';
     }
+}
 
-    private _processUp(e?: FederatedPointerEvent)
+/**
+ * Button based on container. You can use it same {@link Button}
+ * but without need to pre create a container and interact with it through `.view` accessor.
+ * @example
+ * const button = new ButtonContainer(
+ *      new Graphics()
+ *          .beginFill(0xFFFFFF)
+ *          .drawRoundedRect(0, 0, 100, 50, 15)
+ * );
+ *
+ * button.onPress.connect(() => console.log('onPress'));
+ *
+ * container.addChild(button);
+ */
+export class ButtonContainer extends Mixin(Container, Button)
+{
+    constructor(view?: Container)
     {
-        if (this._isDown)
-        {
-            this.onUp.emit(this, e);
-        }
-        this._isDown = false;
-    }
+        super();
 
-    private _processUpOut(e?: FederatedPointerEvent)
-    {
-        if (this._isDown)
+        if (view)
         {
-            this.onUp.emit(this, e);
-            this.onUpOut.emit(this, e);
-        }
-
-        this._isDown = false;
-    }
-
-    private _processOut(e?: FederatedPointerEvent)
-    {
-        if (this._isMouseIn)
-        {
-            this._isMouseIn = false;
-            this.onOut.emit(this, e);
+            this.init(view);
         }
     }
 
-    private _upOut(e?: FederatedPointerEvent)
+    /**
+     * Initialize button.
+     * @param {Container} view
+     */
+    override init(view: Container)
     {
-        this.upOut(e);
-    }
-
-    private _out(e?: FederatedPointerEvent)
-    {
-        this.out(e);
-    }
-
-    private createEvents()
-    {
-        this.onPress = new Signal();
-        this.onDown = new Signal();
-        this.onUp = new Signal();
-        this.onHover = new Signal();
-        this.onOut = new Signal();
-        this.onUpOut = new Signal();
-
-        this.view.on('pointerdown', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = true;
-            this.onDown.emit(this, e);
-        });
-
-        this.view.on('pointerup', (e: FederatedPointerEvent) =>
-        {
-            this._processUp(e);
-        });
-
-        this.view.on('pointerupoutside', (e: FederatedPointerEvent) =>
-        {
-            this._processUpOut(e);
-        });
-
-        this.view.on('pointerout', (e: FederatedPointerEvent) =>
-        {
-            this._processOut(e);
-        });
-
-        this.view.on('pointertap', (e: FederatedPointerEvent) =>
-        {
-            this._isDown = false;
-            this.onPress.emit(this, e);
-            this.press(e);
-        });
-
-        this.view.on('pointerover', (e: FederatedPointerEvent) =>
-        {
-            this._isMouseIn = true;
-            this.onHover.emit(this, e);
-        });
-
-        this.onDown.connect((_btn, e) =>
-        {
-            this.down(e);
-        });
-
-        this.onUp.connect((_btn, e) =>
-        {
-            this.up(e);
-        });
-
-        this.onUpOut.connect((_bth, e) =>
-        {
-            this._upOut(e);
-        });
-
-        if (!utils.isMobile.any)
-        {
-            this.onHover.connect((_bth, e) =>
-            {
-                this.hover(e);
-            });
-        }
-
-        this.onOut.connect((_bth, e) =>
-        {
-            this._out(e);
-        });
+        this.addChild(view);
+        this.view = view;
+        this.enabled = true;
     }
 }

@@ -60,22 +60,57 @@ export class RadioGroup extends Container
 
     private options: RadioBoxOptions;
 
-    constructor(options: RadioBoxOptions)
+    constructor(options?: RadioBoxOptions)
     {
         super();
 
+        if (options)
+        {
+            this.init(options);
+        }
+
+        this.onChange = new Signal();
+    }
+
+    /**
+     * Initiates a group.
+     * @param options
+     */
+    init(options: RadioBoxOptions)
+    {
         this.options = options;
 
         this.value = options.items[options.selectedItem || 0].label.text;
 
         this.selected = options.selectedItem ?? 0; // first item by default
 
-        this.innerView = new List({
-            type: options.type,
-            elementsMargin: options.elementsMargin
-        });
+        if (this.innerView)
+        {
+            this.innerView.type = options.type;
+            this.innerView.elementsMargin = options.elementsMargin;
+        }
+        else
+        {
+            this.innerView = new List({
+                type: options.type,
+                elementsMargin: options.elementsMargin
+            });
+        }
 
-        options.items.forEach((checkBox, id) =>
+        this.addItems(options.items);
+
+        this.addChild(this.innerView);
+
+        this.selectItem(this.selected);
+    }
+
+    /**
+     * Add items to a group.
+     * @param {CheckBox[]} items - array of {@link CheckBox} instances.
+     */
+    addItems(items: CheckBox[])
+    {
+        items.forEach((checkBox, id) =>
         {
             checkBox.onChange.connect(() => this.selectItem(id));
 
@@ -83,12 +118,26 @@ export class RadioGroup extends Container
 
             this.innerView.addChild(checkBox);
         });
+    }
 
-        this.selectItem(this.selected);
+    /**
+     * Remove items from a group.
+     * @param ids
+     */
+    removeItems(ids: number[])
+    {
+        ids.forEach((id) =>
+        {
+            const item = this.items[id];
 
-        this.addChild(this.innerView);
+            if (!item) return;
 
-        this.onChange = new Signal();
+            item.onChange.disconnectAll();
+
+            this.innerView.removeChild(item);
+
+            this.items.splice(id, 1);
+        });
     }
 
     /**

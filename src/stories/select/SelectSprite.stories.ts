@@ -9,7 +9,6 @@ import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
 
 const args = {
-    backgroundColor: '#F5E3A9',
     dropDownHoverColor: '#A5E24D',
     fontColor: '#FFFFFF',
     fontSize: 28,
@@ -17,14 +16,7 @@ const args = {
     onSelect: action('Item selected')
 };
 
-export const UseSprite: StoryFn = ({
-    fontColor,
-    fontSize,
-    itemsAmount,
-    backgroundColor,
-    dropDownHoverColor,
-    onSelect
-}: any) =>
+export const UseSprite: StoryFn = ({ fontColor, fontSize, itemsAmount, dropDownHoverColor, onSelect }: any) =>
 {
     const view = new Container();
     const assets = [`select_closed.png`, `select_open.png`];
@@ -33,7 +25,6 @@ export const UseSprite: StoryFn = ({
 
     preload(assets).then(() =>
     {
-        backgroundColor = getColor(backgroundColor);
         const hoverColor = getColor(dropDownHoverColor);
 
         fontColor = getColor(fontColor);
@@ -49,7 +40,7 @@ export const UseSprite: StoryFn = ({
             textStyle,
             items: {
                 items,
-                backgroundColor,
+                backgroundColor: 'RGBA(0, 0, 0, 0.0001)',
                 hoverColor,
                 width: 200,
                 height: 50,

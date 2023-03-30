@@ -52,7 +52,7 @@ export class ScrollBox extends Container
 
     private readonly onMouseScrollBinded: (event: any) => void;
 
-    private readonly list: List;
+    private list: List;
 
     private readonly freeSlot = {
         x: 0,
@@ -61,46 +61,54 @@ export class ScrollBox extends Container
 
     private _trackpad: Trackpad;
     private isDragging = 0;
-    private interactiveStorage: DisplayObject[] = [];
+    private interactiveStorage: Map<number, DisplayObject> = new Map();
     private ticker = Ticker.shared;
-    private readonly options: ScrollBoxOptions;
+    private options: ScrollBoxOptions;
 
-    constructor(options: ScrollBoxOptions)
+    constructor(options?: ScrollBoxOptions)
     {
         super();
 
+        if (options)
+        {
+            this.init(options);
+        }
+
+        this.ticker.add(this.update, this);
+
+        this.onMouseScrollBinded = this.onMouseScroll.bind(this);
+    }
+
+    /**
+     * Initiates ScrollBox.
+     * @param options
+     */
+    init(options: ScrollBoxOptions)
+    {
         this.options = options;
-        this.addBackground();
+        this.setBackground(options.background);
 
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
 
-        if (!options.vertPadding)
+        options.vertPadding = options.vertPadding ?? options.padding ?? 0;
+        options.horPadding = options.horPadding ?? options.padding ?? 0;
+
+        if (!this.list)
         {
-            options.vertPadding = options.padding ?? 0;
+            this.list = new List();
+
+            super.addChild(this.list);
         }
 
-        if (!options.horPadding)
-        {
-            options.horPadding = options.padding ?? 0;
-        }
-
-        this.list = new List({
+        this.list.init({
             type: options.type,
             elementsMargin: options.elementsMargin,
             vertPadding: options.vertPadding,
             horPadding: options.horPadding,
         });
 
-        super.addChild(this.list);
-
-        if (options.items?.length)
-        {
-            options.items.forEach((item) =>
-            {
-                this.addItem(item);
-            });
-        }
+        this.addItems(options.items);
 
         if (this.hasBounds)
         {
@@ -108,21 +116,10 @@ export class ScrollBox extends Container
             this.makeScrollable();
         }
 
-        this.onMouseScrollBinded = this.onMouseScroll.bind(this);
-
-        const spring = new ScrollSpring();
-
-        this._trackpad = new Trackpad({
-            constrain: true,
-            yEase: spring,
-        });
-
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
 
         this.resize();
-
-        this.ticker.add(this.update, this);
     }
 
     private get hasBounds(): boolean
@@ -133,6 +130,23 @@ export class ScrollBox extends Container
     protected override onChildrenChange()
     {
         // do nothing we manage this in addItem
+    }
+
+    /**
+     * Add an items to a scrollable list.
+     * @param {...any} items
+     */
+    addItems(items: Container[])
+    {
+        if (!items?.length) return;
+
+        items.forEach((item) => this.addItem(item));
+    }
+
+    /** Remove all items from a scrollable list. */
+    removeItems()
+    {
+        this.list.removeChildren();
     }
 
     /**
@@ -242,27 +256,54 @@ export class ScrollBox extends Container
         return this.list?.children ?? [];
     }
 
-    private addBackground()
+    /**
+     * Set ScrollBox background.
+     * @param {number | string} background - background color or texture.
+     */
+    setBackground(background?: number | string)
     {
-        this.background = typeof this.options.background === 'string'
-            ? Sprite.from(this.options.background)
+        if (this.background)
+        {
+            this.removeChild(this.background);
+            if (this.background instanceof Sprite)
+            {
+                this.background.destroy();
+            }
+        }
+
+        this.options.background = background;
+
+        this.background = (background !== undefined && typeof background === 'string')
+            ? Sprite.from(background)
             : new Graphics();
 
-        this.addChild(this.background);
+        this.addChildAt(this.background, 0);
 
         this.resize();
     }
 
     private addMask()
     {
-        this.borderMask = new Graphics();
-        super.addChild(this.borderMask);
-        this.mask = this.borderMask;
+        if (!this.borderMask)
+        {
+            this.borderMask = new Graphics();
+            super.addChild(this.borderMask);
+            this.mask = this.borderMask;
+        }
+
         this.resize();
     }
 
     private makeScrollable()
     {
+        if (!this._trackpad)
+        {
+            this._trackpad = new Trackpad({
+                constrain: true,
+                yEase: new ScrollSpring(),
+            });
+        }
+
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this.isDragging = 1;
@@ -287,9 +328,11 @@ export class ScrollBox extends Container
         {
             this._trackpad.pointerMove(e.global);
 
-            if (this.isDragging)
+            if (!this.isDragging) return;
+
+            if (this.interactiveStorage.size === 0)
             {
-                this.recursiveDisableInteractivity(this.items);
+                this.disableInteractivity(this.items);
             }
         });
 
@@ -299,21 +342,32 @@ export class ScrollBox extends Container
     }
 
     // prevent interactivity on all children
-    private recursiveDisableInteractivity(items: DisplayObject[])
+    private disableInteractivity(items: DisplayObject[])
     {
-        items.forEach((item) =>
+        items.forEach((item, id) =>
         {
+            this.emitPointerOpOutside(item);
+
             if (item.interactive)
             {
-                this.interactiveStorage.push(item);
+                this.interactiveStorage.set(id, item);
                 item.eventMode = 'auto';
-            }
-
-            if (item instanceof Container)
-            {
-                this.recursiveDisableInteractivity(item.children);
+                item.interactiveChildren = false;
             }
         });
+    }
+
+    private emitPointerOpOutside(item: DisplayObject)
+    {
+        if (item.eventMode !== 'auto')
+        {
+            item.emit('pointerupoutside', null);
+        }
+
+        if (item instanceof Container && item.children)
+        {
+            item.children.forEach((child) => this.emitPointerOpOutside(child));
+        }
     }
 
     // restore interactivity on all children that had it
@@ -322,7 +376,8 @@ export class ScrollBox extends Container
         this.interactiveStorage.forEach((item, itemID) =>
         {
             item.eventMode = 'static';
-            delete this.interactiveStorage[itemID];
+            item.interactiveChildren = false;
+            this.interactiveStorage.delete(itemID);
         });
     }
 
@@ -344,6 +399,8 @@ export class ScrollBox extends Container
     /** Controls item positions and visibility. */
     public resize(): void
     {
+        if (!this.hasBounds) return;
+
         this.renderAllItems();
 
         if (
@@ -378,21 +435,23 @@ export class ScrollBox extends Container
                 );
             this.borderMask.eventMode = 'none';
 
-            if (
-                this.background instanceof Graphics
-                && typeof this.options.background === 'number'
-            )
+            if (this.background instanceof Graphics)
             {
-                this.background
-                    .clear()
-                    .lineStyle(0)
-                    .beginFill(this.options.background)
-                    .drawRect(
-                        0,
-                        0,
-                        this.__width + horPadding,
-                        this.__height + verPadding,
-                    );
+                this.background.clear().lineStyle(0);
+
+                const color = this.options.background;
+
+                this.background.beginFill(
+                    color ?? 0x000000,
+                    color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
+                );
+
+                this.background.drawRect(
+                    0,
+                    0,
+                    this.__width + horPadding,
+                    this.__height + verPadding,
+                );
             }
 
             if (this.options.type === 'horizontal')
@@ -608,6 +667,8 @@ export class ScrollBox extends Container
 
     private update()
     {
+        if (!this.list) return;
+
         this._trackpad.update();
 
         if (this.options.type === 'horizontal')

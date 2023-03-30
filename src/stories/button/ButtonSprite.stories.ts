@@ -2,9 +2,10 @@ import { Text } from '@pixi/text';
 import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { centerElement } from '../../utils/helpers/resize';
+import { centerView } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { Texture } from '@pixi/core';
 
 const args = {
@@ -16,42 +17,68 @@ const args = {
 
 export class SpriteButton extends Button
 {
-    private buttonView: Sprite;
     private textView: Text;
+    private buttonView = new Sprite();
     private action: (event: string) => void;
 
     constructor(props: {
         text: string,
-        textColor: string | number,
+        textColor: string,
         disabled: boolean,
         action: (event: string) => void})
     {
-        const sprite = new Sprite();
+        super(/* we can set a view for button later */);
 
-        super(sprite);
+        this.view = this.buttonView;
 
-        this.buttonView = sprite;
-        this.view.addChild(this.buttonView);
-
-        this.textView = new Text(props.text, { fontSize: 40, fill: props.textColor });
-        this.view.addChild(this.textView);
-
-        preload([`button.png`]).then(() =>
+        preload([`button.png`, `button_hover.png`, `button_pressed`]).then(() =>
         {
-            const texture = Texture.from('button.png');
+            this.buttonView.texture = Texture.from('button.png');
 
-            this.buttonView.texture = texture;
+            this.buttonView.anchor.set(0.5);
 
+            this.textView = new Text(props.text, {
+                ...defaultTextStyle,
+                fontSize: 40,
+                fill: props.textColor });
+            this.textView.y = -10;
             this.textView.anchor.set(0.5);
-            this.textView.x = texture.width / 2;
-            this.textView.y = (texture.height / 2) - 12;
+
+            this.buttonView.addChild(this.textView);
+
+            this.enabled = !props.disabled;
 
             this.resize();
         });
 
-        this.enabled = !props.disabled;
-
         this.action = props.action;
+    }
+
+    override down()
+    {
+        this.buttonView.texture = Texture.from('button_pressed.png');
+        this.action('down');
+    }
+
+    override up()
+    {
+        this.buttonView.texture = Texture.from('button_hover.png');
+        this.action('up');
+    }
+
+    override upOut()
+    {
+        this.buttonView.texture = Texture.from('button.png');
+        this.action('upOut');
+    }
+
+    override out()
+    {
+        if (!this.isDown)
+        {
+            this.buttonView.texture = Texture.from('button.png');
+        }
+        this.action('out');
     }
 
     override press()
@@ -59,34 +86,18 @@ export class SpriteButton extends Button
         this.action('onPress');
     }
 
-    override down()
-    {
-        this.action('down');
-    }
-
-    override up()
-    {
-        this.action('up');
-    }
-
     override hover()
     {
+        if (!this.isDown)
+        {
+            this.buttonView.texture = Texture.from('button_hover.png');
+        }
         this.action('hover');
-    }
-
-    override out()
-    {
-        this.action('out');
-    }
-
-    override upOut()
-    {
-        this.action('upOut');
     }
 
     resize()
     {
-        centerElement(this.view);
+        centerView(this.view);
     }
 }
 

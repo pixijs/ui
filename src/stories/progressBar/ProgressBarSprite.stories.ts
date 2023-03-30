@@ -34,8 +34,6 @@ export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 
         view.addChild(progressBar);
 
-        // centerElement(view);
-
         if (vertical)
         {
             progressBar.rotation = -Math.PI / 2;

@@ -7,11 +7,11 @@ interface TrackpadOptions
     xEase?: ConstrainEase;
     yEase?: ConstrainEase;
 
-    maxSpeed?: number
-    constrain?: boolean
+    maxSpeed?: number;
+    constrain?: boolean;
 }
 
-/** A track pad class that lets you scroll both in al directions. Its up to you to hook up the events. */
+/** Easing controller for the {@link ScrollBox}. */
 export class Trackpad
 {
     public xAxis: SlidingNumber;
@@ -28,13 +28,13 @@ export class Trackpad
         this.xAxis = new SlidingNumber({
             ease: options.xEase,
             maxSpeed: options.maxSpeed,
-            constrain: options.constrain,
+            constrain: options.constrain
         });
 
         this.yAxis = new SlidingNumber({
             ease: options.yEase,
             maxSpeed: options.maxSpeed,
-            constrain: options.constrain,
+            constrain: options.constrain
         });
 
         this._frame = new Rectangle();

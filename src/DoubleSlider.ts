@@ -1,7 +1,8 @@
 import { FederatedPointerEvent } from '@pixi/events';
 import type { DragObject } from './utils/HelpTypes';
-import { BaseSliderOptions, SliderBase } from './SliderBase';
+import { DoubleSliderOptions, SliderBase } from './SliderBase';
 import { Signal } from 'typed-signals';
+import { Container } from '@pixi/display';
 
 /**
  * Creates a slider with range selection option.
@@ -14,13 +15,13 @@ import { Signal } from 'typed-signals';
  *  });
  *
  * doubleSlider.onChange.connect((value1, value2) =>
- *     console.log(`New slider range ${value1} - ${value2}`)
+ *     console.log(`New slider range ${value1} - ${value2}`)S
  * );
  */
 
 export class DoubleSlider extends SliderBase
 {
-    protected options: BaseSliderOptions;
+    protected options: DoubleSliderOptions;
 
     private activeValue: 'value1' | 'value2';
 
@@ -30,7 +31,7 @@ export class DoubleSlider extends SliderBase
     /** Signal that fires when value is changing. */
     public onUpdate: Signal<(value1: number, value2: number) => void> = new Signal();
 
-    constructor(options: BaseSliderOptions)
+    constructor(options: DoubleSliderOptions)
     {
         super(options);
 
@@ -105,23 +106,7 @@ export class DoubleSlider extends SliderBase
 
         this._value1 = value1;
 
-        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progressStart;
-
-        if (this.slider1.x > this.slider2.x)
-        {
-            this.slider1.x = this.slider2.x;
-        }
-
-        if (this.options.showValue)
-        {
-            this.value1Text.text = `${Math.round(value1)}`;
-
-            const sliderPosX = this.slider1.x + (this.slider1.width / 2);
-            const sliderPosY = this.slider1.y;
-
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
-        }
+        this.updateSlider1();
 
         this.onUpdate?.emit(this.value1, this.value2);
     }
@@ -142,23 +127,7 @@ export class DoubleSlider extends SliderBase
 
         this._value2 = value2;
 
-        this.slider2.x = ((this.bg.width - this.slider2.width) / 100) * this.progress;
-
-        if (this.slider2.x < this.slider1.x)
-        {
-            this.slider2.x = this.slider1.x;
-        }
-
-        if (this.options.showValue)
-        {
-            this.value2Text.text = `${Math.round(value2)}`;
-
-            const sliderPosX = this.slider2.x + (this.slider2.width / 2);
-            const sliderPosY = this.slider2.y;
-
-            this.value2Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value2Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
-        }
+        this.updateSlider2();
 
         this.onUpdate?.emit(this.value1, this.value2);
     }
@@ -170,12 +139,23 @@ export class DoubleSlider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        const slider1Dist = Math.abs(x - this.slider1.x - this.slider1.width);
-        const slider2Dist = Math.abs(x - this.slider2.x);
+        const slider1Dist = Math.abs(x - this._slider1.x - this._slider1.width);
+        const slider2Dist = Math.abs(x - this._slider2.x);
 
         if (!this.activeValue)
         {
-            this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
+            if (this.slider1 && x < this.slider1.x)
+            {
+                this.activeValue = 'value1';
+            }
+            else if (this.slider2 && x > this.slider2.x)
+            {
+                this.activeValue = 'value2';
+            }
+            else
+            {
+                this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
+            }
         }
 
         const progress = this.validate((x / this.bg.width) * 100);
@@ -203,5 +183,79 @@ export class DoubleSlider extends SliderBase
     protected override change()
     {
         this.onChange?.emit(this.value1, this.value2);
+    }
+
+    /**
+     * Set Slider1 instance.
+     * @param value - Container or string with texture name.
+     */
+    override set slider1(value: Container | string)
+    {
+        super.slider1 = value;
+        this.updateSlider1();
+    }
+
+    /** Get Slider1 instance. */
+    override get slider1(): Container
+    {
+        return this._slider1;
+    }
+
+    /**
+     * Sets Slider instance.
+     * @param value - Container or string with texture name.
+     */
+    override set slider2(value: Container | string)
+    {
+        super.slider2 = value;
+        this.updateSlider2();
+    }
+
+    /** Get Slider2 instance. */
+    override get slider2(): Container
+    {
+        return this._slider2;
+    }
+
+    protected updateSlider1()
+    {
+        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progressStart;
+
+        if (this._slider2 && this._slider1.x > this._slider2.x)
+        {
+            this._slider1.x = this._slider2.x;
+        }
+
+        if (this.options?.showValue)
+        {
+            this.value1Text.text = `${Math.round(this.value1)}`;
+
+            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosY = this._slider1.y;
+
+            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+        }
+    }
+
+    protected updateSlider2()
+    {
+        this._slider2.x = ((this.bg.width - this._slider2.width) / 100) * this.progress;
+
+        if (this._slider2.x < this._slider1.x)
+        {
+            this._slider2.x = this._slider1.x;
+        }
+
+        if (this.options?.showValue)
+        {
+            this.value2Text.text = `${Math.round(this.value2)}`;
+
+            const sliderPosX = this._slider2.x + (this._slider2.width / 2);
+            const sliderPosY = this._slider2.y;
+
+            this.value2Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.value2Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+        }
     }
 }

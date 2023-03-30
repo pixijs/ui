@@ -28,7 +28,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
     // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
-            fill: showFill ? 'slider_progress.png' : '',
+            fill: showFill ? 'slider_progress.png' : null,
             slider: 'slider.png',
             min,
             max,

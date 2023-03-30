@@ -15,7 +15,7 @@ type Offset = {
 
 export type SelectItemsOptions = {
     items: string[];
-    backgroundColor: number;
+    backgroundColor: number | string;
     hoverColor?: number;
     width?: number;
     height?: number;
@@ -25,7 +25,7 @@ export type SelectItemsOptions = {
 
 export type SelectOptions = {
     closedBG: string | Container;
-    openBG?: string | Container;
+    openBG: string | Container;
     textStyle?: Partial<TextStyle>;
     selected?: number;
     selectedTextOffset?: { x?: number; y?: number };
@@ -68,12 +68,11 @@ export type SelectOptions = {
  * });
  */
 
-// TODO: rewrite this basing on Swich
 export class Select extends Container
 {
-    private readonly openButton: FancyButton;
-    private readonly closeButton: FancyButton;
-    private readonly openView: Container;
+    private openButton!: FancyButton;
+    private closeButton!: FancyButton;
+    private openView!: Container;
     private scrollBox: ScrollBox;
 
     /** Selected value ID. */
@@ -82,35 +81,104 @@ export class Select extends Container
     /** Fires when selected value is changed. */
     public onSelect: Signal<(value: number, text: string) => void>;
 
-    constructor({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
+    constructor(options?: SelectOptions)
     {
         super();
 
-        this.openButton = new FancyButton({
-            defaultView: getView(closedBG),
-            text: new Text(items?.items ? items.items[0] : '', textStyle),
-            textOffset: selectedTextOffset
-        });
-        this.openButton.onPress.connect(() => this.toggle());
-        this.addChild(this.openButton);
+        this.onSelect = new Signal();
 
-        this.openView = getView(openBG);
-        this.openView.visible = false;
-        this.addChild(this.openView);
+        if (options)
+        {
+            this.init(options);
+        }
+    }
 
-        const defaultView = new Graphics()
-            .beginFill(0x000000, 0.00001)
-            .drawRect(0, 0, this.openButton.width, this.openButton.height);
+    /**
+     * Initiates Select.
+     * @param root0
+     * @param root0.closedBG
+     * @param root0.textStyle
+     * @param root0.items
+     * @param root0.openBG
+     * @param root0.selected
+     * @param root0.selectedTextOffset
+     * @param root0.scrollBox
+     * @param root0.visibleItems
+     */
+    init({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
+    {
+        if (this.openView && this.openView !== openBG)
+        {
+            this.removeChild(this.openView);
+        }
 
-        this.closeButton = new FancyButton({
-            defaultView,
-            text: new Text(items?.items ? items.items[0] : '', textStyle),
-            textOffset: selectedTextOffset
-        });
-        this.closeButton.onPress.connect(() => this.toggle());
-        this.openView.addChild(this.closeButton);
+        // openButton
+        if (!this.openButton)
+        {
+            this.openButton = new FancyButton({
+                defaultView: getView(closedBG),
+                text: new Text(items?.items ? items.items[0] : '', textStyle),
+                textOffset: selectedTextOffset
+            });
+            this.openButton.onPress.connect(() => this.toggle());
+            this.addChild(this.openButton);
+        }
+        else
+        {
+            this.openButton.views = {
+                defaultView: getView(closedBG),
+                text: new Text(items?.items ? items.items[0] : '', textStyle)
+            };
 
-        this.scrollBox = new ScrollBox({
+            this.openButton.textOffset = selectedTextOffset;
+        }
+
+        // openView
+        if (this.openView !== openBG)
+        {
+            this.openView = getView(openBG);
+            this.openView.visible = false;
+            this.addChild(this.openView);
+        }
+
+        // closeButton
+        if (!this.closeButton)
+        {
+            this.closeButton = new FancyButton({
+                defaultView: new Graphics()
+                    .beginFill(0x000000, 0.00001)
+                    .drawRect(0, 0, this.openButton.width, this.openButton.height),
+                text: new Text(items?.items ? items.items[0] : '', textStyle),
+                textOffset: selectedTextOffset
+            });
+            this.closeButton.onPress.connect(() => this.toggle());
+            this.openView.addChild(this.closeButton);
+        }
+        else
+        {
+            this.closeButton.views = {
+                defaultView: new Graphics()
+                    .beginFill(0x000000, 0.00001)
+                    .drawRect(0, 0, this.openButton.width, this.openButton.height),
+                text: new Text(items?.items ? items.items[0] : '', textStyle)
+            };
+
+            this.openButton.textOffset = selectedTextOffset;
+        }
+
+        // ScrollBox
+        if (!this.scrollBox)
+        {
+            this.scrollBox = new ScrollBox();
+
+            this.openView.addChild(this.scrollBox);
+        }
+        else
+        {
+            this.scrollBox.removeItems();
+        }
+
+        this.scrollBox.init({
             type: 'vertical',
             elementsMargin: 0,
             width: this.openButton.width,
@@ -119,16 +187,14 @@ export class Select extends Container
             padding: 0,
             ...scrollBox
         });
+
         this.scrollBox.y = this.openButton.height;
-        this.openView.addChild(this.scrollBox);
 
         if (scrollBox?.offset)
         {
-            this.scrollBox.x += scrollBox.offset.x ?? 0;
+            this.scrollBox.x = scrollBox.offset.x ?? 0;
             this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
-
-        this.onSelect = new Signal();
 
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
@@ -192,7 +258,9 @@ export class Select extends Container
 
             const color = hoverColor ?? backgroundColor;
             const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
+
             const text = new Text(item, textStyle);
+
             const button = new FancyButton({ defaultView, hoverView, text });
 
             buttons.push(button);

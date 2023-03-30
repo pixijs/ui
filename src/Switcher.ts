@@ -1,17 +1,16 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
-import { Button } from './Button';
 import { ButtonEvent } from './utils/HelpTypes';
 
 /**
- * Container based component that switches visibility of a given containers by any of the button events.
+ * Container based component that switches visibility of a given containers by any of the interaction events.
  *
  * By default it switches on press.
  *
- * Can be used for creating tabs, radio buttons, checkboxes etc.
+ * Can be used for creating buttons, tabs, radio buttons, checkboxes etc.
  * @example
- * // switch on click
+ * // switch on onPress
  * const switch = new Swich([`switch_off.png`, `switch_on.png`]);
  *
  * // switch on hover
@@ -21,77 +20,74 @@ import { ButtonEvent } from './utils/HelpTypes';
  */
 export class Switcher extends Container
 {
-    private triggerEvents: Set<ButtonEvent>;
+    private _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
 
     /** Container that holds all the content of the component. */
     public innerView: Container;
 
     /** The id of the visible(active) view. */
-    public active = 0;
+    private _active: number;
 
     /** Fired when active view changes. */
     public onChange: Signal<(state: number | boolean) => void>;
-
-    /** Button events used to switch views. */
-    public events: Button;
 
     /**
      * @param {Array<Container | string>} views - Array of views or textures that will be switching.
      * @param triggerEvents - Button events, to switch views (can be one event or an array of events).
      * @param activeViewID - The id of the view, visible by default.
      */
-    constructor(views: Array<Container | string>, triggerEvents?: ButtonEvent | ButtonEvent[], activeViewID = 0)
+    constructor(views?: Array<Container | string>, triggerEvents?: ButtonEvent | ButtonEvent[], activeViewID?: number)
     {
         super();
 
         this.innerView = new Container();
         this.addChild(this.innerView);
 
-        this.active = activeViewID;
-
-        views.map((stateView, id) =>
-        {
-            const view = getView(stateView);
-
-            this.innerView.addChild(view);
-
-            view.visible = id === activeViewID;
-
-            return view;
-        });
-
         this.onChange = new Signal();
 
-        if (triggerEvents)
-        {
-            if (Array.isArray(triggerEvents))
-            {
-                this.triggerEvents = new Set(triggerEvents);
-            }
-            else
-            {
-                this.triggerEvents = new Set([triggerEvents]);
-            }
-        }
-        else
-        {
-            this.triggerEvents = new Set(['onPress']);
-        }
+        if (views) this.views = views;
+        if (triggerEvents) this.triggerEvents = triggerEvents;
+        if (activeViewID && this.views.length > 0) this.active = activeViewID;
 
-        this.events = new Button(this);
-
-        this.events.onPress.connect(() => this.switch(this.nextActive, 'onPress'));
-        this.events.onDown.connect(() => this.switch(this.nextActive, 'onDown'));
-        this.events.onUp.connect(() => this.switch(this.nextActive, 'onUp'));
-        this.events.onHover.connect(() => this.switch(this.nextActive, 'onHover'));
-        this.events.onOut.connect(() => this.switch(this.nextActive, 'onOut'));
-        this.events.onUpOut.connect(() => this.switch(this.nextActive, 'onUpOut'));
+        this.setInteractionEvents();
     }
 
-    /** Returns the active view */
-    public get activeView(): Container
+    private setInteractionEvents()
     {
-        return this.views[this.active] as Container;
+        this.innerView.eventMode = 'static';
+
+        this.innerView.on('pointerdown', () => this.handleEvents('onDown'));
+        this.innerView.on('pointerup', () => this.handleEvents('onUp'));
+        this.innerView.on('pointerupoutside', () => this.handleEvents('onUpOut'));
+        this.innerView.on('pointerout', () => this.handleEvents('onOut'));
+        this.innerView.on('pointertap', () => this.handleEvents('onPress'));
+        this.innerView.on('pointerover', () => this.handleEvents('onHover'));
+    }
+
+    private handleEvents(event: ButtonEvent)
+    {
+        if (this._triggerEvents.has(event))
+        {
+            this.switch();
+        }
+    }
+
+    /** Returns the active view. */
+    public get activeView(): Container | undefined
+    {
+        if (this.views && this.views[this.active])
+        {
+            return this.views[this.active] as Container;
+        }
+
+        return undefined;
+    }
+
+    /** Sets the list of instances for switching. */
+    public set views(views: Array<Container | string>)
+    {
+        this.innerView.removeChildren();
+        views.forEach((stateView) => this.add(stateView));
     }
 
     /** Returns all the switchable views */
@@ -101,46 +97,116 @@ export class Switcher extends Container
     }
 
     /**
-     * Show a view by id, or to next one by order, if no ID provided.
-     * @param {number} id - optional id of the view to show.
-     * @param {ButtonEvent} event - optional event to use to switch views.
+     * Adds view instance to a switching list.
+     * @param view
      */
-    public switch(id?: number, event?: ButtonEvent): void
+    public add(view: Container | string): void
     {
-        if (!this.triggerEvents.has(event))
+        const viewInstance = getView(view);
+
+        this.innerView.addChild(viewInstance);
+
+        viewInstance.visible = false;
+
+        if (this.views.length === 1)
         {
-            return;
+            this.active = 0;
         }
+    }
 
-        this.activeView.visible = false;
-        this.active = id !== undefined ? id : this.nextActive;
+    /**
+     * Removes view instance from a switching list by id.
+     * @param id - id of the view to remove.
+     */
+    public remove(id: number)
+    {
+        if (this.views[id])
+        {
+            this.innerView.removeChild(this.views[id]);
+        }
+    }
 
-        const newState = this.views[this.active];
+    /**
+     * Sets a list of events that will make a switcher switch to the next view.
+     * @param {ButtonEvent | ButtonEvent[]} triggerEvents - Button events,
+     * to switch views (can be one event or an array of events).
+     */
+    public set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[])
+    {
+        this._triggerEvents = new Set(Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents]);
+    }
 
-        newState.visible = true;
+    /** Returns a list of events that will make a switcher switch to the next view. */
+    public get triggerEvents(): ButtonEvent[]
+    {
+        return Array.from(this._triggerEvents);
+    }
 
-        const res = this.views.length > 2 ? this.active : this.active === 1;
+    /**
+     * Show a view by id, or to next one by order, if no ID provided.
+     * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
+     */
+    public switch(id?: number)
+    {
+        if (id !== undefined && id === this.active) return;
 
-        this.onChange.emit(res);
+        const exID = this.active;
+
+        this.forceSwitch(id);
+
+        if (exID !== this.active)
+        {
+            const res = this.views.length > 2 ? this.active : this.active === 1;
+
+            this.onChange.emit(res);
+        }
     }
 
     /**
      * Switches a view to a given one without triggering the onChange event.
-     * @param {number} id
+     * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
      */
-    public forceSwitch(id: number): void
+    public forceSwitch(id?: number)
     {
-        this.activeView.visible = false;
-        this.active = id !== undefined ? id : this.nextActive;
+        if (id !== undefined && id === this.active) return;
 
-        const newState = this.views[this.active];
+        if (this.activeView)
+        {
+            this.activeView.visible = false;
+        }
 
-        newState.visible = true;
+        if (id !== undefined && !this.views[id])
+        {
+            throw new Error(`View with id ${id} does not exist.`);
+        }
+
+        this._active = id !== undefined ? id : this.nextActive;
+
+        if (this._active === undefined)
+        {
+            return;
+        }
+
+        this.views[this.active].visible = true;
     }
 
-    /** Returns the id of the next view in order. */
-    private get nextActive(): number
+    /** Returns the id of the next view in order. Or undefined, if order is empty. */
+    private get nextActive(): number | undefined
     {
+        if (this.views.length === 0) return undefined;
+
         return this.active < this.views.length - 1 ? this.active + 1 : 0;
+    }
+
+    /** Sets the id of the visible(active) view and shows to it. */
+    set active(id: number)
+    {
+        this.switch(id);
+    }
+
+    /** Gets the id of the visible(active) view. */
+    get active(): number
+    {
+        return this._active;
     }
 }

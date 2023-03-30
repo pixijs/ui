@@ -1,28 +1,13 @@
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
-import { ITextStyle, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
 import type { DragObject } from './utils/HelpTypes';
-import { SliderBase } from './SliderBase';
+import { BaseSliderOptions, SliderBase } from './SliderBase';
 
-export type SliderOptions = {
-    bg: Container | string;
+export type SliderOptions = BaseSliderOptions & {
     slider: Container | string;
-    fill?: Container | string;
-    min?: number;
-    max?: number;
     value?: number;
-    valueTextStyle?: TextStyle | Partial<ITextStyle>;
-    showValue?: boolean;
-    valueTextOffset?: {
-        x?: number;
-        y?: number;
-    };
-    fillOffset?: {
-        x?: number;
-        y?: number;
-    };
 };
 
 /**
@@ -89,20 +74,17 @@ export class Slider extends SliderBase
 
         this._value1 = value;
 
-        this.slider1.x = ((this.bg.width - this.slider1.width) / 100) * this.progress;
-
-        if (this.options.showValue)
-        {
-            this.value1Text.text = `${Math.round(this.value)}`;
-
-            const sliderPosX = this.slider1.x + (this.slider1.width / 2);
-            const sliderPosY = this.slider1.y;
-
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
-        }
+        this.updateSlider();
 
         this.onUpdate?.emit(this.value);
+    }
+
+    /** Set slider instance ot texture. */
+    // eslint-disable-next-line accessor-pairs
+    set slider(value: Container | string)
+    {
+        this.slider1 = value;
+        this.updateSlider();
     }
 
     protected override update(event: FederatedPointerEvent)
@@ -119,5 +101,21 @@ export class Slider extends SliderBase
     protected override change()
     {
         this.onChange?.emit(this.value);
+    }
+
+    protected updateSlider()
+    {
+        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
+
+        if (this.options.showValue)
+        {
+            this.value1Text.text = `${Math.round(this.value)}`;
+
+            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosY = this._slider1.y;
+
+            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+        }
     }
 }

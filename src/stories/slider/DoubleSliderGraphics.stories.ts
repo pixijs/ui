@@ -84,7 +84,7 @@ export const Double: StoryFn = ({
 
     const doubleSlider = new DoubleSlider({
         bg,
-        fill: showFill ? fill : '',
+        fill: showFill ? fill : null,
         slider1,
         slider2,
         min,

@@ -33,11 +33,11 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    private readonly bg: Container;
-    private readonly inputField: Text;
-    private readonly inputMask: Graphics;
-    private readonly placeholder: Text;
+    private _bg?: Container;
     private _cursor: Sprite;
+    private inputMask: Graphics;
+    private inputField: Text;
+    private placeholder: Text;
     private editing = false;
     private tick = 0;
 
@@ -45,10 +45,10 @@ export class Input extends Container
     private readonly options: InputOptions;
 
     /** Fires when input loses focus. */
-    public readonly onEnter: Signal<(text: string) => void>;
+    public onEnter: Signal<(text: string) => void>;
 
     /** Fires every time input string is changed. */
-    public readonly onChange: Signal<(text: string) => void>;
+    public onChange: Signal<(text: string) => void>;
 
     /** Top side padding */
     public paddingTop = 0;
@@ -67,48 +67,7 @@ export class Input extends Container
         super();
 
         this.options = options;
-        this.bg = getView(options.bg);
-        this.bg.cursor = 'text';
-        this.bg.interactive = true;
-
-        const defaultTextStyle = {
-            fill: 0x000000,
-            align: 'center'
-        } as TextStyle;
-
-        const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
-
-        this.inputField = new Text('', textStyle);
-
         this.padding = options.padding;
-
-        this.inputMask = new Graphics()
-            .beginFill(0xffffff)
-            .drawRect(
-                this.paddingLeft,
-                this.paddingTop,
-                this.bg.width - this.paddingRight - this.paddingLeft,
-                this.bg.height - this.paddingBottom - this.paddingTop
-            );
-
-        this.inputField.mask = this.inputMask;
-
-        this._cursor = new Sprite(Texture.WHITE);
-        this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
-        this._cursor.anchor.set(0.5);
-        this._cursor.width = 2;
-        this._cursor.height = this.inputField.height * 0.8;
-        this._cursor.alpha = 0;
-        this._cursor.mask = this.inputMask;
-
-        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
-        this.placeholder.visible = !!options.placeholder;
-
-        this.value = options.value ?? '';
-
-        this.addChild(this.bg, this.inputField, this.placeholder, this._cursor, this.inputMask);
-
-        this.align();
 
         this.cursor = 'text';
         this.interactive = true;
@@ -153,7 +112,6 @@ export class Input extends Container
             window.addEventListener('click', () =>
             {
                 this.handleActivation();
-                this.onEnter.emit(this.value);
             });
 
             window.addEventListener('keydown', (e) =>
@@ -167,7 +125,6 @@ export class Input extends Container
                 else if (key === 'Escape' || key === 'Enter')
                 {
                     this.stopEditing();
-                    this.onEnter.emit(this.value);
                 }
                 else if (key.length === 1) this._add(key);
             });
@@ -177,6 +134,85 @@ export class Input extends Container
         this.onChange = new Signal();
 
         Ticker.shared.add((delta) => this.update(delta));
+
+        if (options.bg)
+        {
+            this.bg = options.bg;
+        }
+        else
+        {
+            console.error('Input: bg is not defined, please define it.');
+        }
+    }
+
+    private init()
+    {
+        const options = this.options;
+
+        const defaultTextStyle = {
+            fill: 0x000000,
+            align: 'center'
+        } as TextStyle;
+
+        const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
+
+        this.inputField = new Text('', textStyle);
+
+        this._cursor = new Sprite(Texture.WHITE);
+        this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
+        this._cursor.anchor.set(0.5);
+        this._cursor.width = 2;
+        this._cursor.height = this.inputField.height * 0.8;
+        this._cursor.alpha = 0;
+
+        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
+        this.placeholder.visible = !!options.placeholder;
+
+        this.addChild(this.inputField, this.placeholder, this._cursor);
+
+        this.value = options.value ?? '';
+
+        this.align();
+    }
+
+    set bg(bg: Container | string)
+    {
+        this._bg = getView(bg);
+        this._bg.cursor = 'text';
+        this._bg.interactive = true;
+
+        if (!this._bg.parent)
+        {
+            this.addChild(this._bg);
+        }
+
+        if (!this.inputField)
+        {
+            this.init();
+        }
+
+        this.inputMask = new Graphics()
+            .beginFill(0xffffff)
+            .drawRect(
+                this.paddingLeft,
+                this.paddingTop,
+                this._bg.width - this.paddingRight - this.paddingLeft,
+                this._bg.height - this.paddingBottom - this.paddingTop
+            );
+
+        this.inputField.mask = this.inputMask;
+
+        this._cursor.mask = this.inputMask;
+
+        if (!this.inputMask.parent)
+        {
+            this.addChild(this.inputMask);
+        }
+    }
+
+    get bg(): Container | string
+    {
+        return this._bg;
     }
 
     private _add(key: string): void
@@ -240,6 +276,8 @@ export class Input extends Container
 
     private stopEditing(): void
     {
+        if (!this.editing) return;
+
         this._cursor.alpha = 0;
         this.editing = false;
 
@@ -252,6 +290,8 @@ export class Input extends Container
         if (utils.isMobile.any) document.getElementById('v-keyboard')?.blur();
 
         this.align();
+
+        this.onEnter.emit(this.value);
     }
 
     private update(dt: number): void
@@ -263,15 +303,17 @@ export class Input extends Container
 
     private align()
     {
+        if (!this._bg) return;
+
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y = (this.bg.height / 2) + this.paddingTop - this.paddingBottom;
+        this.inputField.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x = (this.bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.placeholder.y = this.bg.height / 2;
+        this.placeholder.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.placeholder.y = this._bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
         this._cursor.y = this.inputField.y;
@@ -279,7 +321,7 @@ export class Input extends Container
 
     private getAlign(): 0 | 1 | 0.5
     {
-        const maxWidth = this.bg.width * 0.95;
+        const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
         const isOverflowed = this.inputField.width + paddings > maxWidth;
 

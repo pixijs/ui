@@ -8,13 +8,9 @@ import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
     bg: Container | string;
-    slider1: Container | string;
-    slider2?: Container | string;
     fill?: Container | string;
     min?: number;
     max?: number;
-    value1?: number;
-    value2?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
     showValue?: boolean;
     valueTextOffset?: {
@@ -27,11 +23,19 @@ export type BaseSliderOptions = {
     };
 };
 
+export type DoubleSliderOptions = BaseSliderOptions & {
+    slider1?: Container | string;
+    slider2?: Container | string;
+
+    value1?: number;
+    value2?: number;
+};
+
 /** Hepper class, used as a base for single or double slider creation. */
 export class SliderBase extends ProgressBar
 {
-    protected slider1: Container;
-    protected slider2: Container;
+    protected _slider1: Container;
+    protected _slider2: Container;
 
     protected value1Text?: Text;
     protected value2Text?: Text;
@@ -50,40 +54,120 @@ export class SliderBase extends ProgressBar
     private startUpdateValue1!: number;
     private startUpdateValue2!: number;
 
-    constructor(options: BaseSliderOptions)
+    private settings: DoubleSliderOptions;
+
+    constructor(options: DoubleSliderOptions)
     {
-        super({
-            bg: options.bg,
-            fill: options.fill ?? options.bg,
-            fillOffset: options.fillOffset
-        });
+        super();
 
-        if (options.slider1)
+        this.setBackground(options.bg);
+
+        if (options.fill)
         {
-            this.slider1 = this.createSlider(options.slider1);
-
-            if (options.showValue)
-            {
-                this.value1Text = new Text('', options.valueTextStyle || { fill: 0xffffff });
-                this.value1Text.anchor.set(0.5);
-                this.addChild(this.value1Text);
-            }
+            this.setFill(options.fill, options.fillOffset);
         }
 
-        if (options.slider2)
-        {
-            this.slider2 = this.createSlider(options.slider2);
+        this.settings = options;
 
-            if (options.showValue)
-            {
-                this.value2Text = new Text('', options.valueTextStyle || { fill: 0xffffff });
-                this.value2Text.anchor.set(0.5);
-                this.addChild(this.value2Text);
-            }
-        }
+        this.slider1 = options.slider1;
+        this.slider2 = options.slider2;
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
+
+        this.activate();
+    }
+
+    /**
+     * Sets Slider1 instance.
+     * @param value - Container or string with texture name.
+     */
+    set slider1(value: Container | string)
+    {
+        if (!value) return;
+
+        if (this._slider1)
+        {
+            this.slider1.removeAllListeners();
+            this.removeChild(this._slider1);
+            this.slider1.destroy();
+        }
+
+        this._slider1 = this.createSlider(value);
+
+        this._slider1.eventMode = 'static';
+
+        this._slider1
+            .on('pointerdown', this.startUpdate, this)
+            .on('globalpointermove', this.update, this)
+            .on('pointerup', this.endUpdate, this)
+            .on('pointerupoutside', this.endUpdate, this);
+
+        if (this.settings.showValue && !this.value1Text)
+        {
+            this.value1Text = new Text('', this.settings.valueTextStyle || { fill: 0xffffff });
+            this.value1Text.anchor.set(0.5);
+            this.addChild(this.value1Text);
+        }
+    }
+
+    /** Get Slider1 instance. */
+    get slider1(): Container
+    {
+        return this._slider1;
+    }
+
+    /**
+     * Sets Slider2 instance.
+     * @param value - Container or string with texture name.
+     */
+    set slider2(value: Container | string)
+    {
+        if (!value) return;
+
+        if (this._slider2)
+        {
+            this.slider2.removeAllListeners();
+            this.removeChild(this._slider2);
+            this.slider2.destroy();
+        }
+
+        this._slider2 = this.createSlider(value);
+
+        this._slider2.eventMode = 'static';
+
+        this._slider2
+            .on('pointerdown', this.startUpdate, this)
+            .on('globalpointermove', this.update, this)
+            .on('pointerup', this.endUpdate, this)
+            .on('pointerupoutside', this.endUpdate, this);
+
+        if (this.settings.showValue && !this.value2Text)
+        {
+            this.value2Text = new Text('', this.settings.valueTextStyle || { fill: 0xffffff });
+            this.value2Text.anchor.set(0.5);
+            this.addChild(this.value2Text);
+        }
+    }
+
+    /** Get Slider2 instance. */
+    get slider2(): Container
+    {
+        return this._slider2;
+    }
+
+    /**
+     * Set bg.
+     * @param bg
+     */
+    override setBackground(bg: Container | string)
+    {
+        if (this.bg)
+        {
+            this.bg.removeAllListeners();
+        }
+
+        super.setBackground(bg);
 
         this.activate();
     }
@@ -97,29 +181,7 @@ export class SliderBase extends ProgressBar
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
 
-        if (this.slider1)
-        {
-            this.slider1.eventMode = 'static';
-
-            this.slider1
-                .on('pointerdown', this.startUpdate, this)
-                .on('globalpointermove', this.update, this)
-                .on('pointerup', this.endUpdate, this)
-                .on('pointerupoutside', this.endUpdate, this);
-        }
-
-        if (this.slider2)
-        {
-            this.slider2.eventMode = 'static';
-
-            this.slider2
-                .on('pointerdown', this.startUpdate, this)
-                .on('globalpointermove', this.update, this)
-                .on('pointerup', this.endUpdate, this)
-                .on('pointerupoutside', this.endUpdate, this);
-        }
-
-        if (this.value1Text)
+        if (this.fill)
         {
             this.fill.eventMode = 'none';
         }
