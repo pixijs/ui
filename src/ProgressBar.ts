@@ -34,10 +34,10 @@ export class ProgressBar extends Container
     public innerView: Container;
 
     /** Start point of progress. */
-    public progressStart = 0;
+    protected progressStart = 0;
 
     /** Current progress value. */
-    public _progress = 0;
+    protected _progress = 0;
 
     constructor(params?: ProgressBarOptions)
     {
