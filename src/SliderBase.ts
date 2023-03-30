@@ -8,13 +8,9 @@ import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
     bg?: Container | string;
-    slider1?: Container | string;
-    slider2?: Container | string;
     fill?: Container | string;
     min?: number;
     max?: number;
-    value1?: number;
-    value2?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
     showValue?: boolean;
     valueTextOffset?: {
@@ -25,6 +21,14 @@ export type BaseSliderOptions = {
         x?: number;
         y?: number;
     };
+};
+
+export type DoubleSliderOptions = BaseSliderOptions & {
+    slider1?: Container | string;
+    slider2?: Container | string;
+
+    value1?: number;
+    value2?: number;
 };
 
 /** Hepper class, used as a base for single or double slider creation. */
@@ -50,9 +54,9 @@ export class SliderBase extends ProgressBar
     private startUpdateValue1!: number;
     private startUpdateValue2!: number;
 
-    private settings: BaseSliderOptions;
+    private settings: DoubleSliderOptions;
 
-    constructor(options: BaseSliderOptions)
+    constructor(options: DoubleSliderOptions)
     {
         super({
             bg: options.bg,
@@ -75,7 +79,7 @@ export class SliderBase extends ProgressBar
      * Sets Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    set slider1(value: Container | string | undefined)
+    set slider1(value: Container | string)
     {
         if (!value) return;
 
@@ -114,7 +118,7 @@ export class SliderBase extends ProgressBar
      * Sets Slider2 instance.
      * @param value - Container or string with texture name.
      */
-    set slider2(value: Container | string | undefined)
+    set slider2(value: Container | string)
     {
         if (!value) return;
 

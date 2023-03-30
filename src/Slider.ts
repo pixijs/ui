@@ -1,28 +1,13 @@
 import { Container } from '@pixi/display';
 import { FederatedPointerEvent } from '@pixi/events';
-import { ITextStyle, TextStyle } from '@pixi/text';
 import { Signal } from 'typed-signals';
 
 import type { DragObject } from './utils/HelpTypes';
-import { SliderBase } from './SliderBase';
+import { BaseSliderOptions, SliderBase } from './SliderBase';
 
-export type SliderOptions = {
-    bg: Container | string;
+export type SliderOptions = BaseSliderOptions & {
     slider: Container | string;
-    fill?: Container | string;
-    min?: number;
-    max?: number;
     value?: number;
-    valueTextStyle?: TextStyle | Partial<ITextStyle>;
-    showValue?: boolean;
-    valueTextOffset?: {
-        x?: number;
-        y?: number;
-    };
-    fillOffset?: {
-        x?: number;
-        y?: number;
-    };
 };
 
 /**
