@@ -47,8 +47,6 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
             }
         });
 
-        singleSlider.setBackground('slider_bg.png');
-
         singleSlider.onChange.connect((value) => onChange(`${value}`));
 
         view.addChild(singleSlider);
