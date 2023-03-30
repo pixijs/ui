@@ -98,14 +98,6 @@ export const Double: StoryFn = ({
         showValue
     });
 
-    doubleSlider.setBackground(
-        new Graphics()
-            .beginFill(borderColor)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .beginFill(0x000000)
-            .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius)
-    );
-
     doubleSlider.onChange.connect((value1, value2) =>
     {
         onChange(`${value1} - ${value2}`);
