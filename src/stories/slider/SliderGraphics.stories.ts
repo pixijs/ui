@@ -76,7 +76,7 @@ export const Single: StoryFn = ({
     // Component usage
     const singleSlider = new Slider({
         bg,
-        fill: showFill ? fill : '',
+        fill: showFill ? fill : null,
         slider,
         min,
         max,

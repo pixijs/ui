@@ -28,7 +28,7 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
     // Component usage !!!
         const doubleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
-            fill: showFill ? 'slider_progress.png' : '',
+            fill: showFill ? 'slider_progress.png' : null,
             slider1: 'slider.png',
             slider2: 'slider.png',
             min,
