@@ -12,7 +12,9 @@ export type ListOptions = {
 /**
  * Container-based component for arranging Pixi containers one after another based on their sizes.
  *
- * If type is not specified, it will be set, items will be arranged to fit horizontally,
+ * Type option is used to set the direction of the arrangement.
+ *
+ * If type is not specified, it will be acting like a bidirectional, items will be arranged to fit horizontally,
  * after there is no space left, new line will be started, so items will be arranged like `inline-block` in css.
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
