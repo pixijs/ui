@@ -35,12 +35,12 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    public label!: Text;
+    label!: Text;
 
     /** Signal emitted when checkbox state changes. */
-    public onCheck: Signal<(state: boolean) => void>;
+    onCheck: Signal<(state: boolean) => void>;
 
-    private _style: CheckBoxStyle;
+    protected _style: CheckBoxStyle;
 
     constructor(options: CheckBoxOptions)
     {
@@ -61,7 +61,7 @@ export class CheckBox extends Switcher
         this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
-    private addLabel(text?: string, style?: LabelStyle)
+    protected addLabel(text?: string, style?: LabelStyle)
     {
         if (!text) return;
 
@@ -119,13 +119,13 @@ export class CheckBox extends Switcher
     }
 
     /** Getter, which returns a checkbox state. */
-    public get checked(): boolean
+    get checked(): boolean
     {
         return this.active === 1;
     }
 
     /** Setter, which sets a checkbox state. */
-    public set checked(checked: boolean)
+    set checked(checked: boolean)
     {
         this.switch(checked ? 1 : 0);
     }
@@ -134,7 +134,7 @@ export class CheckBox extends Switcher
      * Setter, that sets a checkbox state without emitting a signal.
      * @param checked
      */
-    public forceCheck(checked: boolean)
+    forceCheck(checked: boolean)
     {
         this.forceSwitch(checked ? 1 : 0);
     }

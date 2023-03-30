@@ -2,13 +2,13 @@ import { Spring } from './Spring';
 
 export default class ScrollSpring
 {
-    public done: boolean;
-    public to: number;
+    done: boolean;
+    to: number;
 
-    private _spring: Spring;
-    private _pos: number;
-    private _speed: number;
-    private _correctSpeed: boolean;
+    protected _spring: Spring;
+    protected _pos: number;
+    protected _speed: number;
+    protected _correctSpeed: boolean;
 
     constructor()
     {
@@ -35,7 +35,6 @@ export default class ScrollSpring
         {
             this._correctSpeed = true;
         }
-
         else
         {
             this._correctSpeed = false;
@@ -57,7 +56,6 @@ export default class ScrollSpring
 
             this._spring.x = this._pos;
         }
-
         else
         {
             const diff = this.to - this._pos;
@@ -67,7 +65,6 @@ export default class ScrollSpring
                 this._pos = this.to;
                 this.done = true;
             }
-
             else
             {
                 this._spring.tx = this.to;
@@ -81,6 +78,6 @@ export default class ScrollSpring
 
     cancel(): void
     {
-        // matches jux interface
+    // matches jux interface
     }
 }

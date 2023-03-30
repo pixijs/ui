@@ -33,7 +33,7 @@ export class ProgressBar extends Container
     protected _progress = 0;
 
     /** Container, that holds all inner views. */
-    public innerView: Container;
+    innerView: Container;
 
     constructor(params?: ProgressBarOptions)
     {

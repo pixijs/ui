@@ -14,14 +14,14 @@ interface TrackpadOptions
 /** Easing controller for the {@link ScrollBox}. */
 export class Trackpad
 {
-    public xAxis: SlidingNumber;
-    public yAxis: SlidingNumber;
+    xAxis: SlidingNumber;
+    yAxis: SlidingNumber;
 
-    private _isDown: boolean;
-    private _globalPosition: Point;
-    private _frame: Rectangle;
-    private _bounds: Rectangle;
-    private _dirty: boolean;
+    protected _isDown: boolean;
+    protected _globalPosition: Point;
+    protected _frame: Rectangle;
+    protected _bounds: Rectangle;
+    protected _dirty: boolean;
 
     constructor(options: TrackpadOptions)
     {
@@ -43,24 +43,24 @@ export class Trackpad
         this._globalPosition = new Point();
     }
 
-    public pointerDown(pos: Point): void
+    pointerDown(pos: Point): void
     {
         this.xAxis.grab(pos.x);
         this.yAxis.grab(pos.y);
         this._isDown = true;
     }
 
-    public pointerUp(): void
+    pointerUp(): void
     {
         this._isDown = false;
     }
 
-    public pointerMove(pos: Point): void
+    pointerMove(pos: Point): void
     {
         this._globalPosition = pos;
     }
 
-    public update(): void
+    update(): void
     {
         if (this._dirty)
         {
@@ -85,7 +85,7 @@ export class Trackpad
         }
     }
 
-    public resize(w: number, h: number): void
+    resize(w: number, h: number): void
     {
         this._frame.x = 0;
         this._frame.width = w;
@@ -96,7 +96,7 @@ export class Trackpad
         this._dirty = true;
     }
 
-    public setBounds(minX: number, maxX: number, minY: number, maxY: number): void
+    setBounds(minX: number, maxX: number, minY: number, maxY: number): void
     {
         this._bounds.x = minX;
         this._bounds.width = maxX - minX;

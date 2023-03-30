@@ -43,27 +43,27 @@ export type ScrollBoxOptions = {
 
 export class ScrollBox extends Container
 {
-    private background: Graphics | Sprite;
-    private borderMask: Graphics;
-    private lastWidth: number;
-    private lastHeight: number;
-    private __width = 0;
-    private __height = 0;
+    protected background: Graphics | Sprite;
+    protected borderMask: Graphics;
+    protected lastWidth: number;
+    protected lastHeight: number;
+    protected __width = 0;
+    protected __height = 0;
 
-    private readonly onMouseScrollBinded: (event: any) => void;
+    protected readonly onMouseScrollBinded: (event: any) => void;
 
-    private list: List;
+    protected list: List;
 
-    private readonly freeSlot = {
+    protected readonly freeSlot = {
         x: 0,
         y: 0,
     };
 
-    private _trackpad: Trackpad;
-    private isDragging = 0;
-    private interactiveStorage: Map<number, DisplayObject> = new Map();
-    private ticker = Ticker.shared;
-    private options: ScrollBoxOptions;
+    protected _trackpad: Trackpad;
+    protected isDragging = 0;
+    protected interactiveStorage: Map<number, DisplayObject> = new Map();
+    protected ticker = Ticker.shared;
+    protected options: ScrollBoxOptions;
 
     constructor(options?: ScrollBoxOptions)
     {
@@ -122,7 +122,7 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    private get hasBounds(): boolean
+    protected get hasBounds(): boolean
     {
         return !!this.__width || !!this.__height;
     }
@@ -153,7 +153,7 @@ export class ScrollBox extends Container
      * Adds an item to a scrollable list.
      * @param {...any} items
      */
-    public addItem<T extends Container[]>(...items: T): T[0]
+    addItem<T extends Container[]>(...items: T): T[0]
     {
         if (items.length > 1)
         {
@@ -201,7 +201,7 @@ export class ScrollBox extends Container
      * Removes an item from a scrollable list.
      * @param itemID
      */
-    public removeItem(itemID: number)
+    removeItem(itemID: number)
     {
         const child = this.list.children[itemID];
 
@@ -219,7 +219,7 @@ export class ScrollBox extends Container
      * Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.
      * @param item
      */
-    public isItemVisible(item: Container): boolean
+    isItemVisible(item: Container): boolean
     {
         const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
@@ -251,7 +251,7 @@ export class ScrollBox extends Container
     }
 
     /** Returns all inner items in a list. */
-    public get items(): Container[] | []
+    get items(): Container[] | []
     {
         return this.list?.children ?? [];
     }
@@ -282,7 +282,7 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    private addMask()
+    protected addMask()
     {
         if (!this.borderMask)
         {
@@ -294,7 +294,7 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    private makeScrollable()
+    protected makeScrollable()
     {
         if (!this._trackpad)
         {
@@ -342,7 +342,7 @@ export class ScrollBox extends Container
     }
 
     // prevent interactivity on all children
-    private disableInteractivity(items: DisplayObject[])
+    protected disableInteractivity(items: DisplayObject[])
     {
         items.forEach((item, id) =>
         {
@@ -357,7 +357,7 @@ export class ScrollBox extends Container
         });
     }
 
-    private emitPointerOpOutside(item: DisplayObject)
+    protected emitPointerOpOutside(item: DisplayObject)
     {
         if (item.eventMode !== 'auto')
         {
@@ -371,7 +371,7 @@ export class ScrollBox extends Container
     }
 
     // restore interactivity on all children that had it
-    private restoreInteractivity()
+    protected restoreInteractivity()
     {
         this.interactiveStorage.forEach((item, itemID) =>
         {
@@ -381,23 +381,23 @@ export class ScrollBox extends Container
         });
     }
 
-    private setInteractive(interactive: boolean)
+    protected setInteractive(interactive: boolean)
     {
         this.eventMode = interactive ? 'static' : 'auto';
     }
 
-    private get listHeight(): number
+    protected get listHeight(): number
     {
         return this.list.height + (this.options.vertPadding * 2);
     }
 
-    private get listWidth(): number
+    protected get listWidth(): number
     {
         return this.list.width + (this.options.horPadding * 2);
     }
 
     /** Controls item positions and visibility. */
-    public resize(): void
+    resize(): void
     {
         if (!this.hasBounds) return;
 
@@ -497,7 +497,7 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
     }
 
-    private onMouseHover()
+    protected onMouseHover()
     {
         this.renderAllItems();
 
@@ -505,7 +505,7 @@ export class ScrollBox extends Container
         document.addEventListener('DOMMouseScroll', this.onMouseScrollBinded);
     }
 
-    private onMouseOut()
+    protected onMouseOut()
     {
         this.stopRenderHiddenItems();
 
@@ -516,7 +516,7 @@ export class ScrollBox extends Container
         );
     }
 
-    private onMouseScroll(event: any): void
+    protected onMouseScroll(event: any): void
     {
         this.renderAllItems();
 
@@ -573,7 +573,7 @@ export class ScrollBox extends Container
     }
 
     /** Makes it scroll down to the last element. */
-    public scrollBottom()
+    scrollBottom()
     {
         if (!this.interactive)
         {
@@ -586,13 +586,13 @@ export class ScrollBox extends Container
     }
 
     /** Makes it scroll up to the first element. */
-    public scrollTop()
+    scrollTop()
     {
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
     }
 
-    private renderAllItems()
+    protected renderAllItems()
     {
         if (this.options.disableDynamicRendering)
         {
@@ -605,7 +605,7 @@ export class ScrollBox extends Container
         });
     }
 
-    private stopRenderHiddenItems()
+    protected stopRenderHiddenItems()
     {
         if (this.options.disableDynamicRendering)
         {
@@ -622,7 +622,7 @@ export class ScrollBox extends Container
      * Scrolls to the element with the given ID.
      * @param elementID
      */
-    public scrollTo(elementID: number)
+    scrollTo(elementID: number)
     {
         if (!this.interactive)
         {
@@ -654,18 +654,18 @@ export class ScrollBox extends Container
     }
 
     /** Gets component height. */
-    public override get height(): number
+    override get height(): number
     {
         return this.__height;
     }
 
     /** Gets component width. */
-    public override get width(): number
+    override get width(): number
     {
         return this.__width;
     }
 
-    private update()
+    protected update()
     {
         if (!this.list) return;
 

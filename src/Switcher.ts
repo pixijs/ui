@@ -20,16 +20,16 @@ import { ButtonEvent } from './utils/HelpTypes';
  */
 export class Switcher extends Container
 {
-    private _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
+    protected _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
 
     /** Container that holds all the content of the component. */
-    public innerView: Container;
+    innerView: Container;
 
     /** The id of the visible(active) view. */
-    private _active: number;
+    protected _active: number;
 
     /** Fired when active view changes. */
-    public onChange: Signal<(state: number | boolean) => void>;
+    onChange: Signal<(state: number | boolean) => void>;
 
     /**
      * @param {Array<Container | string>} views - Array of views or textures that will be switching.
@@ -52,7 +52,7 @@ export class Switcher extends Container
         this.setInteractionEvents();
     }
 
-    private setInteractionEvents()
+    protected setInteractionEvents()
     {
         this.innerView.eventMode = 'static';
 
@@ -64,7 +64,7 @@ export class Switcher extends Container
         this.innerView.on('pointerover', () => this.handleEvents('onHover'));
     }
 
-    private handleEvents(event: ButtonEvent)
+    protected handleEvents(event: ButtonEvent)
     {
         if (this._triggerEvents.has(event))
         {
@@ -73,7 +73,7 @@ export class Switcher extends Container
     }
 
     /** Returns the active view. */
-    public get activeView(): Container | undefined
+    get activeView(): Container | undefined
     {
         if (this.views && this.views[this.active])
         {
@@ -84,7 +84,7 @@ export class Switcher extends Container
     }
 
     /** Sets the list of instances for switching. */
-    public set views(views: Array<Container | string>)
+    set views(views: Array<Container | string>)
     {
         this.innerView.removeChildren();
         views.forEach((stateView) => this.add(stateView));
@@ -100,7 +100,7 @@ export class Switcher extends Container
      * Adds view instance to a switching list.
      * @param view
      */
-    public add(view: Container | string): void
+    add(view: Container | string): void
     {
         const viewInstance = getView(view);
 
@@ -118,7 +118,7 @@ export class Switcher extends Container
      * Removes view instance from a switching list by id.
      * @param id - id of the view to remove.
      */
-    public remove(id: number)
+    remove(id: number)
     {
         if (this.views[id])
         {
@@ -131,13 +131,13 @@ export class Switcher extends Container
      * @param {ButtonEvent | ButtonEvent[]} triggerEvents - Button events,
      * to switch views (can be one event or an array of events).
      */
-    public set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[])
+    set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[])
     {
         this._triggerEvents = new Set(Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents]);
     }
 
     /** Returns a list of events that will make a switcher switch to the next view. */
-    public get triggerEvents(): ButtonEvent[]
+    get triggerEvents(): ButtonEvent[]
     {
         return Array.from(this._triggerEvents);
     }
@@ -146,7 +146,7 @@ export class Switcher extends Container
      * Show a view by id, or to next one by order, if no ID provided.
      * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
      */
-    public switch(id?: number)
+    switch(id?: number)
     {
         if (id !== undefined && id === this.active) return;
 
@@ -166,7 +166,7 @@ export class Switcher extends Container
      * Switches a view to a given one without triggering the onChange event.
      * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
      */
-    public forceSwitch(id?: number)
+    forceSwitch(id?: number)
     {
         if (id !== undefined && id === this.active) return;
 
@@ -191,7 +191,7 @@ export class Switcher extends Container
     }
 
     /** Returns the id of the next view in order. Or undefined, if order is empty. */
-    private get nextActive(): number | undefined
+    protected get nextActive(): number | undefined
     {
         if (this.views.length === 0) return undefined;
 

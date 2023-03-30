@@ -23,12 +23,12 @@ export type MaskedFrameOptions = {
 export class MaskedFrame extends Graphics
 {
     /** Target container. */
-    public target: Container;
+    target: Container;
 
-    private _targetMask: Container;
-    private maskData: string | Graphics;
-    private borderWidth: number;
-    private borderColor: number;
+    protected _targetMask: Container;
+    protected maskData: string | Graphics;
+    protected borderWidth: number;
+    protected borderColor: number;
 
     constructor(options?: MaskedFrameOptions)
     {
@@ -80,7 +80,7 @@ export class MaskedFrame extends Graphics
      * @param borderWidth
      * @param borderColor
      */
-    public setBorder(borderWidth: number, borderColor: number)
+    setBorder(borderWidth: number, borderColor: number)
     {
         this.borderWidth = borderWidth;
         this.borderColor = borderColor;

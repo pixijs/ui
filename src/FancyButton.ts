@@ -101,52 +101,52 @@ export type ButtonOptions = Views & {
  */
 export class FancyButton extends Container
 {
-    private events: Button;
-    private animations: StateAnimations;
-    private originalInnerViewState: AnimationData;
-    private defaultDuration = 100;
+    protected events: Button;
+    protected animations: StateAnimations;
+    protected originalInnerViewState: AnimationData;
+    protected defaultDuration = 100;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
-    public padding: number;
+    padding: number;
 
     /** Offset of the button state views. If state views have different sizes, this option can help adjust them. */
-    public offset: Offset & Pos;
+    offset: Offset & Pos;
 
     /** Offset of the text view. Can be set to any state of the button. */
-    public textOffset: Offset;
+    textOffset: Offset;
 
     /** Offset of the icon view. Can be set to any state of the button. */
-    public iconOffset: Offset;
+    iconOffset: Offset;
 
     //* View that holds all button inner views */
-    public innerView: Container;
+    innerView: Container;
 
-    private _views: ButtonViews = {};
+    protected _views: ButtonViews = {};
 
     /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
-    public state: State;
+    state: State;
 
     /** Anchor point of the button. */
-    public anchor: ObservablePoint;
+    anchor: ObservablePoint;
 
     /** Event that is fired when the button is down. */
-    public onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
     /**
      * Event that fired when a down event happened inside the button
      * and up event happened inside or outside of the button
      */
-    public onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onUp: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
     /**
      * Event that fired when mouse up event happens outside of the button
      * after the down event happened inside the button boundaries.
      */
-    public onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onUpOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
     /** Event that fired when the mouse is out of the view */
-    public onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onOut: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
     /** Event that is fired when the button is pressed. */
-    public onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onPress: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
     /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
-    public onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
+    onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
     /**
      * Turns a given container-based view into a button by adding all button events.
@@ -306,7 +306,7 @@ export class FancyButton extends Container
      * Manage button text view.
      * @param {string | Text} text - can be a string, Text, BitmapText ot HTMLText (Container-based element).
      */
-    private createTextView(text: AnyText)
+    protected createTextView(text: AnyText)
     {
         if (!this._views.text)
         {
@@ -324,7 +324,7 @@ export class FancyButton extends Container
      * @param state
      * @param offset
      */
-    private setOffset(view: Container, state: State, offset: Offset)
+    protected setOffset(view: Container, state: State, offset: Offset)
     {
         const stateOffset = offset
             ? offset[state]
@@ -356,7 +356,7 @@ export class FancyButton extends Container
      * Returns active view for the state.
      * @param state
      */
-    private getStateView(state: State): Container | undefined
+    protected getStateView(state: State): Container | undefined
     {
         const { default: defaultView, hover, pressed, disabled } = this._views;
 
@@ -379,7 +379,7 @@ export class FancyButton extends Container
      * Adjusts text view position and scale.
      * @param {State} state
      */
-    private adjustTextView(state: State)
+    protected adjustTextView(state: State)
     {
         if (!this.text) return;
 
@@ -402,7 +402,7 @@ export class FancyButton extends Container
      * Adjusts icon view position and scale.
      * @param {State} state
      */
-    private adjustIconView(state: State)
+    protected adjustIconView(state: State)
     {
         if (!this._views.icon)
         {
@@ -427,7 +427,7 @@ export class FancyButton extends Container
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    private updateAnchor()
+    protected updateAnchor()
     {
         const anchorX = this.anchor.x ?? 0;
         const anchorY = this.anchor.y ?? 0;
@@ -560,7 +560,7 @@ export class FancyButton extends Container
     }
 
     /** Creates all button events */
-    private addEvents()
+    protected addEvents()
     {
         this.events = new Button(this);
 
@@ -626,7 +626,7 @@ export class FancyButton extends Container
      * Starts animation for the current button state if configured.
      * @param {State} state
      */
-    private playAnimations(state: State)
+    protected playAnimations(state: State)
     {
         if (!this.animations) return;
 
@@ -682,7 +682,7 @@ export class FancyButton extends Container
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public down(_e?: FederatedPointerEvent)
+    down(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -692,7 +692,7 @@ export class FancyButton extends Container
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public up(_e?: FederatedPointerEvent)
+    up(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -703,7 +703,7 @@ export class FancyButton extends Container
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public upOut(_e?: FederatedPointerEvent)
+    upOut(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -713,7 +713,7 @@ export class FancyButton extends Container
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public out(_e?: FederatedPointerEvent)
+    out(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -723,7 +723,7 @@ export class FancyButton extends Container
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public press(_e?: FederatedPointerEvent)
+    press(_e?: FederatedPointerEvent)
     {
     // override me!
     }
@@ -734,7 +734,7 @@ export class FancyButton extends Container
      * Fired only if device is not mobile.
      * @param {FederatedPointerEvent} _e - event data
      */
-    public hover(_e?: FederatedPointerEvent)
+    hover(_e?: FederatedPointerEvent)
     {
     // override me!
     }

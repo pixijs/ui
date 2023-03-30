@@ -46,15 +46,15 @@ export class SliderBase extends ProgressBar
     protected dragging = 0;
 
     /** Minimal value. */
-    public min = 0;
+    min = 0;
 
     /** Maximal value. */
-    public max = 100;
+    max = 100;
 
-    private startUpdateValue1!: number;
-    private startUpdateValue2!: number;
+    protected startUpdateValue1!: number;
+    protected startUpdateValue2!: number;
 
-    private settings: DoubleSliderOptions;
+    protected settings: DoubleSliderOptions;
 
     constructor(options: DoubleSliderOptions)
     {
