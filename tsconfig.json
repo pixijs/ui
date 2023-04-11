@@ -1,34 +1,34 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "ScriptHost"
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": [
+        "ESNext",
+        "DOM",
+        "ScriptHost"
+        ],
+        "strict": true,
+        "esModuleInterop": true,
+        "allowJs": true,
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "./lib",
+        "outDir": "./lib",
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": false,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "noImplicitOverride": true
+    },
+    "include": [
+        "./src",
+        "./typings",
+        "./test",
+        "./docs-source"
     ],
-    "strict": true,
-    "esModuleInterop": true,
-    "allowJs": true,
-    "moduleResolution": "node",
-    "sourceMap": false,
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "./lib",
-    "outDir": "./lib",
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "strictNullChecks": false,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "noImplicitOverride": true
-  },
-  "include": [
-    "./src",
-    "./typings",
-    "./test",
-    "./docs-source"
-  ],
 }
