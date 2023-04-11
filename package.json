@@ -39,7 +39,7 @@
         "storybook:build": "storybook build --output-dir docs/storybook",
         "types": "xs types",
         "watch": "xs watch",
-        "start": "storybook dev -p 6006"
+        "start": "npm run storybook"
     },
     "husky": {
         "hooks": {
