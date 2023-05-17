@@ -694,4 +694,15 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         }
     }
+
+    /** Destroys the component. */
+    override destroy()
+    {
+        this.ticker.remove(this.update, this);
+
+        this.background.destroy();
+        this.list.destroy();
+
+        super.destroy();
+    }
 }
