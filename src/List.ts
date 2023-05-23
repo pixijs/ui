@@ -155,7 +155,12 @@ export class List extends Container
         let y = this.options?.vertPadding ?? 0;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        const maxWidth = this.parent?.width - this.options?.horPadding;
+        let maxWidth = this.parent?.width;
+
+        if (this.options?.horPadding)
+        {
+            maxWidth -= this.options.horPadding;
+        }
 
         this.children.forEach((child, id) =>
         {
