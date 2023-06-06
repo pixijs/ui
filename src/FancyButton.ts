@@ -1,4 +1,4 @@
-import { ObservablePoint, Ticker, Rectangle } from '@pixi/core';
+import { ObservablePoint, Ticker, Rectangle, utils } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
@@ -582,7 +582,10 @@ export class FancyButton extends Container
         {
             this.onUp.emit(this, e);
             this.up();
-            this.setState('hover');
+
+            utils.isMobile.any
+                ? this.setState('default')
+                : this.setState('hover');
         });
 
         this.events.onUpOut.connect((_bth, e?: FederatedPointerEvent) =>
@@ -607,7 +610,10 @@ export class FancyButton extends Container
         {
             this.onPress.emit(this, e);
             this.press();
-            this.setState('hover');
+
+            utils.isMobile.any
+                ? this.setState('default')
+                : this.setState('hover');
         });
 
         this.events.onHover.connect((_bth, e?: FederatedPointerEvent) =>
@@ -617,7 +623,9 @@ export class FancyButton extends Container
 
             if (!this.events.isDown)
             {
-                this.setState('hover');
+                utils.isMobile.any
+                    ? this.setState('default')
+                    : this.setState('hover');
             }
         });
     }
