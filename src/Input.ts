@@ -82,30 +82,8 @@ export class Input extends Container
         if (utils.isMobile.any)
         {
             window.addEventListener('touchstart', () => this.handleActivation());
-            this._keyboard = document.createElement('input');
-
-            document.body.appendChild(this._keyboard);
-            this._keyboard.style.position = 'fixed';
-            this._keyboard.style.left = '-1000px';
-
-            this._keyboard.oninput = () =>
-            {
-                let value = this._keyboard.value;
-
-                const maxLength = this.options.maxLength;
-
-                if (maxLength && value.length > this.options.maxLength)
-                {
-                    value = value.substring(0, maxLength);
-                    this._keyboard.value = value;
-                }
-
-                this.value = value;
-
-                this.onChange.emit(this.value);
-            };
         }
-        else
+        else if (!utils.isMobile.any)
         {
             window.addEventListener('click', () => this.handleActivation());
 
@@ -247,6 +225,29 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
+            this._keyboard = document.createElement('input');
+
+            document.body.appendChild(this._keyboard);
+            this._keyboard.style.position = 'fixed';
+            this._keyboard.style.left = '-1000px';
+
+            this._keyboard.oninput = () =>
+            {
+                let value = this._keyboard.value;
+
+                const maxLength = this.options.maxLength;
+
+                if (maxLength && value.length > this.options.maxLength)
+                {
+                    value = value.substring(0, maxLength);
+                    this._keyboard.value = value;
+                }
+
+                this.value = value;
+
+                this.onChange.emit(this.value);
+            };
+
             this._keyboard.focus();
             this._keyboard.click();
             this._keyboard.value = this.value;
@@ -284,6 +285,8 @@ export class Input extends Container
         if (utils.isMobile.any)
         {
             this._keyboard?.blur();
+            this._keyboard?.remove();
+            this._keyboard = null;
         }
 
         this.align();
