@@ -45,6 +45,7 @@ export class Trackpad
 
     pointerDown(pos: Point): void
     {
+        this._globalPosition = pos;
         this.xAxis.grab(pos.x);
         this.yAxis.grab(pos.y);
         this._isDown = true;

@@ -307,7 +307,9 @@ export class ScrollBox extends Container
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
             this.isDragging = 1;
-            this._trackpad.pointerDown(e.global);
+            const touchPoint = this.worldTransform.applyInverse(e.global);
+
+            this._trackpad.pointerDown(touchPoint);
         });
 
         this.on('pointerup', () =>
@@ -326,7 +328,9 @@ export class ScrollBox extends Container
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
-            this._trackpad.pointerMove(e.global);
+            const touchPoint = this.worldTransform.applyInverse(e.global);
+
+            this._trackpad.pointerMove(touchPoint);
 
             if (!this.isDragging) return;
 
