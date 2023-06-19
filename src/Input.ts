@@ -8,7 +8,7 @@ import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
 
 export type InputOptions = {
-    bg?: Container | string;
+    bg: Container | string;
     textStyle?: Partial<TextStyle>;
     placeholder?: string;
     value?: string;
