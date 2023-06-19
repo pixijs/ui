@@ -43,6 +43,7 @@ export class Input extends Container
 
     protected activation = false;
     protected readonly options: InputOptions;
+    protected _keyboard: HTMLInputElement;
 
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
@@ -72,34 +73,31 @@ export class Input extends Container
         this.cursor = 'text';
         this.interactive = true;
 
-        this.on('pointertap', () => (this.activation = true));
+        this.on('pointertap', () =>
+        {
+            this.activation = true;
+            utils.isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
+        });
 
         if (utils.isMobile.any)
         {
             window.addEventListener('touchstart', () => this.handleActivation());
+            this._keyboard = document.createElement('input');
 
-            let keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
+            document.body.appendChild(this._keyboard);
+            this._keyboard.style.position = 'fixed';
+            this._keyboard.style.left = '-1000px';
 
-            if (!keyboard)
+            this._keyboard.oninput = () =>
             {
-                keyboard = document.createElement('input');
-
-                document.body.appendChild(keyboard);
-                keyboard.setAttribute('id', 'v-keyboard');
-
-                keyboard.style.opacity = '0';
-            }
-
-            keyboard.oninput = () =>
-            {
-                let value = keyboard.value;
+                let value = this._keyboard.value;
 
                 const maxLength = this.options.maxLength;
 
                 if (maxLength && value.length > this.options.maxLength)
                 {
                     value = value.substring(0, maxLength);
-                    keyboard.value = value;
+                    this._keyboard.value = value;
                 }
 
                 this.value = value;
@@ -109,10 +107,7 @@ export class Input extends Container
         }
         else
         {
-            window.addEventListener('click', () =>
-            {
-                this.handleActivation();
-            });
+            window.addEventListener('click', () => this.handleActivation());
 
             window.addEventListener('keydown', (e) =>
             {
@@ -252,11 +247,9 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            const keyboard = document.getElementById('v-keyboard') as HTMLInputElement;
-
-            keyboard.focus();
-            keyboard.click();
-            keyboard.value = this.value;
+            this._keyboard.focus();
+            this._keyboard.click();
+            this._keyboard.value = this.value;
         }
 
         this.align();
@@ -287,7 +280,11 @@ export class Input extends Container
         }
 
         if (this.value.length === 0) this.placeholder.visible = true;
-        if (utils.isMobile.any) document.getElementById('v-keyboard')?.blur();
+
+        if (utils.isMobile.any)
+        {
+            this._keyboard?.blur();
+        }
 
         this.align();
 
