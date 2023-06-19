@@ -154,6 +154,8 @@ export class Input extends Container
             align: 'center'
         } as TextStyle;
 
+        this.options.textStyle = options.textStyle ?? defaultTextStyle;
+
         const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
 
         this.inputField = new Text('', textStyle);
