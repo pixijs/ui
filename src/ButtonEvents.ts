@@ -1,5 +1,5 @@
 import { FederatedPointerEvent } from '@pixi/events';
-import { isMobile } from '@pixi/core';
+import { isMobile, utils } from '@pixi/core';
 import { Signal } from 'typed-signals';
 import { Container } from '@pixi/display';
 
@@ -40,22 +40,46 @@ export class ButtonEvents
 
     protected connectEvents(view: Container)
     {
-        view.on('pointerdown', this.processDown, this);
-        view.on('pointerup', this.processUp, this);
-        view.on('pointerupoutside', this.processUpOut, this);
-        view.on('pointerout', this.processOut, this);
-        view.on('pointertap', this.processPress, this);
-        view.on('pointerover', this.processOver, this);
+        if (utils.isMobile.any)
+        {
+            view.on('pointerdown', this.processDown, this);
+            view.on('pointerup', this.processUp, this);
+            view.on('pointerupoutside', this.processUpOut, this);
+            view.on('pointerout', this.processOut, this);
+            view.on('pointertap', this.processPress, this);
+            view.on('pointerover', this.processOver, this);
+        }
+        else
+        {
+            view.on('mousedown', this.processDown, this);
+            view.on('mouseup', this.processUp, this);
+            view.on('mouseupoutside', this.processUpOut, this);
+            view.on('mouseout', this.processOut, this);
+            view.on('click', this.processPress, this);
+            view.on('mouseover', this.processOver, this);
+        }
     }
 
     protected disconnectEvents(view: Container)
     {
-        view.off('pointerdown', this.processDown, this);
-        view.off('pointerup', this.processUp, this);
-        view.off('pointerupoutside', this.processUpOut, this);
-        view.off('pointerout', this.processOut, this);
-        view.off('pointertap', this.processPress, this);
-        view.off('pointerover', this.processOver, this);
+        if (utils.isMobile.any)
+        {
+            view.off('pointerdown', this.processDown, this);
+            view.off('pointerup', this.processUp, this);
+            view.off('pointerupoutside', this.processUpOut, this);
+            view.off('pointerout', this.processOut, this);
+            view.off('pointertap', this.processPress, this);
+            view.off('pointerover', this.processOver, this);
+        }
+        else
+        {
+            view.off('mousedown', this.processDown, this);
+            view.off('mouseup', this.processUp, this);
+            view.off('mouseupoutside', this.processUpOut, this);
+            view.off('mouseout', this.processOut, this);
+            view.off('click', this.processPress, this);
+            view.off('mouseover', this.processOver, this);
+        }
     }
 
     protected processDown(e: FederatedPointerEvent): void
