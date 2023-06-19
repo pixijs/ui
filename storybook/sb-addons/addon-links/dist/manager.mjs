@@ -1,4 +1,0 @@
-try{
-var e="storybook/links";var t={NAVIGATE:`${e}/navigate`,REQUEST:`${e}/request`,RECEIVE:`${e}/receive`};var m=__STORYBOOKAPI__,{ActiveTabs:d,Consumer:A,ManagerContext:y,Provider:_,addons:o,combineParameters:h,controlOrMetaKey:E,controlOrMetaSymbol:T,eventMatchesShortcut:O,eventToShortcut:b,isMacLike:p,isShortcutTaken:k,keyToSymbol:g,merge:I,mockChannel:v,optionOrAltSymbol:C,shortcutMatchesShortcut:M,shortcutToHumanString:P,types:R,useAddonState:D,useArgTypes:f,useArgs:x,useChannel:K,useGlobalTypes:G,useGlobals:N,useParameter:V,useSharedState:Y,useStoryPrepared:$,useStorybookApi:B,useStorybookState:Q}=__STORYBOOKAPI__;o.register(e,r=>{o.getChannel().on(t.REQUEST,({kind:n,name:u})=>{let l=r.storyId(n,u);r.emit(t.RECEIVE,l)})});
-}catch(e){ console.error("[Storybook] One of your manager-entries failed: " + import.meta.url, e); }
-//# sourceMappingURL=manager.mjs.map

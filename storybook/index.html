@@ -4,15 +4,45 @@
     <meta charset="utf-8" />
 
     <title>@storybook/cli - Storybook</title>
-
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    
+    <link
+      rel="prefetch"
+      href="./sb-common-assets/nunito-sans-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="prefetch"
+      href="./sb-common-assets/nunito-sans-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="./sb-common-assets/fonts.css" />
 
-      
+    <link href="./sb-manager/runtime.js" rel="modulepreload" />
+
+    
+    <link href="./sb-addons/actions-0/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/backgrounds-1/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/controls-2/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/viewport-3/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/links-4/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/storysource-5/manager-bundle.js" rel="modulepreload" />
+       
 
     <style>
-      #storybook-root[hidden]{
+      #storybook-root[hidden] {
         display: none !important;
       }
     </style>
@@ -30,9 +60,9 @@
   "warnOnLegacyHierarchySeparator": true,
   "buildStoriesJson": true,
   "storyStoreV7": true,
-  "breakingChangesV7": true,
-  "interactionsDebugger": false,
   "argTypeTargetsV7": true,
+  "legacyDecoratorFileOrder": false,
+  "breakingChangesV7": true,
   "babelModeV7": true
 };
         
@@ -59,29 +89,27 @@
       
         
       
-        
-      
     </script>
     
 
     <script type="module">
-      import './sb-manager/runtime.mjs';
+      import './sb-manager/runtime.js';
 
       
-      import './sb-addons/addon-actions/dist/manager.mjs';
+      import './sb-addons/actions-0/manager-bundle.js';
       
-      import './sb-addons/addon-backgrounds/dist/manager.mjs';
+      import './sb-addons/backgrounds-1/manager-bundle.js';
       
-      import './sb-addons/addon-controls/dist/manager.mjs';
+      import './sb-addons/controls-2/manager-bundle.js';
       
-      import './sb-addons/addon-viewport/dist/manager.mjs';
+      import './sb-addons/viewport-3/manager-bundle.js';
       
-      import './sb-addons/addon-links/dist/manager.mjs';
+      import './sb-addons/links-4/manager-bundle.js';
       
-      import './sb-addons/addon-storysource/dist/esm/manager.mjs';
-           
-    </script>    
+      import './sb-addons/storysource-5/manager-bundle.js';
+      
+    </script>
 
-    <link href="./sb-preview/runtime.mjs" rel="preload" as="script">
+    <link href="./sb-preview/runtime.js" rel="prefetch" as="script" />
   </body>
 </html>
