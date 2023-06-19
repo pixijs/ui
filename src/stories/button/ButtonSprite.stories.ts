@@ -6,7 +6,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
 import { Sprite } from '@pixi/sprite';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { Texture } from '@pixi/core';
+import { Texture, utils } from '@pixi/core';
 
 const args = {
     text: 'Click me!',
@@ -31,7 +31,7 @@ export class SpriteButton extends Button
 
         this.view = this.buttonView;
 
-        preload([`button.png`, `button_hover.png`, `button_pressed`]).then(() =>
+        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(() =>
         {
             this.buttonView.texture = Texture.from('button.png');
 
@@ -62,7 +62,10 @@ export class SpriteButton extends Button
 
     override up()
     {
-        this.buttonView.texture = Texture.from('button_hover.png');
+        this.buttonView.texture = utils.isMobile.any
+            ? Texture.from('button.png')
+            : Texture.from('button_hover.png');
+
         this.action('up');
     }
 
