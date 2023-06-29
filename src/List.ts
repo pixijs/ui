@@ -7,6 +7,7 @@ export type ListOptions = {
     children?: Container[];
     vertPadding?: number;
     horPadding?: number;
+    items?: Container[];
 };
 
 /**
@@ -49,6 +50,8 @@ export class List extends Container
         {
             this.init(options);
         }
+
+        options?.items?.forEach((item) => this.addChild(item));
 
         this.on('added', () => this.arrangeChildren());
         this.on('childAdded', () => this.arrangeChildren());
@@ -149,6 +152,10 @@ export class List extends Container
         return this.options.horPadding;
     }
 
+    /**
+     * Arrange all elements basing in their sizes and component options.
+     * Can be arranged vertically, horizontally or bidirectional.
+     */
     protected arrangeChildren()
     {
         let x = this.options?.horPadding ?? 0;

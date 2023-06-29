@@ -25,7 +25,8 @@ export type ScrollBoxOptions = {
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
  *
- * Items, that are out of the visible area, are not rendered.
+ * Items, that are out of the visible area, are not rendered by default.
+ * This behavior can be changed by setting 'disableDynamicRendering' option to true.
  * @example
  * new ScrollBox({
  *     background: 0XFFFFFF,
@@ -82,6 +83,16 @@ export class ScrollBox extends Container
     /**
      * Initiates ScrollBox.
      * @param options
+     * @param {number} [options.background=0xFFFFFF] - background color of the ScrollBox.
+     * @param {number} [options.width] - width of the ScrollBox.
+     * @param {number} [options.height] - height of the ScrollBox.
+     * @param {number} [options.radius] - radius of the ScrollBox and its masks corners.
+     * @param {number} [options.elementsMargin=0] - margin between elements.
+     * @param {number} [options.vertPadding=0] - vertical padding of the ScrollBox.
+     * @param {number} [options.horPadding=0] - horizontal padding of the ScrollBox.
+     * @param {number} [options.padding=0] - padding of the ScrollBox (same horizontal and vertical).
+     * @param {boolean} [options.disableDynamicRendering=false] - disables dynamic rendering of the ScrollBox,
+     * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
      */
     init(options: ScrollBoxOptions)
     {
@@ -106,9 +117,8 @@ export class ScrollBox extends Container
             elementsMargin: options.elementsMargin,
             vertPadding: options.vertPadding,
             horPadding: options.horPadding,
+            items: options.items,
         });
-
-        this.addItems(options.items);
 
         if (this.hasBounds)
         {
@@ -168,27 +178,11 @@ export class ScrollBox extends Container
                 console.error('ScrollBox item should have size');
             }
 
-            child.x = this.freeSlot.x;
-            child.y = this.freeSlot.y;
-
             this.list.addChild(child);
 
             if (!this.options.disableDynamicRendering)
             {
                 child.renderable = this.isItemVisible(child);
-            }
-
-            const elementsMargin = this.options?.elementsMargin ?? 0;
-
-            switch (this.options.type)
-            {
-                case 'horizontal':
-                    this.freeSlot.x += elementsMargin + child.width;
-                    break;
-
-                default:
-                    this.freeSlot.y += elementsMargin + child.height;
-                    break;
             }
         }
 
