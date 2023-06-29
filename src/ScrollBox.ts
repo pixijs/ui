@@ -55,11 +55,6 @@ export class ScrollBox extends Container
 
     protected list: List;
 
-    protected readonly freeSlot = {
-        x: 0,
-        y: 0,
-    };
-
     protected _trackpad: Trackpad;
     protected isDragging = 0;
     protected interactiveStorage: {
