@@ -15,10 +15,11 @@ const args = {
     fontColor: '#000000',
     elementsMargin: 6,
     itemsAmount: 100,
+    disableEasing: false,
     onPress: action('Button pressed')
 };
 
-export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress }: any) =>
+export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onPress, disableEasing }: any) =>
 {
     fontColor = getColor(fontColor);
 
@@ -47,7 +48,8 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
             width: window.width - 80,
             height: window.height - 90,
             vertPadding: 18,
-            radius: 5
+            radius: 5,
+            disableEasing
         });
 
         scrollBox.addItems(items);

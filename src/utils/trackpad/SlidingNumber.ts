@@ -95,13 +95,13 @@ export class SlidingNumber
         }
     }
 
-    slide(): void
+    slide(instant = false): void
     {
         if (this._hasStopped) return;
 
         if (this.constrain)
         {
-            this._updateConstrain();
+            this._updateConstrain(instant);
         }
         else
         {
@@ -125,11 +125,33 @@ export class SlidingNumber
         }
     }
 
-    protected _updateConstrain(): void
+    protected _updateConstrain(instant = false): void
     {
         const max: number = this.max;
 
-        if (this.position > this.min || this.position < max || this._activeEase)
+        if (instant)
+        {
+            if (this.value > 0)
+            {
+                this.value = 0;
+            }
+
+            if (this.value > 0)
+            {
+                this.value = 0;
+            }
+
+            if (this.value < this.max)
+            {
+                this.value = this.max;
+            }
+
+            if (this.value < this.max)
+            {
+                this.value = this.max;
+            }
+        }
+        else if (this.position > this.min || this.position < max || this._activeEase)
         {
             if (!this._activeEase)
             {

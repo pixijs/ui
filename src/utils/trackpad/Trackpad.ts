@@ -9,6 +9,8 @@ interface TrackpadOptions
 
     maxSpeed?: number;
     constrain?: boolean;
+
+    disableEasing?: boolean;
 }
 
 /** Easing controller for the {@link ScrollBox}. */
@@ -22,6 +24,7 @@ export class Trackpad
     protected _frame: Rectangle;
     protected _bounds: Rectangle;
     protected _dirty: boolean;
+    protected disableEasing = false;
 
     constructor(options: TrackpadOptions)
     {
@@ -36,6 +39,8 @@ export class Trackpad
             maxSpeed: options.maxSpeed,
             constrain: options.constrain
         });
+
+        this.disableEasing = options.disableEasing ?? false;
 
         this._frame = new Rectangle();
 
@@ -81,8 +86,8 @@ export class Trackpad
         }
         else
         {
-            this.xAxis.slide();
-            this.yAxis.slide();
+            this.xAxis.slide(this.disableEasing);
+            this.yAxis.slide(this.disableEasing);
         }
     }
 
