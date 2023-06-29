@@ -66,6 +66,7 @@ export class ScrollBox extends Container
         item: DisplayObject;
         eventMode: EventMode;
     }[] = [];
+    protected visibleItems: Container[] = [];
     protected pressedChild: Container;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
@@ -197,19 +198,6 @@ export class ScrollBox extends Container
 
             child.eventMode = 'static';
 
-            if (utils.isMobile.any)
-            {
-                child.on('pointerdown', () => { this.pressedChild = child; });
-                child.on('pointerup', () => { this.pressedChild = null; });
-                child.on('pointerupoutside', () => { this.pressedChild = null; });
-            }
-            else
-            {
-                child.on('mousedown', () => { this.pressedChild = child; });
-                child.on('mouseup', () => { this.pressedChild = null; });
-                child.on('mouseupoutside', () => { this.pressedChild = null; });
-            }
-
             this.list.addChild(child);
 
             if (!this.options.disableDynamicRendering)
@@ -339,6 +327,19 @@ export class ScrollBox extends Container
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
             this._trackpad.pointerDown(touchPoint);
+
+            const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
+
+            this.visibleItems.forEach((item) =>
+            {
+                if (item.x < listTouchPoint.x
+                    && item.x + item.width > listTouchPoint.x
+                    && item.y < listTouchPoint.y
+                    && item.y + item.height > listTouchPoint.y)
+                {
+                    this.pressedChild = item;
+                }
+            });
         });
 
         this.on('pointerup', () =>
@@ -346,6 +347,8 @@ export class ScrollBox extends Container
             this.isDragging = 0;
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
+
+            this.pressedChild = null;
         });
 
         this.on('pointerupoutside', () =>
@@ -353,6 +356,8 @@ export class ScrollBox extends Container
             this.isDragging = 0;
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
+
+            this.pressedChild = null;
         });
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
@@ -607,9 +612,12 @@ export class ScrollBox extends Container
             return;
         }
 
+        this.visibleItems.length = 0;
+
         this.items.forEach((child) =>
         {
             child.renderable = this.isItemVisible(child);
+            this.visibleItems.push(child);
         });
     }
 
