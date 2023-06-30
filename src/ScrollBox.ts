@@ -130,8 +130,9 @@ export class ScrollBox extends Container
             elementsMargin: options.elementsMargin,
             vertPadding: options.vertPadding,
             horPadding: options.horPadding,
-            items: options.items,
         });
+
+        this.addItems(options.items);
 
         if (this.hasBounds)
         {
