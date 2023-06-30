@@ -1,6 +1,6 @@
-import { Ticker } from '@pixi/core';
+import { Ticker, utils } from '@pixi/core';
 import { Container, DisplayObject } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
+import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import type { ListType } from './List';
@@ -25,7 +25,8 @@ export type ScrollBoxOptions = {
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
  *
- * Items, that are out of the visible area, are not rendered.
+ * Items, that are out of the visible area, are not rendered by default.
+ * This behavior can be changed by setting 'disableDynamicRendering' option to true.
  * @example
  * new ScrollBox({
  *     background: 0XFFFFFF,
@@ -54,17 +55,30 @@ export class ScrollBox extends Container
 
     protected list: List;
 
-    protected readonly freeSlot = {
-        x: 0,
-        y: 0,
-    };
-
     protected _trackpad: Trackpad;
     protected isDragging = 0;
-    protected interactiveStorage: Map<number, DisplayObject> = new Map();
+    protected interactiveStorage: {
+        item: DisplayObject;
+        eventMode: EventMode;
+    }[] = [];
+    protected visibleItems: Container[] = [];
+    protected pressedChild: Container;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
 
+    /**
+     * @param options
+     * @param {number} options.background - background color of the ScrollBox.
+     * @param {number} options.width - width of the ScrollBox.
+     * @param {number} options.height - height of the ScrollBox.
+     * @param {number} options.radius - radius of the ScrollBox and its masks corners.
+     * @param {number} options.elementsMargin - margin between elements.
+     * @param {number} options.vertPadding - vertical padding of the ScrollBox.
+     * @param {number} options.horPadding - horizontal padding of the ScrollBox.
+     * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
+     * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
+     * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
+     */
     constructor(options?: ScrollBoxOptions)
     {
         super();
@@ -82,6 +96,16 @@ export class ScrollBox extends Container
     /**
      * Initiates ScrollBox.
      * @param options
+     * @param {number} options.background - background color of the ScrollBox.
+     * @param {number} options.width - width of the ScrollBox.
+     * @param {number} options.height - height of the ScrollBox.
+     * @param {number} options.radius - radius of the ScrollBox and its masks corners.
+     * @param {number} options.elementsMargin - margin between elements.
+     * @param {number} options.vertPadding - vertical padding of the ScrollBox.
+     * @param {number} options.horPadding - horizontal padding of the ScrollBox.
+     * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
+     * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
+     * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
      */
     init(options: ScrollBoxOptions)
     {
@@ -133,8 +157,8 @@ export class ScrollBox extends Container
     }
 
     /**
-     * Add an items to a scrollable list.
-     * @param {...any} items
+     *  Adds array of items to a scrollable list.
+     * @param {Container[]} items - items to add.
      */
     addItems(items: Container[])
     {
@@ -150,8 +174,8 @@ export class ScrollBox extends Container
     }
 
     /**
-     * Adds an item to a scrollable list.
-     * @param {...any} items
+     * Adds one or more items to a scrollable list.
+     * @param {Container} items - one or more items to add.
      */
     addItem<T extends Container[]>(...items: T): T[0]
     {
@@ -168,27 +192,13 @@ export class ScrollBox extends Container
                 console.error('ScrollBox item should have size');
             }
 
-            child.x = this.freeSlot.x;
-            child.y = this.freeSlot.y;
+            child.eventMode = 'static';
 
             this.list.addChild(child);
 
             if (!this.options.disableDynamicRendering)
             {
                 child.renderable = this.isItemVisible(child);
-            }
-
-            const elementsMargin = this.options?.elementsMargin ?? 0;
-
-            switch (this.options.type)
-            {
-                case 'horizontal':
-                    this.freeSlot.x += elementsMargin + child.width;
-                    break;
-
-                default:
-                    this.freeSlot.y += elementsMargin + child.height;
-                    break;
             }
         }
 
@@ -199,7 +209,7 @@ export class ScrollBox extends Container
 
     /**
      * Removes an item from a scrollable list.
-     * @param itemID
+     * @param {number} itemID - id of the item to remove.
      */
     removeItem(itemID: number)
     {
@@ -217,7 +227,7 @@ export class ScrollBox extends Container
 
     /**
      * Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.
-     * @param item
+     * @param {Container} item - item to check.
      */
     isItemVisible(item: Container): boolean
     {
@@ -250,7 +260,10 @@ export class ScrollBox extends Container
         return isVisible;
     }
 
-    /** Returns all inner items in a list. */
+    /**
+     * Returns all inner items in a list.
+     * @returns {Array<Container> | Array} - list of items.
+     */
     get items(): Container[] | []
     {
         return this.list?.children ?? [];
@@ -310,20 +323,37 @@ export class ScrollBox extends Container
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
             this._trackpad.pointerDown(touchPoint);
+
+            const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
+
+            this.visibleItems.forEach((item) =>
+            {
+                if (item.x < listTouchPoint.x
+                    && item.x + item.width > listTouchPoint.x
+                    && item.y < listTouchPoint.y
+                    && item.y + item.height > listTouchPoint.y)
+                {
+                    this.pressedChild = item;
+                }
+            });
         });
 
         this.on('pointerup', () =>
         {
             this.isDragging = 0;
             this._trackpad.pointerUp();
-            this.restoreInteractivity();
+            this.restoreItemsInteractivity();
+
+            this.pressedChild = null;
         });
 
         this.on('pointerupoutside', () =>
         {
             this.isDragging = 0;
             this._trackpad.pointerUp();
-            this.restoreInteractivity();
+            this.restoreItemsInteractivity();
+
+            this.pressedChild = null;
         });
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
@@ -334,55 +364,17 @@ export class ScrollBox extends Container
 
             if (!this.isDragging) return;
 
-            if (this.interactiveStorage.size === 0)
+            if (this.pressedChild)
             {
-                this.disableInteractivity(this.items);
+                this.revertClick(this.pressedChild);
+
+                this.pressedChild = null;
             }
         });
 
         const { onMouseHover, onMouseOut } = this;
 
         this.on('mouseover', onMouseHover, this).on('mouseout', onMouseOut, this);
-    }
-
-    // prevent interactivity on all children
-    protected disableInteractivity(items: DisplayObject[])
-    {
-        items.forEach((item, id) =>
-        {
-            this.emitPointerOpOutside(item);
-
-            if (item.interactive)
-            {
-                this.interactiveStorage.set(id, item);
-                item.eventMode = 'auto';
-                item.interactiveChildren = false;
-            }
-        });
-    }
-
-    protected emitPointerOpOutside(item: DisplayObject)
-    {
-        if (item.eventMode !== 'auto')
-        {
-            item.emit('pointerupoutside', null);
-        }
-
-        if (item instanceof Container && item.children)
-        {
-            item.children.forEach((child) => this.emitPointerOpOutside(child));
-        }
-    }
-
-    // restore interactivity on all children that had it
-    protected restoreInteractivity()
-    {
-        this.interactiveStorage.forEach((item, itemID) =>
-        {
-            item.eventMode = 'static';
-            item.interactiveChildren = false;
-            this.interactiveStorage.delete(itemID);
-        });
     }
 
     protected setInteractive(interactive: boolean)
@@ -616,9 +608,12 @@ export class ScrollBox extends Container
             return;
         }
 
+        this.visibleItems.length = 0;
+
         this.items.forEach((child) =>
         {
             child.renderable = this.isItemVisible(child);
+            this.visibleItems.push(child);
         });
     }
 
@@ -675,27 +670,11 @@ export class ScrollBox extends Container
 
         this._trackpad.update();
 
-        if (this.options.type === 'horizontal')
+        const type = this.options.type === 'horizontal' ? 'x' : 'y';
+
+        if (this.list[type] !== this._trackpad[type])
         {
-            if (this.list.x !== this._trackpad.x)
-            {
-                this.renderAllItems();
-                this.list.x = this._trackpad.x;
-            }
-            else
-            {
-                this.stopRenderHiddenItems();
-            }
-        }
-        else
-        if (this.list.y !== this._trackpad.y)
-        {
-            this.renderAllItems();
-            this.list.y = this._trackpad.y;
-        }
-        else
-        {
-            this.stopRenderHiddenItems();
+            this.list[type] = this._trackpad[type];
         }
     }
 
@@ -708,5 +687,38 @@ export class ScrollBox extends Container
         this.list.destroy();
 
         super.destroy();
+    }
+
+    protected restoreItemsInteractivity()
+    {
+        this.interactiveStorage.forEach((element) =>
+        {
+            element.item.eventMode = element.eventMode;
+        });
+
+        this.interactiveStorage.length = 0;
+    }
+
+    protected revertClick(item: DisplayObject)
+    {
+        if (item.eventMode !== 'auto')
+        {
+            utils.isMobile.any
+                ? item.emit('pointerupoutside', null)
+                : item.emit('mouseupoutside', null);
+
+            this.interactiveStorage.push({
+                item,
+                eventMode: item.eventMode,
+            });
+
+            item.eventMode = 'auto';
+        }
+
+        // need to disable click for all children too
+        if (item instanceof Container && item.children)
+        {
+            item.children.forEach((child) => this.revertClick(child));
+        }
     }
 }
