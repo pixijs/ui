@@ -596,6 +596,8 @@
             
                 <li class="parent  " data-name="List.init"><a href=List.html#init>init</a></li>
             
+                <li class="parent  " data-name="List.arrangeChildren"><a href=List.html#arrangeChildren>arrangeChildren</a></li>
+            
             </ul>
             
             <ul class="events itemMembers">
@@ -1139,7 +1141,8 @@
           <div class="class-description"><p>Scrollable view, for arranging lists of Pixi container-based elements.</p></div>
       
       
-          <div class="class-description"><p>Items, that are out of the visible area, are not rendered.</p></div>
+          <div class="class-description"><p>Items, that are out of the visible area, are not rendered by default.
+This behavior can be changed by setting 'disableDynamicRendering' option to true.</p></div>
       
   </div>
 </header>
@@ -1147,6 +1150,406 @@
 <article class="content-size">
     <div class="container-overview">
         
+              
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new ScrollBox
+              
+            </span>
+            <span class="signature">(options)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+            <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                ScrollBoxOptions
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.background</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>background color of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.width</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>width of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.height</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>height of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.radius</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>radius of the ScrollBox and its masks corners.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.elementsMargin</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>margin between elements.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.vertPadding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>vertical padding of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.horPadding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>horizontal padding of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.padding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>padding of the ScrollBox (same horizontal and vertical).</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.disableDynamicRendering</code></td>
+            
+
+            <td class="type">
+            
+                boolean
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>disables dynamic rendering of the ScrollBox,
+so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
         
 
         
@@ -1289,8 +1692,10 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Returns all inner items in a list.</p></p>
     
+    <div class="description">
+        <p>Returns all inner items in a list.</p>
+    </div>
     
 
     
@@ -1407,7 +1812,7 @@
     
     
     <div class="description">
-        <p>Adds an item to a scrollable list.</p>
+        <p>Adds one or more items to a scrollable list.</p>
     </div>
     
 
@@ -1445,7 +1850,7 @@
 
             <td class="type">
             
-                any
+                Container
             
             </td>
 
@@ -1454,7 +1859,7 @@
             
 
             <td class="description last">
-                
+                <p>one or more items to add.</p>
                 
             </td>
         </tr>
@@ -1557,7 +1962,7 @@
     
     
     <div class="description">
-        <p>Add an items to a scrollable list.</p>
+        <p>Adds array of items to a scrollable list.</p>
     </div>
     
 
@@ -1595,7 +2000,7 @@
 
             <td class="type">
             
-                any
+                Array&lt;Container&gt;
             
             </td>
 
@@ -1604,7 +2009,7 @@
             
 
             <td class="description last">
-                
+                <p>items to add.</p>
                 
             </td>
         </tr>
@@ -1802,6 +2207,205 @@
             </td>
         </tr>
     
+
+        <tr>
+            
+                <td class="name"><code>options.background</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>background color of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.width</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>width of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.height</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>height of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.radius</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>radius of the ScrollBox and its masks corners.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.elementsMargin</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>margin between elements.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.vertPadding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>vertical padding of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.horPadding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>horizontal padding of the ScrollBox.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.padding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>padding of the ScrollBox (same horizontal and vertical).</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.disableDynamicRendering</code></td>
+            
+
+            <td class="type">
+            
+                boolean
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>disables dynamic rendering of the ScrollBox,
+so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.</p>
+                
+            </td>
+        </tr>
+    
     </tbody>
 </table>
 
@@ -1918,7 +2522,7 @@
             
 
             <td class="description last">
-                
+                <p>item to check.</p>
                 
             </td>
         </tr>
@@ -2068,7 +2672,7 @@
             
 
             <td class="description last">
-                
+                <p>id of the item to remove.</p>
                 
             </td>
         </tr>
@@ -2681,7 +3285,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Mon Jun 19 2023 17:46:36 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Fri Jun 30 2023 12:23:42 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
