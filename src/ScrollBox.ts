@@ -5,7 +5,6 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import type { ListType } from './List';
 import { List } from './List';
-import ScrollSpring from './utils/trackpad/ScrollSpring';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
 export type ScrollBoxOptions = {
@@ -20,6 +19,7 @@ export type ScrollBoxOptions = {
     vertPadding?: number;
     horPadding?: number;
     padding?: number;
+    disableEasing?: boolean;
 };
 
 /**
@@ -312,8 +312,7 @@ export class ScrollBox extends Container
         if (!this._trackpad)
         {
             this._trackpad = new Trackpad({
-                constrain: true,
-                yEase: new ScrollSpring(),
+                disableEasing: this.options.disableEasing,
             });
         }
 
