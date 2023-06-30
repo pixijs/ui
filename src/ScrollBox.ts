@@ -670,27 +670,11 @@ export class ScrollBox extends Container
 
         this._trackpad.update();
 
-        if (this.options.type === 'horizontal')
+        const type = this.options.type === 'horizontal' ? 'x' : 'y';
+
+        if (this.list[type] !== this._trackpad[type])
         {
-            if (this.list.x !== this._trackpad.x)
-            {
-                this.renderAllItems();
-                this.list.x = this._trackpad.x;
-            }
-            else
-            {
-                this.stopRenderHiddenItems();
-            }
-        }
-        else
-        if (this.list.y !== this._trackpad.y)
-        {
-            this.renderAllItems();
-            this.list.y = this._trackpad.y;
-        }
-        else
-        {
-            this.stopRenderHiddenItems();
+            this.list[type] = this._trackpad[type];
         }
     }
 
