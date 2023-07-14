@@ -50,7 +50,7 @@ export class Button extends ButtonEvents
     {
         const wasItInitiated = !!this._view;
 
-        if (wasItInitiated) this.disconnectEvents(view);
+        if (wasItInitiated) this.disconnectEvents(this._view);
 
         this._view = view;
         this.connectEvents(view);
