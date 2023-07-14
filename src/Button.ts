@@ -45,12 +45,12 @@ export class Button extends ButtonEvents
         this.enabled = true;
     }
 
-    /** Set button view, thar all the interaction events are applied to. */
+    /** Set button view, that all the interaction events are applied to. */
     set view(view: Container)
     {
         const wasItInitiated = !!this._view;
 
-        if (wasItInitiated) this.disconnectEvents(view);
+        if (wasItInitiated) this.disconnectEvents(this._view);
 
         this._view = view;
         this.connectEvents(view);
@@ -109,24 +109,33 @@ export class Button extends ButtonEvents
  */
 export class ButtonContainer extends Mixin(Container, Button)
 {
-    constructor(view?: Container)
+    /**
+     * Creates container and turns it into a button by adding all button events
+     * @param child - child to add to the container
+     */
+    constructor(child?: Container)
     {
         super();
 
-        if (view)
+        this.init(this);
+
+        if (child)
         {
-            this.init(view);
+            this.addChild(child);
         }
+
+        this.enabled = true;
     }
 
-    /**
-     * Initialize button.
-     * @param {Container} view
-     */
-    override init(view: Container)
+    /** Set button view, that all the interaction events are applied to. */
+    // eslint-disable-next-line accessor-pairs
+    override set view(_view: Container)
     {
-        this.addChild(view);
-        this.view = view;
-        this.enabled = true;
+        // Do nothing, because we are the view
+    }
+
+    override get view(): Container
+    {
+        return this;
     }
 }
