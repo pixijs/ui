@@ -3,36 +3,53 @@ import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { Container } from '@pixi/display';
+// import { Graphics, LINE_CAP, LINE_JOIN } from '@pixi/graphics';
 
 const args = {
+    backgroundColor: 'rgba(0, 0, 0, 0.36)',
     fillColor: '#00b1dd',
-    borderColor: '#FFFFFF',
-    backgroundColor: '#fe6048',
+    radius: 100,
+    lineWidth: 20,
     value: 50,
-    radius: 25,
-    border: 3,
+    backgroundAlpha: 0.5,
+    fillAlpha: 0.8,
     animate: true
 };
 
 export const circular: StoryFn = ({
-    value,
-    borderColor,
     backgroundColor,
     fillColor,
     radius,
-    border,
+    lineWidth,
+    value,
+    backgroundAlpha,
+    fillAlpha,
     animate
 }: any) =>
 {
     const view = new Container();
+    // const mask = new Graphics();
+
+    // mask
+    //     .lineStyle({
+    //         width: lineWidth,
+    //         color: 0xFFFFFF,
+    //         join: LINE_JOIN.ROUND,
+    //         cap: LINE_CAP.ROUND,
+    //     })
+    //     .moveTo(-radius, -radius)
+    //     .lineTo(radius, -radius)
+    //     .lineTo(0, radius)
+    //     .closePath();
 
     const progressBar = new CircularProgressBar({
-        fillColor,
-        borderColor,
         backgroundColor,
-        value,
+        lineWidth,
+        fillColor,
         radius,
-        border
+        value,
+        backgroundAlpha,
+        fillAlpha,
     });
 
     view.addChild(progressBar);
@@ -59,7 +76,7 @@ export const circular: StoryFn = ({
             {
                 isFilling = false;
             }
-            else if (value < -50)
+            else if (value <= 0)
             {
                 isFilling = true;
             }
