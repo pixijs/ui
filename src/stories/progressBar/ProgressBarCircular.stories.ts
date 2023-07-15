@@ -2,14 +2,15 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { List } from '../../List';
 import { Container } from '@pixi/display';
 // import { Graphics, LINE_CAP, LINE_JOIN } from '@pixi/graphics';
 
 const args = {
-    backgroundColor: 'rgba(0, 0, 0, 0.36)',
+    backgroundColor: '#3d3d3d',
     fillColor: '#00b1dd',
-    radius: 100,
-    lineWidth: 20,
+    radius: 50,
+    lineWidth: 15,
     value: 50,
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
@@ -28,21 +29,8 @@ export const circular: StoryFn = ({
 }: any) =>
 {
     const view = new Container();
-    // const mask = new Graphics();
 
-    // mask
-    //     .lineStyle({
-    //         width: lineWidth,
-    //         color: 0xFFFFFF,
-    //         join: LINE_JOIN.ROUND,
-    //         cap: LINE_CAP.ROUND,
-    //     })
-    //     .moveTo(-radius, -radius)
-    //     .lineTo(radius, -radius)
-    //     .lineTo(0, radius)
-    //     .closePath();
-
-    const progressBar = new CircularProgressBar({
+    const progressBar1 = new CircularProgressBar({
         backgroundColor,
         lineWidth,
         fillColor,
@@ -50,9 +38,13 @@ export const circular: StoryFn = ({
         value,
         backgroundAlpha,
         fillAlpha,
+        cap: 'round'
     });
 
-    view.addChild(progressBar);
+    progressBar1.x += progressBar1.width / 2;
+    progressBar1.y += -progressBar1.height / 2;
+
+    view.addChild(progressBar1);
 
     let isFilling = true;
 
@@ -81,7 +73,8 @@ export const circular: StoryFn = ({
                 isFilling = true;
             }
 
-            progressBar.progress = value;
+            progressBar1.progress = value;
+            progressBar1.rotation += 0.1;
         }
     };
 };

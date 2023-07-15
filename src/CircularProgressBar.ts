@@ -1,6 +1,6 @@
 import { DEG_TO_RAD } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Graphics, LINE_CAP, LINE_JOIN } from '@pixi/graphics';
+import { Graphics, LINE_CAP } from '@pixi/graphics';
 
 export type MaskedProgressBarOptions = {
     backgroundColor?: number;
@@ -10,6 +10,7 @@ export type MaskedProgressBarOptions = {
     value?: number;
     backgroundAlpha?: number;
     fillAlpha?: number;
+    cap?: 'butt' | 'round' | 'square';
 };
 
 /**
@@ -24,11 +25,12 @@ export type MaskedProgressBarOptions = {
  *     border: 3,
  * });
  */
-export class CircularProgressBar extends Graphics
+export class CircularProgressBar extends Container
 {
     private _progress = 0;
     private options: MaskedProgressBarOptions;
 
+    private bgCircle = new Graphics();
     private fillCircle = new Graphics();
 
     /** Container, that holds all inner views. */
@@ -40,33 +42,44 @@ export class CircularProgressBar extends Graphics
 
         this.options = options;
 
-        this.addChild(this.fillCircle);
-
-        const {
-            backgroundColor,
-            lineWidth,
-            radius,
-            backgroundAlpha,
-        } = options;
-
-        const x = radius + (lineWidth / 2);
-        const y = radius - (lineWidth / 2);
-
-        this.lineStyle({
-            width: lineWidth,
-            color: backgroundColor,
-            join: LINE_JOIN.ROUND,
-            cap: LINE_CAP.ROUND,
-            // we need to render something, to have proper size, so user will be able to align component.
-            alpha: backgroundAlpha > 0 ? backgroundAlpha : 0.0000001
-        }).drawCircle(x, -y, options.radius);
-
         this.addChild(this.innerView);
+
+        this.innerView.addChild(this.bgCircle, this.fillCircle);
+
+        this.drawBackground();
 
         if (options.value)
         {
             this.progress = options.value;
         }
+    }
+
+    private drawBackground()
+    {
+        const {
+            backgroundColor,
+            lineWidth,
+            radius,
+            backgroundAlpha,
+        } = this.options;
+
+        let alpha = 1;
+
+        if (backgroundAlpha > 0)
+        {
+            alpha = backgroundAlpha;
+        }
+
+        if (backgroundColor === undefined)
+        {
+            alpha = 0.000001;
+        }
+
+        this.bgCircle.lineStyle({
+            width: lineWidth,
+            color: backgroundColor,
+            alpha
+        }).drawCircle(0, 0, radius);
     }
 
     /** Set progress value. */
@@ -88,7 +101,8 @@ export class CircularProgressBar extends Graphics
             lineWidth,
             radius,
             fillColor,
-            fillAlpha
+            fillAlpha,
+            cap
         } = this.options;
 
         if (value === 0 && fillAlpha === 0)
@@ -101,19 +115,15 @@ export class CircularProgressBar extends Graphics
         const startAngle = 0;
         const endAngle = 360 / 100 * value;
 
-        const x = radius + (lineWidth / 2);
-        const y = radius - (lineWidth / 2);
-
         this.fillCircle
             .clear()
             .lineStyle({
                 width: lineWidth,
                 color: fillColor,
-                join: LINE_JOIN.ROUND,
-                cap: LINE_CAP.ROUND,
+                cap: cap as LINE_CAP,
                 alpha: fillAlpha
             })
-            .arc(x, -y, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD);
+            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD);
     }
 
     /** Current progress value. */
