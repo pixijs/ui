@@ -8,6 +8,7 @@ import { Tween, Group } from 'tweedle.js';
 import { ButtonContainer } from './Button';
 
 const states = ['default', 'hover', 'pressed', 'disabled'] as const;
+const stateViews = states.map((state) => `${state}View`);
 
 type State = typeof states[number];
 type Pos = { x?: number; y?: number };
@@ -15,18 +16,9 @@ type PosList = { [K in State]?: Pos };
 
 export type Offset = Pos & PosList;
 
-type ViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
+type ViewType = typeof stateViews[number];
 
 type ButtonView = string | Container;
-
-type BasicViewsInput = {
-    [K in ViewType]?: ButtonView;
-};
-
-type ViewsInput = BasicViewsInput & {
-    text?: AnyText;
-    icon?: ButtonView;
-};
 
 type BasicButtonViews = {
     [K in ViewType]?: Container;
@@ -44,12 +36,23 @@ type AnimationData = {
     height?: number;
     scale?: Pos;
 };
+
 type Animation = {
     props: AnimationData;
     duration?: number;
 };
+
 type StateAnimations = {
     [K in State]?: Animation;
+};
+
+type BasicViewsInput = {
+    [K in ViewType]?: ButtonView;
+};
+
+type ViewsInput = BasicViewsInput & {
+    text?: AnyText;
+    icon?: ButtonView;
 };
 
 export type ButtonOptions = ViewsInput & {
