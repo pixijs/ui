@@ -2,9 +2,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
-import { List } from '../../List';
 import { Container } from '@pixi/display';
-// import { Graphics, LINE_CAP, LINE_JOIN } from '@pixi/graphics';
 
 const args = {
     backgroundColor: '#3d3d3d',
@@ -14,7 +12,8 @@ const args = {
     value: 50,
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
-    animate: true
+    animate: true,
+    cap: ['round', 'butt', 'square']
 };
 
 export const circular: StoryFn = ({
@@ -25,7 +24,8 @@ export const circular: StoryFn = ({
     value,
     backgroundAlpha,
     fillAlpha,
-    animate
+    animate,
+    cap
 }: any) =>
 {
     const view = new Container();
@@ -38,7 +38,7 @@ export const circular: StoryFn = ({
         value,
         backgroundAlpha,
         fillAlpha,
-        cap: 'round'
+        cap
     });
 
     progressBar1.x += progressBar1.width / 2;

@@ -46,7 +46,7 @@ export class CircularProgressBar extends Container
 
         this.innerView.addChild(this.bgCircle, this.fillCircle);
 
-        this.drawBackground();
+        this.addBackground();
 
         if (options.value)
         {
@@ -54,7 +54,7 @@ export class CircularProgressBar extends Container
         }
     }
 
-    private drawBackground()
+    private addBackground()
     {
         const {
             backgroundColor,
