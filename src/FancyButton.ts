@@ -713,6 +713,10 @@ export class FancyButton extends ButtonContainer
         });
     }
 
+    /**
+     * Sets the button padding.
+     * @param {number} padding - padding of the button text and icon views.
+     */
     set padding(padding: number)
     {
         this._padding = padding;
@@ -721,11 +725,17 @@ export class FancyButton extends ButtonContainer
         this.adjustIconView(this.state);
     }
 
+    /** Returns the button padding. */
     get padding(): number
     {
         return this._padding;
     }
 
+    /**
+     * Sets the button offset.
+     * @param { [K in State]?: { x?: number; y?: number } } offset - offset of the button.
+     * Can be set for each state of the button.
+     */
     set offset(offset: Offset)
     {
         this._offset = offset;
@@ -733,11 +743,17 @@ export class FancyButton extends ButtonContainer
         this.updateAnchor();
     }
 
+    /** Returns the button offset. */
     get offset(): Offset
     {
         return this._offset;
     }
 
+    /**
+     * Sets the button text offset.
+     * @param { [K in State]?: { x?: number; y?: number } } textOffset - offsets of the button text view.
+     * can be set for each state of the button.
+     */
     set textOffset(textOffset: Offset)
     {
         this._textOffset = textOffset;
@@ -745,6 +761,7 @@ export class FancyButton extends ButtonContainer
         this.adjustTextView(this.state);
     }
 
+    /** Returns the button text offset. */
     get textOffset(): Offset
     {
         return this._textOffset;
