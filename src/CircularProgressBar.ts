@@ -16,7 +16,7 @@ export type MaskedProgressBarOptions = {
 /**
  * Creates a Circular ProgressBar.
  * @example
- * new CircularProgressBar({
+ * const progressBar = new CircularProgressBar({
  *    backgroundColor: 0x000000,
  *    backgroundAlpha: 0.5,
  *    lineWidth: 10,
@@ -25,6 +25,8 @@ export type MaskedProgressBarOptions = {
  *    value: 50,
  *    cap: 'round'
  * });
+ *
+ * progressBar.progress = 100;
  */
 export class CircularProgressBar extends Container
 {
