@@ -7,13 +7,12 @@ import { Container } from '@pixi/display';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { Text } from '@pixi/text';
 import { randomItem } from '../utils/random';
+import { Sprite } from '@pixi/sprite';
 
 const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
     padding: 11,
-    textOffsetX: 0,
-    textOffsetY: -7,
     anchorX: 0.5,
     anchorY: 0.5,
     disabled: false,
@@ -26,8 +25,6 @@ export const DynamicUpdate = ({
     disabled,
     onPress,
     padding,
-    textOffsetX,
-    textOffsetY,
     anchorX,
     anchorY,
 }: any) =>
@@ -35,8 +32,9 @@ export const DynamicUpdate = ({
     const view = new Container();
 
     const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
+    const avatars = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
 
-    preload(assets).then(() =>
+    preload([...assets, ...avatars]).then(() =>
     {
         // Component usage !!!
         const button = new FancyButton();
@@ -44,13 +42,19 @@ export const DynamicUpdate = ({
         button.defaultView = `button.png`;
         button.hoverView = `button_hover.png`;
 
+        let icon = avatars[0];
+
+        button.iconView = Sprite.from(icon);
+        button.iconView.scale.set(0.2);
+        button.iconOffset = { x: -100, y: -7 };
+
         button.textView = new Text(text, {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill
         });
+        button.textOffset = { x: 30, y: -7 };
 
         button.padding = padding;
-        button.textOffset = { x: textOffsetX, y: textOffsetY };
 
         button.anchor.set(anchorX, anchorY);
 
@@ -69,6 +73,19 @@ export const DynamicUpdate = ({
             ].filter((texture) => texture !== currentTexture)) as string;
 
             button.hoverView = currentTexture;
+
+            const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
+            const text = randomItem(texts.filter((text) => text !== button.text)) as string;
+
+            button.textView = new Text(text, { fontSize: 70 });
+
+            icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
+
+            const sprite = Sprite.from(icon);
+
+            sprite.scale.set(0.2);
+
+            button.iconView = sprite;
         });
 
         centerView(view);

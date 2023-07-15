@@ -7,26 +7,23 @@ import { fitToView } from './utils/helpers/fit';
 import { Tween, Group } from 'tweedle.js';
 import { ButtonContainer } from './Button';
 
-const states = ['default', 'hover', 'pressed', 'disabled'] as const;
-const stateViews = states.map((state) => `${state}View`);
-
-type State = typeof states[number];
+type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
 type PosList = { [K in State]?: Pos };
 
 export type Offset = Pos & PosList;
 
-type ViewType = typeof stateViews[number];
+type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
 
 type ButtonView = string | Container;
 
 type BasicButtonViews = {
-    [K in ViewType]?: Container;
+    [K in ButtonViewType]?: Container;
 };
 
 type ButtonViews = BasicButtonViews & {
-    text?: PixiText;
-    icon?: Container;
+    textView?: PixiText;
+    iconView?: Container;
 };
 
 type AnimationData = {
@@ -47,7 +44,7 @@ type StateAnimations = {
 };
 
 type BasicViewsInput = {
-    [K in ViewType]?: ButtonView;
+    [K in ButtonViewType]?: ButtonView;
 };
 
 type ViewsInput = BasicViewsInput & {
@@ -214,26 +211,26 @@ export class FancyButton extends ButtonContainer
     {
         if (!text || text === 0)
         {
-            this.innerView.removeChild(this._views.text);
-            this._views.text = null;
+            this.innerView.removeChild(this._views.textView);
+            this._views.textView = null;
 
             return;
         }
 
-        if (!this._views.text)
+        if (!this._views.textView)
         {
             this.createTextView(text);
 
             return;
         }
 
-        this._views.text.text = text.toString();
+        this._views.textView.text = text.toString();
     }
 
     /** Returns the text string of the button text element. */
     get text(): string | undefined
     {
-        return this._views.text?.text;
+        return this._views.textView?.text;
     }
 
     /**
@@ -294,9 +291,9 @@ export class FancyButton extends ButtonContainer
      */
     protected createTextView(text: AnyText)
     {
-        this._views.text = getTextView(text);
-        this._views.text.anchor.set(0);
-        this.innerView.addChild(this._views.text);
+        this._views.textView = getTextView(text);
+        this._views.textView.anchor.set(0);
+        this.innerView.addChild(this._views.textView);
 
         this.adjustTextView(this.state);
     }
@@ -370,15 +367,15 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            fitToView(activeView, this._views.text, this.padding);
+            fitToView(activeView, this._views.textView, this.padding);
 
-            this._views.text.x = activeView.x + (activeView.width / 2);
-            this._views.text.y = activeView.y + (activeView.height / 2);
+            this._views.textView.x = activeView.x + (activeView.width / 2);
+            this._views.textView.y = activeView.y + (activeView.height / 2);
         }
 
-        this._views.text.anchor.set(0.5);
+        this._views.textView.anchor.set(0.5);
 
-        this.setOffset(this._views.text, state, this.textOffset);
+        this.setOffset(this._views.textView, state, this.textOffset);
     }
 
     /**
@@ -387,21 +384,21 @@ export class FancyButton extends ButtonContainer
      */
     protected adjustIconView(state: State)
     {
-        if (!this._views.icon)
+        if (!this._views.iconView)
         {
             return;
         }
 
         const activeView = this.getStateView(state);
 
-        fitToView(activeView, this._views.icon, this.padding);
+        fitToView(activeView, this._views.iconView, this.padding);
 
-        (this._views.icon as Sprite).anchor?.set(0);
+        (this._views.iconView as Sprite).anchor?.set(0);
 
-        this._views.icon.x = activeView.x + (activeView.width / 2) - (this._views.icon.width / 2);
-        this._views.icon.y = activeView.y + (activeView.height / 2) - (this._views.icon.height / 2);
+        this._views.iconView.x = activeView.x + (activeView.width / 2) - (this._views.iconView.width / 2);
+        this._views.iconView.y = activeView.y + (activeView.height / 2) - (this._views.iconView.height / 2);
 
-        this.setOffset(this._views.icon, state, this.iconOffset);
+        this.setOffset(this._views.iconView, state, this.iconOffset);
     }
 
     /**
@@ -505,15 +502,16 @@ export class FancyButton extends ButtonContainer
         return this._views.disabledView;
     }
 
-    private updateView(viewType: ViewType, view: ButtonView | null)
+    /**
+     * Helper method to update or cleanup button views.
+     * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
+     * @param { string | Container | null } view - new view
+     */
+    protected updateView(viewType: ButtonViewType, view: ButtonView | null)
     {
         if (view === undefined) return;
 
-        if (this._views[viewType])
-        {
-            this.innerView.removeChild(this._views[viewType]);
-            this._views[viewType] = null;
-        }
+        this.removeView(viewType);
 
         if (view === null)
         {
@@ -531,29 +529,57 @@ export class FancyButton extends ButtonContainer
 
         this.updateAnchor();
 
-        if (this._views.text)
+        if (this._views.iconView)
+        {
+            // pace icon on top of the view
+            this.innerView.addChild(this._views.iconView);
+        }
+
+        if (this._views.textView)
         {
             // pace text on top of the view
-            this.innerView.addChild(this._views.text);
+            this.innerView.addChild(this._views.textView);
         }
 
         this.setState(this.state, true);
     }
 
     /**
+     * Removes button view by type
+     * @param {'defaultView' | 'hoverView' | 'pressedView' | 'disabledView'} viewType - type of the view to remove
+     */
+    removeView(viewType: ButtonViewType | 'textView' | 'iconView')
+    {
+        if (this._views[viewType])
+        {
+            this.innerView.removeChild(this._views[viewType]);
+            this._views[viewType] = null;
+        }
+    }
+
+    /**
      * Sets the textView of the button.
      * @param { string | number | Text | BitmapText | HTMLText } text - string, text or pixi text instance.
      */
-    set textView(text: AnyText)
+    set textView(text: AnyText | null)
     {
+        if (text === undefined) return;
+
+        this.removeView('textView');
+
+        if (text === null)
+        {
+            return;
+        }
+
         if (text)
         {
             this.createTextView(text);
         }
-        else if (text === null && this._views.text)
+        else if (text === null && this._views.textView)
         {
-            this.innerView.removeChild(this._views.text);
-            this._views.text = null;
+            this.innerView.removeChild(this._views.textView);
+            this._views.textView = null;
         }
 
         this.setState(this.state, true);
@@ -562,7 +588,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the text view of the button. */
     get textView(): Container | undefined
     {
-        return this._views.text;
+        return this._views.textView;
     }
 
     /**
@@ -571,19 +597,20 @@ export class FancyButton extends ButtonContainer
      */
     set iconView(view: ButtonView | null)
     {
-        if (view)
-        {
-            this._views.icon = getView(view);
+        if (view === undefined) return;
 
-            if (!this._views.icon.parent)
-            {
-                this.innerView.addChild(this._views.icon);
-            }
-        }
-        else if (view === null && this._views.icon)
+        this.removeView('iconView');
+
+        if (view === null)
         {
-            this.innerView.removeChild(this._views.icon);
-            this._views.icon = null;
+            return;
+        }
+
+        this._views.iconView = getView(view);
+
+        if (!this._views.iconView.parent)
+        {
+            this.innerView.addChild(this._views.iconView);
         }
 
         this.updateAnchor();
@@ -593,7 +620,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the icon view of the button. */
     get iconView(): Container | undefined
     {
-        return this._views.icon;
+        return this._views.iconView;
     }
 
     /**
