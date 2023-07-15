@@ -211,8 +211,7 @@ export class FancyButton extends ButtonContainer
     {
         if (!text || text === 0)
         {
-            this.innerView.removeChild(this._views.textView);
-            this._views.textView = null;
+            this.removeView('textView');
 
             return;
         }
@@ -572,16 +571,7 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (text)
-        {
-            this.createTextView(text);
-        }
-        else if (text === null && this._views.textView)
-        {
-            this.innerView.removeChild(this._views.textView);
-            this._views.textView = null;
-        }
-
+        this.createTextView(text);
         this.setState(this.state, true);
     }
 
