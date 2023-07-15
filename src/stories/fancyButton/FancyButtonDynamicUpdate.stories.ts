@@ -6,6 +6,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { Text } from '@pixi/text';
+import { randomItem } from '../utils/random';
 
 const args = {
     text: 'Click me!',
@@ -40,14 +41,8 @@ export const DynamicUpdate = ({
         // Component usage !!!
         const button = new FancyButton();
 
-        button.anchor.set(anchorX, anchorY);
-
-        if (disabled)
-        {
-            button.enabled = false;
-        }
-
-        button.defaultView = `button_disabled.png`;
+        button.defaultView = `button.png`;
+        button.hoverView = `button_hover.png`;
 
         button.textView = new Text(text, {
             ...defaultTextStyle,
@@ -57,20 +52,23 @@ export const DynamicUpdate = ({
         button.padding = padding;
         button.textOffset = { x: textOffsetX, y: textOffsetY };
 
+        button.anchor.set(anchorX, anchorY);
+
+        button.enabled = !disabled;
+
         button.onPress.connect(onPress);
+
+        let currentTexture = 'button_hover.png';
+
         button.onUp.connect(() =>
         {
-            button.defaultView = `button.png`;
+            currentTexture = randomItem([
+                `button_hover.png`,
+                `button_pressed.png`,
+                `button_disabled.png`
+            ].filter((texture) => texture !== currentTexture)) as string;
 
-            // button.views = {
-            //     hoverView: `button_hover.png`,
-            //     pressedView: `button_pressed.png`,
-            //     disabledView: `button_disabled.png`,
-            //     // text: new Text(text, {
-            //     //     ...defaultTextStyle,
-            //     //     fill: textColor || defaultTextStyle.fill
-            //     // }),
-            // };
+            button.hoverView = currentTexture;
         });
 
         centerView(view);

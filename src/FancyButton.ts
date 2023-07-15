@@ -17,13 +17,15 @@ export type Offset = Pos & PosList;
 
 type ViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
 
+type ButtonView = string | Container;
+
 type BasicViewsInput = {
-    [K in ViewType]?: string | Container;
+    [K in ViewType]?: ButtonView;
 };
 
 type ViewsInput = BasicViewsInput & {
     text?: AnyText;
-    icon?: string | Container;
+    icon?: ButtonView;
 };
 
 type BasicButtonViews = {
@@ -189,14 +191,12 @@ export class FancyButton extends ButtonContainer
             Ticker.shared.add(() => Group.shared.update());
         }
 
-        this.views = {
-            defaultView,
-            hoverView,
-            pressedView,
-            disabledView,
-            text,
-            icon
-        };
+        this.defaultView = defaultView;
+        this.hoverView = hoverView;
+        this.pressedView = pressedView;
+        this.disabledView = disabledView;
+        this.textView = text;
+        this.iconView = icon;
 
         this.setState('default');
 
@@ -437,138 +437,104 @@ export class FancyButton extends ButtonContainer
     }
 
     /**
-     * Set button views according to the config.
-     * If state view is not set (undefined), it will not be changed,
-     * so if it was set before, it will remain the same.
-     * If state view is set to null, it will be removed from the button.
-     * If state view is set it will be updated or added to a button.
-     * @param {ViewsInput} views
-     */
-    // eslint-disable-next-line accessor-pairs
-    set views(views: ViewsInput)
-    {
-        const { defaultView, hoverView, pressedView, disabledView, text, icon } = views;
-
-        if (defaultView !== undefined)
-        {
-            this.defaultView = defaultView;
-        }
-
-        if (hoverView)
-        {
-            this._views.hoverView = getView(hoverView);
-
-            if (!this._views.hoverView.parent)
-            {
-                this.innerView.addChild(this._views.hoverView);
-            }
-
-            this._views.hoverView.visible = false;
-        }
-        else if (hoverView === null && this._views.hoverView)
-        {
-            this.innerView.removeChild(this._views.hoverView);
-            this._views.hoverView = null;
-        }
-
-        if (pressedView)
-        {
-            this._views.pressedView = getView(pressedView);
-
-            if (!this._views.pressedView.parent)
-            {
-                this.innerView.addChild(this._views.pressedView);
-            }
-
-            this._views.pressedView.visible = false;
-        }
-        else if (pressedView === null && this._views.pressedView)
-        {
-            this.innerView.removeChild(this._views.pressedView);
-            this._views.pressedView = null;
-        }
-
-        if (disabledView)
-        {
-            this._views.disabledView = getView(disabledView);
-
-            if (!this._views.disabledView.parent)
-            {
-                this.innerView.addChild(this._views.disabledView);
-            }
-
-            this._views.disabledView.visible = false;
-        }
-        else if (disabledView === null && this._views.disabledView)
-        {
-            this.innerView.removeChild(this._views.disabledView);
-            this._views.disabledView = null;
-        }
-
-        if (icon)
-        {
-            this._views.icon = getView(icon);
-
-            if (!this._views.icon.parent)
-            {
-                this.innerView.addChild(this._views.icon);
-            }
-        }
-        else if (icon === null && this._views.icon)
-        {
-            this.innerView.removeChild(this._views.icon);
-            this._views.icon = null;
-        }
-
-        if (text)
-        {
-            this.createTextView(text);
-        }
-        else if (text === null && this._views.text)
-        {
-            this.innerView.removeChild(this._views.text);
-            this._views.text = null;
-        }
-
-        this.updateAnchor();
-
-        if (this._views.text)
-        {
-            this._views.text.zIndex = Object.keys(this._views).length;
-        }
-
-        this.setState(this.state, true);
-    }
-
-    /**
      * Sets the default view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set defaultView(view: string | Container | null)
+    set defaultView(view: ButtonView | null)
     {
-        if (this._views.defaultView)
-        {
-            this.innerView.removeChild(this._views.defaultView);
-            this._views.defaultView = null;
-        }
-
-        this._views.defaultView = getView(view);
-
-        this.setOffset(this._views.defaultView, 'default', this.offset);
-
-        if (!this._views.defaultView.parent)
-        {
-            this.innerView.addChild(this._views.defaultView);
-        }
-
-        this.updateAnchor();
-        this.setState(this.state, true);
+        this.updateView('defaultView', view);
     }
 
     /** Returns the default view of the button. */
     get defaultView(): Container | undefined
     {
         return this._views.defaultView;
+    }
+
+    /**
+     * Sets the hover view of the button.
+     * @param { string | Container } view - string (path to the image) or a Container-based view
+     */
+    set hoverView(view: ButtonView | null)
+    {
+        this.updateView('hoverView', view);
+        if (this._views.hoverView && this.state !== 'hover')
+        {
+            this._views.hoverView.visible = false;
+        }
+    }
+
+    /** Returns the hover view of the button. */
+    get hoverView(): Container | undefined
+    {
+        return this._views.hoverView;
+    }
+
+    /** Sets the pressed view of the button. */
+    set pressedView(view: ButtonView | null)
+    {
+        this.updateView('pressedView', view);
+        if (this._views.pressedView)
+        {
+            this._views.pressedView.visible = false;
+        }
+    }
+
+    /** Returns the pressed view of the button. */
+    get pressedView(): Container | undefined
+    {
+        return this._views.pressedView;
+    }
+
+    /** Sets the disabled view of the button. */
+    set disabledView(view: ButtonView | null)
+    {
+        this.updateView('disabledView', view);
+        if (this._views.disabledView)
+        {
+            this._views.disabledView.visible = false;
+        }
+    }
+
+    /** Returns the disabled view of the button. */
+    get disabledView(): Container | undefined
+    {
+        return this._views.disabledView;
+    }
+
+    private updateView(viewType: ViewType, view: ButtonView | null)
+    {
+        if (view === undefined) return;
+
+        if (this._views[viewType])
+        {
+            this.innerView.removeChild(this._views[viewType]);
+            this._views[viewType] = null;
+        }
+
+        if (view === null)
+        {
+            return;
+        }
+
+        this._views[viewType] = getView(view);
+
+        this.setOffset(this._views[viewType], this.state, this.offset);
+
+        if (!this._views[viewType].parent)
+        {
+            this.innerView.addChild(this._views[viewType]);
+        }
+
+        this.updateAnchor();
+
+        if (this._views.text)
+        {
+            // pace text on top of the view
+            this.innerView.addChild(this._views.text);
+        }
+
+        this.setState(this.state, true);
     }
 
     /**
@@ -587,13 +553,6 @@ export class FancyButton extends ButtonContainer
             this._views.text = null;
         }
 
-        this.updateAnchor();
-
-        if (this._views.text)
-        {
-            this._views.text.zIndex = 10000;
-        }
-
         this.setState(this.state, true);
     }
 
@@ -601,6 +560,37 @@ export class FancyButton extends ButtonContainer
     get textView(): Container | undefined
     {
         return this._views.text;
+    }
+
+    /**
+     * Sets the iconView of the button.
+     * @param { string | Container } view - string (path to the image) or a Container-based view
+     */
+    set iconView(view: ButtonView | null)
+    {
+        if (view)
+        {
+            this._views.icon = getView(view);
+
+            if (!this._views.icon.parent)
+            {
+                this.innerView.addChild(this._views.icon);
+            }
+        }
+        else if (view === null && this._views.icon)
+        {
+            this.innerView.removeChild(this._views.icon);
+            this._views.icon = null;
+        }
+
+        this.updateAnchor();
+        this.setState(this.state, true);
+    }
+
+    /** Returns the icon view of the button. */
+    get iconView(): Container | undefined
+    {
+        return this._views.icon;
     }
 
     /**
