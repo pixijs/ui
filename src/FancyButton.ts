@@ -530,13 +530,13 @@ export class FancyButton extends ButtonContainer
 
         if (this._views.iconView)
         {
-            // pace icon on top of the view
+            // place icon on top of the view
             this.innerView.addChild(this._views.iconView);
         }
 
         if (this._views.textView)
         {
-            // pace text on top of the view
+            // place text on top of the view
             this.innerView.addChild(this._views.textView);
         }
 
