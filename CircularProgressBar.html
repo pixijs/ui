@@ -1166,7 +1166,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="FancyButton.html">Class: FancyButton</h1>
+        <h1 class="page-title" data-filename="CircularProgressBar.html">Class: CircularProgressBar</h1>
         
 
 
@@ -1175,18 +1175,14 @@
 <header>
   <div class="header content-size">
       <h2>
-        FancyButton
+        CircularProgressBar
 
         
       </h2>
 
       
-          <div class="class-description"><p>Button component with a lots of tweaks, to create a button fast.</p></div>
       
-      
-          <div class="class-description"><p>By default text view and icon view are centered in the active view.</p>
-<p>If views are not the same size, offset property of the constructor
-can be used to adjust the position of the text, icon and the views.</p></div>
+          <div class="class-description"><p>Creates a Circular ProgressBar.</p></div>
       
   </div>
 </header>
@@ -1201,7 +1197,7 @@ can be used to adjust the position of the text, icon and the views.</p></div>
             <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  new FancyButton
+                  new CircularProgressBar
               
             </span>
             <span class="signature">(options)</span><span class="type-signature"></span>
@@ -1218,7 +1214,7 @@ can be used to adjust the position of the text, icon and the views.</p></div>
     
     
     <div class="description">
-        <p>Turns a given container-based view into a button by adding all button events.</p>
+        <p>Creates a Circular ProgressBar.</p>
     </div>
     
 
@@ -1239,6 +1235,8 @@ can be used to adjust the position of the text, icon and the views.</p></div>
         <th>Type</th>
 
         
+            <th>Attributes</th>
+        
 
         
 
@@ -1256,16 +1254,26 @@ can be used to adjust the position of the text, icon and the views.</p></div>
 
             <td class="type">
             
-                object
+                number
             
             </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
             
 
             
 
             <td class="description last">
-                <p>Button options.</p>
+                <p>Options object to use.</p>
                 
             </td>
         </tr>
@@ -1273,139 +1281,7 @@ can be used to adjust the position of the text, icon and the views.</p></div>
 
         <tr>
             
-                <td class="name"><code>options.defaultView</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Container-based view that is shown when non of the button events are active.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.hoverView</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Container-based view that is shown when the mouse hovers over the button.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.pressedView</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Container-based view, shown when the mouse press on the component.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.disabledView</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Container-based view shown when the button is disabled.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.icon</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Container-based view for the button icon.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.text</code></td>
-            
-
-            <td class="type">
-            
-                Text
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Text-based view for the button text.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.padding</code></td>
+                <td class="name"><code>options.backgroundColor</code></td>
             
 
             <td class="type">
@@ -1415,12 +1291,19 @@ can be used to adjust the position of the text, icon and the views.</p></div>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">
-                <p>Padding of the button text and icon views.
-If button text or icon does not fit active view + padding it will scale down to fit.</p>
+                <p>Background color.</p>
                 
             </td>
         </tr>
@@ -1428,73 +1311,7 @@ If button text or icon does not fit active view + padding it will scale down to 
 
         <tr>
             
-                <td class="name"><code>options.offset</code></td>
-            
-
-            <td class="type">
-            
-                Point
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Offset of the button state views.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.textOffset</code></td>
-            
-
-            <td class="type">
-            
-                Point
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Offset of the text view.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.iconOffset</code></td>
-            
-
-            <td class="type">
-            
-                Point
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Offset of the icon view.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.scale</code></td>
+                <td class="name"><code>options.fillColor</code></td>
             
 
             <td class="type">
@@ -1504,12 +1321,19 @@ If button text or icon does not fit active view + padding it will scale down to 
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">
-                <p>Scale of the button. Scale will be applied to a main container,
-when all animations scales will be applied to the inner view.</p>
+                <p>Fill color.</p>
                 
             </td>
         </tr>
@@ -1517,7 +1341,7 @@ when all animations scales will be applied to the inner view.</p>
 
         <tr>
             
-                <td class="name"><code>options.anchor</code></td>
+                <td class="name"><code>options.lineWidth</code></td>
             
 
             <td class="type">
@@ -1527,11 +1351,19 @@ when all animations scales will be applied to the inner view.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">
-                <p>Anchor point of the button.</p>
+                <p>Line width.</p>
                 
             </td>
         </tr>
@@ -1539,7 +1371,7 @@ when all animations scales will be applied to the inner view.</p>
 
         <tr>
             
-                <td class="name"><code>options.anchorX</code></td>
+                <td class="name"><code>options.radius</code></td>
             
 
             <td class="type">
@@ -1549,11 +1381,19 @@ when all animations scales will be applied to the inner view.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">
-                <p>Horizontal anchor point of the button.</p>
+                <p>Radius.</p>
                 
             </td>
         </tr>
@@ -1561,7 +1401,7 @@ when all animations scales will be applied to the inner view.</p>
 
         <tr>
             
-                <td class="name"><code>options.anchorY</code></td>
+                <td class="name"><code>options.value</code></td>
             
 
             <td class="type">
@@ -1571,11 +1411,19 @@ when all animations scales will be applied to the inner view.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">
-                <p>Vertical anchor point of the button.</p>
+                <p>Progress value.</p>
                 
             </td>
         </tr>
@@ -1583,19 +1431,89 @@ when all animations scales will be applied to the inner view.</p>
 
         <tr>
             
-                <td class="name"><code>options.animations</code></td>
+                <td class="name"><code>options.backgroundAlpha</code></td>
             
 
             <td class="type">
             
+                number
+            
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
 
             <td class="description last">
-                <p>Animations that will be played when the button state changes.</p>
+                <p>Background alpha.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.fillAlpha</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>Fill alpha.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.cap</code></td>
+            
+
+            <td class="type">
+            
+                'butt' | 'round' | 'square'
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <p>Line cap.</p>
                 
             </td>
         </tr>
@@ -1676,34 +1594,17 @@ when all animations scales will be applied to the inner view.</p>
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code> const button = new FancyButton({
-     defaultView: `button.png`,
-     hoverView: `button_hover.png`,
-     pressedView: `button_pressed.png`,
-     text: new Text('Click me!'),
-     animations: {
-          hover: {
-              props: {
-                  scale: {
-                      x: 1.1,
-                      y: 1.1,
-                  }
-              },
-              duration: 100,
-          },
-          pressed: {
-              props: {
-                  scale: {
-                      x: 0.9,
-                      y: 0.9,
-                  }
-              },
-              duration: 100,
-          }
-      }
+    <pre class="prettyprint"><code> const progressBar = new CircularProgressBar({
+    backgroundColor: 0x000000,
+    backgroundAlpha: 0.5,
+    lineWidth: 10,
+    fillColor: 0xFFFFFF,
+    radius: 50,
+    value: 50,
+    cap: 'round'
  });
 
- button.onPress.connect(() => console.log('Button pressed!'));</code></pre>
+ progressBar.progress = 100;</code></pre>
 
         
     </div>
@@ -1740,10 +1641,10 @@ when all animations scales will be applied to the inner view.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="anchor">
-            <a class="share-icon" href="#anchor"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">anchor</span>
-            <span class="type-signature type">ObservablePoint</span>
+        <h4 class="name" id="innerView">
+            <a class="share-icon" href="#innerView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">innerView</span>
+            <span class="type-signature"></span>
             
             
             
@@ -1753,7 +1654,7 @@ when all animations scales will be applied to the inner view.</p>
 </dt>
 <dd>
     
-      <p class="description"><p>Anchor point of the button.</p></p>
+      <p class="description"><p>Container, that holds all inner views.</p></p>
     
     
 
@@ -1790,9 +1691,9 @@ when all animations scales will be applied to the inner view.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="enabled">
-            <a class="share-icon" href="#enabled"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">enabled</span>
+        <h4 class="name" id="progress">
+            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">progress</span>
             <span class="type-signature"></span>
             
             
@@ -1805,7 +1706,7 @@ when all animations scales will be applied to the inner view.</p>
     
     
     <div class="description">
-        <p>Setter, that prevents all button events from firing.</p>
+        <p>Set progress value.</p>
     </div>
     
 
@@ -1842,465 +1743,9 @@ when all animations scales will be applied to the inner view.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="enabled">
-            <a class="share-icon" href="#enabled"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">enabled</span>
-            <span class="type-signature type">boolean</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Getter that returns button state, that controls if button events are firing.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="iconOffset">
-            <a class="share-icon" href="#iconOffset"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">iconOffset</span>
-            <span class="type-signature type">Offset</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Offset of the icon view. Can be set to any state of the button.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="offset">
-            <a class="share-icon" href="#offset"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">offset</span>
-            <span class="type-signature type">Offset & Pos</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Offset of the button state views. If state views have different sizes, this option can help adjust them.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onDown">
-            <a class="share-icon" href="#onDown"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onDown</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Event that is fired when the button is down.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onHover">
-            <a class="share-icon" href="#onHover"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onHover</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Event that is fired when the mouse hovers the button. Fired only if device is not mobile.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onOut">
-            <a class="share-icon" href="#onOut"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onOut</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Event that fired when the mouse is out of the view</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onPress">
-            <a class="share-icon" href="#onPress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onPress</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Event that is fired when the button is pressed.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onUp">
-            <a class="share-icon" href="#onUp"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onUp</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Event that fired when a down event happened inside the button
-and up event happened inside or outside of the button</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="onUpOut">
-            <a class="share-icon" href="#onUpOut"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">onUpOut</span>
-            <span class="type-signature type">Signal&lt;(btn: FederatedPointerEvent, e: this) =&gt; void&gt;</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Event that fired when mouse up event happens outside of the button
-after the down event happened inside the button boundaries.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="padding">
-            <a class="share-icon" href="#padding"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">padding</span>
+        <h4 class="name" id="progress">
+            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">progress</span>
             <span class="type-signature type">number</span>
             
             
@@ -2311,265 +1756,9 @@ after the down event happened inside the button boundaries.</p>
 </dt>
 <dd>
     
-      <p class="description"><p>Padding of the button text view. If button text does not fit active view + padding it will scale down to fit.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="state">
-            <a class="share-icon" href="#state"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">state</span>
-            <span class="type-signature type">State</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled'</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="text">
-            <a class="share-icon" href="#text"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">text</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
     
     <div class="description">
-        <p>Updates the text of the button and updates its scaling basing on the new size.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="text">
-            <a class="share-icon" href="#text"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">text</span>
-            <span class="type-signature type">string | undefined</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Returns the text string of the button text element.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="textOffset">
-            <a class="share-icon" href="#textOffset"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">textOffset</span>
-            <span class="type-signature type">Offset</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Offset of the text view. Can be set to any state of the button.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="views">
-            <a class="share-icon" href="#views"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">views</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set button views according to the config.
-If state view is not set (undefined), it will not be changed,
-so if it was set before, it will remain the same.
-If state view is set to null, it will be removed from the button.
-If state view is set it will be updated or added to a button.</p>
+        <p>Current progress value.</p>
     </div>
     
 
@@ -2609,1888 +1798,6 @@ If state view is set it will be updated or added to a button.</p>
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="down">
-            <a class="share-icon" href="#down"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  down
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the button pressed.
-To be overridden.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="hover">
-            <a class="share-icon" href="#hover"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  hover
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the mouse hovers the button.
-To be overridden.
-Fired only if device is not mobile.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="out">
-            <a class="share-icon" href="#out"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  out
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the mouse leaves the button.
-To be overridden.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="press">
-            <a class="share-icon" href="#press"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  press
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the mouse press down the button.
-To be overridden.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="setState">
-            <a class="share-icon" href="#setState"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  setState
-              
-            </span>
-            <span class="signature">(newState)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Updates button state and shows the according views.</p></p>
-    
-    
-    <div class="description">
-        <p>Updates positions and offsets of the views.</p>
-<p>Plays animations if they are set.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>newState</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="up">
-            <a class="share-icon" href="#up"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  up
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the button is up.
-To be overridden.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="upOut">
-            <a class="share-icon" href="#upOut"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  upOut
-              
-            </span>
-            <span class="signature">(_e)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Method called when the up event happens outside of the button,
-after the down event happened inside the button boundaries.
-To be overridden.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_e</code></td>
-            
-
-            <td class="type">
-            
-                FederatedPointerEvent
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>event data</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addEvents">
-            <a class="share-icon" href="#addEvents"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  addEvents
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Creates all button events</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="adjustIconView">
-            <a class="share-icon" href="#adjustIconView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  adjustIconView
-              
-            </span>
-            <span class="signature">(state)</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adjusts icon view position and scale.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>state</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="adjustTextView">
-            <a class="share-icon" href="#adjustTextView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  adjustTextView
-              
-            </span>
-            <span class="signature">(state)</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adjusts text view position and scale.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>state</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="createTextView">
-            <a class="share-icon" href="#createTextView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  createTextView
-              
-            </span>
-            <span class="signature">(text)</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Manage button text view.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                string | Text
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>can be a string, Text, BitmapText ot HTMLText (Container-based element).</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getStateView">
-            <a class="share-icon" href="#getStateView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  getStateView
-              
-            </span>
-            <span class="signature">(state)</span><span class="type-signature"> Container | undefined</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns active view for the state.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>state</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h5>Returns:</h5>
-      
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                    Container | undefined
-            
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="playAnimations">
-            <a class="share-icon" href="#playAnimations"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  playAnimations
-              
-            </span>
-            <span class="signature">(state)</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Starts animation for the current button state if configured.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>state</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="setOffset">
-            <a class="share-icon" href="#setOffset"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  setOffset
-              
-            </span>
-            <span class="signature">(view, state, offset)</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Manages views offsets if it's set.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>view</code></td>
-            
-
-            <td class="type">
-            
-                Container
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>state</code></td>
-            
-
-            <td class="type">
-            
-                State
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                Offset
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="updateAnchor">
-            <a class="share-icon" href="#updateAnchor"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  updateAnchor
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Reset views positions according to the button anchor setting.
-We have to set the anchor position for each view individually, as each of them
-can be a different type of view (container without anchor, sprite with anchor, etc)
-we have to reset all anchors to 0,0 and then set the positions manually.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
     
 
     
