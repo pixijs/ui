@@ -195,7 +195,7 @@ export class FancyButton extends ButtonContainer
         this.hoverView = hoverView;
         this.pressedView = pressedView;
         this.disabledView = disabledView;
-        this.textView = text;
+        this.text = text;
         this.iconView = icon;
 
         this.setState('default');
@@ -207,7 +207,7 @@ export class FancyButton extends ButtonContainer
      * Updates the text of the button and updates its scaling basing on the new size.
      * @param {string | number} text
      */
-    set text(text: string | number | null)
+    set text(text: AnyText)
     {
         if (!text || text === 0)
         {
@@ -558,25 +558,27 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets the textView of the button.
-     * @param { string | number | Text | BitmapText | HTMLText } text - string, text or pixi text instance.
+     * @param { string | number | PixiText | Text | BitmapText | HTMLText } textView - string, text or pixi text instance.
      */
-    set textView(text: AnyText | null)
+    set textView(textView: AnyText | null)
     {
-        if (text === undefined) return;
+        if (textView === undefined) return;
 
         this.removeView('textView');
 
-        if (text === null)
+        if (textView === null)
         {
             return;
         }
 
-        this.createTextView(text);
-        this.setState(this.state, true);
+        this.createTextView(textView);
     }
 
-    /** Returns the text view of the button. */
-    get textView(): Container | undefined
+    /**
+     * Returns the text view of the button.
+     * @returns { string | number | PixiText | Text | BitmapText | HTMLText | undefined }
+     */
+    get textView(): PixiText | undefined
     {
         return this._views.textView;
     }
@@ -733,7 +735,7 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets the button offset.
-     * @param { [K in State]?: { x?: number; y?: number } } offset - offset of the button.
+     * @param { { x?: number; y?: number } } offset - offset of the button.
      * Can be set for each state of the button.
      */
     set offset(offset: Offset)
@@ -751,7 +753,7 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets the button text offset.
-     * @param { [K in State]?: { x?: number; y?: number } } textOffset - offsets of the button text view.
+     * @param { { x?: number; y?: number } } textOffset - offsets of the button text view.
      * can be set for each state of the button.
      */
     set textOffset(textOffset: Offset)
