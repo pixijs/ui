@@ -576,7 +576,7 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Returns the text view of the button.
-     * @returns { string | number | PixiText | Text | BitmapText | HTMLText | undefined }
+     * @returns pixi text instance or undefined.
      */
     get textView(): PixiText | undefined
     {
