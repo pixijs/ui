@@ -18,11 +18,44 @@ npm install @pixi/ui
 
 There is no default export. The correct way to import pixi-ui is:
 
+## Usage
 ```js
-import { Button, ScrollBox } from '@pixi/ui';
+import { Button } from '@pixi/ui';
+
+const button = new Button();
+
+button.onPress.connect(() => console.log('Button pressed!') );
 ```
 
-To use any of the components you can go to it's page and copy/paste the example code to your project.
+To use any of the components you can go to it's page in the [https://pixijs.io/ui/storybook/](sandbox),
+and copy/paste the example code to your project (check the `Code` tab):
+
+## Components
+
+-  [Switcher](https://pixijs.io/ui/storybook/?path=/story/components-switcher-sprites--sprites)
+-  [Button](https://pixijs.io/ui/storybook/?path=/story/components-button-button-container-sprite--button-container-sprite)
+-  [CheckBox](https://pixijs.io/ui/storybook/?path=/story/components-checkbox-use-graphics--use-graphics)
+-  [FancyButton](https://pixijs.io/ui/storybook/?path=/story/components-fancybutton-using-sprite-and-bitmaptext--using-sprite-and-bitmap-text)
+-  [Input](https://pixijs.io/ui/storybook/?path=/story/components-input-use-graphics--use-graphics)
+-  [List](https://pixijs.io/ui/storybook/?path=/story/components-list-use-graphics--use-graphics)
+-  [MaskedFrame](https://pixijs.io/ui/storybook/?path=/story/components-maskedframe-use-graphics--use-graphics)
+-  [ProgressBar](https://pixijs.io/ui/storybook/?path=/story/components-progressbar-circular--circular)
+-  [RadioGroup](https://pixijs.io/ui/storybook/?path=/story/components-radiogroup-use-graphics--use-graphics)
+-  [ScrollBox](https://pixijs.io/ui/storybook/?path=/story/components-scrollbox-use-graphics--use-graphics)
+-  [Select](https://pixijs.io/ui/storybook/?path=/story/components-select-use-graphics--use-graphics)
+-  [Slider](https://pixijs.io/ui/storybook/?path=/story/components-slider-graphics--double)
+
+**We are now a part of the [Open Collective](https://opencollective.com/pixijs) and with your support you can help us make PixiJS even better. To make a donation, simply click the button below and we'll love you forever!**
+
+### Contribute ###
+
+Want to be part of the PixiUI project? Great! All are welcome! We will get there quicker
+together :) Whether you find a bug, have a great feature request, or you fancy owning a task
+from the road map above, feel free to get in touch.
+
+### License ###
+
+This content is released under the (http://opensource.org/licenses/MIT) MIT License.
 
 ## Known Issues
 
