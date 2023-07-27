@@ -10,6 +10,8 @@ Here are some useful resources:
 -   [Github Repo](https://github.com/pixijs/ui)
 -   [Sandbox](https://pixijs.io/ui/storybook/)
 
+**We are now a part of the [Open Collective](https://opencollective.com/pixijs) and with your support you can help us make PixiJS even better. To make a donation, simply click the button below and we'll love you forever!**
+
 ## Install
 
 ```sh
@@ -27,7 +29,7 @@ const button = new Button();
 button.onPress.connect(() => console.log('Button pressed!') );
 ```
 
-To use any of the components you can go to it's page in the [https://pixijs.io/ui/storybook/](sandbox),
+To use any of the components you can go to it's page in the [sandbox](https://pixijs.io/ui/storybook/),
 and copy/paste the example code to your project (check the `Code` tab):
 
 ## Components
@@ -45,13 +47,14 @@ and copy/paste the example code to your project (check the `Code` tab):
 -  [Select](https://pixijs.io/ui/storybook/?path=/story/components-select-use-graphics--use-graphics)
 -  [Slider](https://pixijs.io/ui/storybook/?path=/story/components-slider-graphics--double)
 
-**We are now a part of the [Open Collective](https://opencollective.com/pixijs) and with your support you can help us make PixiJS even better. To make a donation, simply click the button below and we'll love you forever!**
-
 ### Contribute ###
 
 Want to be part of the PixiUI project? Great! All are welcome! We will get there quicker
 together :) Whether you find a bug, have a great feature request, or you fancy owning a task
 from the road map above, feel free to get in touch.
+
+Make sure to read the [Contributing Guide](.github/CONTRIBUTING.md)
+before submitting changes.
 
 ### License ###
 
