@@ -18,17 +18,8 @@ export const ButtonContainerSprite = ({ size, color, disabled, radius, action }:
 {
     color = getColor(color);
 
-    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
-    const text = new Text('🤙', { fontSize: 70 });
-
-    text.anchor.set(0.5);
-    text.x = buttonView.width / 2;
-    text.y = buttonView.height / 2;
-
-    buttonView.addChild(text);
-
     // Component usage !!!
-    const button = new ButtonContainer(buttonView);
+    const button = new ButtonContainer();
 
     button.enabled = !disabled;
 
@@ -38,6 +29,17 @@ export const ButtonContainerSprite = ({ size, color, disabled, radius, action }:
     button.onHover.connect(() => action('onHover'));
     button.onOut.connect(() => action('onOut'));
     button.onUpOut.connect(() => action('onUpOut'));
+
+    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
+    const text = new Text('🤙', { fontSize: 70 });
+
+    text.anchor.set(0.5);
+    text.x = buttonView.width / 2;
+    text.y = buttonView.height / 2;
+
+    buttonView.addChild(text);
+
+    button.addChild(buttonView);
 
     return { view: button, resize: () => centerElement(button) };
 };

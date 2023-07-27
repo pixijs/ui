@@ -125,10 +125,8 @@ export class Select extends Container
         }
         else
         {
-            this.openButton.views = {
-                defaultView: getView(closedBG),
-                text: new Text(items?.items ? items.items[0] : '', textStyle)
-            };
+            this.openButton.defaultView = getView(closedBG);
+            this.openButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -156,12 +154,11 @@ export class Select extends Container
         }
         else
         {
-            this.closeButton.views = {
-                defaultView: new Graphics()
-                    .beginFill(0x000000, 0.00001)
-                    .drawRect(0, 0, this.openButton.width, this.openButton.height),
-                text: new Text(items?.items ? items.items[0] : '', textStyle)
-            };
+            this.closeButton.defaultView = new Graphics()
+                .beginFill(0x000000, 0.00001)
+                .drawRect(0, 0, this.openButton.width, this.openButton.height);
+
+            this.closeButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
 
             this.openButton.textOffset = selectedTextOffset;
         }

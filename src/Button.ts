@@ -32,17 +32,11 @@ export class Button extends ButtonEvents
     {
         super();
 
-        if (view) this.init(view);
-    }
-
-    /**
-     * Creates and connect interaction events.
-     * @param {Container} view - instance of container, to be turned into button
-     */
-    init(view: Container)
-    {
-        this.view = view;
-        this.enabled = true;
+        if (view)
+        {
+            this.view = view;
+            this.enabled = true;
+        }
     }
 
     /** Set button view, that all the interaction events are applied to. */
@@ -53,9 +47,7 @@ export class Button extends ButtonEvents
         if (wasItInitiated) this.disconnectEvents(this._view);
 
         this._view = view;
-        this.connectEvents(view);
-
-        if (!wasItInitiated) this.enabled = true;
+        this.connectEvents(this._view);
     }
 
     /** Get button view, thar all the interaction events are applied to. */
@@ -109,33 +101,16 @@ export class Button extends ButtonEvents
  */
 export class ButtonContainer extends Mixin(Container, Button)
 {
-    /**
-     * Creates container and turns it into a button by adding all button events
-     * @param child - child to add to the container
-     */
-    constructor(child?: Container)
+    constructor(view?: Container)
     {
         super();
 
-        this.init(this);
-
-        if (child)
-        {
-            this.addChild(child);
-        }
-
+        this.view = this;
         this.enabled = true;
-    }
 
-    /** Set button view, that all the interaction events are applied to. */
-    // eslint-disable-next-line accessor-pairs
-    override set view(_view: Container)
-    {
-        // Do nothing, because we are the view
-    }
-
-    override get view(): Container
-    {
-        return this;
+        if (view)
+        {
+            this.addChild(view);
+        }
     }
 }
