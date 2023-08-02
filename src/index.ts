@@ -1,5 +1,6 @@
 export * from './Button';
 export * from './CheckBox';
+export * from './CircularProgressBar';
 export * from './DoubleSlider';
 export * from './FancyButton';
 export * from './Input';
