@@ -496,19 +496,14 @@ export class ScrollBox extends Container
     {
         this.renderAllItems();
 
-        document.addEventListener('mousewheel', this.onMouseScrollBinded);
-        document.addEventListener('DOMMouseScroll', this.onMouseScrollBinded);
+        document.addEventListener('wheel', this.onMouseScrollBinded);
     }
 
     protected onMouseOut()
     {
         this.stopRenderHiddenItems();
 
-        document.removeEventListener('mousewheel', this.onMouseScrollBinded);
-        document.removeEventListener(
-            'DOMMouseScroll',
-            this.onMouseScrollBinded,
-        );
+        document.removeEventListener('wheel', this.onMouseScrollBinded);
     }
 
     protected onMouseScroll(event: any): void
