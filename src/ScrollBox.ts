@@ -483,7 +483,7 @@ export class ScrollBox extends Container
             }
         }
 
-        this.stopRenderHiddenItems();
+        this.updateVisibleItems();
     }
 
     protected onMouseScroll(event: WheelEvent): void
@@ -595,16 +595,18 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItemsTimeout = null;
         }
 
-        this.stopRenderHiddenItemsTimeout = setTimeout(() =>
-        {
-            this.visibleItems.length = 0;
+        this.stopRenderHiddenItemsTimeout = setTimeout(() => this.updateVisibleItems(), 2000);
+    }
 
-            this.items.forEach((child) =>
-            {
-                child.renderable = this.isItemVisible(child);
-                this.visibleItems.push(child);
-            });
-        }, 2000);
+    protected updateVisibleItems()
+    {
+        this.visibleItems.length = 0;
+
+        this.items.forEach((child) =>
+        {
+            child.renderable = this.isItemVisible(child);
+            this.visibleItems.push(child);
+        });
     }
 
     /**
