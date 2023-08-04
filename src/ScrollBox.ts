@@ -604,18 +604,6 @@ export class ScrollBox extends Container
                 child.renderable = this.isItemVisible(child);
                 this.visibleItems.push(child);
             });
-
-            let a = 0;
-
-            this.items.forEach((child) =>
-            {
-                if (child.renderable)
-                {
-                    a++;
-                }
-            });
-
-            console.log(`stopRenderHiddenItems`, a);
         }, 2000);
     }
 
