@@ -64,6 +64,7 @@ export class ScrollBox extends Container
     protected pressedChild: Container;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
+    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
 
     /**
      * @param options
@@ -338,7 +339,7 @@ export class ScrollBox extends Container
 
             this.pressedChild = null;
 
-            setTimeout(() => this.stopRenderHiddenItems(), 500);
+            this.stopRenderHiddenItems();
         });
 
         this.on('pointerupoutside', () =>
@@ -349,7 +350,7 @@ export class ScrollBox extends Container
 
             this.pressedChild = null;
 
-            setTimeout(() => this.stopRenderHiddenItems(), 500);
+            this.stopRenderHiddenItems();
         });
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
@@ -538,7 +539,7 @@ export class ScrollBox extends Container
             }
         }
 
-        setTimeout(() => this.stopRenderHiddenItems(), 500);
+        this.stopRenderHiddenItems();
     }
 
     /** Makes it scroll down to the last element. */
@@ -567,6 +568,9 @@ export class ScrollBox extends Container
 
     protected renderAllItems()
     {
+        clearTimeout(this.stopRenderHiddenItemsTimeout);
+        this.stopRenderHiddenItemsTimeout = null;
+
         if (this.options.disableDynamicRendering)
         {
             return;
@@ -585,13 +589,34 @@ export class ScrollBox extends Container
             return;
         }
 
-        this.visibleItems.length = 0;
-
-        this.items.forEach((child) =>
+        if (this.stopRenderHiddenItemsTimeout)
         {
-            child.renderable = this.isItemVisible(child);
-            this.visibleItems.push(child);
-        });
+            clearTimeout(this.stopRenderHiddenItemsTimeout);
+            this.stopRenderHiddenItemsTimeout = null;
+        }
+
+        this.stopRenderHiddenItemsTimeout = setTimeout(() =>
+        {
+            this.visibleItems.length = 0;
+
+            this.items.forEach((child) =>
+            {
+                child.renderable = this.isItemVisible(child);
+                this.visibleItems.push(child);
+            });
+
+            let a = 0;
+
+            this.items.forEach((child) =>
+            {
+                if (child.renderable)
+                {
+                    a++;
+                }
+            });
+
+            console.log(`stopRenderHiddenItems`, a);
+        }, 2000);
     }
 
     /**
