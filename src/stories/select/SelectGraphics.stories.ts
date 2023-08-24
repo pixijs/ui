@@ -62,6 +62,7 @@ export const UseGraphics: StoryFn = ({
             radius
         },
         scrollBox: {
+            width,
             height: height * 5,
             radius
         }
