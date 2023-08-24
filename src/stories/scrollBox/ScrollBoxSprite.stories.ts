@@ -43,7 +43,6 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
 
         // Component usage !!!
         const scrollBox = new ScrollBox({
-            // type: 'vertical',
             elementsMargin,
             width: window.width - 80,
             height: window.height - 90,

@@ -1,17 +1,16 @@
-import { Ticker, utils } from '@pixi/core';
+import { ColorSource, Ticker, utils } from '@pixi/core';
 import { Container, DisplayObject } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
-import { Sprite } from '@pixi/sprite';
 import type { ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
 export type ScrollBoxOptions = {
+    width: number;
+    height: number;
+    background?: ColorSource;
     type?: ListType;
-    background?: number | string;
-    width?: number;
-    height?: number;
     radius?: number;
     elementsMargin?: number;
     items?: Container[];
@@ -30,6 +29,8 @@ export type ScrollBoxOptions = {
  * @example
  * new ScrollBox({
  *     background: 0XFFFFFF,
+ *     width: 200,
+ *     height: 300,
  *     items: [
  *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
  *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
@@ -44,14 +45,12 @@ export type ScrollBoxOptions = {
 
 export class ScrollBox extends Container
 {
-    protected background: Graphics | Sprite;
+    protected background: Graphics;
     protected borderMask: Graphics;
     protected lastWidth: number;
     protected lastHeight: number;
     protected __width = 0;
     protected __height = 0;
-
-    protected readonly onMouseScrollBinded: (event: any) => void;
 
     protected list: List;
 
@@ -65,6 +64,7 @@ export class ScrollBox extends Container
     protected pressedChild: Container;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
+    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
 
     /**
      * @param options
@@ -89,8 +89,6 @@ export class ScrollBox extends Container
         }
 
         this.ticker.add(this.update, this);
-
-        this.onMouseScrollBinded = this.onMouseScroll.bind(this);
     }
 
     /**
@@ -241,7 +239,7 @@ export class ScrollBox extends Container
 
             if (
                 posY + item.height + this.options.vertPadding >= 0
-                && posY - this.options.vertPadding - this.options.elementsMargin <= this.options.height
+                && posY - this.options.vertPadding <= this.options.height
             )
             {
                 isVisible = true;
@@ -273,22 +271,16 @@ export class ScrollBox extends Container
      * Set ScrollBox background.
      * @param {number | string} background - background color or texture.
      */
-    setBackground(background?: number | string)
+    setBackground(background?: ColorSource)
     {
         if (this.background)
         {
             this.removeChild(this.background);
-            if (this.background instanceof Sprite)
-            {
-                this.background.destroy();
-            }
         }
 
         this.options.background = background;
 
-        this.background = (background !== undefined && typeof background === 'string')
-            ? Sprite.from(background)
-            : new Graphics();
+        this.background = new Graphics();
 
         this.addChildAt(this.background, 0);
 
@@ -318,6 +310,8 @@ export class ScrollBox extends Container
 
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
+            this.renderAllItems();
+
             this.isDragging = 1;
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
@@ -344,6 +338,8 @@ export class ScrollBox extends Container
             this.restoreItemsInteractivity();
 
             this.pressedChild = null;
+
+            this.stopRenderHiddenItems();
         });
 
         this.on('pointerupoutside', () =>
@@ -353,6 +349,8 @@ export class ScrollBox extends Container
             this.restoreItemsInteractivity();
 
             this.pressedChild = null;
+
+            this.stopRenderHiddenItems();
         });
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
@@ -371,9 +369,7 @@ export class ScrollBox extends Container
             }
         });
 
-        const { onMouseHover, onMouseOut } = this;
-
-        this.on('mouseover', onMouseHover, this).on('mouseout', onMouseOut, this);
+        document.addEventListener('wheel', (e: WheelEvent) => this.onMouseScroll(e));
     }
 
     protected setInteractive(interactive: boolean)
@@ -430,24 +426,22 @@ export class ScrollBox extends Container
                 );
             this.borderMask.eventMode = 'none';
 
-            if (this.background instanceof Graphics)
-            {
-                this.background.clear().lineStyle(0);
+            this.background.clear().lineStyle(0);
 
-                const color = this.options.background;
+            const color = this.options.background;
 
-                this.background.beginFill(
-                    color ?? 0x000000,
-                    color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
-                );
+            this.background.beginFill(
+                color ?? 0x000000,
+                color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
+            );
 
-                this.background.drawRect(
-                    0,
-                    0,
-                    this.__width + horPadding,
-                    this.__height + verPadding,
-                );
-            }
+            this.background.drawRoundedRect(
+                0,
+                0,
+                this.__width + horPadding,
+                this.__height + verPadding,
+                this.options.radius | 0,
+            );
 
             if (this.options.type === 'horizontal')
             {
@@ -489,24 +483,10 @@ export class ScrollBox extends Container
             }
         }
 
-        this.stopRenderHiddenItems();
+        this.updateVisibleItems();
     }
 
-    protected onMouseHover()
-    {
-        this.renderAllItems();
-
-        document.addEventListener('wheel', this.onMouseScrollBinded);
-    }
-
-    protected onMouseOut()
-    {
-        this.stopRenderHiddenItems();
-
-        document.removeEventListener('wheel', this.onMouseScrollBinded);
-    }
-
-    protected onMouseScroll(event: any): void
+    protected onMouseScroll(event: WheelEvent): void
     {
         this.renderAllItems();
 
@@ -578,12 +558,19 @@ export class ScrollBox extends Container
     /** Makes it scroll up to the first element. */
     scrollTop()
     {
+        this.renderAllItems();
+
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
+
+        this.stopRenderHiddenItems();
     }
 
     protected renderAllItems()
     {
+        clearTimeout(this.stopRenderHiddenItemsTimeout);
+        this.stopRenderHiddenItemsTimeout = null;
+
         if (this.options.disableDynamicRendering)
         {
             return;
@@ -602,6 +589,17 @@ export class ScrollBox extends Container
             return;
         }
 
+        if (this.stopRenderHiddenItemsTimeout)
+        {
+            clearTimeout(this.stopRenderHiddenItemsTimeout);
+            this.stopRenderHiddenItemsTimeout = null;
+        }
+
+        this.stopRenderHiddenItemsTimeout = setTimeout(() => this.updateVisibleItems(), 2000);
+    }
+
+    protected updateVisibleItems()
+    {
         this.visibleItems.length = 0;
 
         this.items.forEach((child) =>
@@ -629,6 +627,8 @@ export class ScrollBox extends Container
             return;
         }
 
+        this.renderAllItems();
+
         this._trackpad.xAxis.value
             = this.options.type === 'horizontal'
                 ? this.__width
@@ -644,6 +644,8 @@ export class ScrollBox extends Container
                   - target.height
                   - this.options.vertPadding
                 : 0;
+
+        this.stopRenderHiddenItems();
     }
 
     /** Gets component height. */
