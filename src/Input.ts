@@ -157,18 +157,28 @@ export class Input extends Container
 
     set bg(bg: Container | string)
     {
+        if (this._bg)
+        {
+            this.removeChild(this._bg);
+        }
+
         this._bg = getView(bg);
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
         if (!this._bg.parent)
         {
-            this.addChild(this._bg);
+            this.addChildAt(this._bg, 0);
         }
 
         if (!this.inputField)
         {
             this.init();
+        }
+
+        if (this.inputMask)
+        {
+            this.removeChild(this.inputMask);
         }
 
         this.inputMask = new Graphics()
