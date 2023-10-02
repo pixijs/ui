@@ -81,7 +81,9 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            window.addEventListener('touchstart', () => this.handleActivation());
+            window.addEventListener('touchstart', () =>
+                this.handleActivation()
+            );
         }
         else if (!utils.isMobile.any)
         {
@@ -124,7 +126,7 @@ export class Input extends Container
 
         const defaultTextStyle = {
             fill: 0x000000,
-            align: 'center'
+            align: 'center',
         } as TextStyle;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
@@ -140,7 +142,10 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
+        this.placeholder = new Text(
+            options.placeholder,
+            textStyle ?? defaultTextStyle
+        );
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
@@ -197,7 +202,10 @@ export class Input extends Container
             return;
         }
 
-        if (this.options.maxLength && this.value.length >= this.options.maxLength)
+        if (
+            this.options.maxLength
+            && this.value.length >= this.options.maxLength
+        )
         {
             return;
         }
@@ -233,8 +241,11 @@ export class Input extends Container
             this._keyboard.style.position = 'fixed';
             this._keyboard.style.left = '-1000px';
 
-            this._keyboard.oninput = () =>
+            this._keyboard.oninput = (event) =>
             {
+                // Prevent the input event from bubbling up
+                event.preventDefault();
+
                 let value = this._keyboard.value;
 
                 const maxLength = this.options.maxLength;
@@ -248,6 +259,14 @@ export class Input extends Container
                 this.value = value;
 
                 this.onChange.emit(this.value);
+            };
+
+            // Don't let the input element lose focus
+            this._keyboard.onblur = () =>
+            {
+                if (!this._keyboard) return;
+
+                this._keyboard.focus();
             };
 
             this._keyboard.focus();
@@ -310,11 +329,16 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        this.inputField.x
+            = (this._bg.width * align)
+            + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y
+            = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.placeholder.x
+            = (this._bg.width * align)
+            + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this._bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
@@ -425,6 +449,11 @@ export class Input extends Container
     // Return array of paddings [top, right, bottom, left]
     get padding(): [number, number, number, number]
     {
-        return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
+        return [
+            this.paddingTop,
+            this.paddingRight,
+            this.paddingBottom,
+            this.paddingLeft,
+        ];
     }
 }
