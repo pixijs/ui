@@ -26,7 +26,7 @@
         "dist/"
     ],
     "scripts": {
-        "start": "storybook dev -p 6006",
+        "start": "vite --open",
         "build": "xs build",
         "clean": "xs clean",
         "deploy": "xs deploy",
@@ -61,6 +61,7 @@
         "docsKeyword": "PixiJS, UI, components"
     },
     "dependencies": {
+        "pixi.js": "^8.0.0-beta.3",
         "ts-mixer": "^6.0.3",
         "tweedle.js": "^2.1.0",
         "typed-signals": "^2.5.0"
