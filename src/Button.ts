@@ -1,4 +1,4 @@
-import { Sprite, Graphic } from "pixi.js";
+import { Container } from 'pixi.js';
 import { ButtonEvents } from './ButtonEvents';
 import { Mixin } from 'ts-mixer';
 
@@ -105,7 +105,7 @@ export class ButtonContainer extends Mixin(Container, Button)
     {
         super();
 
-        this.view = this;
+        this._view = this;
         this.enabled = true;
 
         if (view)

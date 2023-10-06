@@ -7,6 +7,7 @@ export async function initPixi(options?: Partial<ApplicationOptions>): Promise<A
     await app.init({
         resizeTo: window,
         background: 0x000000,
+        antialias: true,
         ...options
     });
 

@@ -1,5 +1,6 @@
-import { Container, Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 import { initPixi } from './utils/pixi';
+import { Button } from '../Button';
 
 // eslint-disable-next-line no-new
 new class App
@@ -27,11 +28,18 @@ new class App
     private addSubscriptions()
     {
         window.addEventListener('resize', () => this.resize());
-        window.addEventListener('deviceorientation', () => this.resize());
+        window.addEventListener('deviceorientation', () => this.resize(), true);
         this.resize();
     }
 
     private createElements()
+    {
+        const button = this.createButton();
+
+        button.onPress.connect(() => console.log('onPress'));
+    }
+
+    private createButton(): Button
     {
         const text = new Text({ text: 'Pixi 8' });
 
@@ -41,7 +49,20 @@ new class App
             fill: 0xffffff
         };
 
-        this.view.addChild(text);
+        const graphics = new Graphics()
+            .roundRect(0, 0, text.width + 100, text.height + 20, 25)
+            .fill(0xde3249);
+
+        graphics.x = -graphics.width / 2;
+        graphics.y = -graphics.height / 2;
+
+        const buttonContainer = new Container();
+
+        buttonContainer.addChild(graphics, text);
+
+        this.view.addChild(buttonContainer);
+
+        return new Button(this.view);
     }
 
     private resize(width = window.innerWidth, height = window.innerHeight)
