@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Sprite, Graphic } from "pixi.js";
 import { ButtonEvents } from './ButtonEvents';
 import { Mixin } from 'ts-mixer';
 

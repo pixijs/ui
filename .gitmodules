@@ -1,0 +1,6 @@
+[submodule "pixijs"]
+	path = pixijs
+	url = https://github.com/pixijs/pixijs.git
+[submodule "pixi8Experiments"]
+	path = pixi8Experiments
+	url = https://github.com/CyberDex/pixi8Experiments.git
