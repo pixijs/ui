@@ -14,7 +14,6 @@
         }
     },
     "rules": {
-        "no-restricted-imports": ["error", { "paths": ["pixi.js"] }],
         "@typescript-eslint/no-unused-expressions": [1, {"allowShortCircuit": true, "allowTernary": true}],
         "no-mixed-operators": "off",
         "no-mixed-operators/no-mixed-operators": 1,
