@@ -595,9 +595,6 @@ export class FancyButton extends ButtonContainer
     set iconView(view: ButtonView | null)
     {
         if (view === undefined) return;
-        console.log({
-            view
-        });
 
         this.removeView('iconView');
 
