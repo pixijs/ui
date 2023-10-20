@@ -65,6 +65,7 @@ export class ScrollBox extends Container
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
+    protected onMouseScrollBinding = this.onMouseScroll.bind(this);
 
     /**
      * @param options
@@ -369,7 +370,7 @@ export class ScrollBox extends Container
             }
         });
 
-        document.addEventListener('wheel', (e: WheelEvent) => this.onMouseScroll(e));
+        document.addEventListener('wheel', this.onMouseScrollBinding, true);
     }
 
     protected setInteractive(interactive: boolean)
@@ -682,6 +683,8 @@ export class ScrollBox extends Container
     override destroy(options?: IDestroyOptions | boolean)
     {
         this.ticker.remove(this.update, this);
+
+        document.removeEventListener('wheel', this.onMouseScrollBinding, true);
 
         this.background.destroy();
         this.list.destroy();
