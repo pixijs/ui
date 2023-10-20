@@ -15,6 +15,7 @@ export type InputOptions = {
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
+    cleanOnFocus?: boolean;
 };
 
 /**
@@ -158,18 +159,29 @@ export class Input extends Container
 
     set bg(bg: Container | string)
     {
+        if (this._bg)
+        {
+            this.removeChild(this._bg);
+            this._bg.destroy();
+        }
+
         this._bg = getView(bg);
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
-        if (!this._bg.parent)
-        {
-            this.addChild(this._bg);
-        }
+        this.addChildAt(this._bg, 0);
 
         if (!this.inputField)
         {
             this.init();
+        }
+
+        if (this.inputMask)
+        {
+            this.inputField.mask = null;
+            this._cursor.mask = null;
+            this.removeChild(this.inputMask);
+            this.inputMask.destroy();
         }
 
         this.inputMask = new Graphics()
@@ -185,10 +197,7 @@ export class Input extends Container
 
         this._cursor.mask = this.inputMask;
 
-        if (!this.inputMask.parent)
-        {
-            this.addChild(this.inputMask);
-        }
+        this.addChildAt(this.inputMask, 0);
     }
 
     get bg(): Container | string
@@ -226,6 +235,11 @@ export class Input extends Container
 
     protected _startEditing(): void
     {
+        if (this.options.cleanOnFocus)
+        {
+            this.value = '';
+        }
+
         this.tick = 0;
         this.editing = true;
         this.placeholder.visible = false;
