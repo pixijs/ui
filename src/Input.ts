@@ -15,6 +15,7 @@ export type InputOptions = {
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
+    cleanOnFocus?: boolean;
 };
 
 /**
@@ -167,7 +168,7 @@ export class Input extends Container
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
-        this.addChild(this._bg);
+        this.addChildAt(this._bg, 0);
 
         if (!this.inputField)
         {
@@ -195,7 +196,7 @@ export class Input extends Container
 
         this._cursor.mask = this.inputMask;
 
-        this.addChild(this.inputMask);
+        this.addChildAt(this.inputMask, 0);
     }
 
     get bg(): Container | string
@@ -233,6 +234,11 @@ export class Input extends Container
 
     protected _startEditing(): void
     {
+        if (this.options.cleanOnFocus)
+        {
+            this.value = '';
+        }
+
         this.tick = 0;
         this.editing = true;
         this.placeholder.visible = false;
