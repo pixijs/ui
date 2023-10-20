@@ -1,5 +1,5 @@
 import { Texture, utils, Ticker } from '@pixi/core';
-import { Container } from '@pixi/display';
+import { Container, IDestroyOptions } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
@@ -45,6 +45,9 @@ export class Input extends Container
     protected readonly options: InputOptions;
     protected _keyboard: HTMLInputElement;
 
+    protected handleActivationBinding = this.handleActivation.bind(this);
+    protected onKeyDownBinding = this.onKeyDown.bind(this);
+
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
 
@@ -81,26 +84,13 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            window.addEventListener('touchstart', () => this.handleActivation());
+            window.addEventListener('touchstart', this.handleActivationBinding);
         }
         else if (!utils.isMobile.any)
         {
-            window.addEventListener('click', () => this.handleActivation());
+            window.addEventListener('click', this.handleActivationBinding);
 
-            window.addEventListener('keydown', (e) =>
-            {
-                const key = e.key;
-
-                if (key === 'Backspace')
-                {
-                    this._delete();
-                }
-                else if (key === 'Escape' || key === 'Enter')
-                {
-                    this.stopEditing();
-                }
-                else if (key.length === 1) this._add(key);
-            });
+            window.addEventListener('keydown', this.onKeyDownBinding);
         }
 
         this.onEnter = new Signal();
@@ -116,6 +106,21 @@ export class Input extends Container
         {
             console.error('Input: bg is not defined, please define it.');
         }
+    }
+
+    protected onKeyDown(e: KeyboardEvent)
+    {
+        const key = e.key;
+
+        if (key === 'Backspace')
+        {
+            this._delete();
+        }
+        else if (key === 'Escape' || key === 'Enter')
+        {
+            this.stopEditing();
+        }
+        else if (key.length === 1) this._add(key);
     }
 
     protected init()
@@ -426,5 +431,23 @@ export class Input extends Container
     get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
+    }
+
+    override destroy(options?: IDestroyOptions | boolean)
+    {
+        this.off('pointertap');
+
+        if (utils.isMobile.any)
+        {
+            window.removeEventListener('touchstart', this.handleActivationBinding);
+        }
+        else if (!utils.isMobile.any)
+        {
+            window.removeEventListener('click', this.handleActivationBinding);
+
+            window.removeEventListener('keydown', this.onKeyDownBinding);
+        }
+
+        super.destroy(options);
     }
 }
