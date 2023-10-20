@@ -95,9 +95,6 @@ export class CheckBox extends Switcher
     /** Setter, which sets a checkbox style settings. */
     set style(style: CheckBoxStyle)
     {
-        // Preserve checked state for the end of the method
-        const wasChecked = this.checked;
-
         this._style = style;
 
         const { unchecked, checked } = style;
@@ -113,10 +110,6 @@ export class CheckBox extends Switcher
             this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
             this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
         }
-
-        // Reset checked state
-        delete this._active;
-        this.checked = wasChecked;
     }
 
     /** Getter, which returns a checkbox style settings. */

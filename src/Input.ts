@@ -131,7 +131,7 @@ export class Input extends Container
 
         const defaultTextStyle = {
             fill: 0x000000,
-            align: 'center',
+            align: 'center'
         } as TextStyle;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
@@ -147,10 +147,7 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new Text(
-            options.placeholder,
-            textStyle ?? defaultTextStyle
-        );
+        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
@@ -172,10 +169,7 @@ export class Input extends Container
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
-        if (!this._bg.parent)
-        {
-            this.addChildAt(this._bg, 0);
-        }
+        this.addChildAt(this._bg, 0);
 
         if (!this.inputField)
         {
@@ -218,10 +212,7 @@ export class Input extends Container
             return;
         }
 
-        if (
-            this.options.maxLength
-            && this.value.length >= this.options.maxLength
-        )
+        if (this.options.maxLength && this.value.length >= this.options.maxLength)
         {
             return;
         }
@@ -269,11 +260,6 @@ export class Input extends Container
             this.input.removeEventListener('blur', this.stopEditingBinding);
             this.input.removeEventListener('keyup', this.onKeyUpBinding);
 
-            this._keyboard.oninput = (event) =>
-            {
-              let value = this._keyboard.value;
-            }
-            
             this.input?.blur();
             this.input?.remove();
             this.input = null;
@@ -370,16 +356,11 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x
-            = (this._bg.width * align)
-            + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y
-            = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        this.inputField.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x
-            = (this._bg.width * align)
-            + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.placeholder.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this._bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
@@ -490,12 +471,7 @@ export class Input extends Container
     // Return array of paddings [top, right, bottom, left]
     get padding(): [number, number, number, number]
     {
-        return [
-            this.paddingTop,
-            this.paddingRight,
-            this.paddingBottom,
-            this.paddingLeft,
-        ];
+        return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 
     override destroy(options?: IDestroyOptions | boolean)
