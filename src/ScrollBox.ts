@@ -1,5 +1,5 @@
 import { ColorSource, Ticker, utils } from '@pixi/core';
-import { Container, DisplayObject } from '@pixi/display';
+import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import type { ListType } from './List';
@@ -674,15 +674,19 @@ export class ScrollBox extends Container
         }
     }
 
-    /** Destroys the component. */
-    override destroy()
+    /**
+     * Destroys the component.
+     * @param {boolean | IDestroyOptions} [options] - Options parameter.
+     * A boolean will act as if all options have been set to that value
+     */
+    override destroy(options?: IDestroyOptions | boolean)
     {
         this.ticker.remove(this.update, this);
 
         this.background.destroy();
         this.list.destroy();
 
-        super.destroy();
+        super.destroy(options);
     }
 
     protected restoreItemsInteractivity()
