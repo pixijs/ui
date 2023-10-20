@@ -75,7 +75,16 @@ export const UseGraphics = ({
             padding: [paddingTop, paddingRight, paddingBottom, paddingLeft]
         });
 
-        input.onEnter.connect((val) => onChange(`Input ${i + 1} (${val})`));
+        input.onEnter.connect((val) =>
+        {
+            onChange(`Input ${i + 1} (${val})`);
+
+            input.bg = new Graphics()
+                .beginFill('red')
+                .drawRoundedRect(0, 0, width, height, radius + border)
+                .beginFill('green')
+                .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+        });
 
         view.addChild(input);
     }
