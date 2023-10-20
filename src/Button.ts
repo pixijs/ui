@@ -1,6 +1,7 @@
 import { Container } from '@pixi/display';
 import { ButtonEvents } from './ButtonEvents';
-import { Mixin } from 'ts-mixer';
+import { Signal } from 'typed-signals';
+import { FederatedPointerEvent } from '@pixi/events';
 
 /**
  * Adds button events to a given container-based view
@@ -99,18 +100,35 @@ export class Button extends ButtonEvents
  *
  * container.addChild(button);
  */
-export class ButtonContainer extends Mixin(Container, Button)
+export class ButtonContainer extends Container
 {
+    button: Button;
+
+    onDown: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+    onUp: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+    onUpOut: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+    onOut: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+    onPress: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+    onHover: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
+
     constructor(view?: Container)
     {
         super();
 
-        this.view = this;
-        this.enabled = true;
+        this.button = new Button(this);
+
+        this.button.enabled = true;
 
         if (view)
         {
             this.addChild(view);
         }
+
+        this.onPress = this.button.onPress;
+        this.onDown = this.button.onDown;
+        this.onUp = this.button.onUp;
+        this.onHover = this.button.onHover;
+        this.onOut = this.button.onOut;
+        this.onUpOut = this.button.onUpOut;
     }
 }
