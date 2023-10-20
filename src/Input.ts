@@ -43,10 +43,11 @@ export class Input extends Container
 
     protected activation = false;
     protected readonly options: InputOptions;
-    protected _keyboard: HTMLInputElement;
+    protected input: HTMLInputElement;
 
     protected handleActivationBinding = this.handleActivation.bind(this);
-    protected onKeyDownBinding = this.onKeyDown.bind(this);
+    protected onKeyUpBinding = this.onKeyUp.bind(this);
+    protected stopEditingBinding = this.stopEditing.bind(this);
 
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
@@ -90,7 +91,7 @@ export class Input extends Container
         {
             window.addEventListener('click', this.handleActivationBinding);
 
-            window.addEventListener('keydown', this.onKeyDownBinding);
+            window.addEventListener('keyup', this.onKeyUpBinding);
         }
 
         this.onEnter = new Signal();
@@ -108,7 +109,7 @@ export class Input extends Container
         }
     }
 
-    protected onKeyDown(e: KeyboardEvent)
+    protected onKeyUp(e: KeyboardEvent)
     {
         const key = e.key;
 
@@ -232,33 +233,59 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            this._keyboard = document.createElement('input');
-
-            document.body.appendChild(this._keyboard);
-            this._keyboard.style.position = 'fixed';
-            this._keyboard.style.left = '-1000px';
-
-            this._keyboard.oninput = () =>
-            {
-                let value = this._keyboard.value;
-
-                const maxLength = this.options.maxLength;
-
-                if (maxLength && value.length > this.options.maxLength)
-                {
-                    value = value.substring(0, maxLength);
-                    this._keyboard.value = value;
-                }
-
-                this.value = value;
-
-                this.onChange.emit(this.value);
-            };
-
-            this._keyboard.focus();
-            this._keyboard.click();
-            this._keyboard.value = this.value;
+            this.createInputField();
         }
+
+        this.align();
+    }
+
+    protected createInputField()
+    {
+        if (this.input)
+        {
+            this.input.removeEventListener('blur', this.stopEditingBinding);
+            this.input.removeEventListener('keyup', this.onKeyUpBinding);
+
+            this.input?.blur();
+            this.input?.remove();
+            this.input = null;
+        }
+
+        const input: HTMLInputElement = document.createElement('input');
+
+        document.body.appendChild(input);
+
+        input.setAttribute('inputmode', 'decimal');
+
+        input.style.position = 'fixed';
+        input.style.left = `${this.getGlobalPosition().x}px`;
+        input.style.top = `${this.getGlobalPosition().y}px`;
+        input.style.opacity = '0.0000001';
+        input.style.width = `${this._bg.width}px`;
+        input.style.height = `${this._bg.height}px`;
+        input.style.border = 'none';
+        input.style.outline = 'none';
+        input.style.background = 'white';
+
+        // This hack fixes instant hiding keyboard on mobile after showing it
+        if (utils.isMobile.android.device)
+        {
+            setTimeout(() =>
+            {
+                input.focus();
+                input.click();
+            }, 100);
+        }
+        else
+        {
+            input.focus();
+            input.click();
+        }
+
+        input.addEventListener('blur', this.stopEditingBinding);
+        input.addEventListener('keyup', this.onKeyUpBinding);
+
+        this.input = input;
 
         this.align();
     }
@@ -291,9 +318,9 @@ export class Input extends Container
 
         if (utils.isMobile.any)
         {
-            this._keyboard?.blur();
-            this._keyboard?.remove();
-            this._keyboard = null;
+            this.input?.blur();
+            this.input?.remove();
+            this.input = null;
         }
 
         this.align();
@@ -445,7 +472,7 @@ export class Input extends Container
         {
             window.removeEventListener('click', this.handleActivationBinding);
 
-            window.removeEventListener('keydown', this.onKeyDownBinding);
+            window.removeEventListener('keyup', this.onKeyUpBinding);
         }
 
         super.destroy(options);
