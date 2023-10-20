@@ -236,16 +236,16 @@ export class FancyButton extends ButtonContainer
      * Setter, that prevents all button events from firing.
      * @param {boolean} enabled
      */
-    override set enabled(enabled: boolean)
+    set enabled(enabled: boolean)
     {
-        super.enabled = enabled;
+        this.button.enabled = enabled;
 
         this.setState(enabled ? 'default' : 'disabled');
     }
 
-    override get enabled(): boolean
+    get enabled(): boolean
     {
-        return super.enabled;
+        return this.button.enabled;
     }
 
     /**
@@ -389,6 +389,11 @@ export class FancyButton extends ButtonContainer
         }
 
         const activeView = this.getStateView(state);
+
+        if (!activeView)
+        {
+            return;
+        }
 
         fitToView(activeView, this._views.iconView, this.padding);
 
@@ -590,6 +595,9 @@ export class FancyButton extends ButtonContainer
     set iconView(view: ButtonView | null)
     {
         if (view === undefined) return;
+        console.log({
+            view
+        });
 
         this.removeView('iconView');
 
@@ -605,7 +613,6 @@ export class FancyButton extends ButtonContainer
             this.innerView.addChild(this._views.iconView);
         }
 
-        this.updateAnchor();
         this.setState(this.state, true);
     }
 
@@ -691,7 +698,7 @@ export class FancyButton extends ButtonContainer
 
         this.onOut.connect(() =>
         {
-            if (!this.isDown)
+            if (!this.button.isDown)
             {
                 this.setState('default');
             }
@@ -706,7 +713,7 @@ export class FancyButton extends ButtonContainer
 
         this.onHover.connect(() =>
         {
-            if (!this.isDown)
+            if (!this.button.isDown)
             {
                 utils.isMobile.any
                     ? this.setState('default')
