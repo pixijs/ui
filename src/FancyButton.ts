@@ -236,14 +236,14 @@ export class FancyButton extends ButtonContainer
      * Setter, that prevents all button events from firing.
      * @param {boolean} enabled
      */
-    set enabled(enabled: boolean)
+    override set enabled(enabled: boolean)
     {
         this.button.enabled = enabled;
 
         this.setState(enabled ? 'default' : 'disabled');
     }
 
-    get enabled(): boolean
+    override get enabled(): boolean
     {
         return this.button.enabled;
     }

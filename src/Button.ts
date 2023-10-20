@@ -131,4 +131,14 @@ export class ButtonContainer extends Container
         this.onOut = this.button.onOut;
         this.onUpOut = this.button.onUpOut;
     }
+
+    set enabled(enabled: boolean)
+    {
+        this.button.enabled = enabled;
+    }
+
+    get enabled(): boolean
+    {
+        return this.button.enabled;
+    }
 }
