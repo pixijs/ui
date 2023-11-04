@@ -164,7 +164,6 @@ export class Input extends Container
     {
         if (this._bg)
         {
-            this.removeChild(this._bg);
             this._bg.destroy();
         }
 
@@ -199,7 +198,6 @@ export class Input extends Container
         {
             this.inputField.mask = null;
             this._cursor.mask = null;
-            this.removeChild(this.inputMask);
             this.inputMask.destroy();
         }
 

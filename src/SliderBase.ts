@@ -90,7 +90,6 @@ export class SliderBase extends ProgressBar
         if (this._slider1)
         {
             this.slider1.removeAllListeners();
-            this.removeChild(this._slider1);
             this.slider1.destroy();
         }
 
@@ -129,7 +128,6 @@ export class SliderBase extends ProgressBar
         if (this._slider2)
         {
             this.slider2.removeAllListeners();
-            this.removeChild(this._slider2);
             this.slider2.destroy();
         }
 
