@@ -28,7 +28,7 @@ export type SliderOptions = BaseSliderOptions & {
  */
 export class Slider extends SliderBase
 {
-    protected options: SliderOptions;
+    protected sliderOptions: SliderOptions;
 
     /** Fires when value is changing, on every move of slider. */
     onUpdate: Signal<(value: number) => void> = new Signal();
@@ -51,7 +51,7 @@ export class Slider extends SliderBase
             fillPaddings: options.fillPaddings,
         });
 
-        this.options = options;
+        this.sliderOptions = options;
 
         this.progress = ((options.value ?? this.min) - this.min) / (this.max - this.min) * 100;
 
@@ -107,15 +107,15 @@ export class Slider extends SliderBase
     {
         this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
 
-        if (this.options.showValue)
+        if (this.sliderOptions.showValue)
         {
             this.value1Text.text = `${Math.round(this.value)}`;
 
             const sliderPosX = this._slider1.x + (this._slider1.width / 2);
             const sliderPosY = this._slider1.y;
 
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 }

@@ -8,7 +8,7 @@ import { Padding } from './utils/HelpTypes';
 import { NineSlicePlane } from '@pixi/mesh-extras';
 import { Graphics } from '@pixi/graphics';
 
-export type ViewType = Sprite | Graphics | string;
+type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
     bg: ViewType;

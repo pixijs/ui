@@ -12,11 +12,11 @@ type FillPaddings = {
     left?: number;
 };
 
-export type ViewType = Sprite | Graphics | string;
+export type ProgressBarViewType = Sprite | Graphics | string;
 
 export type ProgressBarOptions = {
-    bg: ViewType;
-    fill: ViewType;
+    bg: ProgressBarViewType;
+    fill: ProgressBarViewType;
     fillPaddings?: FillPaddings;
     nineSlicePlane?: {
         bg: [number, number, number, number],
@@ -83,7 +83,7 @@ export class ProgressBar extends Container
      * Set bg.
      * @param bg
      */
-    setBackground(bg: ViewType)
+    setBackground(bg: ProgressBarViewType)
     {
         if (this.bg)
         {
@@ -120,7 +120,7 @@ export class ProgressBar extends Container
      * @param fill
      * @param fillPadding
      */
-    setFill(fill: ViewType, fillPadding?: FillPaddings)
+    setFill(fill: ProgressBarViewType, fillPadding?: FillPaddings)
     {
         if (this.fill)
         {

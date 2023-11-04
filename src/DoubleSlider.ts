@@ -21,7 +21,7 @@ import { Container } from '@pixi/display';
 
 export class DoubleSlider extends SliderBase
 {
-    protected options: DoubleSliderOptions;
+    protected sliderOptions: DoubleSliderOptions;
 
     protected activeValue: 'value1' | 'value2';
 
@@ -35,7 +35,7 @@ export class DoubleSlider extends SliderBase
     {
         super(options);
 
-        this.options = options;
+        this.sliderOptions = options;
         this.setInitialState();
     }
 
@@ -43,7 +43,7 @@ export class DoubleSlider extends SliderBase
     {
         this.validateValues();
 
-        const { value1, value2 } = this.options;
+        const { value1, value2 } = this.sliderOptions;
 
         this.updateProgress(value1, value2);
 
@@ -59,34 +59,34 @@ export class DoubleSlider extends SliderBase
 
     protected validateValues()
     {
-        if (!this.options.value1)
+        if (!this.sliderOptions.value1)
         {
-            this.options.value1 = this.min;
+            this.sliderOptions.value1 = this.min;
         }
 
-        if (!this.options.value2)
+        if (!this.sliderOptions.value2)
         {
-            this.options.value2 = this.options.max;
+            this.sliderOptions.value2 = this.sliderOptions.max;
         }
 
-        if (this.options.value2 < this.options.value1)
+        if (this.sliderOptions.value2 < this.sliderOptions.value1)
         {
-            this.options.value2 = this.options.value1;
+            this.sliderOptions.value2 = this.sliderOptions.value1;
         }
 
-        if (this.options.value1 < this.options.min)
+        if (this.sliderOptions.value1 < this.sliderOptions.min)
         {
-            this.options.value1 = this.options.min;
+            this.sliderOptions.value1 = this.sliderOptions.min;
         }
 
-        if (this.options.value1 > this.options.max)
+        if (this.sliderOptions.value1 > this.sliderOptions.max)
         {
-            this.options.value1 = this.options.max;
+            this.sliderOptions.value1 = this.sliderOptions.max;
         }
 
-        if (this.options.value2 > this.options.max)
+        if (this.sliderOptions.value2 > this.sliderOptions.max)
         {
-            this.options.value2 = this.options.max;
+            this.sliderOptions.value2 = this.sliderOptions.max;
         }
     }
 
@@ -170,6 +170,7 @@ export class DoubleSlider extends SliderBase
         {
             this.progress = progress;
             this.value2 = this.min + (((this.max - this.min) / 100) * progress);
+            this.updateProgress(this.value1, this.value2);
         }
     }
 
@@ -226,15 +227,15 @@ export class DoubleSlider extends SliderBase
             this._slider1.x = this._slider2.x;
         }
 
-        if (this.options?.showValue)
+        if (this.sliderOptions?.showValue)
         {
             this.value1Text.text = `${Math.round(this.value1)}`;
 
             const sliderPosX = this._slider1.x + (this._slider1.width / 2);
             const sliderPosY = this._slider1.y;
 
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 
@@ -247,15 +248,15 @@ export class DoubleSlider extends SliderBase
             this._slider2.x = this._slider1.x;
         }
 
-        if (this.options?.showValue)
+        if (this.sliderOptions?.showValue)
         {
             this.value2Text.text = `${Math.round(this.value2)}`;
 
             const sliderPosX = this._slider2.x + (this._slider2.width / 2);
             const sliderPosY = this._slider2.y;
 
-            this.value2Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value2Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.value2Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value2Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 }

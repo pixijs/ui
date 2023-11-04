@@ -3,12 +3,10 @@ import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
 
 import { FederatedPointerEvent } from '@pixi/events';
-import { FillPaddings, ProgressBar, ViewType } from './ProgressBar';
+import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
 import { getView } from './utils/helpers/view';
 
-export type BaseSliderOptions = {
-    bg: ViewType;
-    fill?: ViewType;
+export type BaseSliderOptions = ProgressBarOptions & {
     min?: number;
     max?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
@@ -17,11 +15,6 @@ export type BaseSliderOptions = {
         x?: number;
         y?: number;
     };
-    fillPaddings?: FillPaddings;
-    nineSlicePlane?: {
-        bg: [number, number, number, number],
-        fill: [number, number, number, number]
-    },
 };
 
 export type DoubleSliderOptions = BaseSliderOptions & {
@@ -76,7 +69,7 @@ export class SliderBase extends ProgressBar
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
 
-        this.activate();
+        this.activateBG();
     }
 
     /**
@@ -94,14 +87,6 @@ export class SliderBase extends ProgressBar
         }
 
         this._slider1 = this.createSlider(value);
-
-        this._slider1.eventMode = 'static';
-
-        this._slider1
-            .on('pointerdown', this.startUpdate, this)
-            .on('globalpointermove', this.update, this)
-            .on('pointerup', this.endUpdate, this)
-            .on('pointerupoutside', this.endUpdate, this);
 
         if (this.settings.showValue && !this.value1Text)
         {
@@ -133,14 +118,6 @@ export class SliderBase extends ProgressBar
 
         this._slider2 = this.createSlider(value);
 
-        this._slider2.eventMode = 'static';
-
-        this._slider2
-            .on('pointerdown', this.startUpdate, this)
-            .on('globalpointermove', this.update, this)
-            .on('pointerup', this.endUpdate, this)
-            .on('pointerupoutside', this.endUpdate, this);
-
         if (this.settings.showValue && !this.value2Text)
         {
             this.value2Text = new Text('', this.settings.valueTextStyle || { fill: 0xffffff });
@@ -159,7 +136,7 @@ export class SliderBase extends ProgressBar
      * Set bg.
      * @param bg
      */
-    override setBackground(bg: ViewType)
+    override setBackground(bg: ProgressBarViewType)
     {
         if (this.bg)
         {
@@ -168,10 +145,10 @@ export class SliderBase extends ProgressBar
 
         super.setBackground(bg);
 
-        this.activate();
+        this.activateBG();
     }
 
-    protected activate()
+    protected activateBG()
     {
         this.bg.eventMode = 'static';
         this.bg
@@ -179,21 +156,6 @@ export class SliderBase extends ProgressBar
             .on('globalpointermove', this.update, this)
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
-
-        if (this.fill)
-        {
-            this.fill.eventMode = 'none';
-        }
-
-        if (this.value1Text)
-        {
-            this.value1Text.eventMode = 'none';
-        }
-
-        if (this.value2Text)
-        {
-            this.value2Text.eventMode = 'none';
-        }
     }
 
     protected createSlider(sliderData: Container | string): Container
