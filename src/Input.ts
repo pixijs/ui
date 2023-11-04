@@ -6,6 +6,7 @@ import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
+import { NineSlicePlane } from '@pixi/mesh-extras';
 
 export type InputOptions = {
     bg: Container | string;
@@ -16,6 +17,7 @@ export type InputOptions = {
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
     cleanOnFocus?: boolean;
+    nineSlicePlane?: [number, number, number, number];
 };
 
 /**
@@ -34,9 +36,9 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    protected _bg?: Container;
+    protected _bg?: Container | NineSlicePlane;
+    protected inputMask: Container | NineSlicePlane;
     protected _cursor: Sprite;
-    protected inputMask: Graphics;
     protected inputField: Text;
     protected placeholder: Text;
     protected editing = false;
@@ -68,9 +70,14 @@ export class Input extends Container
     /** Left side padding */
     paddingLeft = 0;
 
+    /** Input options */
+    private readonly _options: InputOptions;
+
     constructor(options: InputOptions)
     {
         super();
+
+        this._options = options;
 
         this.options = options;
         this.padding = options.padding;
@@ -165,7 +172,23 @@ export class Input extends Container
             this._bg.destroy();
         }
 
-        this._bg = getView(bg);
+        if (this.options?.nineSlicePlane)
+        {
+            if (typeof bg === 'string')
+            {
+                this._bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+            }
+            else
+            {
+                console.warn('NineSlicePlane can not be used with views set as Container.');
+            }
+        }
+
+        if (!this._bg)
+        {
+            this._bg = getView(bg);
+        }
+
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
@@ -184,14 +207,14 @@ export class Input extends Container
             this.inputMask.destroy();
         }
 
-        this.inputMask = new Graphics()
-            .beginFill(0xffffff)
-            .drawRect(
-                this.paddingLeft,
-                this.paddingTop,
-                this._bg.width - this.paddingRight - this.paddingLeft,
-                this._bg.height - this.paddingBottom - this.paddingTop
-            );
+        if (this.options?.nineSlicePlane && typeof bg === 'string')
+        {
+            this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+        }
+        else
+        {
+            this.inputMask = getView(bg);
+        }
 
         this.inputField.mask = this.inputMask;
 
@@ -490,5 +513,61 @@ export class Input extends Container
         }
 
         super.destroy(options);
+    }
+
+    override set width(width: number)
+    {
+        if (this._options?.nineSlicePlane)
+        {
+            if (this._bg)
+            {
+                this._bg.width = width;
+            }
+
+            if (this.inputMask)
+            {
+                this.inputMask.width = width - this.paddingLeft - this.paddingRight;
+                this.inputMask.x = this.paddingLeft;
+            }
+
+            this.align();
+        }
+        else
+        {
+            super.width = width;
+        }
+    }
+
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    override set height(height: number)
+    {
+        if (this._options?.nineSlicePlane)
+        {
+            if (this._bg)
+            {
+                this._bg.height = height;
+            }
+
+            if (this.inputMask)
+            {
+                this.inputMask.height = height - this.paddingTop - this.paddingBottom;
+                this.inputMask.y = this.paddingTop;
+            }
+
+            this.align();
+        }
+        else
+        {
+            super.height = height;
+        }
+    }
+
+    override get height(): number
+    {
+        return super.height;
     }
 }
