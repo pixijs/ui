@@ -501,7 +501,11 @@ export class ScrollBox extends Container
                 ? this.list.x - event.deltaY
                 : this.list.x - event.deltaX;
 
-            if (
+            if (this.listWidth < this.__width)
+            {
+                this._trackpad.xAxis.value = 0;
+            }
+            else if (
                 targetPos < 0
                 && targetPos + this.listWidth + this.options.horPadding
                     < this.__width
@@ -522,7 +526,11 @@ export class ScrollBox extends Container
         {
             const targetPos = this.list.y - event.deltaY;
 
-            if (
+            if (this.listHeight < this.__height)
+            {
+                this._trackpad.yAxis.value = 0;
+            }
+            else if (
                 targetPos < 0
                 && targetPos + this.listHeight + this.options.vertPadding
                     < this.__height
