@@ -20,6 +20,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "strictNullChecks": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noImplicitOverride": true

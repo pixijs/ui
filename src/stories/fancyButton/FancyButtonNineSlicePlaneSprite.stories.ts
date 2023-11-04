@@ -6,8 +6,6 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preload } from '../utils/loader';
 import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
-import { NineSlicePlane } from '@pixi/mesh-extras';
-import { Texture } from '@pixi/core';
 
 const args = {
     text: 'Click me!',
