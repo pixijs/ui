@@ -191,14 +191,14 @@ export class FancyButton extends ButtonContainer
             Ticker.shared.add(() => Group.shared.update());
         }
 
+        this.setState('default');
+
         this.defaultView = defaultView;
         this.hoverView = hoverView;
         this.pressedView = pressedView;
         this.disabledView = disabledView;
         this.text = text;
         this.iconView = icon;
-
-        this.setState('default');
 
         this.initStateControl();
     }
