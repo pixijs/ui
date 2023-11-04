@@ -18,7 +18,7 @@ const args = {
     paddingLeft: 0,
     amount: 1,
     width: 320,
-    height: 54,
+    height: 80,
     onChange: action('Input')
 };
 

@@ -6,9 +6,12 @@ import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
 import { NineSlicePlane } from '@pixi/mesh-extras';
+import { Graphics } from '@pixi/graphics';
+
+export type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
-    bg: Container | string;
+    bg: ViewType;
     textStyle?: Partial<TextStyle>;
     placeholder?: string;
     value?: string;
@@ -35,8 +38,8 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    protected _bg?: Container | NineSlicePlane;
-    protected inputMask: Container | NineSlicePlane;
+    protected _bg?: Container | NineSlicePlane | Graphics;
+    protected inputMask: Container | NineSlicePlane | Graphics;
     protected _cursor: Sprite;
     protected inputField: Text;
     protected placeholder: Text;
@@ -160,7 +163,7 @@ export class Input extends Container
         this.align();
     }
 
-    set bg(bg: Container | string)
+    set bg(bg: ViewType)
     {
         if (this._bg)
         {
@@ -206,9 +209,19 @@ export class Input extends Container
             this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
         }
         else
-        {
-            this.inputMask = getView(bg);
-        }
+            if (bg instanceof Sprite)
+            {
+                this.inputMask = new Sprite(bg.texture);
+            }
+            else
+                if (bg instanceof Graphics)
+                {
+                    this.inputMask = bg.clone();
+                }
+                else
+                {
+                    this.inputMask = getView(bg);
+                }
 
         this.inputField.mask = this.inputMask;
 
