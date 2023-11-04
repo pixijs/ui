@@ -89,6 +89,8 @@ export class Slider extends SliderBase
 
     protected override update(event: FederatedPointerEvent)
     {
+        super.update(event);
+
         if (!this.dragging) return;
 
         const obj = event.currentTarget as DragObject;

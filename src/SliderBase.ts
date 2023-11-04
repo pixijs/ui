@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
-
+import type { DragObject } from './utils/HelpTypes';
 import { FederatedPointerEvent } from '@pixi/events';
 import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
 import { getView } from './utils/helpers/view';
@@ -45,6 +45,7 @@ export class SliderBase extends ProgressBar
     /** Maximal value. */
     max = 100;
 
+    protected startX!: number;
     protected startUpdateValue1!: number;
     protected startUpdateValue2!: number;
 
@@ -183,6 +184,11 @@ export class SliderBase extends ProgressBar
     protected startUpdate(event: FederatedPointerEvent)
     {
         this.dragging = 1;
+
+        const obj = event.currentTarget as DragObject;
+
+        this.startX = obj.parent.worldTransform.applyInverse(event.global).x;
+
         this.startUpdateValue1 = this._value1;
         this.startUpdateValue2 = this._value2;
         this.update(event);
@@ -193,7 +199,7 @@ export class SliderBase extends ProgressBar
         if (!this.dragging) return;
         this.dragging = 0;
 
-        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2)
+        if (!!this.startX || (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2))
         {
             this.change();
         }
@@ -202,10 +208,22 @@ export class SliderBase extends ProgressBar
         this.startUpdateValue2 = null;
     }
 
+    protected onClick()
+    {
+        this.change();
+    }
+
     /* Called when dragging started and on every move. */
     protected update(_event: FederatedPointerEvent)
     {
-    // override me
+        const obj = _event.currentTarget as DragObject;
+
+        const { x } = obj.parent.worldTransform.applyInverse(_event.global);
+
+        if (x !== this.startX)
+        {
+            this.startX = null;
+        }
     }
 
     /** Called when dragging stopped. */
