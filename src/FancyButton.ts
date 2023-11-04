@@ -134,7 +134,7 @@ export class FancyButton extends ButtonContainer
     anchor: ObservablePoint;
 
     /** FancyButton options. */
-    options?: ButtonOptions;
+    private readonly _options?: ButtonOptions;
 
     /**
      * Creates a button with a lot of tweaks.
@@ -161,7 +161,7 @@ export class FancyButton extends ButtonContainer
     {
         super();
 
-        this.options = options;
+        this._options = options;
 
         const {
             defaultView,
@@ -529,11 +529,11 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this._options?.nineSlicePlane)
         {
             if (typeof view === 'string')
             {
-                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this.options.nineSlicePlane);
+                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this._options.nineSlicePlane);
             }
             else
             {
@@ -797,7 +797,7 @@ export class FancyButton extends ButtonContainer
 
     override set width(width: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this._options?.nineSlicePlane)
         {
             if (this._views.defaultView)
             {
@@ -833,7 +833,7 @@ export class FancyButton extends ButtonContainer
 
     override set height(height: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this._options?.nineSlicePlane)
         {
             if (this._views.defaultView)
             {
