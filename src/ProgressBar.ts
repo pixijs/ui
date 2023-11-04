@@ -5,7 +5,7 @@ import { getSpriteView } from './utils/helpers/view';
 import { NineSlicePlane } from '@pixi/mesh-extras';
 import { Graphics } from '@pixi/graphics';
 
-export type FillPaddings = {
+type FillPaddings = {
     top?: number;
     right?: number;
     bottom?: number;
@@ -42,24 +42,23 @@ export class ProgressBar extends Container
     protected progressStart = 0;
     protected _progress = 0;
 
-    /** ProgressBar options. */
-    protected readonly _options?: ProgressBarOptions;
+    protected options: ProgressBarOptions;
 
     /** Container, that holds all inner views. */
     innerView: Container;
 
-    constructor(params?: ProgressBarOptions)
+    constructor(options?: ProgressBarOptions)
     {
         super();
 
-        this._options = params;
+        this.options = options;
 
         this.innerView = new Container();
         this.addChild(this.innerView);
 
-        if (params?.bg && params?.fill)
+        if (options?.bg && options?.fill)
         {
-            this.init(params);
+            this.init(options);
         }
     }
 
@@ -91,11 +90,11 @@ export class ProgressBar extends Container
             this.bg.destroy();
         }
 
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (typeof bg === 'string')
             {
-                this.bg = new NineSlicePlane(Texture.from(bg), ...this._options.nineSlicePlane.bg);
+                this.bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
             }
             else
             {
@@ -136,11 +135,11 @@ export class ProgressBar extends Container
             return;
         }
 
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (typeof fill === 'string')
             {
-                this.fill = new NineSlicePlane(Texture.from(fill), ...this._options.nineSlicePlane.fill);
+                this.fill = new NineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
             }
             else
             {
@@ -218,7 +217,8 @@ export class ProgressBar extends Container
 
         if (this.fillMask)
         {
-            this.fillMask.width = this.fill.width / 100 * this._progress;
+            this.fillMask.width = this.fill.width / 100 * (this._progress - this.progressStart);
+            this.fillMask.x = this.progressStart / 100 * this.fill.width;
             this.fillMask.height = this.fill.height;
         }
     }
@@ -228,9 +228,10 @@ export class ProgressBar extends Container
     {
         return this._progress;
     }
+
     override set width(width: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this.bg)
             {
@@ -239,8 +240,8 @@ export class ProgressBar extends Container
 
             if (this.fill)
             {
-                const leftPadding = this._options.fillPaddings?.left ?? 0;
-                const rightPadding = this._options.fillPaddings?.right ?? 0;
+                const leftPadding = this.options.fillPaddings?.left ?? 0;
+                const rightPadding = this.options.fillPaddings?.right ?? 0;
 
                 this.fill.width = width - leftPadding - rightPadding;
                 this.fillMask.width = width - leftPadding - rightPadding;
@@ -261,7 +262,7 @@ export class ProgressBar extends Container
 
     override set height(height: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this.bg)
             {
@@ -270,8 +271,8 @@ export class ProgressBar extends Container
 
             if (this.fill)
             {
-                const topPadding = this._options.fillPaddings?.top ?? 0;
-                const bottomPadding = this._options.fillPaddings?.bottom ?? 0;
+                const topPadding = this.options.fillPaddings?.top ?? 0;
+                const bottomPadding = this.options.fillPaddings?.bottom ?? 0;
 
                 this.fill.height = height - topPadding - bottomPadding;
                 this.fillMask.height = height - topPadding - bottomPadding;

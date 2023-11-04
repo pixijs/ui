@@ -42,8 +42,8 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
                 y: -40
             },
             fillPaddings: {
-                left: -1,
-                top: -2
+                left: 4.5,
+                top: 2
             }
         });
 

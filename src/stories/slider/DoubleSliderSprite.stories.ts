@@ -44,8 +44,8 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
                 y: -40
             },
             fillPaddings: {
-                left: -1,
-                top: -2
+                left: 4.5,
+                top: 2
             }
         });
 
