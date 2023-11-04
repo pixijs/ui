@@ -6,6 +6,7 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { preload } from '../utils/loader';
 import { centerView } from '../../utils/helpers/resize';
 import { Container } from '@pixi/display';
+import { MaskedFrame } from '../../MaskedFrame';
 
 const args = {
     text: 'Click me!',
@@ -13,8 +14,6 @@ const args = {
     padding: 11,
     width: 300,
     height: 137,
-    textOffsetX: 0,
-    textOffsetY: -7,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -28,8 +27,6 @@ export const UseNineSlicePlane = ({
     disabled,
     onPress,
     padding,
-    textOffsetX,
-    textOffsetY,
     anchorX,
     anchorY,
     animationDuration,
@@ -39,7 +36,14 @@ export const UseNineSlicePlane = ({
 {
     const view = new Container();
 
-    const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
+    const assets = [
+        `button.png`,
+        `button_hover.png`,
+        `button_pressed.png`,
+        `button_disabled.png`,
+        `avatar-01.png`,
+        `avatar_mask.png`
+    ];
 
     preload(assets).then(() =>
     {
@@ -57,7 +61,7 @@ export const UseNineSlicePlane = ({
                 fill: textColor || defaultTextStyle.fill
             }),
             padding,
-            textOffset: { x: textOffsetX, y: textOffsetY },
+            textOffset: { x: 30, y: -5 },
             animations: {
                 hover: {
                     props: {
@@ -73,8 +77,17 @@ export const UseNineSlicePlane = ({
                     },
                     duration: animationDuration
                 }
-            }
+            },
         });
+
+        button.iconView = new MaskedFrame({
+            target: `avatar-01.png`,
+            mask: `avatar_mask.png`,
+            borderWidth: 10,
+            borderColor: 0xFFFFFF
+        });
+        button.iconView.scale.set(0.2);
+        button.iconOffset = { x: -100, y: -7 };
 
         button.anchor.set(anchorX, anchorY);
 
