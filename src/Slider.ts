@@ -48,7 +48,7 @@ export class Slider extends SliderBase
             valueTextStyle: options.valueTextStyle,
             showValue: options.showValue,
             valueTextOffset: options.valueTextOffset,
-            fillOffset: options.fillOffset,
+            fillPaddings: options.fillPaddings,
         });
 
         this.options = options;

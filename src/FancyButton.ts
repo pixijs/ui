@@ -110,6 +110,9 @@ export class FancyButton extends ButtonContainer
     protected originalInnerViewState: AnimationData;
     protected defaultDuration = 100;
 
+    /** FancyButton options. */
+    protected readonly options?: ButtonOptions;
+
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     _padding: number;
 
@@ -132,9 +135,6 @@ export class FancyButton extends ButtonContainer
 
     /** Anchor point of the button. */
     anchor: ObservablePoint;
-
-    /** FancyButton options. */
-    private readonly _options?: ButtonOptions;
 
     /**
      * Creates a button with a lot of tweaks.
@@ -161,7 +161,7 @@ export class FancyButton extends ButtonContainer
     {
         super();
 
-        this._options = options;
+        this.options = options;
 
         const {
             defaultView,
@@ -529,11 +529,11 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (typeof view === 'string')
             {
-                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this._options.nineSlicePlane);
+                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this.options.nineSlicePlane);
             }
             else
             {
@@ -797,7 +797,7 @@ export class FancyButton extends ButtonContainer
 
     override set width(width: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this._views.defaultView)
             {
@@ -833,7 +833,7 @@ export class FancyButton extends ButtonContainer
 
     override set height(height: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this._views.defaultView)
             {

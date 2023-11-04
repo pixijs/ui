@@ -3,12 +3,12 @@ import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
 
 import { FederatedPointerEvent } from '@pixi/events';
-import { ProgressBar } from './ProgressBar';
+import { FillPaddings, ProgressBar, ViewType } from './ProgressBar';
 import { getView } from './utils/helpers/view';
 
 export type BaseSliderOptions = {
-    bg: Container | string;
-    fill?: Container | string;
+    bg: ViewType;
+    fill?: ViewType;
     min?: number;
     max?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
@@ -17,10 +17,11 @@ export type BaseSliderOptions = {
         x?: number;
         y?: number;
     };
-    fillOffset?: {
-        x?: number;
-        y?: number;
-    };
+    fillPaddings?: FillPaddings;
+    nineSlicePlane?: {
+        bg: [number, number, number, number],
+        fill: [number, number, number, number]
+    },
 };
 
 export type DoubleSliderOptions = BaseSliderOptions & {
@@ -64,7 +65,7 @@ export class SliderBase extends ProgressBar
 
         if (options.fill)
         {
-            this.setFill(options.fill, options.fillOffset);
+            this.setFill(options.fill, options.fillPaddings);
         }
 
         this.settings = options;
@@ -160,7 +161,7 @@ export class SliderBase extends ProgressBar
      * Set bg.
      * @param bg
      */
-    override setBackground(bg: Container | string)
+    override setBackground(bg: ViewType)
     {
         if (this.bg)
         {

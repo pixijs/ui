@@ -43,9 +43,9 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
             valueTextOffset: {
                 y: -40
             },
-            fillOffset: {
-                x: -1,
-                y: -2
+            fillPaddings: {
+                left: -1,
+                top: -2
             }
         });
 

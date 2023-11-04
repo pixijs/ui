@@ -1,18 +1,28 @@
 import { Container } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
+import { Texture } from '@pixi/core';
 import { Sprite } from '@pixi/sprite';
-import { getView } from './utils/helpers/view';
+import { getSpriteView } from './utils/helpers/view';
+import { NineSlicePlane } from '@pixi/mesh-extras';
+import { Graphics } from '@pixi/graphics';
 
-type FillOffset = {
-    x?: number;
-    y?: number;
+export type FillPaddings = {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
 };
 
+export type ViewType = Sprite | Graphics | string;
+
 export type ProgressBarOptions = {
-    bg: Container | string;
-    fill: Container | string;
+    bg: ViewType;
+    fill: ViewType;
+    fillPaddings?: FillPaddings;
+    nineSlicePlane?: {
+        bg: [number, number, number, number],
+        fill: [number, number, number, number]
+    },
     progress?: number;
-    fillOffset?: FillOffset;
 };
 
 /**
@@ -26,11 +36,14 @@ export type ProgressBarOptions = {
  */
 export class ProgressBar extends Container
 {
-    protected bg!: Container;
-    protected fill!: Container;
-    protected fillMask!: Graphics;
+    protected bg!: Sprite | NineSlicePlane | Graphics;
+    protected fill!: Sprite | NineSlicePlane | Graphics;
+    protected fillMask!: NineSlicePlane | Graphics;
     protected progressStart = 0;
     protected _progress = 0;
+
+    /** ProgressBar options. */
+    protected readonly _options?: ProgressBarOptions;
 
     /** Container, that holds all inner views. */
     innerView: Container;
@@ -38,6 +51,8 @@ export class ProgressBar extends Container
     constructor(params?: ProgressBarOptions)
     {
         super();
+
+        this._options = params;
 
         this.innerView = new Container();
         this.addChild(this.innerView);
@@ -53,14 +68,14 @@ export class ProgressBar extends Container
      * @param root0
      * @param root0.bg - Background texture.
      * @param root0.fill - Fill texture.
-     * @param root0.fillOffset - Fill offset.
+     * @param root0.fillPaddings - Fill offset.
      * @param root0.progress - Initial progress value.
      */
-    init({ bg, fill, fillOffset, progress }: ProgressBarOptions)
+    init({ bg, fill, fillPaddings, progress }: ProgressBarOptions)
     {
         this.setBackground(bg);
 
-        this.setFill(fill, fillOffset);
+        this.setFill(fill, fillPaddings);
 
         this.progress = progress;
     }
@@ -69,49 +84,109 @@ export class ProgressBar extends Container
      * Set bg.
      * @param bg
      */
-    setBackground(bg: Container | string)
+    setBackground(bg: ViewType)
     {
         if (this.bg)
         {
-            this.innerView.removeChild(this.bg);
+            this.bg.destroy();
         }
 
-        this.bg = getView(bg);
+        if (this._options?.nineSlicePlane)
+        {
+            if (typeof bg === 'string')
+            {
+                this.bg = new NineSlicePlane(Texture.from(bg), ...this._options.nineSlicePlane.bg);
+            }
+            else
+            {
+                console.warn('NineSlicePlane can not be used with views set as Container.');
+            }
+        }
+
+        if (bg instanceof Graphics)
+        {
+            this.bg = bg;
+        }
+
+        if (!this.bg && (typeof bg === 'string' || bg instanceof Sprite))
+        {
+            this.bg = getSpriteView(bg);
+        }
+
         this.innerView.addChildAt(this.bg, 0);
     }
 
     /**
      * Set fill.
      * @param fill
-     * @param fillOffset
+     * @param fillPadding
      */
-    setFill(fill: Container | string, fillOffset?: FillOffset)
+    setFill(fill: ViewType, fillPadding?: FillPaddings)
     {
         if (this.fill)
         {
-            this.innerView.removeChild(this.fill);
             this.fill.destroy();
         }
 
         // in case if user is trying to use same instance for bg and fill
         if (this.bg instanceof Sprite && fill === this.bg)
         {
-            fill = Sprite.from(this.bg.texture);
+            console.warn('Can not use same Sprite instance for bg and fill.');
+
+            return;
         }
 
-        this.fill = getView(fill);
+        if (this._options?.nineSlicePlane)
+        {
+            if (typeof fill === 'string')
+            {
+                this.fill = new NineSlicePlane(Texture.from(fill), ...this._options.nineSlicePlane.fill);
+            }
+            else
+            {
+                console.warn('NineSlicePlane can not be used with views set as Container.');
+            }
+        }
+
+        if (!this.fill)
+        {
+            if (fill instanceof Graphics)
+            {
+                this.fill = fill;
+            }
+            else
+            {
+                this.fill = getSpriteView(fill);
+            }
+        }
+
         this.innerView.addChildAt(this.fill, 1);
 
-        const offsetX = fillOffset?.x ?? 0;
-        const offsetY = fillOffset?.y ?? 0;
+        const offsetX = fillPadding?.left ?? 0;
+        const offsetY = fillPadding?.top ?? 0;
 
-        this.fill.x = ((this.bg.width - this.fill.width) / 2) + offsetX;
-        this.fill.y = ((this.bg.height - this.fill.height) / 2) + offsetY;
+        this.fill.x = offsetX;
+        this.fill.y = offsetY;
 
-        if (!this.fillMask)
+        if (this.fillMask)
         {
-            this.fillMask = new Graphics();
+            this.fill.mask = null;
+            this.fillMask.destroy();
         }
+
+        const leftWidth = this.fill.width / 2;
+        const rightWidth = this.fill.width / 2;
+        const topHeight = this.fill.height / 2;
+        const bottomHeight = this.fill.height / 2;
+
+        let texture: Texture = Texture.WHITE;
+
+        if (this.fill instanceof Sprite && this.fill.texture)
+        {
+            texture = this.fill.texture;
+        }
+
+        this.fillMask = new NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
 
         this.fill.addChild(this.fillMask);
         this.fill.mask = this.fillMask;
@@ -141,12 +216,10 @@ export class ProgressBar extends Container
 
         if (!this.fill) return;
 
-        const startPoint = (this.fill.width / 100) * this.progressStart;
-        const endPoint = ((this.fill.width / 100) * this._progress) - startPoint;
-
         if (this.fillMask)
         {
-            this.fillMask.clear().lineStyle(0).beginFill(0xffffff).drawRect(startPoint, 0, endPoint, this.fill.height);
+            this.fillMask.width = this.fill.width / 100 * this._progress;
+            this.fillMask.height = this.fill.height;
         }
     }
 
@@ -154,5 +227,66 @@ export class ProgressBar extends Container
     get progress(): number
     {
         return this._progress;
+    }
+    override set width(width: number)
+    {
+        if (this._options?.nineSlicePlane)
+        {
+            if (this.bg)
+            {
+                this.bg.width = width;
+            }
+
+            if (this.fill)
+            {
+                const leftPadding = this._options.fillPaddings?.left ?? 0;
+                const rightPadding = this._options.fillPaddings?.right ?? 0;
+
+                this.fill.width = width - leftPadding - rightPadding;
+                this.fillMask.width = width - leftPadding - rightPadding;
+            }
+
+            this.progress = this._progress;
+        }
+        else
+        {
+            super.width = width;
+        }
+    }
+
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    override set height(height: number)
+    {
+        if (this._options?.nineSlicePlane)
+        {
+            if (this.bg)
+            {
+                this.bg.height = height;
+            }
+
+            if (this.fill)
+            {
+                const topPadding = this._options.fillPaddings?.top ?? 0;
+                const bottomPadding = this._options.fillPaddings?.bottom ?? 0;
+
+                this.fill.height = height - topPadding - bottomPadding;
+                this.fillMask.height = height - topPadding - bottomPadding;
+            }
+
+            this.progress = this._progress;
+        }
+        else
+        {
+            super.height = height;
+        }
+    }
+
+    override get height(): number
+    {
+        return super.height;
     }
 }

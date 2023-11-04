@@ -1,6 +1,5 @@
 import { Texture, utils, Ticker } from '@pixi/core';
 import { Container, IDestroyOptions } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
@@ -70,14 +69,11 @@ export class Input extends Container
     /** Left side padding */
     paddingLeft = 0;
 
-    /** Input options */
-    private readonly _options: InputOptions;
-
     constructor(options: InputOptions)
     {
         super();
 
-        this._options = options;
+        this.options = options;
 
         this.options = options;
         this.padding = options.padding;
@@ -517,7 +513,7 @@ export class Input extends Container
 
     override set width(width: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this._bg)
             {
@@ -545,7 +541,7 @@ export class Input extends Container
 
     override set height(height: number)
     {
-        if (this._options?.nineSlicePlane)
+        if (this.options?.nineSlicePlane)
         {
             if (this._bg)
             {
