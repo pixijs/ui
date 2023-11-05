@@ -1,11 +1,12 @@
-import { ObservablePoint, Ticker, Rectangle, utils } from '@pixi/core';
+import { ObservablePoint, Ticker, Rectangle, utils, Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
+import type { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { fitToView } from './utils/helpers/fit';
 import { Tween, Group } from 'tweedle.js';
 import { ButtonContainer } from './Button';
+import { NineSlicePlane } from '@pixi/mesh-extras';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -18,7 +19,7 @@ type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledVie
 type ButtonView = string | Container;
 
 type BasicButtonViews = {
-    [K in ButtonViewType]?: Container;
+    [K in ButtonViewType]?: Container | NineSlicePlane;
 };
 
 type ButtonViews = BasicButtonViews & {
@@ -62,6 +63,7 @@ export type ButtonOptions = ViewsInput & {
     textOffset?: Offset;
     iconOffset?: Offset;
     animations?: StateAnimations;
+    nineSlicePlane?: [number, number, number, number];
 };
 
 /**
@@ -107,6 +109,9 @@ export class FancyButton extends ButtonContainer
     protected animations: StateAnimations;
     protected originalInnerViewState: AnimationData;
     protected defaultDuration = 100;
+
+    /** FancyButton options. */
+    protected readonly options?: ButtonOptions;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     _padding: number;
@@ -155,6 +160,8 @@ export class FancyButton extends ButtonContainer
     constructor(options?: ButtonOptions)
     {
         super();
+
+        this.options = options;
 
         const {
             defaultView,
@@ -522,7 +529,22 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        this._views[viewType] = getView(view);
+        if (this.options?.nineSlicePlane)
+        {
+            if (typeof view === 'string')
+            {
+                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this.options.nineSlicePlane);
+            }
+            else
+            {
+                console.warn('NineSlicePlane can not be used with views set as Container.');
+            }
+        }
+
+        if (!this._views[viewType])
+        {
+            this._views[viewType] = getView(view);
+        }
 
         this.setOffset(this._views[viewType], this.state, this.offset);
 
@@ -771,5 +793,91 @@ export class FancyButton extends ButtonContainer
     get textOffset(): Offset
     {
         return this._textOffset;
+    }
+
+    /**
+     * Sets width of a FancyButtons state views.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlanes of a views.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param width - Width value.
+     */
+    override set width(width: number)
+    {
+        if (this.options?.nineSlicePlane)
+        {
+            if (this._views.defaultView)
+            {
+                this._views.defaultView.width = width;
+            }
+            if (this._views.hoverView)
+            {
+                this._views.hoverView.width = width;
+            }
+            if (this._views.pressedView)
+            {
+                this._views.pressedView.width = width;
+            }
+            if (this._views.disabledView)
+            {
+                this._views.disabledView.width = width;
+            }
+
+            this.adjustTextView(this.state);
+            this.adjustIconView(this.state);
+            this.updateAnchor();
+        }
+        else
+        {
+            super.width = width;
+        }
+    }
+
+    /** Gets width of a FancyButton. */
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    /**
+     * Sets height of a FancyButtons state views.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlanes of a views.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param height - Height value.
+     */
+    override set height(height: number)
+    {
+        if (this.options?.nineSlicePlane)
+        {
+            if (this._views.defaultView)
+            {
+                this._views.defaultView.height = height;
+            }
+            if (this._views.hoverView)
+            {
+                this._views.hoverView.height = height;
+            }
+            if (this._views.pressedView)
+            {
+                this._views.pressedView.height = height;
+            }
+            if (this._views.disabledView)
+            {
+                this._views.disabledView.height = height;
+            }
+
+            this.adjustTextView(this.state);
+            this.adjustIconView(this.state);
+            this.updateAnchor();
+        }
+        else
+        {
+            super.height = height;
+        }
+    }
+
+    /** Gets height of a FancyButton. */
+    override get height(): number
+    {
+        return super.height;
     }
 }

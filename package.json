@@ -1,6 +1,6 @@
 {
     "name": "@pixi/ui",
-    "version": "0.9.1",
+    "version": "0.10.0",
     "description": "It is a library that contains commonly used UI components, that are extensible to allow them to be used in any project",
     "homepage": "https://github.com/pixijs/ui",
     "bugs": "https://github.com/pixijs/ui/issues",
@@ -61,6 +61,7 @@
         "docsKeyword": "PixiJS, UI, components"
     },
     "dependencies": {
+        "@pixi/mesh-extras": "^7.3.2",
         "tweedle.js": "^2.1.0",
         "typed-signals": "^2.5.0"
     },
@@ -79,10 +80,10 @@
         "@pixi/text": "^7.3.1",
         "@pixi/text-bitmap": "^7.3.1",
         "@pixi/text-html": "^7.3.1",
-        "@storybook/addon-essentials": "7.5.1",
-        "@storybook/addon-interactions": "7.5.1",
-        "@storybook/addon-links": "7.5.1",
-        "@storybook/addon-storysource": "^7.5.1",
+        "@storybook/addon-essentials": "7.5.2",
+        "@storybook/addon-interactions": "7.5.2",
+        "@storybook/addon-links": "7.5.2",
+        "@storybook/addon-storysource": "^7.5.2",
         "@storybook/testing-library": "^0.2.2",
         "@types/babel__core": "^7.1.20",
         "@types/jest": "^29.2.4",
@@ -94,7 +95,7 @@
         "jest": "^26.6.3",
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^13.1.0",
-        "storybook": "7.5.1",
+        "storybook": "7.5.2",
         "typescript": "^5.2.0"
     },
     "peerDependencies": {

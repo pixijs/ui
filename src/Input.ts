@@ -1,14 +1,17 @@
 import { Texture, utils, Ticker } from '@pixi/core';
 import { Container, IDestroyOptions } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { TextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
+import { NineSlicePlane } from '@pixi/mesh-extras';
+import { Graphics } from '@pixi/graphics';
+
+type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
-    bg: Container | string;
+    bg: ViewType;
     textStyle?: Partial<TextStyle>;
     placeholder?: string;
     value?: string;
@@ -16,6 +19,7 @@ export type InputOptions = {
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
     cleanOnFocus?: boolean;
+    nineSlicePlane?: [number, number, number, number];
 };
 
 /**
@@ -34,9 +38,9 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    protected _bg?: Container;
+    protected _bg?: Container | NineSlicePlane | Graphics;
+    protected inputMask: Container | NineSlicePlane | Graphics;
     protected _cursor: Sprite;
-    protected inputMask: Graphics;
     protected inputField: Text;
     protected placeholder: Text;
     protected editing = false;
@@ -71,6 +75,8 @@ export class Input extends Container
     constructor(options: InputOptions)
     {
         super();
+
+        this.options = options;
 
         this.options = options;
         this.padding = options.padding;
@@ -157,15 +163,30 @@ export class Input extends Container
         this.align();
     }
 
-    set bg(bg: Container | string)
+    set bg(bg: ViewType)
     {
         if (this._bg)
         {
-            this.removeChild(this._bg);
             this._bg.destroy();
         }
 
-        this._bg = getView(bg);
+        if (this.options?.nineSlicePlane)
+        {
+            if (typeof bg === 'string')
+            {
+                this._bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+            }
+            else
+            {
+                console.warn('NineSlicePlane can not be used with views set as Container.');
+            }
+        }
+
+        if (!this._bg)
+        {
+            this._bg = getView(bg);
+        }
+
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
@@ -180,18 +201,27 @@ export class Input extends Container
         {
             this.inputField.mask = null;
             this._cursor.mask = null;
-            this.removeChild(this.inputMask);
             this.inputMask.destroy();
         }
 
-        this.inputMask = new Graphics()
-            .beginFill(0xffffff)
-            .drawRect(
-                this.paddingLeft,
-                this.paddingTop,
-                this._bg.width - this.paddingRight - this.paddingLeft,
-                this._bg.height - this.paddingBottom - this.paddingTop
-            );
+        if (this.options?.nineSlicePlane && typeof bg === 'string')
+        {
+            this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+        }
+        else
+            if (bg instanceof Sprite)
+            {
+                this.inputMask = new Sprite(bg.texture);
+            }
+            else
+                if (bg instanceof Graphics)
+                {
+                    this.inputMask = bg.clone();
+                }
+                else
+                {
+                    this.inputMask = getView(bg);
+                }
 
         this.inputField.mask = this.inputMask;
 
@@ -490,5 +520,75 @@ export class Input extends Container
         }
 
         super.destroy(options);
+    }
+
+    /**
+     * Sets width of a Input.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param width - Width value.
+     */
+    override set width(width: number)
+    {
+        if (this.options?.nineSlicePlane)
+        {
+            if (this._bg)
+            {
+                this._bg.width = width;
+            }
+
+            if (this.inputMask)
+            {
+                this.inputMask.width = width - this.paddingLeft - this.paddingRight;
+                this.inputMask.x = this.paddingLeft;
+            }
+
+            this.align();
+        }
+        else
+        {
+            super.width = width;
+        }
+    }
+
+    /** Gets width of Input. */
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    /**
+     * Sets height of a Input.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param height - Height value.
+     */
+    override set height(height: number)
+    {
+        if (this.options?.nineSlicePlane)
+        {
+            if (this._bg)
+            {
+                this._bg.height = height;
+            }
+
+            if (this.inputMask)
+            {
+                this.inputMask.height = height - this.paddingTop - this.paddingBottom;
+                this.inputMask.y = this.paddingTop;
+            }
+
+            this.align();
+        }
+        else
+        {
+            super.height = height;
+        }
+    }
+
+    /** Gets height of Input. */
+    override get height(): number
+    {
+        return super.height;
     }
 }

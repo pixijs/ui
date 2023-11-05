@@ -7,11 +7,13 @@ import { List } from '../../List';
 
 const args = {
     value: 50,
+    width: 500,
+    height: 60,
     animate: true,
-    vertical: false
+    vertical: false,
 };
 
-export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
+export const NineSlicePlane: StoryFn = ({ value, animate, vertical, width, height }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -21,16 +23,25 @@ export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 
     preload(assets).then(() =>
     {
-        // Component usage !!!
+    // Component usage !!!
         progressBar = new ProgressBar({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
+            nineSlicePlane: {
+                bg: [22, 15, 22, 23],
+                fill: [22, 15, 22, 15]
+            },
             progress: value,
             fillPaddings: {
                 top: 3,
-                left: 4.5,
+                right: 5,
+                bottom: 6.5,
+                left: 4.5
             }
         });
+
+        progressBar.width = width;
+        progressBar.height = height;
 
         view.addChild(progressBar);
 
@@ -84,7 +95,7 @@ export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 };
 
 export default {
-    title: 'Components/ProgressBar/Sprite',
+    title: 'Components/ProgressBar/NineSlicePlane',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
