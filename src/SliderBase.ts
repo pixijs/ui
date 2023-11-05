@@ -53,7 +53,7 @@ export class SliderBase extends ProgressBar
 
     constructor(options: DoubleSliderOptions)
     {
-        super();
+        super(options);
 
         this.setBackground(options.bg);
 

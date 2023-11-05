@@ -1,0 +1,89 @@
+import { action } from '@storybook/addon-actions';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Slider } from '../../Slider';
+import { centerElement } from '../../utils/helpers/resize';
+import { preload } from '../utils/loader';
+import { Container } from '@pixi/display';
+import type { StoryFn } from '@storybook/types';
+
+const args = {
+    fontColor: '#FFFFFF',
+    min: 0,
+    max: 100,
+    value: 50,
+    fontSize: 20,
+    showValue: true,
+    showFill: true,
+    width: 500,
+    height: 38,
+    onChange: action('Slider')
+};
+
+export const Single: StoryFn = ({
+    min,
+    max,
+    value,
+    fontSize,
+    fontColor,
+    onChange,
+    showValue,
+    showFill,
+    width,
+    height
+}: any) =>
+{
+    const view = new Container();
+
+    const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
+
+    preload(assets).then(() =>
+    {
+    // Component usage !!!
+        const singleSlider = new Slider({
+            bg: 'slider_bg.png',
+            fill: showFill ? 'slider_progress.png' : null,
+            slider: 'slider.png',
+            nineSlicePlane: {
+                bg: [250, 19, 250, 19],
+                fill: [245, 15, 245, 15]
+            },
+            fillPaddings: {
+                top: 2.5,
+                left: 5,
+                right: 5,
+                bottom: 7,
+            },
+            min,
+            max,
+            value,
+            valueTextStyle: {
+                fill: fontColor,
+                fontSize
+            },
+            showValue,
+            valueTextOffset: {
+                y: -40
+            },
+        });
+
+        singleSlider.width = width;
+        singleSlider.height = height;
+
+        singleSlider.onChange.connect((value) => onChange(`${value}`));
+
+        view.addChild(singleSlider);
+
+        centerElement(view);
+    });
+
+    return {
+        view,
+        resize: () => centerElement(view)
+    };
+};
+
+export default {
+    title: 'Components/Slider/SpriteNineSlicePlane',
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args)
+};

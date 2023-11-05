@@ -39,16 +39,9 @@ export class Slider extends SliderBase
     constructor(options: SliderOptions)
     {
         super({
-            bg: options.bg,
             slider1: options.slider,
-            fill: options.fill ?? '',
-            min: options.min,
-            max: options.max,
             value1: options.value,
-            valueTextStyle: options.valueTextStyle,
-            showValue: options.showValue,
-            valueTextOffset: options.valueTextOffset,
-            fillPaddings: options.fillPaddings,
+            ...options
         });
 
         this.sliderOptions = options;
@@ -119,5 +112,29 @@ export class Slider extends SliderBase
             this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
             this.value1Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
+    }
+
+    override set width(value: number)
+    {
+        super.width = value;
+
+        this.updateSlider();
+    }
+
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    override set height(value: number)
+    {
+        super.height = value;
+
+        this.updateSlider();
+    }
+
+    override get height(): number
+    {
+        return super.height;
     }
 }

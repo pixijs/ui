@@ -261,4 +261,30 @@ export class DoubleSlider extends SliderBase
             this.value2Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
+
+    override set width(value: number)
+    {
+        super.width = value;
+
+        this.updateSlider1();
+        this.updateSlider2();
+    }
+
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    override set height(value: number)
+    {
+        super.height = value;
+
+        this.updateSlider1();
+        this.updateSlider2();
+    }
+
+    override get height(): number
+    {
+        return super.height;
+    }
 }
