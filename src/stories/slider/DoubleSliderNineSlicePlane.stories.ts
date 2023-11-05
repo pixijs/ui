@@ -14,7 +14,6 @@ const args = {
     value2: 85,
     fontSize: 20,
     showValue: true,
-    showFill: true,
     width: 500,
     height: 38,
     onChange: action('Slider')
@@ -29,7 +28,6 @@ export const Double: StoryFn = ({
     fontColor,
     onChange,
     showValue,
-    showFill,
     width,
     height
 }: any) =>
@@ -43,7 +41,7 @@ export const Double: StoryFn = ({
     // Component usage !!!
         const singleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
-            fill: showFill ? 'slider_progress.png' : null,
+            fill: 'slider_progress.png',
             slider1: 'slider.png',
             slider2: 'slider.png',
             nineSlicePlane: {

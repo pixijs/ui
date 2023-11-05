@@ -165,7 +165,7 @@ export class SliderBase extends ProgressBar
             slider.anchor.set(0.5);
         }
 
-        container.y = this.bg.height / 2;
+        container.y = this.bg?.height / 2 ?? 0;
 
         this.addChild(container);
 

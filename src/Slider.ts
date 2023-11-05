@@ -89,7 +89,7 @@ export class Slider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        this.progress = this.validate((x / this.bg.width) * 100);
+        this.progress = this.validate((x / this.bg?.width) * 100);
         this.value = this.min + (((this.max - this.min) / 100) * this.progress);
     }
 
@@ -100,7 +100,7 @@ export class Slider extends SliderBase
 
     protected updateSlider()
     {
-        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progress;
+        this._slider1.x = ((this.bg?.width - this._slider1.width) / 100) * this.progress;
 
         if (this.sliderOptions.showValue)
         {

@@ -13,7 +13,6 @@ const args = {
     value: 50,
     fontSize: 20,
     showValue: true,
-    showFill: true,
     width: 500,
     height: 38,
     onChange: action('Slider')
@@ -27,7 +26,6 @@ export const Single: StoryFn = ({
     fontColor,
     onChange,
     showValue,
-    showFill,
     width,
     height
 }: any) =>
@@ -41,7 +39,7 @@ export const Single: StoryFn = ({
     // Component usage !!!
         const singleSlider = new Slider({
             bg: 'slider_bg.png',
-            fill: showFill ? 'slider_progress.png' : null,
+            fill: 'slider_progress.png',
             slider: 'slider.png',
             nineSlicePlane: {
                 bg: [250, 19, 250, 19],

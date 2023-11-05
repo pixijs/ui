@@ -160,7 +160,7 @@ export class DoubleSlider extends SliderBase
             }
         }
 
-        const progress = this.validate((x / this.bg.width) * 100);
+        const progress = this.validate((x / this.bg?.width) * 100);
 
         if (this.activeValue === 'value1')
         {
@@ -222,7 +222,7 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider1()
     {
-        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progressStart;
+        this._slider1.x = ((this.bg?.width - this._slider1.width) / 100) * this.progressStart;
 
         if (this._slider2 && this._slider1.x > this._slider2.x)
         {
@@ -243,7 +243,7 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider2()
     {
-        this._slider2.x = ((this.bg.width - this._slider2.width) / 100) * this.progress;
+        this._slider2.x = ((this.bg?.width - this._slider2.width) / 100) * this.progress;
 
         if (this._slider2.x < this._slider1.x)
         {

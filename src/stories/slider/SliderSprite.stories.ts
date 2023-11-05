@@ -3,7 +3,6 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
-import { Container } from '@pixi/display';
 import type { StoryFn } from '@storybook/types';
 import { List } from '../../List';
 
@@ -14,12 +13,11 @@ const args = {
     value: 50,
     fontSize: 20,
     showValue: true,
-    showFill: true,
     amount: 1,
     onChange: action('Slider')
 };
 
-export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, showFill, amount }: any) =>
+export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, amount }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -32,7 +30,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
             // Component usage !!!
             const singleSlider = new Slider({
                 bg: 'slider_bg.png',
-                fill: showFill ? 'slider_progress.png' : null,
+                fill: 'slider_progress.png',
                 slider: 'slider.png',
                 min,
                 max,
