@@ -42,8 +42,8 @@ export const Single: StoryFn = ({
             fill: 'slider_progress.png',
             slider: 'slider.png',
             nineSlicePlane: {
-                bg: [250, 19, 250, 19],
-                fill: [245, 15, 245, 15]
+                bg: [22, 15, 22, 23],
+                fill: [22, 15, 22, 15]
             },
             fillPaddings: {
                 top: 2.5,

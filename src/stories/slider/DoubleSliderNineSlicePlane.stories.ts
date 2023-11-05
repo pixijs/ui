@@ -45,8 +45,8 @@ export const Double: StoryFn = ({
             slider1: 'slider.png',
             slider2: 'slider.png',
             nineSlicePlane: {
-                bg: [250, 19, 250, 19],
-                fill: [245, 15, 245, 15]
+                bg: [22, 15, 22, 23],
+                fill: [22, 15, 22, 15]
             },
             fillPaddings: {
                 top: 2.5,
