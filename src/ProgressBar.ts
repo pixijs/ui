@@ -233,7 +233,7 @@ export class ProgressBar extends Container
      * Sets width of a ProgressBars background and fill.
      * If nineSlicePlane is set, then width will be set to nineSlicePlane.
      * If nineSlicePlane is not set, then width will control components width as Container.
-     * @param value - Width value.
+     * @param width - Width value.
      */
     override set width(width: number)
     {
@@ -271,7 +271,7 @@ export class ProgressBar extends Container
      * Sets height of a ProgressBars background and fill.
      * If nineSlicePlane is set, then height will be set to nineSlicePlane.
      * If nineSlicePlane is not set, then height will control components height as Container.
-     * @param value - Height value.
+     * @param height - Height value.
      */
     override set height(height: number)
     {
