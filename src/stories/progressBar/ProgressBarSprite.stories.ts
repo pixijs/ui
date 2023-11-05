@@ -11,7 +11,7 @@ const args = {
     vertical: false
 };
 
-export const UseSprite: StoryFn = ({ value, animate, vertical }: any) =>
+export const Sprite: StoryFn = ({ value, animate, vertical }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -84,7 +84,7 @@ export const UseSprite: StoryFn = ({ value, animate, vertical }: any) =>
 };
 
 export default {
-    title: 'Components/ProgressBar/Use Sprite',
+    title: 'Components/ProgressBar/Sprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
