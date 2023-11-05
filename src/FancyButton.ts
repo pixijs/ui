@@ -795,6 +795,12 @@ export class FancyButton extends ButtonContainer
         return this._textOffset;
     }
 
+    /**
+     * Sets width of a FancyButtons state views.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlanes of a views.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param value - Width value.
+     */
     override set width(width: number)
     {
         if (this.options?.nineSlicePlane)
@@ -826,11 +832,18 @@ export class FancyButton extends ButtonContainer
         }
     }
 
+    /** Gets width of a FancyButton. */
     override get width(): number
     {
         return super.width;
     }
 
+    /**
+     * Sets height of a FancyButtons state views.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlanes of a views.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param value - Height value.
+     */
     override set height(height: number)
     {
         if (this.options?.nineSlicePlane)
@@ -862,6 +875,7 @@ export class FancyButton extends ButtonContainer
         }
     }
 
+    /** Gets height of a FancyButton. */
     override get height(): number
     {
         return super.height;

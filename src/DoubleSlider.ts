@@ -264,6 +264,12 @@ export class DoubleSlider extends SliderBase
         }
     }
 
+    /**
+     * Sets width of a Sliders background and fill.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param value - Width value.
+     */
     override set width(value: number)
     {
         super.width = value;
@@ -272,11 +278,18 @@ export class DoubleSlider extends SliderBase
         this.updateSlider2();
     }
 
+    /** Gets width of a Slider. */
     override get width(): number
     {
         return super.width;
     }
 
+    /**
+     * Sets height of a Sliders background and fill.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param value - Height value.
+     */
     override set height(value: number)
     {
         super.height = value;
@@ -285,6 +298,7 @@ export class DoubleSlider extends SliderBase
         this.updateSlider2();
     }
 
+    /** Gets height of a Slider. */
     override get height(): number
     {
         return super.height;

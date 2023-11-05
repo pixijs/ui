@@ -229,6 +229,12 @@ export class ProgressBar extends Container
         return this._progress;
     }
 
+    /**
+     * Sets width of a ProgressBars background and fill.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param value - Width value.
+     */
     override set width(width: number)
     {
         if (this.options?.nineSlicePlane)
@@ -255,11 +261,18 @@ export class ProgressBar extends Container
         }
     }
 
+    /** Gets width of a ProgressBar. */
     override get width(): number
     {
         return super.width;
     }
 
+    /**
+     * Sets height of a ProgressBars background and fill.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param value - Height value.
+     */
     override set height(height: number)
     {
         if (this.options?.nineSlicePlane)
@@ -286,6 +299,7 @@ export class ProgressBar extends Container
         }
     }
 
+    /** Gets height of a ProgressBar. */
     override get height(): number
     {
         return super.height;
