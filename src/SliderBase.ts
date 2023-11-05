@@ -55,13 +55,6 @@ export class SliderBase extends ProgressBar
     {
         super(options);
 
-        this.setBackground(options.bg);
-
-        if (options.fill)
-        {
-            this.setFill(options.fill, options.fillPaddings);
-        }
-
         this.settings = options;
 
         this.slider1 = options.slider1;
@@ -69,8 +62,6 @@ export class SliderBase extends ProgressBar
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
-
-        this.activateBG();
     }
 
     /**
