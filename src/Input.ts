@@ -72,6 +72,24 @@ export class Input extends Container
     /** Left side padding */
     paddingLeft = 0;
 
+    /**
+     * Creates an input.
+     * @param options - Options.
+     * @param { number } options - Options object to use.
+     * @param { Sprite | Graphics | string } options.bg - Background of the Input.
+     * @param { Partial<TextStyle> } options.textStyle - Text style of the Input.
+     * @param { string } options.placeholder - Placeholder of the Input.
+     * @param { string } options.value - Value of the Input.
+     * @param { number } options.maxLength - Max length of the Input.
+     * @param { 'left' | 'center' | 'right' } options.align - Align of the Input.
+     * @param { Padding } options.padding - Padding of the Input.
+     * @param { number } options.padding.top - Top padding of the Input.
+     * @param { number } options.padding.right - Right padding of the Input.
+     * @param { number } options.padding.bottom - Bottom padding of the Input.
+     * @param { number } options.padding.left - Left padding of the Input.
+     * @param { boolean } options.cleanOnFocus - Clean Input on focus.
+     * @param { Array } options.nineSlicePlane - NineSlicePlane values for bg and fill ([number, number, number, number]).
+     */
     constructor(options: InputOptions)
     {
         super();
