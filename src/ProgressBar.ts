@@ -54,7 +54,6 @@ export class ProgressBar extends Container
     /**
      * Creates a ProgressBar.
      * @param options - Options.
-     * @param { number } options - Options object to use.
      * @param { Sprite | Graphics | string } options.bg - Background of the ProgressBar.
      * @param { Sprite | Graphics | string } options.fill - Fill of the ProgressBar.
      * @param { FillPaddings } options.fillPaddings - Fill offsets.
