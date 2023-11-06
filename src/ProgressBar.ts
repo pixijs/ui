@@ -13,15 +13,16 @@ type FillPaddings = {
 };
 
 export type ProgressBarViewType = Sprite | Graphics | string;
+export type NineSlicePlane = {
+    bg: [number, number, number, number],
+    fill: [number, number, number, number]
+};
 
 export type ProgressBarOptions = {
     bg: ProgressBarViewType;
     fill: ProgressBarViewType;
     fillPaddings?: FillPaddings;
-    nineSlicePlane?: {
-        bg: [number, number, number, number],
-        fill: [number, number, number, number]
-    },
+    nineSlicePlane?: NineSlicePlane,
     progress?: number;
 };
 
@@ -47,6 +48,25 @@ export class ProgressBar extends Container
     /** Container, that holds all inner views. */
     innerView: Container;
 
+    /** Container, given as a constructor parameter that is a button view. */
+    protected _view: Container;
+
+    /**
+     * Creates a ProgressBar.
+     * @param options - Options.
+     * @param { number } options - Options object to use.
+     * @param { Sprite | Graphics | string } options.bg - Background of the ProgressBar.
+     * @param { Sprite | Graphics | string } options.fill - Fill of the ProgressBar.
+     * @param { FillPaddings } options.fillPaddings - Fill offsets.
+     * @param { number } options.fillPaddings.top - Fill top offset.
+     * @param { number } options.fillPaddings.right - Fill right offset.
+     * @param { number } options.fillPaddings.bottom - Fill bottom offset.
+     * @param { number } options.fillPaddings.left - Fill left offset.
+     * @param { NineSlicePlane } options.nineSlicePlane - NineSlicePlane values for bg and fill.
+     * @param { Array } options.nineSlicePlane.bg - NineSlicePlane config for bg ([number, number, number, number]).
+     * @param { Array } options.nineSlicePlane.fill - NineSlicePlane config fill ([number, number, number, number]).
+     * @param { number } options.progress - Initial progress value.
+     */
     constructor(options?: ProgressBarOptions)
     {
         super();
