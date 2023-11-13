@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { Texture } from '@pixi/core';
 import { Sprite } from '@pixi/sprite';
 import { getSpriteView } from './utils/helpers/view';
-import { NineSlicePlane } from '@pixi/mesh-extras';
+import { NineSlicePlane as PixiNineSlicePlane } from '@pixi/mesh-extras';
 import { Graphics } from '@pixi/graphics';
 
 type FillPaddings = {
@@ -37,9 +37,9 @@ export type ProgressBarOptions = {
  */
 export class ProgressBar extends Container
 {
-    protected bg!: Sprite | NineSlicePlane | Graphics;
-    protected fill!: Sprite | NineSlicePlane | Graphics;
-    protected fillMask!: NineSlicePlane | Graphics;
+    protected bg!: Sprite | PixiNineSlicePlane | Graphics;
+    protected fill!: Sprite | PixiNineSlicePlane | Graphics;
+    protected fillMask!: PixiNineSlicePlane | Graphics;
     protected progressStart = 0;
     protected _progress = 0;
 
@@ -113,7 +113,7 @@ export class ProgressBar extends Container
         {
             if (typeof bg === 'string')
             {
-                this.bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
+                this.bg = new PixiNineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
             }
             else
             {
@@ -158,7 +158,7 @@ export class ProgressBar extends Container
         {
             if (typeof fill === 'string')
             {
-                this.fill = new NineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
+                this.fill = new PixiNineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
             }
             else
             {
@@ -204,7 +204,7 @@ export class ProgressBar extends Container
             texture = this.fill.texture;
         }
 
-        this.fillMask = new NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+        this.fillMask = new PixiNineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
 
         this.fill.addChild(this.fillMask);
         this.fill.mask = this.fillMask;

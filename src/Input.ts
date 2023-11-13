@@ -74,7 +74,6 @@ export class Input extends Container
 
     /**
      * Creates an input.
-     * @param options - Options.
      * @param { number } options - Options object to use.
      * @param { Sprite | Graphics | string } options.bg - Background of the Input.
      * @param { Partial<TextStyle> } options.textStyle - Text style of the Input.
