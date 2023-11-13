@@ -100,7 +100,7 @@ export class Slider extends SliderBase
 
     protected updateSlider()
     {
-        this._slider1.x = ((this.bg?.width - this._slider1.width) / 100) * this.progress;
+        this._slider1.x = ((this.bg?.width / 100) * this.progress) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;
 
         if (this.sliderOptions.showValue)
