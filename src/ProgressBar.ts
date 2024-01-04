@@ -1,9 +1,5 @@
-import { Container } from '@pixi/display';
-import { Texture } from '@pixi/core';
-import { Sprite } from '@pixi/sprite';
+import { Container, Graphics, NineSliceSprite as PixiNineSliceSprite, Sprite, Texture } from 'pixi.js';
 import { getSpriteView } from './utils/helpers/view';
-import { NineSlicePlane as PixiNineSlicePlane } from '@pixi/mesh-extras';
-import { Graphics } from '@pixi/graphics';
 
 type FillPaddings = {
     top?: number;
@@ -22,7 +18,7 @@ export type ProgressBarOptions = {
     bg: ProgressBarViewType;
     fill: ProgressBarViewType;
     fillPaddings?: FillPaddings;
-    nineSlicePlane?: NineSlicePlane,
+    nineSliceSprite?: NineSlicePlane,
     progress?: number;
 };
 
@@ -37,9 +33,9 @@ export type ProgressBarOptions = {
  */
 export class ProgressBar extends Container
 {
-    protected bg!: Sprite | PixiNineSlicePlane | Graphics;
-    protected fill!: Sprite | PixiNineSlicePlane | Graphics;
-    protected fillMask!: PixiNineSlicePlane | Graphics;
+    protected bg!: Sprite | PixiNineSliceSprite | Graphics;
+    protected fill!: Sprite | PixiNineSliceSprite | Graphics;
+    protected fillMask!: PixiNineSliceSprite | Graphics;
     protected progressStart = 0;
     protected _progress = 0;
 
@@ -109,11 +105,17 @@ export class ProgressBar extends Container
             this.bg.destroy();
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof bg === 'string')
             {
-                this.bg = new PixiNineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
+                this.bg = new PixiNineSliceSprite({
+                    texture: Texture.from(bg),
+                    leftWidth: this.options.nineSliceSprite.bg[0],
+                    topHeight: this.options.nineSliceSprite.bg[1],
+                    rightWidth: this.options.nineSliceSprite.bg[2],
+                    bottomHeight: this.options.nineSliceSprite.bg[3],
+                });
             }
             else
             {
@@ -154,11 +156,17 @@ export class ProgressBar extends Container
             return;
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof fill === 'string')
             {
-                this.fill = new PixiNineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
+                this.fill = new PixiNineSliceSprite({
+                    texture: Texture.from(fill),
+                    leftWidth: this.options.nineSliceSprite.fill[0],
+                    topHeight: this.options.nineSliceSprite.fill[1],
+                    rightWidth: this.options.nineSliceSprite.fill[2],
+                    bottomHeight: this.options.nineSliceSprite.fill[3],
+                });
             }
             else
             {
@@ -204,7 +212,7 @@ export class ProgressBar extends Container
             texture = this.fill.texture;
         }
 
-        this.fillMask = new PixiNineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+        this.fillMask = new PixiNineSliceSprite({ texture, leftWidth, topHeight, rightWidth, bottomHeight });
 
         this.fill.addChild(this.fillMask);
         this.fill.mask = this.fillMask;
@@ -256,7 +264,7 @@ export class ProgressBar extends Container
      */
     override set width(width: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this.bg)
             {
@@ -294,7 +302,7 @@ export class ProgressBar extends Container
      */
     override set height(height: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this.bg)
             {

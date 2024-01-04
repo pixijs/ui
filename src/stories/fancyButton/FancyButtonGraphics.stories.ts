@@ -1,15 +1,12 @@
-import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
-import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerView } from '../../utils/helpers/resize';
-import { preload } from '../utils/loader';
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
+import { Container, Graphics, Sprite, Text } from 'pixi.js';
+import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
+import { centerView } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
 
 const args = {
     text: 'Click me!',

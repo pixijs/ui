@@ -3,7 +3,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Switcher } from '../../Switcher';
 import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import { BUTTON_EVENTS } from '../../utils/HelpTypes';
 
 const args = {

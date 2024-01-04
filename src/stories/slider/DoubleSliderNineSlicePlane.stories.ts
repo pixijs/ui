@@ -3,7 +3,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import type { StoryFn } from '@storybook/types';
 
 const args = {
@@ -44,7 +44,7 @@ export const Double: StoryFn = ({
             fill: 'slider_progress.png',
             slider1: 'slider.png',
             slider2: 'slider.png',
-            nineSlicePlane: {
+            nineSliceSprite: {
                 bg: [22, 15, 22, 23],
                 fill: [22, 15, 22, 15]
             },

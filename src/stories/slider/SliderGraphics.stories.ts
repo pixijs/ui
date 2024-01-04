@@ -1,4 +1,4 @@
-import { Graphics } from '@pixi/graphics';
+import { Graphics } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -88,7 +88,7 @@ export const Single: StoryFn = ({
 
     singleSlider.value = value;
 
-    singleSlider.onUpdate.connect((value) => onChange(`${value}`));
+    singleSlider.onValueUpdate.connect((value) => onChange(`${value}`));
 
     view.addChild(singleSlider);
 

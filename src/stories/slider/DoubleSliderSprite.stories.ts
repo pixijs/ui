@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';

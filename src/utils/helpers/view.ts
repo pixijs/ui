@@ -1,5 +1,4 @@
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
+import { Container, Sprite } from 'pixi.js';
 
 export function getView(view: string | Container): Container
 {

@@ -1,10 +1,9 @@
-import { Text } from '@pixi/text';
-import { FancyButton } from '../../FancyButton';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { Container, Text } from 'pixi.js';
+import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
     text: 'Click me!',

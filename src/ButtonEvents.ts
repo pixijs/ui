@@ -1,7 +1,5 @@
-import { FederatedPointerEvent } from '@pixi/events';
-import { isMobile, utils } from '@pixi/core';
+import { Container, FederatedPointerEvent, isMobile } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { Container } from '@pixi/display';
 
 /** Events controller used for {@link Button}. */
 export class ButtonEvents
@@ -40,7 +38,7 @@ export class ButtonEvents
 
     protected connectEvents(view: Container)
     {
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             view.on('pointerdown', this.processDown, this);
             view.on('pointerup', this.processUp, this);
@@ -62,7 +60,7 @@ export class ButtonEvents
 
     protected disconnectEvents(view: Container)
     {
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             view.off('pointerdown', this.processDown, this);
             view.off('pointerup', this.processUp, this);

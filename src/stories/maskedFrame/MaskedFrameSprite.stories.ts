@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import { MaskedFrame } from '../../MaskedFrame';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';

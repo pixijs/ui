@@ -1,4 +1,4 @@
-import { Sprite } from '@pixi/sprite';
+import { Sprite } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
 import { Input } from '../../Input';

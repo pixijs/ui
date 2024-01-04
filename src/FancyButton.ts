@@ -1,12 +1,10 @@
-import { ObservablePoint, Ticker, Rectangle, utils, Texture } from '@pixi/core';
-import { Container } from '@pixi/display';
-import type { Sprite } from '@pixi/sprite';
-import { getView } from './utils/helpers/view';
-import { AnyText, getTextView, PixiText } from './utils/helpers/text';
-import { fitToView } from './utils/helpers/fit';
-import { Tween, Group } from 'tweedle.js';
+import type { Sprite } from 'pixi.js';
+import { Container, NineSlicePlane, ObservablePoint, Rectangle, Texture, Ticker, isMobile } from 'pixi.js';
+import { Group, Tween } from 'tweedle.js';
 import { ButtonContainer } from './Button';
-import { NineSlicePlane } from '@pixi/mesh-extras';
+import { fitToView } from './utils/helpers/fit';
+import { AnyText, PixiText, getTextView } from './utils/helpers/text';
+import { getView } from './utils/helpers/view';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -183,7 +181,7 @@ export class FancyButton extends ButtonContainer
 
         this.addChild(this.innerView);
 
-        this.anchor = new ObservablePoint(this.updateAnchor, this);
+        this.anchor = new ObservablePoint(this);
         this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;
@@ -705,7 +703,7 @@ export class FancyButton extends ButtonContainer
 
         this.onUp.connect(() =>
         {
-            utils.isMobile.any
+            isMobile.any
                 ? this.setState('default')
                 : this.setState('hover');
         });
@@ -725,7 +723,7 @@ export class FancyButton extends ButtonContainer
 
         this.onPress.connect(() =>
         {
-            utils.isMobile.any
+            isMobile.any
                 ? this.setState('default')
                 : this.setState('hover');
         });
@@ -734,7 +732,7 @@ export class FancyButton extends ButtonContainer
         {
             if (!this.button.isDown)
             {
-                utils.isMobile.any
+                isMobile.any
                     ? this.setState('default')
                     : this.setState('hover');
             }

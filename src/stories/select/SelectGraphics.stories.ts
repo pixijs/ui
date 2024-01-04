@@ -1,14 +1,12 @@
-import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
-import { preload } from '../utils/loader';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { Container, Graphics, Sprite } from 'pixi.js';
+import { Select } from '../../Select';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
 
 const args = {
     backgroundColor: '#F5E3A9',

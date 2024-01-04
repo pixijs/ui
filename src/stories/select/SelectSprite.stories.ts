@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';

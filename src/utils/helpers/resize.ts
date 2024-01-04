@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 
 export function centerElement(view: Container, horPos?: number, verPos?: number)
 {

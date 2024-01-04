@@ -27,7 +27,7 @@ export const NineSlicePlane: StoryFn = ({ value, animate, vertical, width, heigh
         progressBar = new ProgressBar({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
-            nineSlicePlane: {
+            nineSliceSprite: {
                 bg: [22, 15, 22, 23],
                 fill: [22, 15, 22, 15]
             },

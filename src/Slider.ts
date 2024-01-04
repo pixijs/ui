@@ -1,9 +1,8 @@
-import { Container } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
+import { Container, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
 
-import type { DragObject } from './utils/HelpTypes';
 import { BaseSliderOptions, SliderBase } from './SliderBase';
+import type { DragObject } from './utils/HelpTypes';
 
 export type SliderOptions = BaseSliderOptions & {
     slider: Container | string;
@@ -31,7 +30,7 @@ export class Slider extends SliderBase
     protected sliderOptions: SliderOptions;
 
     /** Fires when value is changing, on every move of slider. */
-    onUpdate: Signal<(value: number) => void> = new Signal();
+    onValueUpdate: Signal<(value: number) => void> = new Signal();
 
     /** Fires when value changed, only when slider is released. */
     onChange: Signal<(value: number) => void> = new Signal();
@@ -69,7 +68,7 @@ export class Slider extends SliderBase
 
         this.updateSlider();
 
-        this.onUpdate?.emit(this.value);
+        this.onValueUpdate?.emit(this.value);
     }
 
     /** Set slider instance ot texture. */

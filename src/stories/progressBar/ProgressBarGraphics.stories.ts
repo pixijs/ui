@@ -1,4 +1,4 @@
-import { Graphics } from '@pixi/graphics';
+import { Graphics } from 'pixi.js';
 import { List } from '../../List';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';

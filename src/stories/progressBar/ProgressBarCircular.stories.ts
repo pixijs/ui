@@ -2,7 +2,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 
 const args = {
     backgroundColor: '#3d3d3d',

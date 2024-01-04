@@ -1,12 +1,11 @@
-import { RadioGroup } from '../../RadioGroup';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
-import { getColor } from '../utils/color';
+import { Container, Graphics } from 'pixi.js';
 import { CheckBox } from '../../CheckBox';
-import { Graphics } from '@pixi/graphics';
+import { RadioGroup } from '../../RadioGroup';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { getColor } from '../utils/color';
 
 const args = {
     text: 'Radio',

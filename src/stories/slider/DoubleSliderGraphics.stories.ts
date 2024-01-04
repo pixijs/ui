@@ -1,4 +1,4 @@
-import { Graphics } from '@pixi/graphics';
+import { Graphics } from 'pixi.js';
 import { action } from '@storybook/addon-actions';
 import type { StoryFn } from '@storybook/types';
 import { DoubleSlider } from '../../DoubleSlider';
