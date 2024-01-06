@@ -45,10 +45,8 @@ export class Slider extends SliderBase
         });
 
         this.sliderOptions = options;
-
-        this.progress = ((options.value ?? this.min) - this.min) / (this.max - this.min) * 100;
-
         this.value = options.value ?? this.min;
+        this.updateSlider();
     }
 
     /** Return selected value. */
@@ -70,6 +68,28 @@ export class Slider extends SliderBase
         this.updateSlider();
 
         this.onUpdate?.emit(this.value);
+    }
+
+    override set max(value: number)
+    {
+        super.max = value;
+        this.updateSlider();
+    }
+
+    override get max(): number
+    {
+        return super.max;
+    }
+
+    override set min(value: number)
+    {
+        super.min = value;
+        this.updateSlider();
+    }
+
+    override get min(): number
+    {
+        return super.min;
     }
 
     /** Set slider instance ot texture. */
@@ -100,10 +120,12 @@ export class Slider extends SliderBase
 
     protected updateSlider()
     {
+        this.progress = ((this.value ?? this.min) - this.min) / (this.max - this.min) * 100;
+
         this._slider1.x = ((this.bg?.width / 100) * this.progress) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;
 
-        if (this.sliderOptions.showValue)
+        if (this.sliderOptions?.showValue)
         {
             this.value1Text.text = `${Math.round(this.value)}`;
 

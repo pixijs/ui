@@ -222,6 +222,8 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider1()
     {
+        this.updateProgress(this.value1, this.value2);
+
         this._slider1.x = (this.bg?.width / 100 * this.progressStart) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;
 
@@ -244,6 +246,8 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider2()
     {
+        this.updateProgress(this.value1, this.value2);
+
         this._slider2.x = ((this.bg?.width / 100) * this.progress) - (this._slider2.width / 2);
         this._slider2.y = this.bg?.height / 2;
 
