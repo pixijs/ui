@@ -30,7 +30,7 @@ export class Slider extends SliderBase
     protected sliderOptions: SliderOptions;
 
     /** Fires when value is changing, on every move of slider. */
-    onValueUpdate: Signal<(value: number) => void> = new Signal();
+    onUpdate: Signal<(value: number) => void> = new Signal();
 
     /** Fires when value changed, only when slider is released. */
     onChange: Signal<(value: number) => void> = new Signal();
@@ -68,7 +68,7 @@ export class Slider extends SliderBase
 
         this.updateSlider();
 
-        this.onValueUpdate?.emit(this.value);
+        this.onUpdate?.emit(this.value);
     }
 
     /** Set slider instance ot texture. */

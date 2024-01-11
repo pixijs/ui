@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { BitmapFont, BitmapText, Container } from 'pixi.js';
+import { BitmapFont, BitmapFontManager, BitmapText, Container } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -38,12 +38,12 @@ export const UsingSpriteAndBitmapText = ({
 
     preload(assets).then(() =>
     {
-        BitmapFont.from('TitleFont', {
+        BitmapFontManager.install('TitleFont', {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill
         });
 
-        const title = new BitmapText(text, { fontName: 'TitleFont' });
+        const title = new BitmapText(text, { fontFamily: 'TitleFont' });
 
         // Component usage !!!
         const button = new FancyButton({

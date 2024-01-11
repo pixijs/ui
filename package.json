@@ -84,14 +84,17 @@
         "eslint-plugin-no-mixed-operators": "^1.1.1",
         "husky": "^8.0.0",
         "jest": "^26.6.3",
-        "pixi.js": "^8.0.0-rc.1",
+        "pixi.js": "^8.0.0-rc.3",
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^13.1.0",
         "storybook": "7.5.2",
         "typescript": "^5.2.0"
     },
     "peerDependencies": {
-        "pixi.js": "^8.0.0-*"
+        "pixi.js": "^8.0.0-0"
+    },
+    "overrides": {
+        "pixi.js": "^8.0.0-rc.3"
     },
     "publishConfig": {
         "access": "public"

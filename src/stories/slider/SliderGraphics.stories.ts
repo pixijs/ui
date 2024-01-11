@@ -88,7 +88,7 @@ export const Single: StoryFn = ({
 
     singleSlider.value = value;
 
-    singleSlider.onValueUpdate.connect((value) => onChange(`${value}`));
+    singleSlider.onUpdate.connect((value) => onChange(`${value}`));
 
     view.addChild(singleSlider);
 
