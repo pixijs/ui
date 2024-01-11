@@ -316,8 +316,6 @@ export class Input extends Container
 
         document.body.appendChild(input);
 
-        input.setAttribute('inputmode', 'decimal');
-
         input.style.position = 'fixed';
         input.style.left = `${this.getGlobalPosition().x}px`;
         input.style.top = `${this.getGlobalPosition().y}px`;
