@@ -1,4 +1,4 @@
-import { ColorSource, Ticker, utils } from '@pixi/core';
+import { ColorSource, Ticker, utils, Point } from '@pixi/core';
 import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
@@ -19,6 +19,7 @@ export type ScrollBoxOptions = {
     horPadding?: number;
     padding?: number;
     disableEasing?: boolean;
+    dragTrashHold?: number;
 };
 
 /**
@@ -66,6 +67,7 @@ export class ScrollBox extends Container
     protected options: ScrollBoxOptions;
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
+    protected dragStarTouchPoint: Point;
 
     /**
      * @param options
@@ -314,9 +316,9 @@ export class ScrollBox extends Container
             this.renderAllItems();
 
             this.isDragging = 1;
-            const touchPoint = this.worldTransform.applyInverse(e.global);
+            this.dragStarTouchPoint = this.worldTransform.applyInverse(e.global);
 
-            this._trackpad.pointerDown(touchPoint);
+            this._trackpad.pointerDown(this.dragStarTouchPoint);
 
             const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
 
@@ -356,11 +358,37 @@ export class ScrollBox extends Container
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
+            if (!this.isDragging) return;
+
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
-            this._trackpad.pointerMove(touchPoint);
+            if (this.dragStarTouchPoint)
+            {
+                const dragTrashHold = this.options.dragTrashHold ?? 10;
 
-            if (!this.isDragging) return;
+                if (this.options.type === 'horizontal')
+                {
+                    const xDist = touchPoint.x - this.dragStarTouchPoint.x;
+
+                    if (Math.abs(xDist) > dragTrashHold)
+                    {
+                        this.isDragging = 2;
+                    }
+                }
+                else
+                {
+                    const yDist = touchPoint.y - this.dragStarTouchPoint.y;
+
+                    if (Math.abs(yDist) > dragTrashHold)
+                    {
+                        this.isDragging = 2;
+                    }
+                }
+            }
+
+            if (this.dragStarTouchPoint && this.isDragging !== 2) return;
+
+            this._trackpad.pointerMove(touchPoint);
 
             if (this.pressedChild)
             {
