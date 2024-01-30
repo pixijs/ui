@@ -214,14 +214,7 @@ export class ScrollBox extends Container
      */
     removeItem(itemID: number)
     {
-        const child = this.list.children[itemID];
-
-        if (!child)
-        {
-            return;
-        }
-
-        this.list.removeChild(child);
+        this.list.removeItem(itemID);
 
         this.resize();
     }
