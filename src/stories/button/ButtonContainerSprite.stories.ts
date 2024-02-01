@@ -13,7 +13,7 @@ const args = {
     action: action('Button')
 };
 
-export const npm = ({ size, color, disabled, radius, action }: any) =>
+export const ButtonContainerSprite = ({ size, color, disabled, radius, action }: any) =>
 {
     color = getColor(color);
 

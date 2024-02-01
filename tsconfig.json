@@ -30,5 +30,5 @@
     "./typings",
     "./test",
     "./docs-source"
-  ],
+, "src/stories/checkbox/.ts"  ],
 }
