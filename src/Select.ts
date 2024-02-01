@@ -14,9 +14,9 @@ type Offset = {
 export type SelectItemsOptions = {
     items: string[];
     backgroundColor: number | string;
+    width: number;
+    height: number;
     hoverColor?: number;
-    width?: number;
-    height?: number;
     textStyle?: Partial<TextStyle>;
     radius?: number;
 };
@@ -191,6 +191,16 @@ export class Select extends Container
             this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
 
+        this.addItems(items, selected);
+    }
+
+    /**
+     * Adds items to the dropdown.
+     * @param items
+     * @param selected
+     */
+    addItems(items: SelectItemsOptions, selected = 0)
+    {
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
             const text = button.text;
@@ -212,6 +222,15 @@ export class Select extends Container
 
             this.scrollBox.addItem(button);
         });
+    }
+
+    /**
+     * Remove items from the dropdown.
+     * @param itemID - Item to remove (starting from 0).
+     */
+    removeItem(itemID: number)
+    {
+        this.scrollBox.removeItem(itemID);
     }
 
     /** Toggle the select state (open if closed, closes - id open). */

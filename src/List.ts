@@ -205,4 +205,21 @@ export class List extends Container
             }
         });
     }
+
+    /**
+     * Removes items from the list. (Does not destroy them)
+     * @param itemID - Item to remove (starting from 0).
+     */
+    removeItem(itemID: number)
+    {
+        const child = this.children[itemID];
+
+        if (!child)
+        {
+            return;
+        }
+
+        this.removeChild(child);
+        this.arrangeChildren();
+    }
 }

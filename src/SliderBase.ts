@@ -37,10 +37,10 @@ export class SliderBase extends ProgressBar
     protected dragging = 0;
 
     /** Minimal value. */
-    min = 0;
+    protected _min = 0;
 
     /** Maximal value. */
-    max = 100;
+    protected _max = 100;
 
     protected startX!: number;
     protected startUpdateValue1!: number;
@@ -224,5 +224,35 @@ export class SliderBase extends ProgressBar
     protected change()
     {
     // override me
+    }
+
+    /**
+     * Set max value.
+     * @param value
+     */
+    set max(value: number)
+    {
+        this._max = value;
+    }
+
+    /** Get max value. */
+    get max(): number
+    {
+        return this._max;
+    }
+
+    /**
+     * Set min value.
+     * @param value
+     */
+    set min(value: number)
+    {
+        this._min = value;
+    }
+
+    /** Get min value. */
+    get min(): number
+    {
+        return this._min;
     }
 }
