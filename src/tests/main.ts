@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Container, Graphics, Text } from 'pixi.js';
 import { initPixi } from './utils/pixi';
 import { Button } from '../Button';
@@ -34,18 +35,16 @@ new class App
 
     private createElements()
     {
-        const button = this.createButton();
-
-        button.onPress.connect(() => console.log('onPress'));
+        this.createButton();
     }
 
-    private createButton(): Button
+    private createButton()
     {
         const text = new Text({ text: 'Pixi 8' });
 
         text.anchor.set(0.5);
         text.style = {
-            fontSize: 100,
+            fontSize: 20,
             fill: 0xffffff
         };
 
@@ -62,7 +61,8 @@ new class App
 
         this.view.addChild(buttonContainer);
 
-        return new Button(this.view);
+        new Button(this.view)
+            .onPress.connect(() => console.log('onPress'));
     }
 
     private resize(width = window.innerWidth, height = window.innerHeight)

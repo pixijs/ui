@@ -1,9 +1,8 @@
-import { ButtonContainer } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Graphics, Text } from 'pixi.js';
+import { ButtonContainer } from '../../Button';
 import { centerElement } from '../../utils/helpers/resize';
-import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 
 const args = {
@@ -14,7 +13,7 @@ const args = {
     action: action('Button')
 };
 
-export const ButtonContainerSprite = ({ size, color, disabled, radius, action }: any) =>
+export const npm = ({ size, color, disabled, radius, action }: any) =>
 {
     color = getColor(color);
 
@@ -30,8 +29,8 @@ export const ButtonContainerSprite = ({ size, color, disabled, radius, action }:
     button.onOut.connect(() => action('onOut'));
     button.onUpOut.connect(() => action('onUpOut'));
 
-    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
-    const text = new Text('🤙', { fontSize: 70 });
+    const buttonView = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
+    const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
     text.anchor.set(0.5);
     text.x = buttonView.width / 2;

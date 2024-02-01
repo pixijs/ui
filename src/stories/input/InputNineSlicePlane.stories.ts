@@ -50,7 +50,7 @@ export const UseNineSlicePlane = ({
             // Component usage
             const input = new Input({
                 bg: 'input.png',
-                nineSlicePlane: [
+                nineSliceSprite: [
                     160, 27, 160, 27
                 ],
                 padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],

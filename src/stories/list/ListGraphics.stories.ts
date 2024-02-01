@@ -1,13 +1,12 @@
-import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { FancyButton } from '../../FancyButton';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
-import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
+import { Graphics, Text } from 'pixi.js';
+import { FancyButton } from '../../FancyButton';
 import { List } from '../../List';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { getColor } from '../utils/color';
 
 const args = {
     type: [null, 'horizontal', 'vertical'],

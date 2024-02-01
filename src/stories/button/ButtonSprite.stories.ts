@@ -1,12 +1,10 @@
-import { Text } from '@pixi/text';
-import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Sprite, Text, Texture, isMobile } from 'pixi.js';
+import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
-import { preload } from '../utils/loader';
-import { Sprite } from '@pixi/sprite';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { Texture, utils } from '@pixi/core';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
 
 const args = {
     text: 'Click me!',
@@ -37,10 +35,12 @@ export class SpriteButton extends Button
 
             this.buttonView.anchor.set(0.5);
 
-            this.textView = new Text(props.text, {
-                ...defaultTextStyle,
-                fontSize: 40,
-                fill: props.textColor });
+            this.textView = new Text({
+                text: props.text, style: {
+                    ...defaultTextStyle,
+                    fontSize: 40,
+                    fill: props.textColor }
+            });
             this.textView.y = -10;
             this.textView.anchor.set(0.5);
 
@@ -62,7 +62,7 @@ export class SpriteButton extends Button
 
     override up()
     {
-        this.buttonView.texture = utils.isMobile.any
+        this.buttonView.texture = isMobile.any
             ? Texture.from('button.png')
             : Texture.from('button_hover.png');
 

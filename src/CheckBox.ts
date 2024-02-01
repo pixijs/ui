@@ -1,11 +1,10 @@
-import { Container } from '@pixi/display';
-import { TextStyle, ITextStyle, Text } from '@pixi/text';
+import { AnyTextStyle, AnyTextStyleOptions, Container, Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
 import { getView } from './utils/helpers/view';
 
-type LabelStyle = TextStyle | Partial<ITextStyle>;
+type LabelStyle = AnyTextStyle | AnyTextStyleOptions;
 
 type CheckBoxStyle = {
     checked: Container | string;
@@ -36,7 +35,7 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    label!: Text;
+    labelText!: Text;
 
     /** Signal emitted when checkbox state changes. */
     onCheck: Signal<(state: boolean) => void>;
@@ -66,12 +65,15 @@ export class CheckBox extends Switcher
     {
         if (!text) return;
 
-        this.label = new Text(text ?? '', style ?? this._style?.text);
-        this.addChild(this.label);
+        this.labelText = new Text({
+            text: text ?? '',
+            style: style ?? this._style?.text,
+        });
+        this.addChild(this.labelText);
 
-        this.label.cursor = 'pointer';
-        this.label.eventMode = 'static';
-        this.label.on('pointertap', () => (this.checked = !this.checked));
+        this.labelText.cursor = 'pointer';
+        this.labelText.eventMode = 'static';
+        this.labelText.on('pointertap', () => (this.checked = !this.checked));
     }
 
     /** Setter, which sets a checkbox text. */
@@ -79,18 +81,18 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            cleanup(this.label);
+            cleanup(this.labelText);
 
             return;
         }
 
-        this.label ? (this.label.text = text) : this.addLabel(text);
+        this.labelText ? (this.labelText.text = text) : this.addLabel(text);
     }
 
     /** Getter, which returns a checkbox text. */
     get text(): string | ''
     {
-        return this.label?.text ?? '';
+        return this.labelText?.text ?? '';
     }
 
     /** Setter, which sets a checkbox style settings. */
@@ -120,10 +122,20 @@ export class CheckBox extends Switcher
 
         if (this.label)
         {
-            if (style.text) this.label.style = style.text;
+            checkedView.visible = true;
+            this.active = 1;
+        }
+        else
+        {
+            uncheckedView.visible = true;
+        }
 
-            this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
+        if (this.labelText)
+        {
+            if (style.text) this.labelText.style = style.text;
+
+            this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
+            this.labelText.y = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
         }
     }
 

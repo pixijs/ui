@@ -1,7 +1,13 @@
-import { ColorSource, Ticker, utils, Point } from '@pixi/core';
-import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
-import { EventMode, FederatedPointerEvent } from '@pixi/events';
-import { Graphics } from '@pixi/graphics';
+import {
+    ColorSource,
+    Container,
+    DestroyOptions,
+    EventMode,
+    FederatedPointerEvent,
+    Graphics,
+    Ticker,
+    isMobile,
+} from 'pixi.js';
 import type { ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
@@ -58,7 +64,7 @@ export class ScrollBox extends Container
     protected _trackpad: Trackpad;
     protected isDragging = 0;
     protected interactiveStorage: {
-        item: DisplayObject;
+        item: Container;
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
@@ -150,11 +156,6 @@ export class ScrollBox extends Container
     protected get hasBounds(): boolean
     {
         return !!this.__width || !!this.__height;
-    }
-
-    protected override onChildrenChange()
-    {
-        // do nothing we manage this in addItem
     }
 
     /**
@@ -706,10 +707,10 @@ export class ScrollBox extends Container
 
     /**
      * Destroys the component.
-     * @param {boolean | IDestroyOptions} [options] - Options parameter.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
      * A boolean will act as if all options have been set to that value
      */
-    override destroy(options?: IDestroyOptions | boolean)
+    override destroy(options?: DestroyOptions | boolean)
     {
         this.ticker.remove(this.update, this);
 
@@ -731,11 +732,11 @@ export class ScrollBox extends Container
         this.interactiveStorage.length = 0;
     }
 
-    protected revertClick(item: DisplayObject)
+    protected revertClick(item: Container)
     {
         if (item.eventMode !== 'auto')
         {
-            utils.isMobile.any
+            isMobile.any
                 ? item.emit('pointerupoutside', null)
                 : item.emit('mouseupoutside', null);
 

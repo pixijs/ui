@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { getView } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';

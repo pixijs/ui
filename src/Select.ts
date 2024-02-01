@@ -1,6 +1,4 @@
-import { Container } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
-import { Text, TextStyle } from '@pixi/text';
+import { Container, Graphics, Text, TextStyle } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';

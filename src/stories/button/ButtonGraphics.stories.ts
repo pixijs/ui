@@ -1,9 +1,8 @@
-import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
-import { Button } from '../../Button';
 import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Graphics, Text } from 'pixi.js';
+import { Button } from '../../Button';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 
 const args = {
@@ -18,8 +17,8 @@ export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
 {
     color = getColor(color);
 
-    const buttonView = new Graphics().beginFill(color).drawRoundedRect(0, 0, size, size, radius);
-    const text = new Text('🤙', { fontSize: 70 });
+    const buttonView = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
+    const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
     text.anchor.set(0.5);
     text.x = buttonView.width / 2;

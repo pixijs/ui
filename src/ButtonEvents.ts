@@ -1,4 +1,4 @@
-import { FederatedPointerEvent, isMobile, Container } from 'pixi.js';
+import { Container, FederatedPointerEvent, isMobile } from 'pixi.js';
 import { Signal } from 'typed-signals';
 
 /** Events controller used for {@link Button}. */

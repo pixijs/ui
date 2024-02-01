@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 
 export type ListType = 'horizontal' | 'vertical';
 

@@ -1,15 +1,13 @@
-import { Sprite } from '@pixi/sprite';
-import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { ScrollBox } from '../../ScrollBox';
-import { FancyButton } from '../../FancyButton';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { action } from '@storybook/addon-actions';
-import { preload } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
+import { Container, Sprite, Text } from 'pixi.js';
+import { FancyButton } from '../../FancyButton';
+import { ScrollBox } from '../../ScrollBox';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
 
 const args = {
     fontColor: '#000000',

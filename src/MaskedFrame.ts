@@ -1,6 +1,4 @@
-import { Container } from '@pixi/display';
-import { Graphics } from '@pixi/graphics';
-import { Sprite } from '@pixi/sprite';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
@@ -87,7 +85,7 @@ export class MaskedFrame extends Graphics
 
         this.showBorder();
 
-        const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone();
+        const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone(true);
 
         borderMask.width += borderWidth * 2;
         borderMask.height += borderWidth * 2;

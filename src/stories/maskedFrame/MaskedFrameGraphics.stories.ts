@@ -1,11 +1,9 @@
-import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { MaskedFrame } from '../../MaskedFrame';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { preload } from '../utils/loader';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
 
 const args = {
     borderColor: '#FFFFFF',

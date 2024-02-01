@@ -1,25 +1,31 @@
-import { Texture, utils, Ticker } from '@pixi/core';
-import { Container, IDestroyOptions } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { TextStyle, Text } from '@pixi/text';
+import {
+    Container,
+    DestroyOptions,
+    Graphics,
+    NineSliceSprite,
+    Sprite,
+    Text,
+    TextStyleOptions,
+    Texture,
+    Ticker,
+    isMobile,
+} from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
-import { NineSlicePlane } from '@pixi/mesh-extras';
-import { Graphics } from '@pixi/graphics';
+import { getView } from './utils/helpers/view';
 
 type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
     bg: ViewType;
-    textStyle?: Partial<TextStyle>;
+    textStyle?: Partial<TextStyleOptions>
     placeholder?: string;
     value?: string;
     maxLength?: number;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
     cleanOnFocus?: boolean;
-    nineSlicePlane?: [number, number, number, number];
+    nineSliceSprite?: [number, number, number, number];
 };
 
 /**
@@ -38,8 +44,8 @@ export type InputOptions = {
  */
 export class Input extends Container
 {
-    protected _bg?: Container | NineSlicePlane | Graphics;
-    protected inputMask: Container | NineSlicePlane | Graphics;
+    protected _bg?: Container | NineSliceSprite | Graphics;
+    protected inputMask: Container | NineSliceSprite | Graphics;
     protected _cursor: Sprite;
     protected inputField: Text;
     protected placeholder: Text;
@@ -87,7 +93,7 @@ export class Input extends Container
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
-     * @param { Array } options.nineSlicePlane - NineSlicePlane values for bg and fill ([number, number, number, number]).
+     * @param { Array } options.nineSlicePlane - NineSliceSprite values for bg and fill ([number, number, number, number]).
      */
     constructor(options: InputOptions)
     {
@@ -104,14 +110,14 @@ export class Input extends Container
         this.on('pointertap', () =>
         {
             this.activation = true;
-            utils.isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
+            isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
         });
 
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             window.addEventListener('touchstart', this.handleActivationBinding);
         }
-        else if (!utils.isMobile.any)
+        else if (!isMobile.any)
         {
             window.addEventListener('click', this.handleActivationBinding);
 
@@ -121,7 +127,7 @@ export class Input extends Container
         this.onEnter = new Signal();
         this.onChange = new Signal();
 
-        Ticker.shared.add((delta) => this.update(delta));
+        Ticker.shared.add((ticker) => this.update(ticker.deltaTime));
 
         if (options.bg)
         {
@@ -155,13 +161,14 @@ export class Input extends Container
         const defaultTextStyle = {
             fill: 0x000000,
             align: 'center'
-        } as TextStyle;
+        } as TextStyleOptions;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
 
-        const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
-
-        this.inputField = new Text('', textStyle);
+        this.inputField = new Text({
+            text: '',
+            style: options.textStyle ?? defaultTextStyle
+        });
 
         this._cursor = new Sprite(Texture.WHITE);
         this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
@@ -170,7 +177,10 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
+        this.placeholder = new Text({
+            text: options.placeholder ?? '',
+            style: options.textStyle ?? defaultTextStyle
+        });
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
@@ -187,15 +197,18 @@ export class Input extends Container
             this._bg.destroy();
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof bg === 'string')
             {
-                this._bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+                this._bg = new NineSliceSprite({
+                    texture: Texture.from(bg),
+                    ...this.options.nineSliceSprite
+                });
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -221,9 +234,16 @@ export class Input extends Container
             this.inputMask.destroy();
         }
 
-        if (this.options?.nineSlicePlane && typeof bg === 'string')
+        if (this.options?.nineSliceSprite && typeof bg === 'string')
         {
-            this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+            this.inputMask = new NineSliceSprite(Texture.from(bg));
+            this.inputMask = new NineSliceSprite({
+                texture: Texture.from(bg),
+                leftWidth: this.options.nineSliceSprite[0],
+                topHeight: this.options.nineSliceSprite[1],
+                rightWidth: this.options.nineSliceSprite[2],
+                bottomHeight: this.options.nineSliceSprite[3],
+            });
         }
         else
             if (bg instanceof Sprite)
@@ -233,7 +253,7 @@ export class Input extends Container
             else
                 if (bg instanceof Graphics)
                 {
-                    this.inputMask = bg.clone();
+                    this.inputMask = bg.clone(true);
                 }
                 else
                 {
@@ -292,7 +312,7 @@ export class Input extends Container
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             this.createInputField();
         }
@@ -327,7 +347,7 @@ export class Input extends Container
         input.style.background = 'white';
 
         // This hack fixes instant hiding keyboard on mobile after showing it
-        if (utils.isMobile.android.device)
+        if (isMobile.android.device)
         {
             setTimeout(() =>
             {
@@ -375,7 +395,7 @@ export class Input extends Container
 
         if (this.value.length === 0) this.placeholder.visible = true;
 
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             this.input?.blur();
             this.input?.remove();
@@ -519,15 +539,15 @@ export class Input extends Container
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 
-    override destroy(options?: IDestroyOptions | boolean)
+    override destroy(options?: DestroyOptions | boolean)
     {
         this.off('pointertap');
 
-        if (utils.isMobile.any)
+        if (isMobile.any)
         {
             window.removeEventListener('touchstart', this.handleActivationBinding);
         }
-        else if (!utils.isMobile.any)
+        else if (!isMobile.any)
         {
             window.removeEventListener('click', this.handleActivationBinding);
 
@@ -545,7 +565,7 @@ export class Input extends Container
      */
     override set width(width: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this._bg)
             {
@@ -580,7 +600,7 @@ export class Input extends Container
      */
     override set height(height: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this._bg)
             {

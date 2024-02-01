@@ -1,7 +1,6 @@
-import { Container } from 'pixi.js';
-import { ButtonEvents } from './ButtonEvents';
+import { Container, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { FederatedPointerEvent } from '@pixi/events';
+import { ButtonEvents } from './ButtonEvents';
 
 /**
  * Adds button events to a given container-based view

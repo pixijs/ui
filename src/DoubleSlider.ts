@@ -1,8 +1,7 @@
-import { FederatedPointerEvent } from '@pixi/events';
-import type { DragObject } from './utils/HelpTypes';
-import { DoubleSliderOptions, SliderBase } from './SliderBase';
+import { Container, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { Container } from '@pixi/display';
+import { DoubleSliderOptions, SliderBase } from './SliderBase';
+import type { DragObject } from './utils/HelpTypes';
 
 /**
  * Creates a slider with range selection option.
