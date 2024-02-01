@@ -21,7 +21,7 @@ import { Container } from '@pixi/display';
 
 export class DoubleSlider extends SliderBase
 {
-    protected options: DoubleSliderOptions;
+    protected sliderOptions: DoubleSliderOptions;
 
     protected activeValue: 'value1' | 'value2';
 
@@ -35,7 +35,7 @@ export class DoubleSlider extends SliderBase
     {
         super(options);
 
-        this.options = options;
+        this.sliderOptions = options;
         this.setInitialState();
     }
 
@@ -43,7 +43,7 @@ export class DoubleSlider extends SliderBase
     {
         this.validateValues();
 
-        const { value1, value2 } = this.options;
+        const { value1, value2 } = this.sliderOptions;
 
         this.updateProgress(value1, value2);
 
@@ -59,34 +59,34 @@ export class DoubleSlider extends SliderBase
 
     protected validateValues()
     {
-        if (!this.options.value1)
+        if (!this.sliderOptions.value1)
         {
-            this.options.value1 = this.min;
+            this.sliderOptions.value1 = this.min;
         }
 
-        if (!this.options.value2)
+        if (!this.sliderOptions.value2)
         {
-            this.options.value2 = this.options.max;
+            this.sliderOptions.value2 = this.sliderOptions.max;
         }
 
-        if (this.options.value2 < this.options.value1)
+        if (this.sliderOptions.value2 < this.sliderOptions.value1)
         {
-            this.options.value2 = this.options.value1;
+            this.sliderOptions.value2 = this.sliderOptions.value1;
         }
 
-        if (this.options.value1 < this.options.min)
+        if (this.sliderOptions.value1 < this.sliderOptions.min)
         {
-            this.options.value1 = this.options.min;
+            this.sliderOptions.value1 = this.sliderOptions.min;
         }
 
-        if (this.options.value1 > this.options.max)
+        if (this.sliderOptions.value1 > this.sliderOptions.max)
         {
-            this.options.value1 = this.options.max;
+            this.sliderOptions.value1 = this.sliderOptions.max;
         }
 
-        if (this.options.value2 > this.options.max)
+        if (this.sliderOptions.value2 > this.sliderOptions.max)
         {
-            this.options.value2 = this.options.max;
+            this.sliderOptions.value2 = this.sliderOptions.max;
         }
     }
 
@@ -134,6 +134,8 @@ export class DoubleSlider extends SliderBase
 
     protected override update(event: FederatedPointerEvent)
     {
+        super.update(event);
+
         if (!this.dragging) return;
 
         const obj = event.currentTarget as DragObject;
@@ -158,7 +160,7 @@ export class DoubleSlider extends SliderBase
             }
         }
 
-        const progress = this.validate((x / this.bg.width) * 100);
+        const progress = this.validate((x / this.bg?.width) * 100);
 
         if (this.activeValue === 'value1')
         {
@@ -170,6 +172,7 @@ export class DoubleSlider extends SliderBase
         {
             this.progress = progress;
             this.value2 = this.min + (((this.max - this.min) / 100) * progress);
+            this.updateProgress(this.value1, this.value2);
         }
     }
 
@@ -219,43 +222,89 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider1()
     {
-        this._slider1.x = ((this.bg.width - this._slider1.width) / 100) * this.progressStart;
+        this.updateProgress(this.value1, this.value2);
+
+        this._slider1.x = (this.bg?.width / 100 * this.progressStart) - (this._slider1.width / 2);
+        this._slider1.y = this.bg?.height / 2;
 
         if (this._slider2 && this._slider1.x > this._slider2.x)
         {
             this._slider1.x = this._slider2.x;
         }
 
-        if (this.options?.showValue)
+        if (this.sliderOptions?.showValue)
         {
             this.value1Text.text = `${Math.round(this.value1)}`;
 
             const sliderPosX = this._slider1.x + (this._slider1.width / 2);
             const sliderPosY = this._slider1.y;
 
-            this.value1Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value1Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 
     protected updateSlider2()
     {
-        this._slider2.x = ((this.bg.width - this._slider2.width) / 100) * this.progress;
+        this.updateProgress(this.value1, this.value2);
+
+        this._slider2.x = ((this.bg?.width / 100) * this.progress) - (this._slider2.width / 2);
+        this._slider2.y = this.bg?.height / 2;
 
         if (this._slider2.x < this._slider1.x)
         {
             this._slider2.x = this._slider1.x;
         }
 
-        if (this.options?.showValue)
+        if (this.sliderOptions?.showValue)
         {
             this.value2Text.text = `${Math.round(this.value2)}`;
 
             const sliderPosX = this._slider2.x + (this._slider2.width / 2);
             const sliderPosY = this._slider2.y;
 
-            this.value2Text.x = sliderPosX + (this.options.valueTextOffset?.x ?? 0);
-            this.value2Text.y = sliderPosY + (this.options.valueTextOffset?.y ?? 0);
+            this.value2Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value2Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
+    }
+
+    /**
+     * Sets width of a Sliders background and fill.
+     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then width will control components width as Container.
+     * @param value - Width value.
+     */
+    override set width(value: number)
+    {
+        super.width = value;
+
+        this.updateSlider1();
+        this.updateSlider2();
+    }
+
+    /** Gets width of a Slider. */
+    override get width(): number
+    {
+        return super.width;
+    }
+
+    /**
+     * Sets height of a Sliders background and fill.
+     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
+     * If nineSlicePlane is not set, then height will control components height as Container.
+     * @param value - Height value.
+     */
+    override set height(value: number)
+    {
+        super.height = value;
+
+        this.updateSlider1();
+        this.updateSlider2();
+    }
+
+    /** Gets height of a Slider. */
+    override get height(): number
+    {
+        return super.height;
     }
 }

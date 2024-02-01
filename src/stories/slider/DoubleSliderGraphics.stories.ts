@@ -24,7 +24,6 @@ const args = {
     border: 5,
     handleBorder: 3,
     showValue: true,
-    showFill: true,
     onChange: action('Slider')
 };
 
@@ -46,7 +45,6 @@ export const Double: StoryFn = ({
     handleBorder,
     showValue,
     onChange,
-    showFill
 }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
@@ -84,7 +82,7 @@ export const Double: StoryFn = ({
 
     const doubleSlider = new DoubleSlider({
         bg,
-        fill: showFill ? fill : null,
+        fill,
         slider1,
         slider2,
         min,

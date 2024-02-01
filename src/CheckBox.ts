@@ -3,6 +3,7 @@ import { TextStyle, ITextStyle, Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
+import { getView } from './utils/helpers/view';
 
 type LabelStyle = TextStyle | Partial<ITextStyle>;
 
@@ -95,13 +96,27 @@ export class CheckBox extends Switcher
     /** Setter, which sets a checkbox style settings. */
     set style(style: CheckBoxStyle)
     {
+        // Preserve checked state for the end of the method
+        const wasChecked = this.checked;
+
         this._style = style;
 
         const { unchecked, checked } = style;
 
-        this.views = [unchecked, checked];
+        const uncheckedView = getView(unchecked);
+        const checkedView = getView(checked);
 
-        const uncheckedView = this.views[0];
+        this.views = [uncheckedView, checkedView];
+
+        if (wasChecked)
+        {
+            checkedView.visible = true;
+            this.active = 1;
+        }
+        else
+        {
+            uncheckedView.visible = true;
+        }
 
         if (this.label)
         {

@@ -47,15 +47,16 @@ export const argTypes = (args: Types) =>
         if (typeof args[key] === 'number')
         {
             let min = 0;
+            const arg: number = args[key] as number;
 
             if (key.includes('font'))
             {
                 min = 1;
             }
 
-            if (args[key] >= 0)
+            if (arg >= 0)
             {
-                if (args[key] >= 100)
+                if (arg >= 100)
                 {
                     exportArgTypes[key] = {
                         control: {
@@ -66,7 +67,7 @@ export const argTypes = (args: Types) =>
                         }
                     };
                 }
-                else if (args[key] > 10)
+                else if (arg > 10)
                 {
                     exportArgTypes[key] = {
                         control: {
@@ -77,7 +78,7 @@ export const argTypes = (args: Types) =>
                         }
                     };
                 }
-                else if (args[key] !== 0 && args[key] < 1)
+                else if (arg !== 0 && arg < 1)
                 {
                     exportArgTypes[key] = {
                         control: {
@@ -100,7 +101,7 @@ export const argTypes = (args: Types) =>
                     };
                 }
             }
-            else if (args[key] <= -100)
+            else if (arg <= -100)
             {
                 exportArgTypes[key] = {
                     control: {
@@ -111,7 +112,7 @@ export const argTypes = (args: Types) =>
                     }
                 };
             }
-            else if (args[key] < -10)
+            else if (arg < -10)
             {
                 exportArgTypes[key] = {
                     control: {
@@ -122,7 +123,7 @@ export const argTypes = (args: Types) =>
                     }
                 };
             }
-            else if (args[key] !== 0 && args[key] > -1)
+            else if (arg !== 0 && arg > -1)
             {
                 exportArgTypes[key] = {
                     control: {

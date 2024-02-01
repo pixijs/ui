@@ -23,7 +23,6 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
-    showFill: true,
     onChange: action('Slider')
 };
 
@@ -44,7 +43,6 @@ export const Single: StoryFn = ({
     border,
     onChange,
     showValue,
-    showFill
 }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
@@ -76,7 +74,7 @@ export const Single: StoryFn = ({
     // Component usage
     const singleSlider = new Slider({
         bg,
-        fill: showFill ? fill : null,
+        fill,
         slider,
         min,
         max,

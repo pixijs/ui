@@ -1,9 +1,9 @@
-import { Container } from '@pixi/display';
 import { action } from '@storybook/addon-actions';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 import { preload } from '../utils/loader';
+import { Container } from '@pixi/display';
 import type { StoryFn } from '@storybook/types';
 
 const args = {
@@ -14,22 +14,46 @@ const args = {
     value2: 85,
     fontSize: 20,
     showValue: true,
+    width: 500,
+    height: 38,
     onChange: action('Slider')
 };
 
-export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange }: any) =>
+export const Double: StoryFn = ({
+    min,
+    max,
+    value1,
+    value2,
+    fontSize,
+    fontColor,
+    onChange,
+    showValue,
+    width,
+    height
+}: any) =>
 {
     const view = new Container();
+
     const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
     preload(assets).then(() =>
     {
     // Component usage !!!
-        const doubleSlider = new DoubleSlider({
+        const singleSlider = new DoubleSlider({
             bg: 'slider_bg.png',
             fill: 'slider_progress.png',
             slider1: 'slider.png',
             slider2: 'slider.png',
+            nineSlicePlane: {
+                bg: [22, 15, 22, 23],
+                fill: [22, 15, 22, 15]
+            },
+            fillPaddings: {
+                top: 2.5,
+                left: 5,
+                right: 5,
+                bottom: 7,
+            },
             min,
             max,
             value1,
@@ -42,21 +66,14 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
             valueTextOffset: {
                 y: -40
             },
-            fillPaddings: {
-                left: 4.5,
-                top: 2
-            }
         });
 
-        doubleSlider.value1 = value1;
-        doubleSlider.value2 = value2;
+        singleSlider.width = width;
+        singleSlider.height = height;
 
-        doubleSlider.onChange.connect((value1, value2) =>
-        {
-            onChange(`${value1} - ${value2}`);
-        });
+        singleSlider.onChange.connect((value) => onChange(`${value}`));
 
-        view.addChild(doubleSlider);
+        view.addChild(singleSlider);
 
         centerElement(view);
     });
@@ -68,7 +85,7 @@ export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor,
 };
 
 export default {
-    title: 'Components/Slider/Sprite',
+    title: 'Components/Slider/SpriteNineSlicePlane',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

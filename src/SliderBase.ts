@@ -1,23 +1,17 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { ITextStyle, Text, TextStyle } from '@pixi/text';
-
+import type { DragObject } from './utils/HelpTypes';
 import { FederatedPointerEvent } from '@pixi/events';
-import { ProgressBar } from './ProgressBar';
+import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
 import { getView } from './utils/helpers/view';
 
-export type BaseSliderOptions = {
-    bg: Container | string;
-    fill?: Container | string;
+export type BaseSliderOptions = ProgressBarOptions & {
     min?: number;
     max?: number;
     valueTextStyle?: TextStyle | Partial<ITextStyle>;
     showValue?: boolean;
     valueTextOffset?: {
-        x?: number;
-        y?: number;
-    };
-    fillOffset?: {
         x?: number;
         y?: number;
     };
@@ -46,11 +40,12 @@ export class SliderBase extends ProgressBar
     protected dragging = 0;
 
     /** Minimal value. */
-    min = 0;
+    protected _min = 0;
 
     /** Maximal value. */
-    max = 100;
+    protected _max = 100;
 
+    protected startX!: number;
     protected startUpdateValue1!: number;
     protected startUpdateValue2!: number;
 
@@ -58,14 +53,7 @@ export class SliderBase extends ProgressBar
 
     constructor(options: DoubleSliderOptions)
     {
-        super();
-
-        this.setBackground(options.bg);
-
-        if (options.fill)
-        {
-            this.setFill(options.fill, options.fillOffset);
-        }
+        super(options);
 
         this.settings = options;
 
@@ -74,8 +62,6 @@ export class SliderBase extends ProgressBar
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
-
-        this.activate();
     }
 
     /**
@@ -89,19 +75,10 @@ export class SliderBase extends ProgressBar
         if (this._slider1)
         {
             this.slider1.removeAllListeners();
-            this.removeChild(this._slider1);
             this.slider1.destroy();
         }
 
         this._slider1 = this.createSlider(value);
-
-        this._slider1.eventMode = 'static';
-
-        this._slider1
-            .on('pointerdown', this.startUpdate, this)
-            .on('globalpointermove', this.update, this)
-            .on('pointerup', this.endUpdate, this)
-            .on('pointerupoutside', this.endUpdate, this);
 
         if (this.settings.showValue && !this.value1Text)
         {
@@ -128,19 +105,10 @@ export class SliderBase extends ProgressBar
         if (this._slider2)
         {
             this.slider2.removeAllListeners();
-            this.removeChild(this._slider2);
             this.slider2.destroy();
         }
 
         this._slider2 = this.createSlider(value);
-
-        this._slider2.eventMode = 'static';
-
-        this._slider2
-            .on('pointerdown', this.startUpdate, this)
-            .on('globalpointermove', this.update, this)
-            .on('pointerup', this.endUpdate, this)
-            .on('pointerupoutside', this.endUpdate, this);
 
         if (this.settings.showValue && !this.value2Text)
         {
@@ -160,7 +128,7 @@ export class SliderBase extends ProgressBar
      * Set bg.
      * @param bg
      */
-    override setBackground(bg: Container | string)
+    override setBackground(bg: ProgressBarViewType)
     {
         if (this.bg)
         {
@@ -169,10 +137,10 @@ export class SliderBase extends ProgressBar
 
         super.setBackground(bg);
 
-        this.activate();
+        this.activateBG();
     }
 
-    protected activate()
+    protected activateBG()
     {
         this.bg.eventMode = 'static';
         this.bg
@@ -180,21 +148,6 @@ export class SliderBase extends ProgressBar
             .on('globalpointermove', this.update, this)
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
-
-        if (this.fill)
-        {
-            this.fill.eventMode = 'none';
-        }
-
-        if (this.value1Text)
-        {
-            this.value1Text.eventMode = 'none';
-        }
-
-        if (this.value2Text)
-        {
-            this.value2Text.eventMode = 'none';
-        }
     }
 
     protected createSlider(sliderData: Container | string): Container
@@ -212,7 +165,7 @@ export class SliderBase extends ProgressBar
             slider.anchor.set(0.5);
         }
 
-        container.y = this.bg.height / 2;
+        container.y = this.bg?.height / 2 ?? 0;
 
         this.addChild(container);
 
@@ -222,6 +175,11 @@ export class SliderBase extends ProgressBar
     protected startUpdate(event: FederatedPointerEvent)
     {
         this.dragging = 1;
+
+        const obj = event.currentTarget as DragObject;
+
+        this.startX = obj.parent.worldTransform.applyInverse(event.global).x;
+
         this.startUpdateValue1 = this._value1;
         this.startUpdateValue2 = this._value2;
         this.update(event);
@@ -232,7 +190,7 @@ export class SliderBase extends ProgressBar
         if (!this.dragging) return;
         this.dragging = 0;
 
-        if (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2)
+        if (!!this.startX || (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2))
         {
             this.change();
         }
@@ -241,15 +199,57 @@ export class SliderBase extends ProgressBar
         this.startUpdateValue2 = null;
     }
 
+    protected onClick()
+    {
+        this.change();
+    }
+
     /* Called when dragging started and on every move. */
     protected update(_event: FederatedPointerEvent)
     {
-    // override me
+        const obj = _event.currentTarget as DragObject;
+
+        const { x } = obj.parent.worldTransform.applyInverse(_event.global);
+
+        if (x !== this.startX)
+        {
+            this.startX = null;
+        }
     }
 
     /** Called when dragging stopped. */
     protected change()
     {
     // override me
+    }
+
+    /**
+     * Set max value.
+     * @param value
+     */
+    set max(value: number)
+    {
+        this._max = value;
+    }
+
+    /** Get max value. */
+    get max(): number
+    {
+        return this._max;
+    }
+
+    /**
+     * Set min value.
+     * @param value
+     */
+    set min(value: number)
+    {
+        this._min = value;
+    }
+
+    /** Get min value. */
+    get min(): number
+    {
+        return this._min;
     }
 }

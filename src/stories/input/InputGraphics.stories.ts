@@ -24,6 +24,7 @@ const args = {
     paddingRight: 0,
     paddingBottom: 0,
     paddingLeft: 0,
+    cleanOnFocus: true,
     onChange: action('Change')
 };
 
@@ -45,7 +46,8 @@ export const UseGraphics = ({
     paddingRight,
     paddingBottom,
     paddingLeft,
-    onChange
+    onChange,
+    cleanOnFocus
 }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
@@ -72,10 +74,14 @@ export const UseGraphics = ({
             align,
             placeholder,
             value: text,
-            padding: [paddingTop, paddingRight, paddingBottom, paddingLeft]
+            padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
+            cleanOnFocus
         });
 
-        input.onEnter.connect((val) => onChange(`Input ${i + 1} (${val})`));
+        input.onEnter.connect((val) =>
+        {
+            onChange(`Input ${i + 1} (${val})`);
+        });
 
         view.addChild(input);
     }

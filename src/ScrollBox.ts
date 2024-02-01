@@ -1,5 +1,5 @@
-import { ColorSource, Ticker, utils } from '@pixi/core';
-import { Container, DisplayObject } from '@pixi/display';
+import { ColorSource, Ticker, utils, Point } from '@pixi/core';
+import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
 import type { ListType } from './List';
@@ -19,6 +19,7 @@ export type ScrollBoxOptions = {
     horPadding?: number;
     padding?: number;
     disableEasing?: boolean;
+    dragTrashHold?: number;
 };
 
 /**
@@ -65,6 +66,8 @@ export class ScrollBox extends Container
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
+    protected onMouseScrollBinding = this.onMouseScroll.bind(this);
+    protected dragStarTouchPoint: Point;
 
     /**
      * @param options
@@ -211,14 +214,7 @@ export class ScrollBox extends Container
      */
     removeItem(itemID: number)
     {
-        const child = this.list.children[itemID];
-
-        if (!child)
-        {
-            return;
-        }
-
-        this.list.removeChild(child);
+        this.list.removeItem(itemID);
 
         this.resize();
     }
@@ -313,9 +309,9 @@ export class ScrollBox extends Container
             this.renderAllItems();
 
             this.isDragging = 1;
-            const touchPoint = this.worldTransform.applyInverse(e.global);
+            this.dragStarTouchPoint = this.worldTransform.applyInverse(e.global);
 
-            this._trackpad.pointerDown(touchPoint);
+            this._trackpad.pointerDown(this.dragStarTouchPoint);
 
             const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
 
@@ -355,11 +351,37 @@ export class ScrollBox extends Container
 
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
+            if (!this.isDragging) return;
+
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
-            this._trackpad.pointerMove(touchPoint);
+            if (this.dragStarTouchPoint)
+            {
+                const dragTrashHold = this.options.dragTrashHold ?? 10;
 
-            if (!this.isDragging) return;
+                if (this.options.type === 'horizontal')
+                {
+                    const xDist = touchPoint.x - this.dragStarTouchPoint.x;
+
+                    if (Math.abs(xDist) > dragTrashHold)
+                    {
+                        this.isDragging = 2;
+                    }
+                }
+                else
+                {
+                    const yDist = touchPoint.y - this.dragStarTouchPoint.y;
+
+                    if (Math.abs(yDist) > dragTrashHold)
+                    {
+                        this.isDragging = 2;
+                    }
+                }
+            }
+
+            if (this.dragStarTouchPoint && this.isDragging !== 2) return;
+
+            this._trackpad.pointerMove(touchPoint);
 
             if (this.pressedChild)
             {
@@ -369,7 +391,7 @@ export class ScrollBox extends Container
             }
         });
 
-        document.addEventListener('wheel', (e: WheelEvent) => this.onMouseScroll(e));
+        document.addEventListener('wheel', this.onMouseScrollBinding, true);
     }
 
     protected setInteractive(interactive: boolean)
@@ -500,7 +522,11 @@ export class ScrollBox extends Container
                 ? this.list.x - event.deltaY
                 : this.list.x - event.deltaX;
 
-            if (
+            if (this.listWidth < this.__width)
+            {
+                this._trackpad.xAxis.value = 0;
+            }
+            else if (
                 targetPos < 0
                 && targetPos + this.listWidth + this.options.horPadding
                     < this.__width
@@ -521,7 +547,11 @@ export class ScrollBox extends Container
         {
             const targetPos = this.list.y - event.deltaY;
 
-            if (
+            if (this.listHeight < this.__height)
+            {
+                this._trackpad.yAxis.value = 0;
+            }
+            else if (
                 targetPos < 0
                 && targetPos + this.listHeight + this.options.vertPadding
                     < this.__height
@@ -674,15 +704,21 @@ export class ScrollBox extends Container
         }
     }
 
-    /** Destroys the component. */
-    override destroy()
+    /**
+     * Destroys the component.
+     * @param {boolean | IDestroyOptions} [options] - Options parameter.
+     * A boolean will act as if all options have been set to that value
+     */
+    override destroy(options?: IDestroyOptions | boolean)
     {
         this.ticker.remove(this.update, this);
+
+        document.removeEventListener('wheel', this.onMouseScrollBinding, true);
 
         this.background.destroy();
         this.list.destroy();
 
-        super.destroy();
+        super.destroy(options);
     }
 
     protected restoreItemsInteractivity()
