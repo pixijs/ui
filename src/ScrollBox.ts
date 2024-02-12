@@ -39,13 +39,13 @@ export type ScrollBoxOptions = {
  *     width: 200,
  *     height: 300,
  *     items: [
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
  *     ],
  * });
  */
@@ -439,8 +439,8 @@ export class ScrollBox extends Container
             this.borderMask
                 .clear()
                 .lineStyle(0)
-                .beginFill(0xffffff)
-                .drawRoundedRect(
+                .fill(0xffffff)
+                .roundRect(
                     0,
                     0,
                     this.__width,
@@ -453,12 +453,12 @@ export class ScrollBox extends Container
 
             const color = this.options.background;
 
-            this.background.beginFill(
+            this.background.fill(
                 color ?? 0x000000,
                 color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
             );
 
-            this.background.drawRoundedRect(
+            this.background.roundRect(
                 0,
                 0,
                 this.__width + horPadding,

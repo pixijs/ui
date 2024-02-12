@@ -142,7 +142,7 @@ export class Select extends Container
         {
             this.closeButton = new FancyButton({
                 defaultView: new Graphics()
-                    .beginFill(0x000000, 0.00001)
+                    .fill(0x000000, 0.00001)
                     .drawRect(0, 0, this.openButton.width, this.openButton.height),
                 text: new Text(items?.items ? items.items[0] : '', textStyle),
                 textOffset: selectedTextOffset
@@ -153,7 +153,7 @@ export class Select extends Container
         else
         {
             this.closeButton.defaultView = new Graphics()
-                .beginFill(0x000000, 0.00001)
+                .fill(0x000000, 0.00001)
                 .drawRect(0, 0, this.openButton.width, this.openButton.height);
 
             this.closeButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
@@ -268,10 +268,10 @@ export class Select extends Container
 
         items.forEach((item) =>
         {
-            const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
+            const defaultView = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height, radius);
 
             const color = hoverColor ?? backgroundColor;
-            const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
+            const hoverView = new Graphics().fill(color).roundRect(0, 0, width, height, radius);
 
             const text = new Text(item, textStyle);
 

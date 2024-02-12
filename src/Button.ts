@@ -10,8 +10,8 @@ import { ButtonEvents } from './ButtonEvents';
  * const container = new Container();
  * const button = new Button(
  *      new Graphics()
- *          .beginFill(0xFFFFFF)
- *          .drawRoundedRect(0, 0, 100, 50, 15)
+ *          .fill(0xFFFFFF)
+ *          .roundRect(0, 0, 100, 50, 15)
  * );
  *
  * button.onPress.connect(() => console.log('onPress'));
@@ -91,8 +91,8 @@ export class Button extends ButtonEvents
  * @example
  * const button = new ButtonContainer(
  *      new Graphics()
- *          .beginFill(0xFFFFFF)
- *          .drawRoundedRect(0, 0, 100, 50, 15)
+ *          .fill(0xFFFFFF)
+ *          .roundRect(0, 0, 100, 50, 15)
  * );
  *
  * button.onPress.connect(() => console.log('onPress'));

@@ -55,28 +55,28 @@ export const Double: StoryFn = ({
     backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(backgroundColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(0, 0, width, height, radius)
+        .fill(backgroundColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const fill = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(fillColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(0, 0, width, height, radius)
+        .fill(fillColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const slider1 = new Graphics()
-        .beginFill(borderColor)
+        .fill(borderColor)
         .drawCircle(0, 0, 20 + handleBorder)
-        .beginFill(meshColor)
+        .fill(meshColor)
         .drawCircle(0, 0, 20)
         .endFill();
 
     const slider2 = new Graphics()
-        .beginFill(borderColor)
+        .fill(borderColor)
         .drawCircle(0, 0, 20 + handleBorder)
-        .beginFill(meshColor)
+        .fill(meshColor)
         .drawCircle(0, 0, 20)
         .endFill();
 

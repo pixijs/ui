@@ -48,11 +48,11 @@ function getMask(width: number, height: number, radius: number): Graphics
 
     if (isCircle)
     {
-        mask.beginFill(0x000000).drawCircle(width / 2, height / 2, width / 2);
+        mask.fill(0x000000).drawCircle(width / 2, height / 2, width / 2);
     }
     else
     {
-        mask.beginFill(0x000000).drawRoundedRect(0, 0, width, height, radius);
+        mask.fill(0x000000).roundRect(0, 0, width, height, radius);
     }
 
     return mask;

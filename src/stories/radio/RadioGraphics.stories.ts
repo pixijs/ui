@@ -94,7 +94,7 @@ export const UseGraphics = ({
 
 function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
 {
-    const graphics = new Graphics().beginFill(color);
+    const graphics = new Graphics().fill(color);
 
     const isCircle = width === height && radius >= width / 2;
 
@@ -104,12 +104,12 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
     }
     else
     {
-        graphics.drawRoundedRect(0, 0, width, height, radius);
+        graphics.roundRect(0, 0, width, height, radius);
     }
 
     if (fillColor !== undefined)
     {
-        graphics.beginFill(fillColor);
+        graphics.fill(fillColor);
 
         const center = width / 2;
 
@@ -119,7 +119,7 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
         }
         else
         {
-            graphics.drawRoundedRect(
+            graphics.roundRect(
                 padding,
                 padding,
                 width - (padding * 2),

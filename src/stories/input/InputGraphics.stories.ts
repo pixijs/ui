@@ -61,10 +61,10 @@ export const UseGraphics = ({
     // Component usage
         const input = new Input({
             bg: new Graphics()
-                .beginFill(borderColor)
-                .drawRoundedRect(0, 0, width, height, radius + border)
-                .beginFill(backgroundColor)
-                .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius),
+                .fill(borderColor)
+                .roundRect(0, 0, width, height, radius + border)
+                .fill(backgroundColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius),
             textStyle: {
                 fill: textColor,
                 fontSize,

@@ -86,7 +86,7 @@ export const UseGraphics: StoryFn = ({
 
 function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const closedBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
+    const closedBG = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height, radius);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -103,7 +103,7 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
 
 function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const openBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
+    const openBG = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height * 6, radius);
 
     preload(['arrow_down.png']).then(() =>
     {

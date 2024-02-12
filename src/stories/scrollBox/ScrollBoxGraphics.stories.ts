@@ -50,9 +50,9 @@ export const UseGraphics: StoryFn = ({
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            pressedView: new Graphics().beginFill(0xfe6048).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
+            defaultView: new Graphics().fill(0xa5e24d).roundRect(0, 0, elementsWidth, elementsHeight, radius),
+            hoverView: new Graphics().fill(0xfec230).roundRect(0, 0, elementsWidth, elementsHeight, radius),
+            pressedView: new Graphics().fill(0xfe6048).roundRect(0, 0, elementsWidth, elementsHeight, radius),
             text: new Text(`Item ${i + 1}`, {
                 ...defaultTextStyle,
                 fill: fontColor

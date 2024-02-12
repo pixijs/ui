@@ -54,19 +54,19 @@ export const UseGraphics = ({
             checked,
             style: {
                 unchecked: new Graphics()
-                    .beginFill(borderColor)
-                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
-                    .beginFill(color)
-                    .drawRoundedRect(0, 0, width, height, radius),
+                    .fill(borderColor)
+                    .roundRect(-2, -2, width + 4, height + 4, radius)
+                    .fill(color)
+                    .roundRect(0, 0, width, height, radius),
                 checked: new Graphics()
-                    .beginFill(borderColor)
-                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
-                    .beginFill(color)
-                    .drawRoundedRect(0, 0, width, height, radius)
-                    .beginFill(fillBorderColor)
-                    .drawRoundedRect(3, 3, width - 6, height - 6, radius)
-                    .beginFill(fillColor)
-                    .drawRoundedRect(5, 5, width - 10, height - 10, radius),
+                    .fill(borderColor)
+                    .roundRect(-2, -2, width + 4, height + 4, radius)
+                    .fill(color)
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(fillBorderColor)
+                    .roundRect(3, 3, width - 6, height - 6, radius)
+                    .fill(fillColor)
+                    .roundRect(5, 5, width - 10, height - 10, radius),
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,

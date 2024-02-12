@@ -39,16 +39,16 @@ export const UseGraphics: StoryFn = ({
     backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(backgroundColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(0, 0, width, height, radius)
+        .fill(backgroundColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     const fill = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(fillColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(0, 0, width, height, radius)
+        .fill(fillColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
 
     // Component usage
     const progressBar = new ProgressBar({

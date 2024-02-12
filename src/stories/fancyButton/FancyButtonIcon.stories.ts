@@ -66,17 +66,17 @@ export const UseIcon = ({
 
         const icon = new MaskedFrame({
             target,
-            mask: new Graphics().beginFill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
+            mask: new Graphics().fill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
             borderWidth: 5,
             borderColor: 0xffffff
         });
 
         // Component usage !!!
         const button = new FancyButton({
-            defaultView: new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius),
-            hoverView: new Graphics().beginFill(hoverColor).drawRoundedRect(0, 0, width, height, radius),
-            pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
-            disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
+            defaultView: new Graphics().fill(color).roundRect(0, 0, width, height, radius),
+            hoverView: new Graphics().fill(hoverColor).roundRect(0, 0, width, height, radius),
+            pressedView: new Graphics().fill(pressedColor).roundRect(0, 0, width, height, radius),
+            disabledView: new Graphics().fill(disabledColor).roundRect(0, 0, width, height, radius),
             icon,
             padding,
             offset: {

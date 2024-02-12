@@ -22,12 +22,12 @@ export type ListOptions = {
  * @example
  * const list = new List({
  *    children: [
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50),
-        new Graphics().beginFill(0xFFFFFF).drawRect(0, 0, 50, 50),
+        new Graphics().fill(0x000000).drawRect(0, 0, 50, 50),
+        new Graphics().fill(0xFFFFFF).drawRect(0, 0, 50, 50),
  *    ],
  * });
  *
- * list.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
+ * list.addChild(new Graphics().fill(0x000000).drawRect(0, 0, 50, 50));
  */
 export class List extends Container
 {
