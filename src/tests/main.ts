@@ -2,10 +2,10 @@
 import { Container } from 'pixi.js';
 import { initPixi } from './utils/pixi';
 import { Pane } from 'tweakpane';
-import { circular as CircularProgressBarStory } from '../stories/progressBar/ProgressBarCircular.stories';
-import { UseGraphics as CheckBoxStory } from '../stories/checkbox/CheckBoxGraphics.stories';
-
-import { ButtonContainerSprite as ButtonStory } from '../stories/button/ButtonContainerSprite.stories';
+import CheckBoxStoryOptions, { UseGraphics as CheckBoxStory } from '../stories/checkbox/CheckBoxGraphics.stories';
+import ButtonStoryOptions, { ButtonContainerSprite as ButtonStory } from '../stories/button/ButtonContainerSprite.stories';
+import CircularProgressBarOptions,
+{ circular as CircularProgressBarStory } from '../stories/progressBar/ProgressBarCircular.stories';
 
 // eslint-disable-next-line no-new
 new class App
@@ -41,19 +41,29 @@ new class App
             expanded: true,
         });
 
-        this.addComponent('Button', ButtonStory);
-        this.addComponent('CheckBox', CheckBoxStory);
-        this.addComponent('CircularProgressBar', CircularProgressBarStory);
+        this.addComponent('Button', ButtonStory, ButtonStoryOptions);
+        this.addComponent('CheckBox', CheckBoxStory, CheckBoxStoryOptions);
+        this.addComponent('CircularProgressBar', CircularProgressBarStory, CircularProgressBarOptions);
+
+        this.switchComponent(ButtonStory, ButtonStoryOptions);
     }
 
-    private addComponent(name: string, story: any)
+    private addComponent(name: string, story: any, options: StoryOptions)
     {
-        this.controller
-            .addButton({ title: name })
-            .on('click', () => this.switchComponent(story));
+        const folder = (this.controller as any).addFolder({ title: name });
+
+        for (const key in options.args)
+        {
+            if (typeof options.args[key] !== 'function')
+            {
+                folder.addBinding(options.args, key);
+            }
+        }
+
+        folder.on('change', () => this.switchComponent(story, options));
     }
 
-    private switchComponent(creatorFunction: any)
+    private switchComponent(creatorFunction: any, options: StoryOptions)
     {
         this.view.removeChildren();
 
@@ -62,17 +72,7 @@ new class App
             this.activeComponent.destroy();
         }
 
-        this.activeComponent = creatorFunction({
-            backgroundColor: '#3d3d3d',
-            fillColor: '#00b1dd',
-            radius: 50,
-            lineWidth: 15,
-            value: 50,
-            backgroundAlpha: 0.5,
-            fillAlpha: 0.8,
-            animate: true,
-            cap: ['round', 'butt', 'square']
-        });
+        this.activeComponent = creatorFunction(options.args);
 
         console.log(this.activeComponent);
 
@@ -93,3 +93,8 @@ new class App
     }
 }();
 
+type StoryOptions = {
+    title: string;
+    argTypes: any;
+    args: any;
+};
