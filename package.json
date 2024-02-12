@@ -27,6 +27,7 @@
     ],
     "scripts": {
         "start": "vite --open",
+        "buildTest": "vite build",
         "build": "xs build",
         "clean": "xs clean",
         "deploy": "xs deploy",
