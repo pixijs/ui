@@ -2,6 +2,7 @@
 import { Container } from 'pixi.js';
 import { initPixi } from './utils/pixi';
 import { Pane } from 'tweakpane';
+import SwitcherStoryOpts, { Sprites as SwitcherStory } from '../stories/Switcher/Switcher.stories';
 import ButtonContainerSpriteOpts, { ButtonContainerSprite } from '../stories/button/ButtonContainerSprite.stories';
 import UseGraphicsOpts, { UseGraphics } from '../stories/button/ButtonGraphics.stories';
 import UseSpriteOpts, { UseSprite } from '../stories/button/ButtonSprite.stories';
@@ -41,43 +42,57 @@ new class App
 
     private addComponents()
     {
-        this.addComponentSection('Button', [
-            {
-                name: ButtonContainerSpriteOpts.title,
-                cb: () => this.addComponent(
-                    ButtonContainerSprite,
-                    ButtonContainerSpriteOpts,
-                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonContainerSprite.stories.ts'
-                )
-            },
-            {
-                name: UseGraphicsOpts.title,
-                cb: () => this.addComponent(
-                    UseGraphics,
-                    UseGraphicsOpts,
-                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonGraphics.stories.ts'
-                )
-            },
-            {
-                name: UseSpriteOpts.title,
-                cb: () => this.addComponent(
-                    UseSprite,
-                    UseSpriteOpts,
-                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonSprite.stories.ts'
-                )
-            }
-        ]);
+        const componentsSettings: ComponentsSettings = {
+            Switcher: [
+                {
+                    name: 'Switcher',
+                    cb: () => this.addComponent(
+                        SwitcherStory,
+                        SwitcherStoryOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/Switcher/Switcher.stories.ts'
+                    )
+                }
+            ],
+            Button: [
+                {
+                    name: ButtonContainerSpriteOpts.title,
+                    cb: () => this.addComponent(
+                        ButtonContainerSprite,
+                        ButtonContainerSpriteOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonContainerSprite.stories.ts'
+                    )
+                },
+                {
+                    name: UseGraphicsOpts.title,
+                    cb: () => this.addComponent(
+                        UseGraphics,
+                        UseGraphicsOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonGraphics.stories.ts'
+                    )
+                },
+                {
+                    name: UseSpriteOpts.title,
+                    cb: () => this.addComponent(
+                        UseSprite,
+                        UseSpriteOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonSprite.stories.ts'
+                    )
+                }
+            ]
+        };
 
-        this.addComponent(
-            ButtonContainerSprite,
-            ButtonContainerSpriteOpts
-        );
+        for (const section in componentsSettings)
+        {
+            this.addComponentSection(section, componentsSettings[section]);
+
+            if (!this.activeComponent)
+            {
+                componentsSettings[section][0].cb();
+            }
+        }
     }
 
-    private addComponentSection(sectionName: string, components: {
-        name: string;
-        cb: () => void;
-    }[])
+    private addComponentSection(sectionName: string, components: Components)
     {
         const buttonFolder = this.componentsList.addFolder({
             title: sectionName,
@@ -155,4 +170,15 @@ type StoryOptions = {
     title: string;
     argTypes: any;
     args: any;
+};
+
+type Component = {
+    name: string;
+    cb: () => void;
+};
+
+type Components = Component[];
+
+type ComponentsSettings = {
+    [key: string]: Components;
 };
