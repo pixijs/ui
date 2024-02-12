@@ -46,7 +46,8 @@ new class App
                 name: ButtonContainerSpriteOpts.title,
                 cb: () => this.addComponent(
                     ButtonContainerSprite,
-                    ButtonContainerSpriteOpts
+                    ButtonContainerSpriteOpts,
+                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonContainerSprite.stories.ts'
                 )
             },
             {
@@ -54,6 +55,7 @@ new class App
                 cb: () => this.addComponent(
                     UseGraphics,
                     UseGraphicsOpts,
+                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonGraphics.stories.ts'
                 )
             },
             {
@@ -61,6 +63,7 @@ new class App
                 cb: () => this.addComponent(
                     UseSprite,
                     UseSpriteOpts,
+                    'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonSprite.stories.ts'
                 )
             }
         ]);
@@ -87,7 +90,7 @@ new class App
         });
     }
 
-    private addComponent(story: any, options: StoryOptions)
+    private addComponent(story: any, options: StoryOptions, link: string)
     {
         this.options?.dispose();
 
@@ -105,6 +108,10 @@ new class App
                 this.options.addBinding(options.args, key);
             }
         }
+
+        this.options
+            .addButton({ title: 'Open code example' })
+            .on('click', () => window.open(link, '_blank'));
 
         this.options.on('change', () => this.switchComponent(story, options));
 
