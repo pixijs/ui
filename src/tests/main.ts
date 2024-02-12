@@ -5,6 +5,7 @@ import { Pane } from 'tweakpane';
 import ButtonContainerSpriteOpts, { ButtonContainerSprite } from '../stories/button/ButtonContainerSprite.stories';
 import UseGraphicsOpts, { UseGraphics } from '../stories/button/ButtonGraphics.stories';
 import UseSpriteOpts, { UseSprite } from '../stories/button/ButtonSprite.stories';
+import { getTitle } from './utils/getTitle';
 
 // eslint-disable-next-line no-new
 new class App
@@ -14,12 +15,7 @@ new class App
     private componentsList: any;
     private activeComponent: any;
 
-    constructor()
-    {
-        this.init();
-    }
-
-    private async init()
+    async init()
     {
         const pixiApp = await initPixi();
 
@@ -28,6 +24,7 @@ new class App
         pixiApp.stage.addChild(this.view);
 
         this.createComponentsList();
+        this.addComponents();
 
         this.addSubscriptions();
     }
@@ -40,7 +37,10 @@ new class App
         });
 
         document.getElementById('componentsList')?.appendChild(this.componentsList.element);
+    }
 
+    private addComponents()
+    {
         this.addComponentSection('Button', [
             {
                 name: ButtonContainerSpriteOpts.title,
@@ -66,8 +66,8 @@ new class App
         ]);
 
         this.addComponent(
-            UseSprite,
-            UseSpriteOpts,
+            ButtonContainerSprite,
+            ButtonContainerSpriteOpts
         );
     }
 
@@ -83,7 +83,7 @@ new class App
 
         components.forEach((component) =>
         {
-            buttonFolder.addButton({ title: this.getTitle(component.name) }).on('click', () => component.cb());
+            buttonFolder.addButton({ title: getTitle(component.name) }).on('click', () => component.cb());
         });
     }
 
@@ -95,6 +95,8 @@ new class App
             title: 'Settings',
             expanded: true,
         });
+
+        document.getElementById('componentSettings')?.appendChild(this.options.element);
 
         for (const key in options.args)
         {
@@ -138,17 +140,9 @@ new class App
 
     private resize(width = window.innerWidth, height = window.innerHeight)
     {
-        this.view.x = (width / 2) - (this.view.width / 2);
-        this.view.y = (height / 2) - (this.view.height / 2);
+        this.activeComponent?.resize(width, height);
     }
-
-    private getTitle(title: string): string
-    {
-        const split =  title.split('/');
-
-        return split[split.length - 1];
-    }
-}();
+}().init();
 
 type StoryOptions = {
     title: string;
