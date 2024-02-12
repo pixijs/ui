@@ -8,6 +8,9 @@ import UseGraphicsOpts, { UseGraphics } from '../stories/button/ButtonGraphics.s
 import UseSpriteOpts, { UseSprite } from '../stories/button/ButtonSprite.stories';
 import { getTitle } from './utils/getTitle';
 
+// Migration guide:
+// https://github.com/pixijs/pixijs/releases/tag/v8.0.0-beta.0
+
 // eslint-disable-next-line no-new
 new class App
 {
