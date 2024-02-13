@@ -2,13 +2,17 @@
 import { Container } from 'pixi.js';
 import { initPixi } from './utils/pixi';
 import { Pane } from 'tweakpane';
-import SwitcherStoryOpts, { Sprites as SwitcherStory } from '../stories/Switcher/Switcher.stories';
-import ButtonContainerSpriteOpts, { ButtonContainerSprite } from '../stories/button/ButtonContainerSprite.stories';
-import UseGraphicsOpts, { UseGraphics } from '../stories/button/ButtonGraphics.stories';
-import UseSpriteOpts, { UseSprite } from '../stories/button/ButtonSprite.stories';
+import { getTitle } from './utils/getTitle';
+
+import SwitcherOpts, { Sprites as SwitcherStory } from '../stories/Switcher/Switcher.stories';
+
+import ButtonContainerOpts,
+{ ButtonContainerSprite as ButtonContainerStory } from '../stories/button/ButtonContainerSprite.stories';
+import ButtonUseGraphicsOpts, { UseGraphics as ButtonUseGraphicsStory } from '../stories/button/ButtonGraphics.stories';
+import ButtonUseSpriteOpts, { UseSprite as ButtonUseSpriteStory } from '../stories/button/ButtonSprite.stories';
+
 import CheckboxGraphicsOpts, { UseGraphics as CheckboxGraphicsStory } from '../stories/checkbox/CheckBoxGraphics.stories';
 import CheckboxSpriteOpts, { UseSprite as CheckboxSpriteStory } from '../stories/checkbox/CheckBoxSprite.stories';
-import { getTitle } from './utils/getTitle';
 
 // Migration guide:
 // https://github.com/pixijs/pixijs/releases/tag/v8.0.0-beta.0
@@ -53,33 +57,33 @@ new class App
                     name: 'Switcher',
                     cb: () => this.addComponent(
                         SwitcherStory,
-                        SwitcherStoryOpts,
+                        SwitcherOpts,
                         'https://github.com/pixijs/ui/blob/main/src/stories/Switcher/Switcher.stories.ts'
                     )
                 }
             ],
             Button: [
                 {
-                    name: ButtonContainerSpriteOpts.title,
+                    name: ButtonContainerOpts.title,
                     cb: () => this.addComponent(
-                        ButtonContainerSprite,
-                        ButtonContainerSpriteOpts,
+                        ButtonContainerStory,
+                        ButtonContainerOpts,
                         'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonContainerSprite.stories.ts'
                     )
                 },
                 {
-                    name: UseGraphicsOpts.title,
+                    name: ButtonUseGraphicsOpts.title,
                     cb: () => this.addComponent(
-                        UseGraphics,
-                        UseGraphicsOpts,
+                        ButtonUseGraphicsStory,
+                        ButtonUseGraphicsOpts,
                         'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonGraphics.stories.ts'
                     )
                 },
                 {
-                    name: UseSpriteOpts.title,
+                    name: ButtonUseSpriteOpts.title,
                     cb: () => this.addComponent(
-                        UseSprite,
-                        UseSpriteOpts,
+                        ButtonUseSpriteStory,
+                        ButtonUseSpriteOpts,
                         'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonSprite.stories.ts'
                     )
                 }
