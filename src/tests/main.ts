@@ -14,6 +14,12 @@ import ButtonUseSpriteOpts, { UseSprite as ButtonUseSpriteStory } from '../stori
 import CheckboxGraphicsOpts, { UseGraphics as CheckboxGraphicsStory } from '../stories/checkbox/CheckBoxGraphics.stories';
 import CheckboxSpriteOpts, { UseSprite as CheckboxSpriteStory } from '../stories/checkbox/CheckBoxSprite.stories';
 
+import ScrollBoxGraphicsOpts, { UseGraphics as ScrollBoxGraphicsStory } from '../stories/scrollBox/ScrollBoxGraphics.stories';
+import ScrollBoxSpriteOpts, { UseSprite as ScrollBoxSpriteStory } from '../stories/scrollBox/ScrollBoxSprite.stories';
+
+import SelectGraphicsOpts, { UseGraphics as SelectGraphicsStory } from '../stories/select/SelectGraphics.stories';
+import SelectSpriteOpts, { UseSprite as SelectSpriteStory } from '../stories/select/SelectSprite.stories';
+
 // Migration guide:
 // https://github.com/pixijs/pixijs/releases/tag/v8.0.0-beta.0
 
@@ -105,6 +111,42 @@ new class App
                         'https://github.com/pixijs/ui/blob/main/src/stories/checkbox/CheckBoxSprite.stories.ts'
                     )
                 }
+            ],
+            ScrollBox: [
+                {
+                    name: ScrollBoxGraphicsOpts.title,
+                    cb: () => this.addComponent(
+                        ScrollBoxGraphicsStory,
+                        ScrollBoxGraphicsOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/scrollBox/ScrollBoxGraphics.stories.ts'
+                    )
+                },
+                {
+                    name: ScrollBoxSpriteOpts.title,
+                    cb: () => this.addComponent(
+                        ScrollBoxSpriteStory,
+                        ScrollBoxSpriteOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/scrollBox/ScrollBoxSprite.stories.ts'
+                    )
+                }
+            ],
+            Select: [
+                {
+                    name: SelectGraphicsOpts.title,
+                    cb: () => this.addComponent(
+                        SelectGraphicsStory,
+                        SelectGraphicsOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/select/SelectGraphics.stories.ts'
+                    )
+                },
+                {
+                    name: SelectSpriteOpts.title,
+                    cb: () => this.addComponent(
+                        SelectSpriteStory,
+                        SelectSpriteOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/select/SelectSprite.stories.ts'
+                    )
+                }
             ]
         };
 
@@ -143,11 +185,11 @@ new class App
 
         document.getElementById('componentSettings')?.appendChild(this.options.element);
 
-        // console.log(options.argTypes, options.args);
+        console.log(options.argTypes, options.args);
 
         for (const key in options.args)
         {
-            // console.log(key, options.args[key], options.argTypes[key]);
+            console.log(key, options.args[key], options.argTypes[key]);
 
             if (key === 'action' || typeof options.args[key] === 'function')
             {
@@ -168,8 +210,13 @@ new class App
                     this.options.addBlade({
                         view: 'list',
                         label: key,
-                        options: options.argTypes[key].options.map((option: string) => ({ text: option, value: option })),
-                        value: options.args[key],
+                        options: options.argTypes[key].options.map((option: string) =>
+                        {
+                            if (!option) option = 'undefined';
+
+                            return { text: option, value: option };
+                        }),
+                        value: options.args[key] ?? 'undefined',
                     }).on('change', ({ value }: {value: string}) =>
                     {
                         options.args[key] = value;
