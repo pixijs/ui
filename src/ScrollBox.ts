@@ -5,6 +5,7 @@ import {
     EventMode,
     FederatedPointerEvent,
     Graphics,
+    Point,
     Ticker,
     isMobile,
 } from 'pixi.js';
