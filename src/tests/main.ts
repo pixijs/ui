@@ -143,10 +143,18 @@ new class App
 
         for (const key in options.args)
         {
-            console.log(key, options.args[key], options.argTypes[key]);
+            // console.log(key, options.args[key], options.argTypes[key]);
 
-            if (key === 'action')
+            if (key === 'action' || typeof options.args[key] === 'function')
             {
+                continue;
+            }
+
+            if (!options.argTypes[key])
+            {
+                this.options.addBinding(options.args, key);
+                this.options.on('change', () => this.switchComponent(story, options));
+
                 continue;
             }
 
@@ -165,7 +173,15 @@ new class App
                     });
 
                     break;
+                case 'range':
+                    this.options.addBinding(options.args, key, {
+                        step: options.argTypes[key].control?.step || 1,
+                        min: options.argTypes[key].control?.min || 0,
+                        max: options.argTypes[key].control?.max || 100,
+                    });
+                    this.options.on('change', () => this.switchComponent(story, options));
 
+                    break;
                 default:
                     this.options.addBinding(options.args, key);
                     this.options.on('change', () => this.switchComponent(story, options));
@@ -190,9 +206,12 @@ new class App
             this.activeComponent.destroy();
         }
 
-        if (options.args.action)
+        for (const key in options.args)
         {
-            options.args.action = (message: string) => console.log(message);
+            if (typeof options.args[key] === 'function')
+            {
+                options.args[key] = (message: string) => console.log(message);
+            }
         }
 
         console.log(`switchComponent`, options);
