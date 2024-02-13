@@ -6,6 +6,8 @@ import SwitcherStoryOpts, { Sprites as SwitcherStory } from '../stories/Switcher
 import ButtonContainerSpriteOpts, { ButtonContainerSprite } from '../stories/button/ButtonContainerSprite.stories';
 import UseGraphicsOpts, { UseGraphics } from '../stories/button/ButtonGraphics.stories';
 import UseSpriteOpts, { UseSprite } from '../stories/button/ButtonSprite.stories';
+import CheckboxGraphicsOpts, { UseGraphics as CheckboxGraphicsStory } from '../stories/checkbox/CheckBoxGraphics.stories';
+import CheckboxSpriteOpts, { UseSprite as CheckboxSpriteStory } from '../stories/checkbox/CheckBoxSprite.stories';
 import { getTitle } from './utils/getTitle';
 
 // Migration guide:
@@ -81,6 +83,24 @@ new class App
                         'https://github.com/pixijs/ui/blob/main/src/stories/button/ButtonSprite.stories.ts'
                     )
                 }
+            ],
+            CheckBox: [
+                {
+                    name: CheckboxGraphicsOpts.title,
+                    cb: () => this.addComponent(
+                        CheckboxGraphicsStory,
+                        CheckboxGraphicsOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/checkbox/CheckBoxGraphics.stories.ts'
+                    )
+                },
+                {
+                    name: CheckboxSpriteOpts.title,
+                    cb: () => this.addComponent(
+                        CheckboxSpriteStory,
+                        CheckboxSpriteOpts,
+                        'https://github.com/pixijs/ui/blob/main/src/stories/checkbox/CheckBoxSprite.stories.ts'
+                    )
+                }
             ]
         };
 
@@ -119,19 +139,44 @@ new class App
 
         document.getElementById('componentSettings')?.appendChild(this.options.element);
 
+        // console.log(options.argTypes, options.args);
+
         for (const key in options.args)
         {
-            if (key !== 'action')
+            console.log(key, options.args[key], options.argTypes[key]);
+
+            if (key === 'action')
             {
-                this.options.addBinding(options.args, key);
+                continue;
+            }
+
+            switch (options.argTypes[key].control?.type)
+            {
+                case 'select':
+                    this.options.addBlade({
+                        view: 'list',
+                        label: key,
+                        options: options.argTypes[key].options.map((option: string) => ({ text: option, value: option })),
+                        value: options.args[key],
+                    }).on('change', ({ value }: {value: string}) =>
+                    {
+                        options.args[key] = value;
+                        this.switchComponent(story, options);
+                    });
+
+                    break;
+
+                default:
+                    this.options.addBinding(options.args, key);
+                    this.options.on('change', () => this.switchComponent(story, options));
+
+                    break;
             }
         }
 
         this.options
             .addButton({ title: 'Open code example' })
             .on('click', () => window.open(link, '_blank'));
-
-        this.options.on('change', () => this.switchComponent(story, options));
 
         this.switchComponent(story, options);
     }
@@ -149,6 +194,8 @@ new class App
         {
             options.args.action = (message: string) => console.log(message);
         }
+
+        console.log(`switchComponent`, options);
 
         this.activeComponent = creatorFunction(options.args);
         this.view.addChild(this.activeComponent.view);
