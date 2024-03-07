@@ -60,6 +60,8 @@ export class SliderBase extends ProgressBar
         this.slider1 = options.slider1;
         this.slider2 = options.slider2;
 
+        this.fill.eventMode = 'none';
+
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
     }
@@ -154,6 +156,7 @@ export class SliderBase extends ProgressBar
     {
         const slider = getView(sliderData);
 
+        slider.eventMode = 'none';
         slider.x = slider.width / 2;
 
         const container = new Container();
