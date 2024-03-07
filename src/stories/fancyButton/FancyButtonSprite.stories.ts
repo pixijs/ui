@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
 import { Container, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -44,9 +44,11 @@ export const UseSprite = ({
             hoverView: `button_hover.png`,
             pressedView: `button_pressed.png`,
             disabledView: `button_disabled.png`,
-            text: new Text(text, {
-                ...defaultTextStyle,
-                fill: textColor || defaultTextStyle.fill
+            text: new Text({
+                text, style: {
+                    ...defaultTextStyle,
+                    fill: textColor || defaultTextStyle.fill
+                }
             }),
             padding,
             textOffset: { x: textOffsetX, y: textOffsetY },

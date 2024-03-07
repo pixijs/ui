@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
 import { BitmapFontManager, BitmapText, Container } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -38,12 +38,16 @@ export const UsingSpriteAndBitmapText = ({
 
     preload(assets).then(() =>
     {
-        BitmapFontManager.install('TitleFont', {
-            ...defaultTextStyle,
-            fill: textColor || defaultTextStyle.fill
+        BitmapFontManager.install({
+            name: 'TitleFont',
+            style: {
+                ...defaultTextStyle,
+
+                fill: textColor || defaultTextStyle.fill
+            },
         });
 
-        const title = new BitmapText(text, { fontFamily: 'TitleFont' });
+        const title = new BitmapText({ text, style: { fontFamily: 'TitleFont' } });
 
         // Component usage !!!
         const button = new FancyButton({

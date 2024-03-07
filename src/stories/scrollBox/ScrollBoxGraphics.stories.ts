@@ -1,5 +1,3 @@
-import { action } from '@storybook/addon-actions';
-import type { StoryFn } from '@storybook/types';
 import { Container, Graphics, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
@@ -7,6 +5,9 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#000000',
@@ -50,12 +51,14 @@ export const UseGraphics: StoryFn = ({
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: new Graphics().fill(0xa5e24d).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().fill(0xfec230).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            pressedView: new Graphics().fill(0xfe6048).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(`Item ${i + 1}`, {
-                ...defaultTextStyle,
-                fill: fontColor
+            defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
+            hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
+            pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+            text: new Text({
+                text: `Item ${i + 1}`, style: {
+                    ...defaultTextStyle,
+                    fill: fontColor
+                }
             })
         });
 

@@ -1,9 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Container } from 'pixi.js';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { Container } from 'pixi.js';
+import { action } from '@storybook/addon-actions';
+
 import type { StoryFn } from '@storybook/types';
 
 const args = {
@@ -81,7 +82,7 @@ export const Single: StoryFn = ({
 };
 
 export default {
-    title: 'Components/Slider/SpriteNineSlicePlane',
+    title: 'Components/Slider/SpriteNineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

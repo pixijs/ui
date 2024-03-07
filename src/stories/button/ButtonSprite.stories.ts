@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { Sprite, Text, Texture, isMobile } from 'pixi.js';
+import { isMobile, Sprite, Text, Texture } from 'pixi.js';
 import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -39,7 +39,8 @@ export class SpriteButton extends Button
                 text: props.text, style: {
                     ...defaultTextStyle,
                     fontSize: 40,
-                    fill: props.textColor }
+                    fill: props.textColor
+                }
             });
             this.textView.y = -10;
             this.textView.anchor.set(0.5);

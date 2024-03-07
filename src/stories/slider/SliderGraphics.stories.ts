@@ -1,11 +1,12 @@
 import { Graphics } from 'pixi.js';
-import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     meshColor: '#a5e34d',
@@ -43,7 +44,7 @@ export const Single: StoryFn = ({
     border,
     onChange,
     showValue,
-}: any) =>
+}: any, a) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -53,23 +54,22 @@ export const Single: StoryFn = ({
     backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(backgroundColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(backgroundColor);
 
     const fill = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(fillColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(fillColor);
 
     const slider = new Graphics()
+        .circle(0, 0, 20 + handleBorder)
         .fill(borderColor)
-        .drawCircle(0, 0, 20 + handleBorder)
-        .fill(meshColor)
-        .drawCircle(0, 0, 20)
-        .endFill();
+        .circle(0, 0, 20)
+        .fill(meshColor);
 
     // Component usage
     const singleSlider = new Slider({

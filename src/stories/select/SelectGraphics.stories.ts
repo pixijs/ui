@@ -1,5 +1,3 @@
-import { action } from '@storybook/addon-actions';
-import type { StoryFn } from '@storybook/types';
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
@@ -7,6 +5,9 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -86,7 +87,7 @@ export const UseGraphics: StoryFn = ({
 
 function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const closedBG = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height, radius);
+    const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -103,7 +104,7 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
 
 function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
 {
-    const openBG = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height * 6, radius);
+    const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
 
     preload(['arrow_down.png']).then(() =>
     {

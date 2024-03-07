@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { List } from '../../List';
 import { CheckBox } from '../../CheckBox';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preload } from '../utils/loader';
+import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: '',

@@ -89,13 +89,12 @@ export class CircularProgressBar extends Container
         }
 
         this.bgCircle
-            .setStrokeStyle({
+            .circle(0, 0, radius)
+            .stroke({
                 width: lineWidth,
                 color: backgroundColor,
                 alpha
-            })
-            .circle(0, 0, radius)
-            .fill();
+            });
     }
 
     /**
@@ -136,13 +135,13 @@ export class CircularProgressBar extends Container
 
         this.fillCircle
             .clear()
-            .setStrokeStyle({
+            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD)
+            .stroke({
                 width: lineWidth,
                 color: fillColor,
                 cap,
                 alpha: fillAlpha
-            })
-            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD);
+            });
     }
 
     /**

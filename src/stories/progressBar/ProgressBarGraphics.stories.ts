@@ -1,10 +1,11 @@
 import { Graphics } from 'pixi.js';
 import { List } from '../../List';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     fillColor: '#00b1dd',
@@ -39,16 +40,16 @@ export const UseGraphics: StoryFn = ({
     backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(backgroundColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(backgroundColor);
 
     const fill = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(fillColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(fillColor);
 
     // Component usage
     const progressBar = new ProgressBar({

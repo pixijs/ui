@@ -5,13 +5,14 @@ import {
     EventMode,
     FederatedPointerEvent,
     Graphics,
+    isMobile,
     Point,
     Ticker,
-    isMobile,
 } from 'pixi.js';
-import type { ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
+
+import type { ListType } from './List';
 
 export type ScrollBoxOptions = {
     width: number;
@@ -40,13 +41,13 @@ export type ScrollBoxOptions = {
  *     width: 200,
  *     height: 300,
  *     items: [
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().fill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
  *     ],
  * });
  */
@@ -440,32 +441,32 @@ export class ScrollBox extends Container
             this.borderMask
                 .clear()
                 .lineStyle(0)
-                .fill(0xffffff)
                 .roundRect(
                     0,
                     0,
                     this.__width,
                     this.__height,
                     this.options.radius | 0,
-                );
+                )
+                .fill(0xff00ff);
             this.borderMask.eventMode = 'none';
-
-            this.background.clear().lineStyle(0);
 
             const color = this.options.background;
 
-            this.background.fill(
-                color ?? 0x000000,
-                color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
-            );
-
-            this.background.roundRect(
-                0,
-                0,
-                this.__width + horPadding,
-                this.__height + verPadding,
-                this.options.radius | 0,
-            );
+            this.background
+                .clear()
+                .lineStyle(0)
+                .roundRect(
+                    0,
+                    0,
+                    this.__width + horPadding,
+                    this.__height + verPadding,
+                    this.options.radius | 0,
+                )
+                .fill({
+                    color: color ?? 0x000000,
+                    alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
+                });
 
             if (this.options.type === 'horizontal')
             {

@@ -1,11 +1,11 @@
-import { RadioGroup } from '../../RadioGroup';
-import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { List } from '../../List';
-import { preload } from '../utils/loader';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { centerElement } from '../../utils/helpers/resize';
 import { CheckBox } from '../../CheckBox';
+import { List } from '../../List';
+import { RadioGroup } from '../../RadioGroup';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Radio',

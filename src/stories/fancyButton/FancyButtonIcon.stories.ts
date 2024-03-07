@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
@@ -6,6 +5,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     color: '#A5E24D',
@@ -66,17 +66,17 @@ export const UseIcon = ({
 
         const icon = new MaskedFrame({
             target,
-            mask: new Graphics().fill(0x000000).drawCircle(target.width / 2, target.height / 2, target.width / 2),
+            mask: new Graphics().drawCircle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
             borderWidth: 5,
             borderColor: 0xffffff
         });
 
         // Component usage !!!
         const button = new FancyButton({
-            defaultView: new Graphics().fill(color).roundRect(0, 0, width, height, radius),
-            hoverView: new Graphics().fill(hoverColor).roundRect(0, 0, width, height, radius),
-            pressedView: new Graphics().fill(pressedColor).roundRect(0, 0, width, height, radius),
-            disabledView: new Graphics().fill(disabledColor).roundRect(0, 0, width, height, radius),
+            defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
+            hoverView: new Graphics().roundRect(0, 0, width, height, radius).fill(hoverColor),
+            pressedView: new Graphics().roundRect(0, 0, width, height, radius).fill(pressedColor),
+            disabledView: new Graphics().roundRect(0, 0, width, height, radius).fill(disabledColor),
             icon,
             padding,
             offset: {

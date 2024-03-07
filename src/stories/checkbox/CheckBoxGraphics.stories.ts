@@ -1,11 +1,11 @@
 import { Graphics } from 'pixi.js';
 import { CheckBox } from '../../CheckBox';
-import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Checkbox',

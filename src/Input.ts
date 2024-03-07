@@ -2,17 +2,17 @@ import {
     Container,
     DestroyOptions,
     Graphics,
+    isMobile,
     NineSliceSprite,
     Sprite,
     Text,
     TextStyleOptions,
     Texture,
     Ticker,
-    isMobile,
 } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { Padding } from './utils/HelpTypes';
 import { getView } from './utils/helpers/view';
+import { Padding } from './utils/HelpTypes';
 
 type ViewType = Sprite | Graphics | string;
 

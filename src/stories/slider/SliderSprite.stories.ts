@@ -1,10 +1,11 @@
-import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { List } from '../../List';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
+
 import type { StoryFn } from '@storybook/types';
-import { List } from '../../List';
 
 const args = {
     fontColor: '#FFFFFF',

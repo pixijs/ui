@@ -1,10 +1,10 @@
 import { Sprite } from 'pixi.js';
-import { action } from '@storybook/addon-actions';
-import { List } from '../../List';
 import { Input } from '../../Input';
+import { List } from '../../List';
+import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: '',

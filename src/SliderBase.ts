@@ -1,7 +1,8 @@
-import { Container, FederatedPointerEvent, TextStyleOptions, Sprite, Text, TextStyle } from 'pixi.js';
+import { Container, FederatedPointerEvent, Sprite, Text, TextStyle, TextStyleOptions } from 'pixi.js';
 import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
-import type { DragObject } from './utils/HelpTypes';
 import { getView } from './utils/helpers/view';
+
+import type { DragObject } from './utils/HelpTypes';
 
 export type BaseSliderOptions = ProgressBarOptions & {
     min?: number;

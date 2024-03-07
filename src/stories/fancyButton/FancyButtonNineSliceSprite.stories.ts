@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { Container, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
@@ -6,6 +5,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -20,7 +20,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UseNineSlicePlane = ({
+export const UseNineSliceSprite = ({
     text,
     textColor,
     disabled,
@@ -55,9 +55,11 @@ export const UseNineSlicePlane = ({
             nineSlicePlane: [
                 150, 66, 150, 66
             ],
-            text: new Text(text, {
-                ...defaultTextStyle,
-                fill: textColor || defaultTextStyle.fill
+            text: new Text({
+                text, style: {
+                    ...defaultTextStyle,
+                    fill: textColor || defaultTextStyle.fill
+                }
             }),
             padding,
             textOffset: { x: 30, y: -5 },
@@ -133,7 +135,7 @@ export const UseNineSlicePlane = ({
 };
 
 export default {
-    title: 'Components/FancyButton/Use NineSlicePlane',
+    title: 'Components/FancyButton/Use NineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

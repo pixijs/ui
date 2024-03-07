@@ -1,12 +1,13 @@
 import { Container } from 'pixi.js';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
-import { action } from '@storybook/addon-actions';
-import { preload } from '../utils/loader';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     dropDownHoverColor: '#A5E24D',

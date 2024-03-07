@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
-import { List } from '../../List';
 import { Input } from '../../Input';
+import { List } from '../../List';
+import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: '',
@@ -22,7 +22,7 @@ const args = {
     onChange: action('Input')
 };
 
-export const UseNineSlicePlane = ({
+export const UseNineSliceSprite = ({
     text,
     amount,
     paddingTop,
@@ -80,7 +80,7 @@ export const UseNineSlicePlane = ({
 };
 
 export default {
-    title: 'Components/Input/Use NineSlicePlane',
+    title: 'Components/Input/Use NineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

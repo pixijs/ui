@@ -1,10 +1,11 @@
-import type { Sprite } from 'pixi.js';
-import { Container, NineSlicePlane, ObservablePoint, Rectangle, Texture, Ticker, isMobile } from 'pixi.js';
+import { Container, isMobile, NineSlicePlane, ObservablePoint, Rectangle, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { ButtonContainer } from './Button';
 import { fitToView } from './utils/helpers/fit';
-import { AnyText, PixiText, getTextView } from './utils/helpers/text';
+import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
+
+import type { Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };

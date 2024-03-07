@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
 import { Container, HTMLText } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -38,9 +38,12 @@ export const UsingSpriteAndHTMLText = ({
 
     preload(assets).then(() =>
     {
-        const title = new HTMLText(text, {
-            ...defaultTextStyle,
-            fill: textColor || defaultTextStyle.fill
+        const title = new HTMLText({
+            text,
+            style: {
+                ...defaultTextStyle,
+                fill: textColor || defaultTextStyle.fill
+            }
         });
 
         // Component usage !!!

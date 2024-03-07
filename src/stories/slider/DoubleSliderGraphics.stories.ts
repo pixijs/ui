@@ -1,11 +1,12 @@
 import { Graphics } from 'pixi.js';
-import { action } from '@storybook/addon-actions';
-import type { StoryFn } from '@storybook/types';
 import { DoubleSlider } from '../../DoubleSlider';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     meshColor: '#a5e34d',
@@ -55,30 +56,28 @@ export const Double: StoryFn = ({
     backgroundColor = getColor(backgroundColor);
 
     const bg = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(backgroundColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(backgroundColor);
 
     const fill = new Graphics()
-        .fill(borderColor)
         .roundRect(0, 0, width, height, radius)
-        .fill(fillColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius);
+        .fill(borderColor)
+        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+        .fill(fillColor);
 
     const slider1 = new Graphics()
+        .circle(0, 0, 20 + handleBorder)
         .fill(borderColor)
-        .drawCircle(0, 0, 20 + handleBorder)
-        .fill(meshColor)
-        .drawCircle(0, 0, 20)
-        .endFill();
+        .circle(0, 0, 20)
+        .fill(meshColor);
 
     const slider2 = new Graphics()
+        .circle(0, 0, 20 + handleBorder)
         .fill(borderColor)
-        .drawCircle(0, 0, 20 + handleBorder)
-        .fill(meshColor)
-        .drawCircle(0, 0, 20)
-        .endFill();
+        .circle(0, 0, 20)
+        .fill(meshColor);
 
     const doubleSlider = new DoubleSlider({
         bg,

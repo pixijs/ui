@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { Switcher } from '../../Switcher';
-import { preload } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
 import { Container } from 'pixi.js';
+import { Switcher } from '../../Switcher';
+import { centerElement } from '../../utils/helpers/resize';
 import { BUTTON_EVENTS } from '../../utils/HelpTypes';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     triggerEvent1: BUTTON_EVENTS,

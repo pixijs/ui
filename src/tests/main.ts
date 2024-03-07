@@ -1,24 +1,21 @@
 /* eslint-disable no-console */
 import { Container } from 'pixi.js';
-import { initPixi } from './utils/pixi';
 import { Pane } from 'tweakpane';
-import { getTitle } from './utils/getTitle';
-
-import SwitcherOpts, { Sprites as SwitcherStory } from '../stories/Switcher/Switcher.stories';
-
 import ButtonContainerOpts,
 { ButtonContainerSprite as ButtonContainerStory } from '../stories/button/ButtonContainerSprite.stories';
 import ButtonUseGraphicsOpts, { UseGraphics as ButtonUseGraphicsStory } from '../stories/button/ButtonGraphics.stories';
 import ButtonUseSpriteOpts, { UseSprite as ButtonUseSpriteStory } from '../stories/button/ButtonSprite.stories';
-
 import CheckboxGraphicsOpts, { UseGraphics as CheckboxGraphicsStory } from '../stories/checkbox/CheckBoxGraphics.stories';
 import CheckboxSpriteOpts, { UseSprite as CheckboxSpriteStory } from '../stories/checkbox/CheckBoxSprite.stories';
-
-import ScrollBoxGraphicsOpts, { UseGraphics as ScrollBoxGraphicsStory } from '../stories/scrollBox/ScrollBoxGraphics.stories';
+import ScrollBoxGraphicsOpts, {
+    UseGraphics as ScrollBoxGraphicsStory
+} from '../stories/scrollBox/ScrollBoxGraphics.stories';
 import ScrollBoxSpriteOpts, { UseSprite as ScrollBoxSpriteStory } from '../stories/scrollBox/ScrollBoxSprite.stories';
-
 import SelectGraphicsOpts, { UseGraphics as SelectGraphicsStory } from '../stories/select/SelectGraphics.stories';
 import SelectSpriteOpts, { UseSprite as SelectSpriteStory } from '../stories/select/SelectSprite.stories';
+import SwitcherOpts, { Sprites as SwitcherStory } from '../stories/Switcher/Switcher.stories';
+import { getTitle } from './utils/getTitle';
+import { initPixi } from './utils/pixi';
 
 // Migration guide:
 // https://github.com/pixijs/pixijs/releases/tag/v8.0.0-beta.0

@@ -1,7 +1,7 @@
 import { Container, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
-
 import { BaseSliderOptions, SliderBase } from './SliderBase';
+
 import type { DragObject } from './utils/HelpTypes';
 
 export type SliderOptions = BaseSliderOptions & {

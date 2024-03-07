@@ -1,9 +1,10 @@
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+
 import type { StoryFn } from '@storybook/types';
-import { List } from '../../List';
 
 const args = {
     value: 50,

@@ -1,9 +1,10 @@
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+
 import type { StoryFn } from '@storybook/types';
-import { List } from '../../List';
 
 const args = {
     value: 50,
@@ -13,7 +14,7 @@ const args = {
     vertical: false,
 };
 
-export const NineSlicePlane: StoryFn = ({ value, animate, vertical, width, height }: any) =>
+export const NineSliceSprite: StoryFn = ({ value, animate, vertical, width, height }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -95,7 +96,7 @@ export const NineSlicePlane: StoryFn = ({ value, animate, vertical, width, heigh
 };
 
 export default {
-    title: 'Components/ProgressBar/NineSlicePlane',
+    title: 'Components/ProgressBar/NineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

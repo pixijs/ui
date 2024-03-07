@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { Container, Sprite, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
@@ -6,6 +5,7 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { randomItem } from '../utils/random';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',

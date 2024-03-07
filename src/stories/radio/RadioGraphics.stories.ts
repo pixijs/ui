@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { Container, Graphics } from 'pixi.js';
 import { CheckBox } from '../../CheckBox';
 import { RadioGroup } from '../../RadioGroup';
@@ -6,6 +5,7 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Radio',
@@ -94,28 +94,28 @@ export const UseGraphics = ({
 
 function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
 {
-    const graphics = new Graphics().fill(color);
+    const graphics = new Graphics();
 
     const isCircle = width === height && radius >= width / 2;
 
     if (isCircle)
     {
-        graphics.drawCircle(width / 2, width / 2, width / 2);
+        graphics.circle(width / 2, width / 2, width / 2);
     }
     else
     {
         graphics.roundRect(0, 0, width, height, radius);
     }
 
+    graphics.fill(color);
+
     if (fillColor !== undefined)
     {
-        graphics.fill(fillColor);
-
         const center = width / 2;
 
         if (isCircle)
         {
-            graphics.drawCircle(center, center, center - padding);
+            graphics.circle(center, center, center - padding);
         }
         else
         {
@@ -127,6 +127,8 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
                 radius,
             );
         }
+
+        graphics.fill(fillColor);
     }
 
     return graphics;

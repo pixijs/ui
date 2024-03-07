@@ -115,7 +115,7 @@ export class Select extends Container
         {
             this.openButton = new FancyButton({
                 defaultView: getView(closedBG),
-                text: new Text(items?.items ? items.items[0] : '', textStyle),
+                text: new Text({ text: items?.items ? items.items[0] : '', style: textStyle }),
                 textOffset: selectedTextOffset
             });
             this.openButton.onPress.connect(() => this.toggle());
@@ -124,7 +124,7 @@ export class Select extends Container
         else
         {
             this.openButton.defaultView = getView(closedBG);
-            this.openButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
+            this.openButton.textView = new Text({ text: items?.items ? items.items[0] : '', style: textStyle });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -142,9 +142,9 @@ export class Select extends Container
         {
             this.closeButton = new FancyButton({
                 defaultView: new Graphics()
-                    .fill(0x000000, 0.00001)
-                    .drawRect(0, 0, this.openButton.width, this.openButton.height),
-                text: new Text(items?.items ? items.items[0] : '', textStyle),
+                    .rect(0, 0, this.openButton.width, this.openButton.height)
+                    .fill({ color: 0x000000, alpha: 0.00001 }),
+                text: new Text({ text: items?.items ? items.items[0] : '', style: textStyle }),
                 textOffset: selectedTextOffset
             });
             this.closeButton.onPress.connect(() => this.toggle());
@@ -153,10 +153,10 @@ export class Select extends Container
         else
         {
             this.closeButton.defaultView = new Graphics()
-                .fill(0x000000, 0.00001)
-                .drawRect(0, 0, this.openButton.width, this.openButton.height);
+                .rect(0, 0, this.openButton.width, this.openButton.height)
+                .fill({ color: 0x000000, alpha: 0.00001 });
 
-            this.closeButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
+            this.closeButton.textView = new Text({ text: items?.items ? items.items[0] : '', style: textStyle });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -268,12 +268,12 @@ export class Select extends Container
 
         items.forEach((item) =>
         {
-            const defaultView = new Graphics().fill(backgroundColor).roundRect(0, 0, width, height, radius);
+            const defaultView = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
             const color = hoverColor ?? backgroundColor;
-            const hoverView = new Graphics().fill(color).roundRect(0, 0, width, height, radius);
+            const hoverView = new Graphics().roundRect(0, 0, width, height, radius).fill(color);
 
-            const text = new Text(item, textStyle);
+            const text = new Text({ text: item, style: textStyle });
 
             const button = new FancyButton({ defaultView, hoverView, text });
 

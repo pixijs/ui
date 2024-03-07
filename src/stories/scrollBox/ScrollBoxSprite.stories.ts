@@ -1,5 +1,3 @@
-import { action } from '@storybook/addon-actions';
-import type { StoryFn } from '@storybook/types';
 import { Container, Sprite, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
@@ -8,6 +6,9 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#000000',
@@ -29,7 +30,7 @@ export const UseSprite: StoryFn = ({ fontColor, elementsMargin, itemsAmount, onP
     preload(assets).then(() =>
     {
         const window = Sprite.from(`window.png`);
-        const title = new Text(`Levels`, { fill: 0x000000, fontSize: 40 });
+        const title = new Text({ text: `Levels`, style: { fill: 0x000000, fontSize: 40 } });
 
         title.anchor.set(0.5);
         window.addChild(title);

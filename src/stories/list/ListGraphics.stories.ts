@@ -1,5 +1,3 @@
-import { action } from '@storybook/addon-actions';
-import type { StoryFn } from '@storybook/types';
 import { Graphics, Text } from 'pixi.js';
 import { FancyButton } from '../../FancyButton';
 import { List } from '../../List';
@@ -7,6 +5,9 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
+
+import type { StoryFn } from '@storybook/types';
 
 const args = {
     type: [null, 'horizontal', 'vertical'],
@@ -43,20 +44,22 @@ export const UseGraphics: StoryFn = ({
     fontColor = getColor(fontColor);
     bgColor = getColor(bgColor);
 
-    const view = new Graphics().fill(bgColor).roundRect(0, 0, width, height, radius);
+    const view = new Graphics().roundRect(0, 0, width, height, radius).fill(bgColor);
 
     const items = [];
 
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: new Graphics().fill(0xa5e24d).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().fill(0xfec230).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            pressedView: new Graphics().fill(0xfe6048).roundRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(i + 1, {
-                ...defaultTextStyle,
-                fontSize: 28,
-                fill: fontColor
+            defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
+            hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
+            pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+            text: new Text({
+                text: i + 1, style: {
+                    ...defaultTextStyle,
+                    fontSize: 28,
+                    fill: fontColor
+                }
             })
         });
 

@@ -10,8 +10,8 @@ import { ButtonEvents } from './ButtonEvents';
  * const container = new Container();
  * const button = new Button(
  *      new Graphics()
+ *          .rect(0, 0, 100, 50, 15)
  *          .fill(0xFFFFFF)
- *          .roundRect(0, 0, 100, 50, 15)
  * );
  *
  * button.onPress.connect(() => console.log('onPress'));

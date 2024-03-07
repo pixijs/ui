@@ -1,10 +1,10 @@
 import { Graphics } from 'pixi.js';
-import { action } from '@storybook/addon-actions';
-import { List } from '../../List';
 import { Input } from '../../Input';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: '',
@@ -61,10 +61,10 @@ export const UseGraphics = ({
     // Component usage
         const input = new Input({
             bg: new Graphics()
-                .fill(borderColor)
                 .roundRect(0, 0, width, height, radius + border)
-                .fill(backgroundColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius),
+                .fill(borderColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .fill(backgroundColor),
             textStyle: {
                 fill: textColor,
                 fontSize,

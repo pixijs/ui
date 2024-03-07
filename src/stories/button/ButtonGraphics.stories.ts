@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
 import { Graphics, Text } from 'pixi.js';
 import { Button } from '../../Button';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     color: '#A5E24D',
