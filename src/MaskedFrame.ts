@@ -1,11 +1,11 @@
-import { Container } from '@pixi/display';
+import { Container, DisplayObject } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
     target?: string | Container;
-    mask?: string | Graphics;
+    mask?: string | Graphics | Container;
     borderWidth?: number;
     borderColor?: number;
 };
@@ -26,7 +26,7 @@ export class MaskedFrame extends Graphics
     target: Container;
 
     protected _targetMask: Container;
-    protected maskData: string | Graphics;
+    protected maskData: string | Graphics | Container;
     protected borderWidth: number;
     protected borderColor: number;
 
@@ -66,7 +66,7 @@ export class MaskedFrame extends Graphics
      * Applies a mask to a target container.
      * @param mask
      */
-    setMask(mask: string | Graphics)
+    setMask(mask: string | Graphics | Container)
     {
         this.maskData = mask;
 
@@ -87,7 +87,21 @@ export class MaskedFrame extends Graphics
 
         this.showBorder();
 
-        const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone();
+        let borderMask;
+
+        if (typeof this.maskData === 'string')
+        {
+            borderMask = Sprite.from(this.maskData);
+        }
+        else if (this.maskData instanceof Graphics)
+        {
+            borderMask = this.maskData.clone();
+        }
+        else
+        {
+            // TODO: Find a more efficient way to deal with border for Container
+            borderMask = cloneContainer(this.maskData);
+        }
 
         borderMask.width += borderWidth * 2;
         borderMask.height += borderWidth * 2;
@@ -114,4 +128,41 @@ export class MaskedFrame extends Graphics
     {
         this.clear();
     }
+}
+
+const cloneFunctions = {
+    [Sprite.name]: (child: Sprite) => new Sprite(child.texture),
+    [Graphics.name]: (child: Graphics) => child.clone(),
+    [Container.name]: cloneContainer
+};
+
+function cloneContainer(container: Container)
+{
+    const clone = new Container();
+
+    applyTransform(clone, container);
+
+    for (const child of container.children)
+    {
+        const cloneFunction = cloneFunctions[child.constructor.name];
+
+        if (cloneFunction)
+        {
+            const childClone = cloneFunction(child as any);
+
+            applyTransform(childClone, child);
+            clone.addChild(childClone);
+        }
+    }
+
+    return clone;
+}
+
+function applyTransform(target: DisplayObject, ref: DisplayObject)
+{
+    target.position.set(ref.position.x, ref.position.y);
+    target.rotation = ref.rotation;
+    target.scale.set(ref.scale.x, ref.scale.y);
+    target.pivot.set(ref.pivot.x, ref.pivot.y);
+    target.skew.set(ref.skew.x, ref.skew.y);
 }
