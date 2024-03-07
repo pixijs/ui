@@ -138,8 +138,8 @@ export class Slider extends SliderBase
 
     /**
      * Sets width of a Sliders background and fill.
-     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then width will control components width as Container.
+     * If nineSliceSprite is set, then width will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then width will control components width as Container.
      * @param value - Width value.
      */
     override set width(value: number)
@@ -157,8 +157,8 @@ export class Slider extends SliderBase
 
     /**
      * Sets height of a Sliders background and fill.
-     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then height will control components height as Container.
+     * If nineSliceSprite is set, then height will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then height will control components height as Container.
      * @param value - Height value.
      */
     override set height(value: number)

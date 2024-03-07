@@ -78,10 +78,12 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
             defaultView: `SmallButton.png`,
             hoverView: `SmallButton-hover.png`,
             pressedView: `SmallButton-pressed.png`,
-            text: new Text(i + 1, {
-                ...defaultTextStyle,
-                fontSize: 68,
-                fill: fontColor
+            text: new Text({
+                text: i + 1, style: {
+                    ...defaultTextStyle,
+                    fontSize: 68,
+                    fill: fontColor
+                }
             }),
             textOffset: {
                 x: 0,

@@ -52,7 +52,7 @@ export const UseNineSliceSprite = ({
             hoverView: `button_hover.png`,
             pressedView: `button_pressed.png`,
             disabledView: `button_disabled.png`,
-            nineSlicePlane: [
+            nineSliceSprite: [
                 150, 66, 150, 66
             ],
             text: new Text({

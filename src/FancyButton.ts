@@ -1,4 +1,4 @@
-import { Container, isMobile, NineSlicePlane, ObservablePoint, Rectangle, Texture, Ticker } from 'pixi.js';
+import { Container, isMobile, NineSliceSprite, ObservablePoint, Rectangle, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { ButtonContainer } from './Button';
 import { fitToView } from './utils/helpers/fit';
@@ -18,7 +18,7 @@ type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledVie
 type ButtonView = string | Container;
 
 type BasicButtonViews = {
-    [K in ButtonViewType]?: Container | NineSlicePlane;
+    [K in ButtonViewType]?: Container | NineSliceSprite;
 };
 
 type ButtonViews = BasicButtonViews & {
@@ -62,7 +62,7 @@ export type ButtonOptions = ViewsInput & {
     textOffset?: Offset;
     iconOffset?: Offset;
     animations?: StateAnimations;
-    nineSlicePlane?: [number, number, number, number];
+    nineSliceSprite?: [number, number, number, number];
 };
 
 /**
@@ -528,15 +528,21 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof view === 'string')
             {
-                this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this.options.nineSlicePlane);
+                this._views[viewType] = new NineSliceSprite({
+                    texture: Texture.from(view),
+                    leftWidth: this.options.nineSliceSprite[0],
+                    topHeight: this.options.nineSliceSprite[1],
+                    rightWidth: this.options.nineSliceSprite[2],
+                    bottomHeight: this.options.nineSliceSprite[3],
+                });
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -796,13 +802,13 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets width of a FancyButtons state views.
-     * If nineSlicePlane is set, then width will be set to nineSlicePlanes of a views.
-     * If nineSlicePlane is not set, then width will control components width as Container.
+     * If nineSliceSprite is set, then width will be set to nineSliceSprites of a views.
+     * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
     override set width(width: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this._views.defaultView)
             {
@@ -839,13 +845,13 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets height of a FancyButtons state views.
-     * If nineSlicePlane is set, then height will be set to nineSlicePlanes of a views.
-     * If nineSlicePlane is not set, then height will control components height as Container.
+     * If nineSliceSprite is set, then height will be set to nineSliceSprites of a views.
+     * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
     override set height(height: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this._views.defaultView)
             {

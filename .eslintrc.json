@@ -17,7 +17,6 @@
         "@typescript-eslint/no-unused-expressions": [1, {"allowShortCircuit": true, "allowTernary": true}],
         "no-mixed-operators": "off",
         "no-mixed-operators/no-mixed-operators": 1,
-        "@typescript-eslint/no-parameter-properties": 1,
         "@typescript-eslint/type-annotation-spacing": 1,
         "jsdoc/multiline-blocks": [
             1,
@@ -32,7 +31,6 @@
         "jsdoc/check-values": 1,
         "jsdoc/empty-tags": 1,
         "jsdoc/implements-on-classes": 1,
-        "jsdoc/newline-after-description": [1, "never"],
         "jsdoc/no-multi-asterisks": [1, { "allowWhitespace": true }],
         "jsdoc/require-param": 1,
         "jsdoc/require-param-description": 0,

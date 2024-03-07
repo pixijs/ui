@@ -44,7 +44,7 @@ export const Single: StoryFn = ({
     border,
     onChange,
     showValue,
-}: any, a) =>
+}: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 

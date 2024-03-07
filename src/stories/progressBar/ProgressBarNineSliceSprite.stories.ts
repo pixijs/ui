@@ -36,7 +36,7 @@ export const NineSliceSprite: StoryFn = ({ value, animate, vertical, width, heig
             fillPaddings: {
                 top: 3,
                 right: 5,
-                bottom: 6.5,
+                bottom: 4.5,
                 left: 4.5
             }
         });

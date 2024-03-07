@@ -93,7 +93,7 @@ export class Input extends Container
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
-     * @param { Array } options.nineSlicePlane - NineSliceSprite values for bg and fill ([number, number, number, number]).
+     * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
      */
     constructor(options: InputOptions)
     {
@@ -203,7 +203,10 @@ export class Input extends Container
             {
                 this._bg = new NineSliceSprite({
                     texture: Texture.from(bg),
-                    ...this.options.nineSliceSprite
+                    leftWidth: this.options.nineSliceSprite[0],
+                    topHeight: this.options.nineSliceSprite[1],
+                    rightWidth: this.options.nineSliceSprite[2],
+                    bottomHeight: this.options.nineSliceSprite[3],
                 });
             }
             else
@@ -559,8 +562,8 @@ export class Input extends Container
 
     /**
      * Sets width of a Input.
-     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then width will control components width as Container.
+     * If nineSliceSprite is set, then width will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
     override set width(width: number)
@@ -594,8 +597,8 @@ export class Input extends Container
 
     /**
      * Sets height of a Input.
-     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then height will control components height as Container.
+     * If nineSliceSprite is set, then height will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
     override set height(height: number)

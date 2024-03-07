@@ -9,7 +9,7 @@ type FillPaddings = {
 };
 
 export type ProgressBarViewType = Sprite | Graphics | string;
-export type NineSlicePlane = {
+export type NineSliceSprite = {
     bg: [number, number, number, number],
     fill: [number, number, number, number]
 };
@@ -18,7 +18,7 @@ export type ProgressBarOptions = {
     bg: ProgressBarViewType;
     fill: ProgressBarViewType;
     fillPaddings?: FillPaddings;
-    nineSliceSprite?: NineSlicePlane,
+    nineSliceSprite?: NineSliceSprite,
     progress?: number;
 };
 
@@ -57,9 +57,9 @@ export class ProgressBar extends Container
      * @param { number } options.fillPaddings.right - Fill right offset.
      * @param { number } options.fillPaddings.bottom - Fill bottom offset.
      * @param { number } options.fillPaddings.left - Fill left offset.
-     * @param { NineSlicePlane } options.nineSlicePlane - NineSlicePlane values for bg and fill.
-     * @param { Array } options.nineSlicePlane.bg - NineSlicePlane config for bg ([number, number, number, number]).
-     * @param { Array } options.nineSlicePlane.fill - NineSlicePlane config fill ([number, number, number, number]).
+     * @param { NineSliceSprite } options.nineSliceSprite - NineSliceSprite values for bg and fill.
+     * @param { Array } options.nineSliceSprite.bg - NineSliceSprite config for bg ([number, number, number, number]).
+     * @param { Array } options.nineSliceSprite.fill - NineSliceSprite config fill ([number, number, number, number]).
      * @param { number } options.progress - Initial progress value.
      */
     constructor(options?: ProgressBarOptions)
@@ -119,7 +119,7 @@ export class ProgressBar extends Container
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -170,7 +170,7 @@ export class ProgressBar extends Container
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -213,8 +213,9 @@ export class ProgressBar extends Container
         }
 
         this.fillMask = new PixiNineSliceSprite({ texture, leftWidth, topHeight, rightWidth, bottomHeight });
+        this.fillMask.position.copyFrom(this.fill);
 
-        this.fill.addChild(this.fillMask);
+        this.addChild(this.fillMask);
         this.fill.mask = this.fillMask;
     }
 
@@ -244,9 +245,11 @@ export class ProgressBar extends Container
 
         if (this.fillMask)
         {
-            this.fillMask.width = this.fill.width / 100 * (this._progress - this.progressStart);
-            this.fillMask.x = this.progressStart / 100 * this.fill.width;
+            this.fill.mask = null;
+            this.fillMask.width = (this.fill.width / 100 * (this._progress - this.progressStart));
+            this.fillMask.x = (this.progressStart / 100 * this.fill.width) + this.fill.x;
             this.fillMask.height = this.fill.height;
+            this.fill.mask = this.fillMask;
         }
     }
 
@@ -258,8 +261,8 @@ export class ProgressBar extends Container
 
     /**
      * Sets width of a ProgressBars background and fill.
-     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then width will control components width as Container.
+     * If nineSliceSprite is set, then width will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
     override set width(width: number)
@@ -296,8 +299,8 @@ export class ProgressBar extends Container
 
     /**
      * Sets height of a ProgressBars background and fill.
-     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then height will control components height as Container.
+     * If nineSliceSprite is set, then height will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
     override set height(height: number)

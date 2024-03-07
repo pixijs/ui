@@ -100,8 +100,8 @@ export class MaskedFrame extends Graphics
         const width = this.borderWidth * 2;
 
         this.clear()
-            .fill(this.borderColor)
-            .drawRect(0, 0, this.target.width + width, this.target.height + width);
+            .rect(0, 0, this.target.width + width, this.target.height + width)
+            .fill(this.borderColor);
 
         this.target.x = this.borderWidth;
         this.target.y = this.borderWidth;
