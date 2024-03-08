@@ -77,9 +77,14 @@ type TextSelectOptions = {
      * => new TextClass({ arg1, arg2, arg3, label: text })
      */
     consolidateOptionsWithKey?: string;
+    /**
+     * Provide a function to update the text view.
+     * Good for the custom text class that doesn't have a direct text property
+     * that the default update function makes use of.
+     */
+    textUpdate?: (view: any, text: string) => void;
     /** Specify the text style options */
     textStyle?: Partial<TextStyle>;
-    textUpdate?: (view: any, text: string) => void;
     /** Provide an array of text strings for the dropdown */
     items: string[];
 } & BaseSelectOptions;
