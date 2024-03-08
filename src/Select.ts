@@ -54,7 +54,29 @@ type TextSelectOptions = {
     /** Specify which type of content is being used in the dropdown */
     type: 'text';
     /** Override the text class to use, otherwise it will use the default Pixi Text */
-    textClass?: (...args: any[]) => any;
+    textClass?: new (...args: any[]) => any;
+    /**
+     * Custom options to be passed to the custom text class which will be
+     * in form of an array of arguments and will append after the text string when instantiating.
+     * If it's a single option object, please also wrap it in an array.
+     *
+     * eg:
+     * - [arg1, arg2, arg3] => new TextClass(text, arg1, arg2, arg3)
+     * - [{ arg1, arg2, arg3 }] => new TextClass(text, { arg1, arg2, arg3 })
+     *
+     * If not provided, it will use the specified text style if also supplied.
+     */
+    textArgs?: any;
+    /**
+     * This is explicity for custom text classes that expect text string to be supplied
+     * within a single options object. The text string will be added to the object with the
+     * key specified here.
+     *
+     * eg:
+     * { `consolidateOptionsWithKey`: 'label', textArgs: [{ arg1, arg2, arg3 }] }
+     * => new TextClass({ arg1, arg2, arg3, label: text })
+     */
+    consolidateOptionsWithKey?: string;
     /** Specify the text style options */
     textStyle?: Partial<TextStyle>;
     textUpdate?: (view: any, text: string) => void;
@@ -357,9 +379,21 @@ export class Select extends Container
         if (this.options.type === 'text')
         {
             const TextClass = this.options.textClass ?? Text;
-            const text = new TextClass(item, this.options.textStyle);
+            const style = this.options.textStyle;
+            const args = this.options.textArgs;
+            const textKey = this.options.consolidateOptionsWithKey;
 
-            return { text };
+            if (textKey)
+            {
+                return { text: new TextClass({ [textKey]: item, ...style, ...args }) };
+            }
+
+            if (args)
+            {
+                return { text: new TextClass(item, ...args) };
+            }
+
+            return { text: new TextClass(item, style) };
         }
 
         const sprite = Sprite.from(item);
