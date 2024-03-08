@@ -1,8 +1,11 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Text, TextStyle } from '@pixi/text';
+import { Sprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
+import { ColorSource } from '@pixi/color';
 import { Signal } from 'typed-signals';
-import { FancyButton } from './FancyButton';
+import { ButtonOptions, FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView } from './utils/helpers/view';
 
@@ -13,39 +16,64 @@ type Offset = {
     x: number;
 };
 
-export type SelectItemsOptions = {
-    items: string[];
-    backgroundColor: number | string;
+type ItemOptions = {
+    /** Width of a dropdown item */
     width: number;
+    /** Height of a dropdown item */
     height: number;
-    hoverColor?: number;
-    textStyle?: Partial<TextStyle>;
+    /** Specify a background color for the item view, defaults to transparency */
+    backgroundColor?: ColorSource;
+    /** Specify a hover color for the item view, defaults to transparency */
+    hoverColor?: ColorSource;
+    /** Specify the corner radius of the item view, defaults to 0 */
     radius?: number;
+    /** Specify the padding around the content within the item view, defaults to 0 */
+    padding?: number;
 };
 
-export type SelectOptions = {
+type BaseSelectOptions = {
+    /** Options for the individual dropdown item */
+    itemOptions: ItemOptions;
+    /** Texture alias or a view container that will be used for the closed state */
     closedBG: string | Container;
+    /** Texture alias or a view container that will be used for the open state */
     openBG: string | Container;
-    textStyle?: Partial<TextStyle>;
+    /** Specify the initial selected index, otherwise it will use the first item */
     selected?: number;
-    selectedTextOffset?: { x?: number; y?: number };
-
-    items: SelectItemsOptions;
-
-    scrollBoxOffset?: { x?: number; y?: number };
-    scrollBoxWidth?: number;
-    scrollBoxHeight?: number;
-    scrollBoxRadius?: number;
-
-    visibleItems?: number;
-
+    /** Specify the selected item offset within the open/close view */
+    selectedItemOffset?: { x?: number; y?: number };
+    /** Specify the dropdown scroll box options */
     scrollBox?: ScrollBoxOptions & {
         offset?: Offset;
     };
+    /** Specify the amount of items should be displayed on the dropdown */
+    visibleItems?: number;
 };
 
+type TextSelectOptions = {
+    /** Specify which type of content is being used in the dropdown */
+    type: 'text';
+    /** Override the text class to use, otherwise it will use the default Pixi Text */
+    textClass?: any;
+    /** Specify the text style options */
+    textStyle?: Partial<TextStyle>;
+    textUpdate?: (view: any, text: string) => void;
+    /** Provide an array of text strings for the dropdown */
+    items: string[];
+} & BaseSelectOptions;
+
+type SpriteSelectOptions = {
+    /** Specify which type of content is being used in the dropdown */
+    type: 'sprite';
+    /** Provide an array of sprite source for the dropdown, can be aliases or Texture instances */
+    items: (Texture | string)[];
+} & BaseSelectOptions;
+
+export type SelectOptions = TextSelectOptions | SpriteSelectOptions;
+
 /**
- * Container-based component that gives us a selection dropdown.
+ * Container-based component that gives us a selection dropdown
+ * for a list of items which can be either text or sprites.
  *
  * It is a composition of a {@link Button} and a {@link ScrollBox}.
  * @example
@@ -70,55 +98,64 @@ export type SelectOptions = {
 
 export class Select extends Container
 {
+    protected options: SelectOptions;
     protected openButton!: FancyButton;
     protected closeButton!: FancyButton;
     protected openView!: Container;
     protected scrollBox: ScrollBox;
 
-    /** Selected value ID. */
-    value: number;
+    /** Selected index. */
+    index: number;
+
+    /** Selected value. */
+    value: string | Texture;
 
     /** Fires when selected value is changed. */
-    onSelect: Signal<(value: number, text: string) => void>;
+    onSelect: Signal<(index: number, value: string | Texture) => void>;
 
     constructor(options?: SelectOptions)
     {
         super();
-
         this.onSelect = new Signal();
-
-        if (options)
-        {
-            this.init(options);
-        }
+        if (options) this.init(options);
     }
 
     /**
      * Initiates Select.
      * @param root0
      * @param root0.closedBG
-     * @param root0.textStyle
      * @param root0.items
      * @param root0.openBG
      * @param root0.selected
-     * @param root0.selectedTextOffset
+     * @param root0.selectedItemOffset
      * @param root0.scrollBox
      * @param root0.visibleItems
+     * @param root0.type
+     * @param options
      */
-    init({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
+    init(options: SelectOptions)
     {
-        if (this.openView && this.openView !== openBG)
-        {
-            this.removeChild(this.openView);
-        }
+        this.options = options;
 
-        // openButton
+        // Destructure common options.
+        const { closedBG, openBG, items, itemOptions, selected, scrollBox, visibleItems, selectedItemOffset } = options;
+
+        const baseItemOpts = {
+            textOffset: selectedItemOffset,
+            iconOffset: selectedItemOffset,
+            padding: itemOptions.padding ?? 0,
+        };
+
+        // Get the item options, containing a view instance.
+        const openItemOpts = this.getContentOptions(items[selected ?? 0]);
+
+        // Create / update the open button.
         if (!this.openButton)
         {
             this.openButton = new FancyButton({
                 defaultView: getView(closedBG),
-                text: new Text(items?.items ? items.items[0] : '', textStyle),
-                textOffset: selectedTextOffset
+                ...baseItemOpts,
+                ...openItemOpts,
             });
             this.openButton.onPress.connect(() => this.toggle());
             this.addChild(this.openButton);
@@ -126,28 +163,34 @@ export class Select extends Container
         else
         {
             this.openButton.defaultView = getView(closedBG);
-            this.openButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
-
-            this.openButton.textOffset = selectedTextOffset;
+            this.openButton.textView = openItemOpts.text;
+            this.openButton.iconView = openItemOpts.icon;
+            this.openButton.textOffset = this.openButton.iconOffset = selectedItemOffset;
+            this.openButton.padding = openItemOpts.padding;
         }
 
-        // openView
+        // Add the open view.
         if (this.openView !== openBG)
         {
+            // Remove the old open view, if exists.
+            if (this.openView) this.removeChild(this.openView);
             this.openView = getView(openBG);
             this.openView.visible = false;
             this.addChild(this.openView);
         }
 
-        // closeButton
+        // Get the item options, containing another view instance.
+        const closeItemOpts = this.getContentOptions(items[selected ?? 0]);
+
+        // Create / update the close button.
         if (!this.closeButton)
         {
             this.closeButton = new FancyButton({
                 defaultView: new Graphics()
                     .beginFill(0x000000, 0.00001)
                     .drawRect(0, 0, this.openButton.width, this.openButton.height),
-                text: new Text(items?.items ? items.items[0] : '', textStyle),
-                textOffset: selectedTextOffset
+                ...baseItemOpts,
+                ...closeItemOpts
             });
             this.closeButton.onPress.connect(() => this.toggle());
             this.openView.addChild(this.closeButton);
@@ -158,12 +201,13 @@ export class Select extends Container
                 .beginFill(0x000000, 0.00001)
                 .drawRect(0, 0, this.openButton.width, this.openButton.height);
 
-            this.closeButton.textView = new Text(items?.items ? items.items[0] : '', textStyle);
-
-            this.openButton.textOffset = selectedTextOffset;
+            this.closeButton.textView = closeItemOpts.text;
+            this.closeButton.iconView = closeItemOpts.icon;
+            this.closeButton.textOffset = this.openButton.iconOffset = selectedItemOffset;
+            this.closeButton.padding = closeItemOpts.padding;
         }
 
-        // ScrollBox
+        // Create / clean the scroll box.
         if (!this.scrollBox)
         {
             this.scrollBox = new ScrollBox();
@@ -175,6 +219,7 @@ export class Select extends Container
             this.scrollBox.removeItems();
         }
 
+        // Update the scroll box.
         this.scrollBox.init({
             type: 'vertical',
             elementsMargin: 0,
@@ -193,6 +238,7 @@ export class Select extends Container
             this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
 
+        // Add items to the dropdown.
         this.addItems(items, selected);
     }
 
@@ -201,24 +247,20 @@ export class Select extends Container
      * @param items
      * @param selected
      */
-    addItems(items: SelectItemsOptions, selected = 0)
+    addItems(items: string[] | (Texture | string)[], selected = 0)
     {
-        this.convertItemsToButtons(items).forEach((button, id) =>
+        this.convertItemsToButtons(items).forEach((button, i) =>
         {
-            const text = button.text;
+            const value = items[i];
 
-            if (id === selected)
-            {
-                this.openButton.text = text;
-                this.closeButton.text = text;
-            }
+            if (i === selected) this.updateSelected(value);
 
             button.onPress.connect(() =>
             {
-                this.value = id;
-                this.onSelect.emit(id, text);
-                this.openButton.text = text;
-                this.closeButton.text = text;
+                this.index = i;
+                this.value = value;
+                this.onSelect.emit(i, value);
+                this.updateSelected(value);
                 this.close();
             });
 
@@ -256,32 +298,72 @@ export class Select extends Container
         this.openButton.visible = true;
     }
 
-    protected convertItemsToButtons({
-        items,
-        backgroundColor,
-        hoverColor,
-        width,
-        height,
-        textStyle,
-        radius
-    }: SelectItemsOptions): FancyButton[]
+    protected updateSelected(value: string | Texture)
+    {
+        if (this.options.type === 'sprite')
+        {
+            const openView = this.openButton.iconView as Sprite;
+            const closeView = this.closeButton.iconView as Sprite;
+            const texture = typeof value === 'string' ? Texture.from(value) : value;
+
+            openView.texture = texture;
+            closeView.texture = texture;
+
+            return;
+        }
+
+        const openView = this.openButton.textView;
+        const closeView = this.closeButton.textView;
+        const text = value as string;
+
+        if (this.options.textUpdate)
+        {
+            this.options.textUpdate(openView, text);
+            this.options.textUpdate(closeView, text);
+
+            return;
+        }
+
+        openView.text = text;
+        closeView.text = text;
+    }
+
+    protected convertItemsToButtons(items: string[] | (Texture | string)[]): FancyButton[]
     {
         const buttons: FancyButton[] = [];
 
-        items.forEach((item) =>
-        {
-            const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
-
-            const color = hoverColor ?? backgroundColor;
-            const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
-
-            const text = new Text(item, textStyle);
-
-            const button = new FancyButton({ defaultView, hoverView, text });
-
-            buttons.push(button);
-        });
+        items.forEach((item) => buttons.push(this.createItemButton(item)));
 
         return buttons;
+    }
+
+    protected createItemButton(item: string | Texture)
+    {
+        const { backgroundColor, hoverColor, width, height, radius, padding } = this.options.itemOptions;
+        const defaultView = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
+        const color = hoverColor ?? backgroundColor;
+        const hoverView = new Graphics().beginFill(color).drawRoundedRect(0, 0, width, height, radius);
+
+        return new FancyButton({
+            defaultView,
+            hoverView,
+            padding: padding ?? 0,
+            ...this.getContentOptions(item)
+        });
+    }
+
+    protected getContentOptions(item: string | Texture): Partial<ButtonOptions>
+    {
+        if (this.options.type === 'text')
+        {
+            const TextClass = this.options.textClass ?? Text;
+            const text = new TextClass(item, this.options.textStyle);
+
+            return { text };
+        }
+
+        const sprite = Sprite.from(item);
+
+        return { icon: sprite };
     }
 }

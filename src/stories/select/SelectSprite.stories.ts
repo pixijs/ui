@@ -35,19 +35,19 @@ export const UseSprite: StoryFn = ({ fontColor, fontSize, itemsAmount, dropDownH
         // Component usage !!!
         // Important: in order scroll to work, you have to call update() method in your game loop.
         select = new Select({
+            type: 'text',
             closedBG: `select_closed.png`,
             openBG: `select_open.png`,
             textStyle,
-            items: {
-                items,
+            items,
+            itemOptions: {
                 backgroundColor: 'RGBA(0, 0, 0, 0.0001)',
                 hoverColor,
                 width: 200,
                 height: 50,
-                textStyle,
-                radius: 25
+                radius: 25,
             },
-            selectedTextOffset: {
+            selectedItemOffset: {
                 y: -13
             },
             scrollBox: {
@@ -63,10 +63,10 @@ export const UseSprite: StoryFn = ({ fontColor, fontSize, itemsAmount, dropDownH
 
         select.y = 10;
 
-        select.onSelect.connect((_, text) =>
+        select.onSelect.connect((id, text) =>
         {
             onSelect({
-                id: select.value,
+                id,
                 text
             });
         });

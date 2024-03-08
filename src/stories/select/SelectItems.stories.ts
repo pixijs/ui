@@ -5,7 +5,6 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Select } from '../../Select';
 import { action } from '@storybook/addon-actions';
 import { preload } from '../utils/loader';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
 import type { StoryFn } from '@storybook/types';
 import { getColor } from '../utils/color';
@@ -16,50 +15,45 @@ const args = {
     dropDownHoverColor: '#A5E24D',
     fontColor: '#000000',
     fontSize: 28,
-    width: 250,
-    height: 50,
+    width: 200,
+    height: 120,
     radius: 15,
-    itemsAmount: 100,
+    padding: 15,
     onSelect: action('Item selected')
 };
 
-export const UseGraphics: StoryFn = ({
-    fontColor,
-    fontSize,
+export const UseGraphicalItems: StoryFn = ({
     width,
     height,
     radius,
-    itemsAmount,
     backgroundColor,
     dropDownBackgroundColor,
     dropDownHoverColor,
-    onSelect
+    onSelect,
+    padding,
 }: any) =>
 {
     const view = new Container();
 
     backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
     dropDownBackgroundColor = getColor(dropDownBackgroundColor);
     const hoverColor = getColor(dropDownHoverColor);
-    const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
-
-    const items = getItems(itemsAmount, 'Item');
+    const items = ['avatar-01.png', 'avatar-02.png', 'avatar-03.png', 'avatar-04.png', 'avatar-05.png'];
 
     // Component usage !!!
     // Important: in order scroll to work, you have to call update() method in your game loop.
     const select = new Select({
-        type: 'text',
+        type: 'sprite',
         closedBG: getClosedBG(backgroundColor, width, height, radius),
         openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
-        textStyle,
         items,
         itemOptions: {
             backgroundColor,
             hoverColor,
             width,
             height,
-            radius
+            radius,
+            padding,
         },
         scrollBox: {
             width,
@@ -70,10 +64,10 @@ export const UseGraphics: StoryFn = ({
 
     select.y = 10;
 
-    select.onSelect.connect((id, text) =>
+    select.onSelect.connect((_, text) =>
     {
         onSelect({
-            id,
+            id: select.value,
             text
         });
     });
@@ -121,20 +115,8 @@ function getOpenBG(backgroundColor: number, width: number, height: number, radiu
     return openBG;
 }
 
-function getItems(itemsAmount: number, text: string): string[]
-{
-    const items: string[] = [];
-
-    for (let i = 0; i < itemsAmount; i++)
-    {
-        items.push(`${text} ${i + 1}`);
-    }
-
-    return items;
-}
-
 export default {
-    title: 'Components/Select/Use Graphics',
+    title: 'Components/Select/Use Graphical Items',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };
