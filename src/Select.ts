@@ -54,7 +54,7 @@ type TextSelectOptions = {
     /** Specify which type of content is being used in the dropdown */
     type: 'text';
     /** Override the text class to use, otherwise it will use the default Pixi Text */
-    textClass?: any;
+    textClass?: (...args: any[]) => any;
     /** Specify the text style options */
     textStyle?: Partial<TextStyle>;
     textUpdate?: (view: any, text: string) => void;
