@@ -7,6 +7,39 @@ import { getView } from './utils/helpers/view';
 
 type LabelStyle = TextStyle | Partial<ITextStyle>;
 
+type CustomTextOptions = {
+    /** Override the text class to use, otherwise it will use the default Pixi Text */
+    textClass?: new (...args: any[]) => any;
+    /**
+     * Custom options to be passed to the custom text class which will be
+     * in form of an array of arguments and will append after the text string when instantiating.
+     * If it's a single option object, please also wrap it in an array.
+     *
+     * eg:
+     * - [arg1, arg2, arg3] => new TextClass(text, arg1, arg2, arg3)
+     * - [{ arg1, arg2, arg3 }] => new TextClass(text, { arg1, arg2, arg3 })
+     *
+     * If not provided, it will use the specified text style if also supplied.
+     */
+    textArgs?: any;
+    /**
+     * This is explicity for custom text classes that expect text string to be supplied
+     * within a single options object. The text string will be added to the object with the
+     * key specified here.
+     *
+     * eg:
+     * { `consolidateOptionsWithKey`: 'label', textArgs: [{ arg1, arg2, arg3 }] }
+     * => new TextClass({ arg1, arg2, arg3, label: text })
+     */
+    consolidateOptionsWithKey?: string;
+    /**
+     * Provide a function to update the text view.
+     * Good for the custom text class that doesn't have a direct text property
+     * that the default update function makes use of.
+     */
+    textUpdate?: (label: any, text: string) => void;
+};
+
 type CheckBoxStyle = {
     checked: Container | string;
     unchecked: Container | string;
@@ -19,6 +52,7 @@ type CheckBoxStyle = {
 
 export type CheckBoxOptions = {
     style: CheckBoxStyle;
+    customText?: CustomTextOptions;
     text?: string;
     checked?: boolean;
 };
@@ -43,9 +77,13 @@ export class CheckBox extends Switcher
 
     protected _style: CheckBoxStyle;
 
+    protected _customTextOptions: CustomTextOptions;
+
     constructor(options: CheckBoxOptions)
     {
         super();
+
+        this._customTextOptions = options.customText;
 
         this.text = options.text;
 
@@ -66,7 +104,26 @@ export class CheckBox extends Switcher
     {
         if (!text) return;
 
-        this.label = new Text(text ?? '', style ?? this._style?.text);
+        const TextClass = this._customTextOptions?.textClass ?? Text;
+        const args = this._customTextOptions?.textArgs;
+        const textKey = this._customTextOptions?.consolidateOptionsWithKey;
+
+        text = text ?? '';
+        style = style ?? this._style?.text;
+
+        if (textKey)
+        {
+            this.label = new TextClass({ [textKey]: text, ...style, ...args });
+        }
+        else if (args)
+        {
+            this.label = new TextClass(text, ...args);
+        }
+        else
+        {
+            this.label = new TextClass(text, style);
+        }
+
         this.addChild(this.label);
 
         this.label.cursor = 'pointer';
@@ -84,7 +141,7 @@ export class CheckBox extends Switcher
             return;
         }
 
-        this.label ? (this.label.text = text) : this.addLabel(text);
+        this.label ? this.updateText(text) : this.addLabel(text);
     }
 
     /** Getter, which returns a checkbox text. */
@@ -120,7 +177,7 @@ export class CheckBox extends Switcher
 
         if (this.label)
         {
-            if (style.text) this.label.style = style.text;
+            if (style.text && this.label.style) this.label.style = style.text;
 
             this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
             this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
@@ -152,5 +209,19 @@ export class CheckBox extends Switcher
     forceCheck(checked: boolean)
     {
         this.forceSwitch(checked ? 1 : 0);
+    }
+
+    protected updateText(value: string)
+    {
+        if (!this.label) return;
+
+        if (this._customTextOptions.textUpdate)
+        {
+            this._customTextOptions.textUpdate(this.label, value);
+
+            return;
+        }
+
+        this.label.text = value;
     }
 }
