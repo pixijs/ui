@@ -532,17 +532,12 @@ export class ScrollBox extends Container
             {
                 this._trackpad.xAxis.value = 0;
             }
-            else if (targetPos < 0 && targetPos + this.listWidth < this.__width)
-            {
-                this._trackpad.xAxis.value = this.__width - this.listWidth;
-            }
-            else if (targetPos > 0)
-            {
-                this._trackpad.xAxis.value = 0;
-            }
             else
             {
-                this._trackpad.xAxis.value = targetPos;
+                const min = this.__width - this.listWidth;
+                const max = 0;
+
+                this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
             }
         }
         else if (typeof event.deltaY !== 'undefined')
@@ -553,17 +548,12 @@ export class ScrollBox extends Container
             {
                 this._trackpad.yAxis.value = 0;
             }
-            else if (targetPos < 0 && targetPos + this.listHeight < this.__height)
-            {
-                this._trackpad.yAxis.value = this.__height - this.listHeight;
-            }
-            else if (targetPos > 0)
-            {
-                this._trackpad.yAxis.value = 0;
-            }
             else
             {
-                this._trackpad.yAxis.value = targetPos;
+                const min = this.__height - this.listHeight;
+                const max = 0;
+
+                this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
             }
         }
 
