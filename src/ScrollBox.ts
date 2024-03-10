@@ -68,6 +68,7 @@ export class ScrollBox extends Container
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point;
+    protected isOver = false;
 
     /**
      * @param options
@@ -349,6 +350,16 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
+        this.on('pointerover', () =>
+        {
+            this.isOver = true;
+        });
+
+        this.on('pointerout', () =>
+        {
+            this.isOver = false;
+        });
+
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
             if (!this.isDragging) return;
@@ -510,17 +521,12 @@ export class ScrollBox extends Container
 
     protected onMouseScroll(event: WheelEvent): void
     {
+        if (!this.isOver) return;
         this.renderAllItems();
 
-        if (
-            this.options.type === 'horizontal'
-            && (typeof event.deltaX !== 'undefined'
-                || typeof event.deltaY !== 'undefined')
-        )
+        if (this.options.type === 'horizontal' && typeof event.deltaX !== 'undefined')
         {
-            const targetPos = event.deltaY
-                ? this.list.x - event.deltaY
-                : this.list.x - event.deltaX;
+            const targetPos = this.list.x - event.deltaX;
 
             if (this.listWidth < this.__width)
             {
