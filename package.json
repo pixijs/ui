@@ -61,7 +61,7 @@
         "docsKeyword": "PixiJS, UI, components"
     },
     "dependencies": {
-        "pixi.js": "^8.0.0",
+        "pixi.js": "^8.0.1",
         "tweedle.js": "^2.1.0",
         "typed-signals": "^2.5.0"
     },
@@ -89,9 +89,6 @@
         "lint-staged": "^13.3.0",
         "storybook": "7.6.17",
         "typescript": "^5.4.2"
-    },
-    "peerDependencies": {
-        "pixi.js": "^8.0.0"
     },
     "publishConfig": {
         "access": "public"

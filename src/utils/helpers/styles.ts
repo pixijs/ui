@@ -1,6 +1,6 @@
-import { TextStyle } from 'pixi.js';
+import { TextStyleOptions } from 'pixi.js';
 
-export const defaultTextStyle = new TextStyle({
+export const defaultTextStyle: TextStyleOptions = {
     fill: 0xffffff,
     fontSize: 42,
     fontWeight: 'bold',
@@ -11,4 +11,4 @@ export const defaultTextStyle = new TextStyle({
         blur: 3,
         angle: 0
     }
-});
+};

@@ -66,7 +66,7 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
 
                 let currentTexture = 'button_hover.png';
 
-                button.onUp.connect(() =>
+                button.onPress.connect(() =>
                 {
                     currentTexture = randomItem([
                         `button_hover.png`,
