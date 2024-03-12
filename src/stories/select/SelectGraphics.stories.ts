@@ -1,4 +1,4 @@
-import { ColorSource, Container, Graphics, Sprite } from 'pixi.js';
+import { ColorSource, Container, Graphics, Sprite, TextStyle } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
@@ -36,7 +36,7 @@ export const UseGraphics: StoryFn<typeof args> = ({
         context,
         init: (view) =>
         {
-            const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
+            const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize } as TextStyle;
 
             const items = getItems(itemsAmount, 'Item');
 

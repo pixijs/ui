@@ -1,3 +1,4 @@
+import { TextStyle } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
@@ -27,7 +28,7 @@ export const UseSprite: StoryFn<typeof args> = (
 
             preload(assets).then(() =>
             {
-                const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
+                const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize } as TextStyle;
 
                 const items = getItems(itemsAmount, 'Item');
 

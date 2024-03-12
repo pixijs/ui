@@ -22,11 +22,9 @@ export class MaskedFrame extends Container
 {
     /** Target container. */
     target: Container;
-
-    protected _targetMaskView = new Container();
+    border = new Graphics();
     protected _targetMask: Container;
     protected maskData: string | Graphics;
-    protected border: Graphics = new Graphics();
     protected borderWidth: number;
     protected borderColor: FillStyleInputs;
 
@@ -71,18 +69,8 @@ export class MaskedFrame extends Container
         this.maskData = mask;
 
         this._targetMask = getView(mask);
-        this._targetMaskView.addChild(this._targetMask);
-        this.addChild(this._targetMaskView);
-        this.target.mask = this._targetMaskView;
-    }
-
-    /** Updates mask position based on the border width. */
-    protected updateMask()
-    {
-        if (this._targetMask)
-        {
-            this._targetMaskView.position.set(this.borderWidth);
-        }
+        this.addChild(this._targetMask);
+        this.target.mask = this._targetMask;
     }
 
     /**
@@ -106,7 +94,7 @@ export class MaskedFrame extends Container
 
             this.mask = borderMask;
             this.addChild(borderMask);
-            this.updateMask();
+            this._targetMask.position.set(borderWidth);
         }
     }
 
