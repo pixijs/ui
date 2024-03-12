@@ -242,7 +242,6 @@ export class Input extends Container
 
             if (this.options?.nineSliceSprite && typeof bg === 'string')
             {
-                this.inputMask = new NineSliceSprite(Texture.from(bg));
                 this.inputMask = new NineSliceSprite({
                     texture: Texture.from(bg),
                     leftWidth: this.options.nineSliceSprite[0],
