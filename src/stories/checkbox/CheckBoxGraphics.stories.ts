@@ -1,4 +1,5 @@
 import { Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
@@ -19,75 +20,78 @@ const args = {
     radius: 11,
     amount: 3,
     checked: false,
-    onPress: action('Checkbox')
+    onPress: action('Checkbox'),
 };
 
-export const UseGraphics = ({
-    text,
-    amount,
-    checked,
-
-    textColor,
-    borderColor,
-    fillBorderColor,
-    fillColor,
-    color,
-    width,
-    height,
-    radius,
-
-    onPress
-}: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    color = getColor(color);
-    borderColor = getColor(borderColor);
-    fillColor = getColor(fillColor);
-    fillBorderColor = getColor(fillBorderColor);
-
-    for (let i = 0; i < amount; i++)
+export const UseGraphics: StoryFn<typeof args> = (
     {
-    // Component usage !!!
-        const checkBox = new CheckBox({
-            text: `${text} ${i + 1}`,
-            checked,
-            style: {
-                unchecked: new Graphics()
-                    .fill(borderColor)
-                    .roundRect(-2, -2, width + 4, height + 4, radius)
-                    .fill(color)
-                    .roundRect(0, 0, width, height, radius),
-                checked: new Graphics()
-                    .fill(borderColor)
-                    .roundRect(-2, -2, width + 4, height + 4, radius)
-                    .fill(color)
-                    .roundRect(0, 0, width, height, radius)
-                    .fill(fillBorderColor)
-                    .roundRect(3, 3, width - 6, height - 6, radius)
-                    .fill(fillColor)
-                    .roundRect(5, 5, width - 10, height - 10, radius),
-                text: {
-                    ...defaultTextStyle,
-                    fontSize: 22,
-                    fill: textColor
-                }
-            }
-        });
+        text,
+        amount,
+        checked,
 
-        checkBox.onCheck.connect((checked) =>
+        textColor,
+        borderColor,
+        fillBorderColor,
+        fillColor,
+        color,
+        width,
+        height,
+        radius,
+
+        onPress,
+    },
+    context
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            onPress(`checkBox ${i + 1} ${checked}`);
-        });
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-        view.addChild(checkBox);
-    }
+            for (let i = 0; i < amount; i++)
+            {
+                // Component usage !!!
+                const checkBox = new CheckBox({
+                    text: `${text} ${i + 1}`,
+                    checked,
+                    style: {
+                        unchecked: new Graphics()
+                            .roundRect(-2, -2, width + 4, height + 4, radius)
+                            .fill(borderColor)
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(color),
+                        checked: new Graphics()
+                            .roundRect(-2, -2, width + 4, height + 4, radius)
+                            .fill(borderColor)
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(color)
+                            .roundRect(3, 3, width - 6, height - 6, radius)
+                            .fill(fillBorderColor)
+                            .roundRect(5, 5, width - 10, height - 10, radius)
+                            .fill(fillColor),
+                        text: {
+                            ...defaultTextStyle,
+                            fontSize: 22,
+                            fill: getColor(textColor),
+                        },
+                    },
+                });
 
-    return { view, resize: () => centerElement(view) };
-};
+                checkBox.onCheck.connect((checked) =>
+                {
+                    onPress(`checkBox ${i + 1} ${checked}`);
+                });
+
+                list.addChild(checkBox);
+            }
+            view.addChild(list);
+            centerElement(list);
+        },
+        resize: (view) => centerElement(view.children[0]),
+    });
 
 export default {
     title: 'Components/Checkbox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

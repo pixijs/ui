@@ -1,10 +1,10 @@
-import { Container, Graphics } from 'pixi.js';
+import { ColorSource, Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { RadioGroup } from '../../RadioGroup';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
 
 const args = {
@@ -21,7 +21,7 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const UseGraphics = ({
+export const UseGraphics: StoryFn<typeof args> = ({
     amount,
     text,
 
@@ -35,62 +35,60 @@ export const UseGraphics = ({
     radius,
 
     onChange,
-}: any) =>
-{
-    const view = new Container();
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const items = [];
 
-    bgColor = getColor(bgColor);
-    fillColor = getColor(fillColor);
-
-    const items = [];
-
-    for (let i = 0; i < amount; i++)
-    {
-        items.push(
-            new CheckBox({
-                text: `${text} ${i + 1}`,
-                style: {
-                    unchecked: drawRadio({
-                        color: bgColor,
-                        width,
-                        height,
-                        padding,
-                        radius,
+            for (let i = 0; i < amount; i++)
+            {
+                items.push(
+                    new CheckBox({
+                        text: `${text} ${i + 1}`,
+                        style: {
+                            unchecked: drawRadio({
+                                color: bgColor,
+                                width,
+                                height,
+                                padding,
+                                radius,
+                            }),
+                            checked: drawRadio({
+                                color: bgColor,
+                                fillColor,
+                                width,
+                                height,
+                                padding,
+                                radius,
+                            }),
+                            text: {
+                                ...defaultTextStyle,
+                                fontSize: 22,
+                                fill: textColor,
+                            },
+                        },
                     }),
-                    checked: drawRadio({
-                        color: bgColor,
-                        fillColor,
-                        width,
-                        height,
-                        padding,
-                        radius,
-                    }),
-                    text: {
-                        ...defaultTextStyle,
-                        fontSize: 22,
-                        fill: textColor,
-                    },
-                },
-            }),
-        );
-    }
+                );
+            }
 
-    // Component usage
-    const radioGroup = new RadioGroup({
-        selectedItem: 0,
-        items,
-        type: 'vertical',
-        elementsMargin: 10,
+            // Component usage
+            const radioGroup = new RadioGroup({
+                selectedItem: 0,
+                items,
+                type: 'vertical',
+                elementsMargin: 10,
+            });
+
+            radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+                onChange({ id: selectedItemID, val: selectedVal }),
+            );
+
+            view.addChild(radioGroup.innerView);
+        },
+        resize: (view) => centerElement(view),
     });
-
-    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-        onChange({ id: selectedItemID, val: selectedVal }),
-    );
-
-    view.addChild(radioGroup.innerView);
-
-    return { view, resize: () => centerElement(view) };
-};
 
 function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
 {
@@ -135,8 +133,8 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
 }
 
 type GraphicsType = {
-    color: number;
-    fillColor?: number;
+    color: ColorSource;
+    fillColor?: ColorSource;
     width?: number;
     height?: number;
     radius?: number;

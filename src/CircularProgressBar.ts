@@ -1,8 +1,8 @@
-import { Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
+import { ColorSource, Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
 
 export type MaskedProgressBarOptions = {
-    backgroundColor?: number;
-    fillColor: number;
+    backgroundColor?: ColorSource;
+    fillColor: ColorSource;
     lineWidth: number;
     radius: number;
     value?: number;
@@ -40,8 +40,8 @@ export class CircularProgressBar extends Container
     /**
      * Creates a Circular ProgressBar.
      * @param { number } options - Options object to use.
-     * @param { number } options.backgroundColor - Background color.
-     * @param { number } options.fillColor - Fill color.
+     * @param { ColorSource } options.backgroundColor - Background color.
+     * @param { ColorSource } options.fillColor - Fill color.
      * @param { number } options.lineWidth - Line width.
      * @param { number } options.radius - Radius.
      * @param { number } options.value - Progress value.

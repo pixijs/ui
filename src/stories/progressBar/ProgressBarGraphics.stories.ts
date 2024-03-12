@@ -1,11 +1,9 @@
 import { Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     fillColor: '#00b1dd',
@@ -20,7 +18,7 @@ const args = {
     vertical: false
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args> = ({
     value,
     borderColor,
     backgroundColor,
@@ -31,52 +29,52 @@ export const UseGraphics: StoryFn = ({
     border,
     animate,
     vertical
-}: any) =>
+}, context) =>
 {
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    fillColor = getColor(fillColor);
-    borderColor = getColor(borderColor);
-    backgroundColor = getColor(backgroundColor);
-
-    const bg = new Graphics()
-        .roundRect(0, 0, width, height, radius)
-        .fill(borderColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
-        .fill(backgroundColor);
-
-    const fill = new Graphics()
-        .roundRect(0, 0, width, height, radius)
-        .fill(borderColor)
-        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
-        .fill(fillColor);
-
-    // Component usage
-    const progressBar = new ProgressBar({
-        bg,
-        fill,
-        progress: value
-    });
-
-    if (vertical)
-    {
-        progressBar.rotation = -Math.PI / 2;
-    }
-
-    view.addChild(progressBar);
-
     let isFilling = true;
+    let progressBar: ProgressBar;
 
-    return {
-        view,
-        resize: () =>
+    return new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
+
+            const bg = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .fill(backgroundColor);
+
+            const fill = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .fill(fillColor);
+
+            // Component usage
+            progressBar = new ProgressBar({
+                bg,
+                fill,
+                progress: value
+            });
+
+            if (vertical)
+            {
+                progressBar.rotation = -Math.PI / 2;
+            }
+
+            list.addChild(progressBar);
+            view.addChild(list);
+        },
+        resize: (view) =>
         {
             centerElement(view);
             view.y += view.height;
         },
         update: () =>
         {
-            if (!animate)
+            if (!animate || !progressBar)
             {
                 return;
             }
@@ -94,7 +92,7 @@ export const UseGraphics: StoryFn = ({
 
             progressBar.progress = value;
         }
-    };
+    });
 };
 
 export default {

@@ -1,10 +1,9 @@
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     value: 50,
@@ -14,54 +13,58 @@ const args = {
     vertical: false,
 };
 
-export const NineSliceSprite: StoryFn = ({ value, animate, vertical, width, height }: any) =>
+export const NineSliceSprite: StoryFn<typeof args> = ({ value, animate, vertical, width, height }, context) =>
 {
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    const assets = ['slider_bg.png', 'slider_progress.png'];
-
+    let isFilling = true;
     let progressBar: ProgressBar;
 
-    preload(assets).then(() =>
-    {
-    // Component usage !!!
-        progressBar = new ProgressBar({
-            bg: 'slider_bg.png',
-            fill: 'slider_progress.png',
-            nineSliceSprite: {
-                bg: [22, 15, 22, 23],
-                fill: [22, 15, 22, 15]
-            },
-            progress: value,
-            fillPaddings: {
-                top: 3,
-                right: 5,
-                bottom: 4.5,
-                left: 4.5
-            }
-        });
-
-        progressBar.width = width;
-        progressBar.height = height;
-
-        view.addChild(progressBar);
-
-        if (vertical)
+    return new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            progressBar.rotation = -Math.PI / 2;
-            view.y += view.height / 2;
-        }
-        else
-        {
-            view.x += -view.width / 2;
-        }
-    });
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-    let isFilling = true;
+            const assets = ['slider_bg.png', 'slider_progress.png'];
 
-    return {
-        view,
-        resize: () =>
+            preload(assets).then(() =>
+            {
+                // Component usage !!!
+                progressBar = new ProgressBar({
+                    bg: 'slider_bg.png',
+                    fill: 'slider_progress.png',
+                    nineSliceSprite: {
+                        bg: [22, 15, 22, 23],
+                        fill: [22, 15, 22, 15]
+                    },
+                    progress: value,
+                    fillPaddings: {
+                        top: 3,
+                        right: 5,
+                        bottom: 4.5,
+                        left: 4.5
+                    }
+                });
+
+                progressBar.width = width;
+                progressBar.height = height;
+
+                list.addChild(progressBar);
+
+                if (vertical)
+                {
+                    progressBar.rotation = -Math.PI / 2;
+                    list.y += list.height / 2;
+                }
+                else
+                {
+                    list.x += -list.width / 2;
+                }
+            });
+
+            view.addChild(list);
+        },
+
+        resize: (view) =>
         {
             centerElement(view);
             if (vertical)
@@ -71,7 +74,7 @@ export const NineSliceSprite: StoryFn = ({ value, animate, vertical, width, heig
         },
         update: () =>
         {
-            if (!animate)
+            if (!animate || !progressBar)
             {
                 return;
             }
@@ -92,7 +95,7 @@ export const NineSliceSprite: StoryFn = ({ value, animate, vertical, width, heig
                 progressBar.progress = value;
             }
         }
-    };
+    });
 };
 
 export default {

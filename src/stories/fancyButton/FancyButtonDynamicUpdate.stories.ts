@@ -1,4 +1,5 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Sprite, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -17,7 +18,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const DynamicUpdate = ({
+export const DynamicUpdate: StoryFn<typeof args> = ({
     text,
     textColor,
     disabled,
@@ -25,74 +26,75 @@ export const DynamicUpdate = ({
     padding,
     anchorX,
     anchorY,
-}: any) =>
-{
-    const view = new Container();
-
-    const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
-    const avatars = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
-
-    preload([...assets, ...avatars]).then(() =>
-    {
-        // Component usage !!!
-        const button = new FancyButton();
-
-        button.defaultView = `button.png`;
-        button.hoverView = `button_hover.png`;
-
-        let icon = avatars[0];
-
-        button.iconView = Sprite.from(icon);
-        button.iconView.scale.set(0.2);
-        button.iconOffset = { x: -100, y: -7 };
-
-        button.textView = new Text(text, {
-            ...defaultTextStyle,
-            fill: textColor || defaultTextStyle.fill
-        });
-        button.textOffset = { x: 30, y: -7 };
-
-        button.padding = padding;
-
-        button.anchor.set(anchorX, anchorY);
-
-        button.enabled = !disabled;
-
-        button.onPress.connect(onPress);
-
-        let currentTexture = 'button_hover.png';
-
-        button.onUp.connect(() =>
+}, context) =>
+    new PixiStory({
+        context,
+        init: (view) =>
         {
-            currentTexture = randomItem([
-                `button_hover.png`,
-                `button_pressed.png`,
-                `button_disabled.png`
-            ].filter((texture) => texture !== currentTexture)) as string;
+            const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
+            const avatars = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
 
-            button.hoverView = currentTexture;
+            preload([...assets, ...avatars]).then(() =>
+            {
+                // Component usage !!!
+                const button = new FancyButton();
 
-            const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
-            const text = randomItem(texts.filter((text) => text !== button.text)) as string;
+                button.defaultView = `button.png`;
+                button.hoverView = `button_hover.png`;
 
-            button.textView = new Text(text, { fontSize: 70 });
+                let icon = avatars[0];
 
-            icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
+                button.iconView = Sprite.from(icon);
+                button.iconView.scale.set(0.2);
+                button.iconOffset = { x: -100, y: -7 };
 
-            const sprite = Sprite.from(icon);
+                button.textView = new Text(text, {
+                    ...defaultTextStyle,
+                    fill: textColor || defaultTextStyle.fill
+                });
+                button.textOffset = { x: 30, y: -7 };
 
-            sprite.scale.set(0.2);
+                button.padding = padding;
 
-            button.iconView = sprite;
-        });
+                button.anchor.set(anchorX, anchorY);
 
-        centerView(view);
+                button.enabled = !disabled;
 
-        view.addChild(button);
+                button.onPress.connect(onPress);
+
+                let currentTexture = 'button_hover.png';
+
+                button.onUp.connect(() =>
+                {
+                    currentTexture = randomItem([
+                        `button_hover.png`,
+                        `button_pressed.png`,
+                        `button_disabled.png`
+                    ].filter((texture) => texture !== currentTexture)) as string;
+
+                    button.hoverView = currentTexture;
+
+                    const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
+                    const text = randomItem(texts.filter((text) => text !== button.text)) as string;
+
+                    button.textView = new Text(text, { fontSize: 70 });
+
+                    icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
+
+                    const sprite = Sprite.from(icon);
+
+                    sprite.scale.set(0.2);
+
+                    button.iconView = sprite;
+                });
+
+                centerView(view);
+
+                view.addChild(button);
+            });
+        },
+        resize: centerView
     });
-
-    return { view, resize: () => centerView(view) };
-};
 
 export default {
     title: 'Components/FancyButton/Dynamic Update',

@@ -1,8 +1,7 @@
-import { Container } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 
 const args = {
@@ -10,32 +9,30 @@ const args = {
     borderWidth: 10
 };
 
-// TODO: implement preloading
-export const UseSprite = ({ borderColor, borderWidth }: any) =>
-{
-    const view = new Container();
+export const UseSprite: StoryFn<typeof args> = ({ borderColor, borderWidth }, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const assets = [`avatar-01.png`, `avatar_mask.png`];
 
-    const assets = [`avatar-01.png`, `avatar_mask.png`];
+            preload(assets).then(() =>
+            {
+                // Component usage !!!
+                const frame = new MaskedFrame({
+                    target: `avatar-01.png`,
+                    mask: `avatar_mask.png`,
+                    borderWidth,
+                    borderColor
+                });
 
-    preload(assets).then(() =>
-    {
-        borderColor = getColor(borderColor);
+                view.addChild(frame);
 
-        // Component usage !!!
-        const frame = new MaskedFrame({
-            target: `avatar-01.png`,
-            mask: `avatar_mask.png`,
-            borderWidth,
-            borderColor
-        });
-
-        view.addChild(frame);
-
-        centerElement(view);
+                centerElement(view);
+            });
+        },
+        resize: centerElement
     });
-
-    return { view, resize: () => centerElement(view) };
-};
 
 export default {
     title: 'Components/MaskedFrame/Use Sprite',

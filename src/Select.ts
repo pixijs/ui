@@ -1,4 +1,4 @@
-import { Container, Graphics, Text, TextStyle } from 'pixi.js';
+import { Container, FillStyleInputs, Graphics, Text, TextStyle } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
@@ -13,10 +13,10 @@ type Offset = {
 
 export type SelectItemsOptions = {
     items: string[];
-    backgroundColor: number | string;
+    backgroundColor: FillStyleInputs
     width: number;
     height: number;
-    hoverColor?: number;
+    hoverColor?: FillStyleInputs;
     textStyle?: Partial<TextStyle>;
     radius?: number;
 };

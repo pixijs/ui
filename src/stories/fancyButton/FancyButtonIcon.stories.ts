@@ -1,9 +1,9 @@
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Graphics, Sprite } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
@@ -29,7 +29,7 @@ const args = {
     action: action('Button')
 };
 
-export const UseIcon = ({
+export const UseIcon: StoryFn<typeof args> = ({
     width,
     height,
     radius,
@@ -49,83 +49,79 @@ export const UseIcon = ({
     anchorX,
     anchorY,
     animationDuration
-}: any) =>
-{
-    color = getColor(color);
-    hoverColor = getColor(hoverColor);
-    pressedColor = getColor(pressedColor);
-    disabledColor = getColor(disabledColor);
-
-    const view = new Container();
-
-    const assets = [`avatar-01.png`];
-
-    preload(assets).then(() =>
-    {
-        const target = Sprite.from(`avatar-01.png`);
-
-        const icon = new MaskedFrame({
-            target,
-            mask: new Graphics().drawCircle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
-            borderWidth: 5,
-            borderColor: 0xffffff
-        });
-
-        // Component usage !!!
-        const button = new FancyButton({
-            defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
-            hoverView: new Graphics().roundRect(0, 0, width, height, radius).fill(hoverColor),
-            pressedView: new Graphics().roundRect(0, 0, width, height, radius).fill(pressedColor),
-            disabledView: new Graphics().roundRect(0, 0, width, height, radius).fill(disabledColor),
-            icon,
-            padding,
-            offset: {
-                default: { y: defaultOffset },
-                disabled: { y: disabledOffset }
-            },
-            iconOffset: {
-                x: iconOffsetX,
-                y: iconOffsetY
-            },
-            animations: {
-                hover: {
-                    props: {
-                        scale: { x: 1.03, y: 1.03 },
-                        y: hoverOffset
-                    },
-                    duration: animationDuration
-                },
-                pressed: {
-                    props: {
-                        scale: { x: 0.9, y: 0.9 },
-                        y: pressedOffset
-                    },
-                    duration: animationDuration
-                }
-            }
-        });
-
-        button.anchor.set(anchorX, anchorY);
-
-        if (disabled)
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            button.enabled = false;
-        }
+            const assets = [`avatar-01.png`];
 
-        button.onPress.connect(() => action('onPress'));
-        button.onDown.connect(() => action('onDown'));
-        button.onUp.connect(() => action('onUp'));
-        button.onHover.connect(() => action('onHover'));
-        button.onOut.connect(() => action('onOut'));
-        button.onUpOut.connect(() => action('onUpOut'));
+            preload(assets).then(() =>
+            {
+                const target = Sprite.from(`avatar-01.png`);
 
-        view.addChild(button);
+                const icon = new MaskedFrame({
+                    target,
+                    mask: new Graphics().drawCircle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
+                    borderWidth: 5,
+                    borderColor: 0xffffff
+                });
 
-        centerView(view);
+                // Component usage !!!
+                const button = new FancyButton({
+                    defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
+                    hoverView: new Graphics().roundRect(0, 0, width, height, radius).fill(hoverColor),
+                    pressedView: new Graphics().roundRect(0, 0, width, height, radius).fill(pressedColor),
+                    disabledView: new Graphics().roundRect(0, 0, width, height, radius).fill(disabledColor),
+                    icon,
+                    padding,
+                    offset: {
+                        default: { y: defaultOffset },
+                        disabled: { y: disabledOffset }
+                    },
+                    iconOffset: {
+                        x: iconOffsetX,
+                        y: iconOffsetY
+                    },
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.03, y: 1.03 },
+                                y: hoverOffset
+                            },
+                            duration: animationDuration
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.9, y: 0.9 },
+                                y: pressedOffset
+                            },
+                            duration: animationDuration
+                        }
+                    }
+                });
+
+                button.anchor.set(anchorX, anchorY);
+
+                if (disabled)
+                {
+                    button.enabled = false;
+                }
+
+                button.onPress.connect(() => action('onPress'));
+                button.onDown.connect(() => action('onDown'));
+                button.onUp.connect(() => action('onUp'));
+                button.onHover.connect(() => action('onHover'));
+                button.onOut.connect(() => action('onOut'));
+                button.onUpOut.connect(() => action('onUpOut'));
+
+                view.addChild(button);
+
+                centerView(view);
+            });
+        },
+        resize: centerView
     });
-
-    return { view, resize: () => centerView(view) };
-};
 
 export default {
     title: 'Components/FancyButton/Use Icon',

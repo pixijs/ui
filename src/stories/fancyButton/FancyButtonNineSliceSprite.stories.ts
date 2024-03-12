@@ -1,4 +1,5 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
@@ -20,7 +21,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UseNineSliceSprite = ({
+export const UseNineSliceSprite: StoryFn<typeof args> = ({
     text,
     textColor,
     disabled,
@@ -31,108 +32,109 @@ export const UseNineSliceSprite = ({
     animationDuration,
     width,
     height
-}: any) =>
-{
-    const view = new Container();
-
-    const assets = [
-        `button.png`,
-        `button_hover.png`,
-        `button_pressed.png`,
-        `button_disabled.png`,
-        `avatar-01.png`,
-        `avatar_mask.png`
-    ];
-
-    preload(assets).then(() =>
-    {
-    // Component usage !!!
-        const button = new FancyButton({
-            defaultView: `button.png`,
-            hoverView: `button_hover.png`,
-            pressedView: `button_pressed.png`,
-            disabledView: `button_disabled.png`,
-            nineSliceSprite: [
-                150, 66, 150, 66
-            ],
-            text: new Text({
-                text, style: {
-                    ...defaultTextStyle,
-                    fill: textColor || defaultTextStyle.fill
-                }
-            }),
-            padding,
-            textOffset: { x: 30, y: -5 },
-            animations: {
-                hover: {
-                    props: {
-                        scale: { x: 1.03, y: 1.03 },
-                        y: 0
-                    },
-                    duration: animationDuration
-                },
-                pressed: {
-                    props: {
-                        scale: { x: 0.9, y: 0.9 },
-                        y: 10
-                    },
-                    duration: animationDuration
-                }
-            },
-        });
-
-        button.iconView = new MaskedFrame({
-            target: `avatar-01.png`,
-            mask: `avatar_mask.png`,
-            borderWidth: 10,
-            borderColor: 0xFFFFFF
-        });
-        button.iconView.scale.set(0.2);
-        button.iconOffset = { x: -100, y: -7 };
-
-        button.anchor.set(anchorX, anchorY);
-
-        if (disabled)
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            button.enabled = false;
-        }
+            const assets = [
+                `button.png`,
+                `button_hover.png`,
+                `button_pressed.png`,
+                `button_disabled.png`,
+                `avatar-01.png`,
+                `avatar_mask.png`
+            ];
 
-        const sizes: {w: number, h: number}[] = [
-            { w: width, h: height },
-            { w: 300, h: 300 },
-            { w: 600, h: 137 },
-            { w: 600, h: 300 }
-        ];
-
-        button.width = sizes[0].w;
-        button.height = sizes[0].h;
-
-        let currentSizeID = 0;
-
-        button.onPress.connect(() =>
-        {
-            currentSizeID++;
-
-            if (currentSizeID >= sizes.length)
+            preload(assets).then(() =>
             {
-                currentSizeID = 0;
-            }
+                // Component usage !!!
+                const button = new FancyButton({
+                    defaultView: `button.png`,
+                    hoverView: `button_hover.png`,
+                    pressedView: `button_pressed.png`,
+                    disabledView: `button_disabled.png`,
+                    nineSliceSprite: [
+                        150, 66, 150, 66
+                    ],
+                    text: new Text({
+                        text, style: {
+                            ...defaultTextStyle,
+                            fill: textColor || defaultTextStyle.fill
+                        }
+                    }),
+                    padding,
+                    textOffset: { x: 30, y: -5 },
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.03, y: 1.03 },
+                                y: 0
+                            },
+                            duration: animationDuration
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.9, y: 0.9 },
+                                y: 10
+                            },
+                            duration: animationDuration
+                        }
+                    },
+                });
 
-            const size = sizes[currentSizeID];
+                button.iconView = new MaskedFrame({
+                    target: `avatar-01.png`,
+                    mask: `avatar_mask.png`,
+                    borderWidth: 10,
+                    borderColor: 0xFFFFFF
+                });
+                button.iconView.scale.set(0.2);
+                button.iconOffset = { x: -100, y: -7 };
 
-            button.width = size.w;
-            button.height = size.h;
-        });
+                button.anchor.set(anchorX, anchorY);
 
-        button.onPress.connect(onPress);
+                if (disabled)
+                {
+                    button.enabled = false;
+                }
 
-        centerView(view);
+                const sizes: {w: number, h: number}[] = [
+                    { w: width, h: height },
+                    { w: 300, h: 300 },
+                    { w: 600, h: 137 },
+                    { w: 600, h: 300 }
+                ];
 
-        view.addChild(button);
+                button.width = sizes[0].w;
+                button.height = sizes[0].h;
+
+                let currentSizeID = 0;
+
+                button.onPress.connect(() =>
+                {
+                    currentSizeID++;
+
+                    if (currentSizeID >= sizes.length)
+                    {
+                        currentSizeID = 0;
+                    }
+
+                    const size = sizes[currentSizeID];
+
+                    button.width = size.w;
+                    button.height = size.h;
+                });
+
+                button.onPress.connect(onPress);
+
+                centerView(view);
+
+                view.addChild(button);
+            });
+        },
+        resize: centerView
     });
-
-    return { view, resize: () => centerView(view) };
-};
 
 export default {
     title: 'Components/FancyButton/Use NineSliceSprite',

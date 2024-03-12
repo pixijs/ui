@@ -1,9 +1,9 @@
 import { Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
 
 const args = {
@@ -28,7 +28,7 @@ const args = {
     onChange: action('Change')
 };
 
-export const UseGraphics = ({
+export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
     text,
     amount,
     border,
@@ -48,46 +48,46 @@ export const UseGraphics = ({
     paddingLeft,
     onChange,
     cleanOnFocus
-}: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    backgroundColor = getColor(backgroundColor);
-    borderColor = getColor(borderColor);
-    textColor = getColor(textColor);
-
-    for (let i = 0; i < amount; i++)
-    {
-    // Component usage
-        const input = new Input({
-            bg: new Graphics()
-                .roundRect(0, 0, width, height, radius + border)
-                .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
-                .fill(backgroundColor),
-            textStyle: {
-                fill: textColor,
-                fontSize,
-                fontWeight: 'bold'
-            },
-            maxLength,
-            align,
-            placeholder,
-            value: text,
-            padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
-            cleanOnFocus
-        });
-
-        input.onEnter.connect((val) =>
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            onChange(`Input ${i + 1} (${val})`);
-        });
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-        view.addChild(input);
-    }
+            for (let i = 0; i < amount; i++)
+            {
+            // Component usage
+                const input = new Input({
+                    bg: new Graphics()
+                        .roundRect(0, 0, width, height, radius + border)
+                        .fill(borderColor)
+                        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                        .fill(backgroundColor),
+                    textStyle: {
+                        fill: textColor,
+                        fontSize,
+                        fontWeight: 'bold'
+                    },
+                    maxLength,
+                    align,
+                    placeholder,
+                    value: text,
+                    padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
+                    cleanOnFocus
+                });
 
-    return { view, resize: () => centerElement(view) };
-};
+                input.onEnter.connect((val) =>
+                {
+                    onChange(`Input ${i + 1} (${val})`);
+                });
+
+                list.addChild(input);
+                view.addChild(list);
+            }
+        },
+        resize: (view) => centerElement(view.children[0])
+    });
 
 export default {
     title: 'Components/Input/Use Graphics',

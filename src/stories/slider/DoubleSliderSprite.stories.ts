@@ -1,11 +1,9 @@
-import { Container } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -18,55 +16,56 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Double: StoryFn = ({ min, max, value1, value2, fontSize, fontColor, showValue, onChange }: any) =>
-{
-    const view = new Container();
-    const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
-
-    preload(assets).then(() =>
-    {
-    // Component usage !!!
-        const doubleSlider = new DoubleSlider({
-            bg: 'slider_bg.png',
-            fill: 'slider_progress.png',
-            slider1: 'slider.png',
-            slider2: 'slider.png',
-            min,
-            max,
-            value1,
-            value2,
-            valueTextStyle: {
-                fill: fontColor,
-                fontSize
-            },
-            showValue,
-            valueTextOffset: {
-                y: -40
-            },
-            fillPaddings: {
-                left: 4.5,
-                top: 2
-            }
-        });
-
-        doubleSlider.value1 = value1;
-        doubleSlider.value2 = value2;
-
-        doubleSlider.onChange.connect((value1, value2) =>
+export const Double: StoryFn<typeof args> = (
+    { min, max, value1, value2, fontSize, fontColor, showValue, onChange }, context
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            onChange(`${value1} - ${value2}`);
-        });
+            const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-        view.addChild(doubleSlider);
+            preload(assets).then(() =>
+            {
+                // Component usage !!!
+                const doubleSlider = new DoubleSlider({
+                    bg: 'slider_bg.png',
+                    fill: 'slider_progress.png',
+                    slider1: 'slider.png',
+                    slider2: 'slider.png',
+                    min,
+                    max,
+                    value1,
+                    value2,
+                    valueTextStyle: {
+                        fill: fontColor,
+                        fontSize
+                    },
+                    showValue,
+                    valueTextOffset: {
+                        y: -40
+                    },
+                    fillPaddings: {
+                        left: 4.5,
+                        top: 2
+                    }
+                });
 
-        centerElement(view);
+                doubleSlider.value1 = value1;
+                doubleSlider.value2 = value2;
+
+                doubleSlider.onChange.connect((value1, value2) =>
+                {
+                    onChange(`${value1} - ${value2}`);
+                });
+
+                view.addChild(doubleSlider);
+
+                centerElement(view);
+            });
+        },
+        resize: centerElement
     });
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/Slider/Sprite',

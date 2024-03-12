@@ -1,8 +1,8 @@
 import { Graphics, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
 
 const args = {
@@ -13,33 +13,37 @@ const args = {
     action: action('Button')
 };
 
-export const UseGraphics = ({ size, color, disabled, radius, action }: any) =>
-{
-    color = getColor(color);
+export const UseGraphics: StoryFn<typeof args> = ({ size, color, disabled, radius, action }, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const buttonView = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
+            const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
-    const buttonView = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
-    const text = new Text({ text: '🤙', style: { fontSize: 70 } });
+            text.anchor.set(0.5);
+            text.x = buttonView.width / 2;
+            text.y = buttonView.height / 2;
 
-    text.anchor.set(0.5);
-    text.x = buttonView.width / 2;
-    text.y = buttonView.height / 2;
+            buttonView.addChild(text);
 
-    buttonView.addChild(text);
+            // Component usage !!!
+            const button = new Button(buttonView);
 
-    // Component usage !!!
-    const button = new Button(buttonView);
+            button.enabled = !disabled;
 
-    button.enabled = !disabled;
+            button.onPress.connect(() => action('onPress'));
+            button.onDown.connect(() => action('onDown'));
+            button.onUp.connect(() => action('onUp'));
+            button.onHover.connect(() => action('onHover'));
+            button.onOut.connect(() => action('onOut'));
+            button.onUpOut.connect(() => action('onUpOut'));
+            view.addChild(buttonView);
 
-    button.onPress.connect(() => action('onPress'));
-    button.onDown.connect(() => action('onDown'));
-    button.onUp.connect(() => action('onUp'));
-    button.onHover.connect(() => action('onHover'));
-    button.onOut.connect(() => action('onOut'));
-    button.onUpOut.connect(() => action('onUpOut'));
-
-    return { view: button.view, resize: () => centerElement(buttonView) };
-};
+            centerElement(buttonView);
+        },
+        resize: (view) => centerElement(view.children[0])
+    });
 
 export default {
     title: 'Components/Button/Use Graphics',

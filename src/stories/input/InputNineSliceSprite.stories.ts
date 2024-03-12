@@ -1,3 +1,4 @@
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
@@ -19,68 +20,83 @@ const args = {
     amount: 1,
     width: 320,
     height: 80,
-    onChange: action('Input')
+    onChange: action('Input'),
 };
 
-export const UseNineSliceSprite = ({
-    text,
-    amount,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-    textColor,
-    fontSize,
-    maxLength,
-    align,
-    placeholder,
-    width,
-    height,
-    onChange
-}: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    const assets = [`input.png`];
-
-    preload(assets).then(() =>
+export const UseNineSliceSprite: StoryFn<
+    typeof args & { align: 'center' | 'left' | 'right' }
+> = (
     {
-        for (let i = 0; i < amount; i++)
+        text,
+        amount,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+        textColor,
+        fontSize,
+        maxLength,
+        align,
+        placeholder,
+        width,
+        height,
+        onChange,
+    },
+    context
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            // Component usage
-            const input = new Input({
-                bg: 'input.png',
-                nineSliceSprite: [
-                    160, 27, 160, 27
-                ],
-                padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
-                textStyle: {
-                    fill: textColor,
-                    fontSize,
-                    fontWeight: 'bold'
-                },
-                maxLength,
-                align,
-                placeholder,
-                value: text,
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
+
+            const assets = [`input.png`];
+
+            preload(assets).then(() =>
+            {
+                for (let i = 0; i < amount; i++)
+                {
+                    // Component usage
+                    const input = new Input({
+                        bg: 'input.png',
+                        nineSliceSprite: [160, 27, 160, 27],
+                        padding: [
+                            paddingTop,
+                            paddingRight,
+                            paddingBottom,
+                            paddingLeft,
+                        ],
+                        textStyle: {
+                            fill: textColor,
+                            fontSize,
+                            fontWeight: 'bold',
+                        },
+                        maxLength,
+                        align,
+                        placeholder,
+                        value: text,
+                    });
+
+                    input.width = width;
+                    input.height = height;
+
+                    input.onChange.connect(() =>
+                        onChange(`${i + 1} - ${input.value}`)
+                    );
+
+                    list.addChild(input);
+                }
+
+                centerElement(list);
             });
 
-            input.width = width;
-            input.height = height;
-
-            input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
-
-            view.addChild(input);
-        }
-
-        centerElement(view);
+            view.addChild(list);
+        },
+        resize: (view) => centerElement(view.children[0]),
     });
-
-    return { view, resize: () => centerElement(view) };
-};
 
 export default {
     title: 'Components/Input/Use NineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

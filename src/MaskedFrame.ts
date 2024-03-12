@@ -1,11 +1,11 @@
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Container, FillStyleInputs, Graphics, Sprite } from 'pixi.js';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
     target?: string | Container;
     mask?: string | Graphics;
     borderWidth?: number;
-    borderColor?: number;
+    borderColor?: FillStyleInputs;
 };
 
 /**
@@ -26,7 +26,7 @@ export class MaskedFrame extends Graphics
     protected _targetMask: Container;
     protected maskData: string | Graphics;
     protected borderWidth: number;
-    protected borderColor: number;
+    protected borderColor: FillStyleInputs;
 
     constructor(options?: MaskedFrameOptions)
     {
@@ -78,7 +78,7 @@ export class MaskedFrame extends Graphics
      * @param borderWidth
      * @param borderColor
      */
-    setBorder(borderWidth: number, borderColor: number)
+    setBorder(borderWidth: number, borderColor: FillStyleInputs)
     {
         this.borderWidth = borderWidth;
         this.borderColor = borderColor;

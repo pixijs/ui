@@ -1,4 +1,5 @@
 import { Sprite } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
@@ -21,7 +22,7 @@ const args = {
     onChange: action('Input')
 };
 
-export const UseSprite = ({
+export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
     text,
     amount,
     paddingTop,
@@ -34,41 +35,45 @@ export const UseSprite = ({
     align,
     placeholder,
     onChange
-}: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    const assets = [`input.png`];
-
-    preload(assets).then(() =>
-    {
-        for (let i = 0; i < amount; i++)
+}, context) =>
+    new PixiStory({
+        context,
+        init: (view) =>
         {
-            // Component usage
-            const input = new Input({
-                bg: Sprite.from('input.png'),
-                padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
-                textStyle: {
-                    fill: textColor,
-                    fontSize,
-                    fontWeight: 'bold'
-                },
-                maxLength,
-                align,
-                placeholder,
-                value: text
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
+
+            const assets = [`input.png`];
+
+            preload(assets).then(() =>
+            {
+                for (let i = 0; i < amount; i++)
+                {
+                    // Component usage
+                    const input = new Input({
+                        bg: Sprite.from('input.png'),
+                        padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
+                        textStyle: {
+                            fill: textColor,
+                            fontSize,
+                            fontWeight: 'bold'
+                        },
+                        maxLength,
+                        align,
+                        placeholder,
+                        value: text
+                    });
+
+                    input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
+
+                    list.addChild(input);
+                }
+
+                centerElement(list);
             });
-
-            input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
-
-            view.addChild(input);
-        }
-
-        centerElement(view);
+            view.addChild(list);
+        },
+        resize: (view) => centerElement(view.children[0])
     });
-
-    return { view, resize: () => centerElement(view) };
-};
 
 export default {
     title: 'Components/Input/Use Sprite',

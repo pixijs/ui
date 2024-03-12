@@ -1,4 +1,5 @@
 import { isMobile, Sprite, Text, Texture } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -48,8 +49,6 @@ export class SpriteButton extends Button
             this.buttonView.addChild(this.textView);
 
             this.enabled = !props.disabled;
-
-            this.resize();
         });
 
         this.action = props.action;
@@ -98,14 +97,19 @@ export class SpriteButton extends Button
         }
         this.action('hover');
     }
-
-    resize()
-    {
-        centerView(this.view);
-    }
 }
 
-export const UseSprite = (params: any) => new SpriteButton(params);
+export const UseSprite: StoryFn<typeof args> = (params, context) => new PixiStory({
+    context, init: (view) =>
+    {
+        const buttonView = new SpriteButton(params);
+
+        view.addChild(buttonView.view);
+
+        centerView(view);
+    },
+    resize: centerView
+});
 
 export default {
     title: 'Components/Button/Use Sprite',

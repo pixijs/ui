@@ -1,4 +1,5 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -19,7 +20,7 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UseSprite = ({
+export const UseSprite: StoryFn<typeof args> = ({
     text,
     textColor,
     disabled,
@@ -30,62 +31,63 @@ export const UseSprite = ({
     anchorX,
     anchorY,
     animationDuration
-}: any) =>
-{
-    const view = new Container();
-
-    const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
-
-    preload(assets).then(() =>
-    {
-    // Component usage !!!
-        const button = new FancyButton({
-            defaultView: `button.png`,
-            hoverView: `button_hover.png`,
-            pressedView: `button_pressed.png`,
-            disabledView: `button_disabled.png`,
-            text: new Text({
-                text, style: {
-                    ...defaultTextStyle,
-                    fill: textColor || defaultTextStyle.fill
-                }
-            }),
-            padding,
-            textOffset: { x: textOffsetX, y: textOffsetY },
-            animations: {
-                hover: {
-                    props: {
-                        scale: { x: 1.03, y: 1.03 },
-                        y: 0
-                    },
-                    duration: animationDuration
-                },
-                pressed: {
-                    props: {
-                        scale: { x: 0.9, y: 0.9 },
-                        y: 10
-                    },
-                    duration: animationDuration
-                }
-            }
-        });
-
-        button.anchor.set(anchorX, anchorY);
-
-        if (disabled)
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            button.enabled = false;
-        }
+            const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
 
-        button.onPress.connect(onPress);
+            preload(assets).then(() =>
+            {
+                // Component usage !!!
+                const button = new FancyButton({
+                    defaultView: `button.png`,
+                    hoverView: `button_hover.png`,
+                    pressedView: `button_pressed.png`,
+                    disabledView: `button_disabled.png`,
+                    text: new Text({
+                        text, style: {
+                            ...defaultTextStyle,
+                            fill: textColor || defaultTextStyle.fill
+                        }
+                    }),
+                    padding,
+                    textOffset: { x: textOffsetX, y: textOffsetY },
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.03, y: 1.03 },
+                                y: 0
+                            },
+                            duration: animationDuration
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.9, y: 0.9 },
+                                y: 10
+                            },
+                            duration: animationDuration
+                        }
+                    }
+                });
 
-        centerView(view);
+                button.anchor.set(anchorX, anchorY);
 
-        view.addChild(button);
+                if (disabled)
+                {
+                    button.enabled = false;
+                }
+
+                button.onPress.connect(onPress);
+
+                centerView(view);
+
+                view.addChild(button);
+            });
+        },
+        resize: centerView
     });
-
-    return { view, resize: () => centerView(view) };
-};
 
 export default {
     title: 'Components/FancyButton/Use Sprite',

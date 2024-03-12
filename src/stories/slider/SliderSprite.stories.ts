@@ -1,11 +1,10 @@
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -18,50 +17,55 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, amount }: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
-
-    const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
-
-    preload(assets).then(() =>
-    {
-        for (let i = 0; i < amount; i++)
+export const Single: StoryFn<typeof args> = (
+    { min, max, value, fontSize, fontColor, onChange, showValue, amount },
+    context
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            // Component usage !!!
-            const singleSlider = new Slider({
-                bg: 'slider_bg.png',
-                fill: 'slider_progress.png',
-                slider: 'slider.png',
-                min,
-                max,
-                value,
-                valueTextStyle: {
-                    fill: fontColor,
-                    fontSize
-                },
-                showValue,
-                valueTextOffset: {
-                    y: -40
-                },
-                fillPaddings: {
-                    left: 4.5,
-                    top: 2
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
+
+            const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
+
+            preload(assets).then(() =>
+            {
+                for (let i = 0; i < amount; i++)
+                {
+                    // Component usage !!!
+                    const singleSlider = new Slider({
+                        bg: 'slider_bg.png',
+                        fill: 'slider_progress.png',
+                        slider: 'slider.png',
+                        min,
+                        max,
+                        value,
+                        valueTextStyle: {
+                            fill: fontColor,
+                            fontSize
+                        },
+                        showValue,
+                        valueTextOffset: {
+                            y: -40
+                        },
+                        fillPaddings: {
+                            left: 4.5,
+                            top: 2
+                        }
+                    });
+
+                    singleSlider.onChange.connect((value) => onChange(`onChange ${i + 1}: ${value}`));
+
+                    list.addChild(singleSlider);
                 }
+                centerElement(list);
             });
 
-            singleSlider.onChange.connect((value) => onChange(`onChange ${i + 1}: ${value}`));
-
-            view.addChild(singleSlider);
-        }
-        centerElement(view);
+            view.addChild(list);
+        },
+        resize: (view) => centerElement(view.children[0])
     });
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/Slider/Sprite',

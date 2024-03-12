@@ -1,3 +1,4 @@
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
 import { RadioGroup } from '../../RadioGroup';
@@ -14,56 +15,60 @@ const args = {
     onChange: action('Radio changed')
 };
 
-export const UseSprite = ({ amount, text, textColor, onChange }: any) =>
-{
-    const view = new List({
-        type: 'vertical',
-        elementsMargin: 20
-    });
-
-    const assets = [`radio.png`, `radio_checked.png`];
-
-    preload(assets).then(() =>
-    {
-        const items = [];
-
-        for (let i = 0; i < amount; i++)
+export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onChange }, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
         {
-            items.push(
-                new CheckBox({
-                    text: `${text} ${i + 1}`,
-                    style: {
-                        unchecked: 'radio.png',
-                        checked: 'radio_checked.png',
-                        text: {
-                            ...defaultTextStyle,
-                            fontSize: 22,
-                            fill: textColor
-                        }
-                    }
-                })
-            );
-        }
+            const list = new List({
+                type: 'vertical',
+                elementsMargin: 20
+            });
 
-        // Component usage
-        const radioGroup = new RadioGroup({
-            selectedItem: 0,
-            items,
-            type: 'vertical',
-            elementsMargin: 10
-        });
+            const assets = [`radio.png`, `radio_checked.png`];
 
-        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-            onChange({ id: selectedItemID, val: selectedVal })
-        );
+            preload(assets).then(() =>
+            {
+                const items = [];
 
-        view.addChild(radioGroup.innerView);
+                for (let i = 0; i < amount; i++)
+                {
+                    items.push(
+                        new CheckBox({
+                            text: `${text} ${i + 1}`,
+                            style: {
+                                unchecked: 'radio.png',
+                                checked: 'radio_checked.png',
+                                text: {
+                                    ...defaultTextStyle,
+                                    fontSize: 22,
+                                    fill: textColor
+                                }
+                            }
+                        })
+                    );
+                }
 
-        centerElement(view);
+                // Component usage
+                const radioGroup = new RadioGroup({
+                    selectedItem: 0,
+                    items,
+                    type: 'vertical',
+                    elementsMargin: 10
+                });
+
+                radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+                    onChange({ id: selectedItemID, val: selectedVal })
+                );
+
+                list.addChild(radioGroup.innerView);
+
+                centerElement(list);
+                view.addChild(list);
+            });
+        },
+        resize: (view) => centerElement(view.children[0])
     });
-
-    return { view, resize: () => centerElement(view) };
-};
 
 export default {
     title: 'Components/RadioGroup/Use Sprite',

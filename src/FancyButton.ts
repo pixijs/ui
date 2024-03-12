@@ -182,7 +182,9 @@ export class FancyButton extends ButtonContainer
 
         this.addChild(this.innerView);
 
-        this.anchor = new ObservablePoint(this);
+        this.anchor = new ObservablePoint({
+            _onUpdate: () => this.updateAnchor(),
+        });
         this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;

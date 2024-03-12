@@ -1,4 +1,5 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
@@ -13,55 +14,55 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const TextLink = ({
+export const TextLink: StoryFn<typeof args> = ({
     text,
     textColor,
     disabled,
     onPress,
     animationDuration
-}: any) =>
-{
-    const view = new Container();
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const button = new FancyButton({
+                text: new Text({
+                    text, style: {
+                        ...defaultTextStyle,
+                        fill: textColor || defaultTextStyle.fill
+                    }
+                }),
+                animations: {
+                    hover: {
+                        props: {
+                            scale: { x: 1.03, y: 1.03 },
+                            y: 0
+                        },
+                        duration: animationDuration
+                    },
+                    pressed: {
+                        props: {
+                            scale: { x: 0.9, y: 0.9 },
+                            y: 10
+                        },
+                        duration: animationDuration
+                    }
+                }
+            });
 
-    // Component usage !!!
-    const button = new FancyButton({
-        text: new Text({
-            text, style: {
-                ...defaultTextStyle,
-                fill: textColor || defaultTextStyle.fill
+            if (disabled)
+            {
+                button.enabled = false;
             }
-        }),
-        animations: {
-            hover: {
-                props: {
-                    scale: { x: 1.03, y: 1.03 },
-                    y: 0
-                },
-                duration: animationDuration
-            },
-            pressed: {
-                props: {
-                    scale: { x: 0.9, y: 0.9 },
-                    y: 10
-                },
-                duration: animationDuration
-            }
-        }
+
+            button.onPress.connect(onPress);
+
+            centerView(view);
+
+            view.addChild(button);
+        },
+        resize: centerView
     });
-
-    if (disabled)
-    {
-        button.enabled = false;
-    }
-
-    button.onPress.connect(onPress);
-
-    centerView(view);
-
-    view.addChild(button);
-
-    return { view, resize: () => centerView(view) };
-};
 
 export default {
     title: 'Components/FancyButton/Text Link',

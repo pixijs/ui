@@ -1,9 +1,7 @@
-import { Container } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     backgroundColor: '#3d3d3d',
@@ -17,7 +15,7 @@ const args = {
     cap: ['round', 'butt', 'square']
 };
 
-export const circular: StoryFn = ({
+export const circular: StoryFn<typeof args & {cap: 'round' | 'butt' | 'square'}> = ({
     backgroundColor,
     fillColor,
     radius,
@@ -27,31 +25,32 @@ export const circular: StoryFn = ({
     fillAlpha,
     animate,
     cap
-}: any) =>
+}, context) =>
 {
-    const view = new Container();
-
-    const progressBar1 = new CircularProgressBar({
-        backgroundColor,
-        lineWidth,
-        fillColor,
-        radius,
-        value,
-        backgroundAlpha,
-        fillAlpha,
-        cap
-    });
-
-    progressBar1.x += progressBar1.width / 2;
-    progressBar1.y += -progressBar1.height / 2;
-
-    view.addChild(progressBar1);
-
     let isFilling = true;
+    let progressBar1: CircularProgressBar;
 
-    return {
-        view,
-        resize: () =>
+    return new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            progressBar1 = new CircularProgressBar({
+                backgroundColor,
+                lineWidth,
+                fillColor,
+                radius,
+                value,
+                backgroundAlpha,
+                fillAlpha,
+                cap
+            });
+
+            progressBar1.x += progressBar1.width / 2;
+            progressBar1.y += -progressBar1.height / 2;
+
+            view.addChild(progressBar1);
+        },
+        resize: (view) =>
         {
             centerElement(view);
             view.y += view.height;
@@ -77,7 +76,7 @@ export const circular: StoryFn = ({
             progressBar1.progress = value;
             progressBar1.rotation += 0.1;
         }
-    };
+    });
 };
 
 export default {

@@ -1,13 +1,11 @@
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { ColorSource, Graphics, Sprite } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -22,7 +20,7 @@ const args = {
     onSelect: action('Item selected')
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args> = ({
     fontColor,
     fontSize,
     width,
@@ -33,59 +31,54 @@ export const UseGraphics: StoryFn = ({
     dropDownBackgroundColor,
     dropDownHoverColor,
     onSelect
-}: any) =>
-{
-    const view = new Container();
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
 
-    backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
-    dropDownBackgroundColor = getColor(dropDownBackgroundColor);
-    const hoverColor = getColor(dropDownHoverColor);
-    const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
+            const items = getItems(itemsAmount, 'Item');
 
-    const items = getItems(itemsAmount, 'Item');
+            // Component usage !!!
+            // Important: in order scroll to work, you have to call update() method in your game loop.
+            const select = new Select({
+                closedBG: getClosedBG(backgroundColor, width, height, radius),
+                openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
+                textStyle,
+                items: {
+                    items,
+                    backgroundColor,
+                    hoverColor: dropDownHoverColor,
+                    width,
+                    height,
+                    textStyle,
+                    radius
+                },
+                scrollBox: {
+                    width,
+                    height: height * 5,
+                    radius
+                }
+            });
 
-    // Component usage !!!
-    // Important: in order scroll to work, you have to call update() method in your game loop.
-    const select = new Select({
-        closedBG: getClosedBG(backgroundColor, width, height, radius),
-        openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
-        textStyle,
-        items: {
-            items,
-            backgroundColor,
-            hoverColor,
-            width,
-            height,
-            textStyle,
-            radius
+            select.y = 10;
+
+            select.onSelect.connect((_, text) =>
+            {
+                onSelect({
+                    id: select.value,
+                    text
+                });
+            });
+
+            view.addChild(select);
         },
-        scrollBox: {
-            width,
-            height: height * 5,
-            radius
-        }
+
+        resize: (view) => centerElement(view, 0.5, 0)
     });
 
-    select.y = 10;
-
-    select.onSelect.connect((_, text) =>
-    {
-        onSelect({
-            id: select.value,
-            text
-        });
-    });
-
-    view.addChild(select);
-
-    return {
-        view,
-        resize: () => centerElement(view, 0.5, 0)
-    };
-};
-
-function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
+function getClosedBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
     const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
@@ -102,7 +95,7 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
     return closedBG;
 }
 
-function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
+function getOpenBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
     const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
 

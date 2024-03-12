@@ -1,13 +1,11 @@
-import { Container, Graphics, Text } from 'pixi.js';
+import { Graphics, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
-
-import type { StoryFn } from '@storybook/types';
 
 const args = {
     fontColor: '#000000',
@@ -25,7 +23,7 @@ const args = {
     onPress: action('Button pressed')
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = ({
     fontColor,
     elementsMargin,
     elementsPadding,
@@ -39,56 +37,51 @@ export const UseGraphics: StoryFn = ({
     disableEasing,
     type,
     onPress
-}: any) =>
-{
-    const view = new Container();
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const items = [];
 
-    backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
+            for (let i = 0; i < itemsAmount; i++)
+            {
+                const button = new FancyButton({
+                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
+                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
+                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    text: new Text({
+                        text: `Item ${i + 1}`, style: {
+                            ...defaultTextStyle,
+                            fill: fontColor
+                        }
+                    })
+                });
 
-    const items = [];
+                button.anchor.set(0);
+                button.onPress.connect(() => onPress(i + 1));
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
-        const button = new FancyButton({
-            defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-            hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-            pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
-            text: new Text({
-                text: `Item ${i + 1}`, style: {
-                    ...defaultTextStyle,
-                    fill: fontColor
-                }
-            })
-        });
+                items.push(button);
+            }
 
-        button.anchor.set(0);
-        button.onPress.connect(() => onPress(i + 1));
+            // Component usage !!!
+            const scrollBox = new ScrollBox({
+                background: backgroundColor,
+                elementsMargin,
+                width,
+                height,
+                radius,
+                padding: elementsPadding,
+                disableEasing,
+                type
+            });
 
-        items.push(button);
-    }
+            scrollBox.addItems(items);
 
-    // Component usage !!!
-    const scrollBox = new ScrollBox({
-        background: backgroundColor,
-        elementsMargin,
-        width,
-        height,
-        radius,
-        padding: elementsPadding,
-        disableEasing,
-        type
+            view.addChild(scrollBox);
+        },
+        resize: centerElement
     });
-
-    scrollBox.addItems(items);
-
-    view.addChild(scrollBox);
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/ScrollBox/Use Graphics',
