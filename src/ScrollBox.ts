@@ -440,7 +440,6 @@ export class ScrollBox extends Container
 
             this.borderMask
                 .clear()
-                .lineStyle(0)
                 .roundRect(
                     0,
                     0,
@@ -448,14 +447,14 @@ export class ScrollBox extends Container
                     this.__height,
                     this.options.radius | 0,
                 )
-                .fill(0xff00ff);
+                .fill(0xff00ff)
+                .stroke(0x0);
             this.borderMask.eventMode = 'none';
 
             const color = this.options.background;
 
             this.background
                 .clear()
-                .lineStyle(0)
                 .roundRect(
                     0,
                     0,

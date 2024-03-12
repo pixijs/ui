@@ -18,13 +18,15 @@ export type MaskedFrameOptions = {
  *     borderColor: 0xFFFFFF,
  * });
  */
-export class MaskedFrame extends Graphics
+export class MaskedFrame extends Container
 {
     /** Target container. */
     target: Container;
 
+    protected _targetMaskView = new Container();
     protected _targetMask: Container;
     protected maskData: string | Graphics;
+    protected border: Graphics = new Graphics();
     protected borderWidth: number;
     protected borderColor: FillStyleInputs;
 
@@ -54,7 +56,7 @@ export class MaskedFrame extends Graphics
         }
 
         this.target = getView(target);
-        this.addChild(this.target);
+        this.addChild(this.border, this.target);
 
         if (mask) this.setMask(mask);
         if (borderWidth) this.setBorder(borderWidth, borderColor);
@@ -69,8 +71,18 @@ export class MaskedFrame extends Graphics
         this.maskData = mask;
 
         this._targetMask = getView(mask);
-        this.target.addChild(this._targetMask);
-        this.target.mask = this._targetMask;
+        this._targetMaskView.addChild(this._targetMask);
+        this.addChild(this._targetMaskView);
+        this.target.mask = this._targetMaskView;
+    }
+
+    /** Updates mask position based on the border width. */
+    protected updateMask()
+    {
+        if (this._targetMask)
+        {
+            this._targetMaskView.position.set(this.borderWidth);
+        }
     }
 
     /**
@@ -85,13 +97,17 @@ export class MaskedFrame extends Graphics
 
         this.showBorder();
 
-        const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone(true);
+        if (this.maskData)
+        {
+            const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone(true);
 
-        borderMask.width += borderWidth * 2;
-        borderMask.height += borderWidth * 2;
+            borderMask.width += borderWidth * 2;
+            borderMask.height += borderWidth * 2;
 
-        this.mask = borderMask;
-        this.addChild(borderMask);
+            this.mask = borderMask;
+            this.addChild(borderMask);
+            this.updateMask();
+        }
     }
 
     /** Hides a border. */
@@ -99,7 +115,7 @@ export class MaskedFrame extends Graphics
     {
         const width = this.borderWidth * 2;
 
-        this.clear()
+        this.border.clear()
             .rect(0, 0, this.target.width + width, this.target.height + width)
             .fill(this.borderColor);
 
@@ -110,6 +126,6 @@ export class MaskedFrame extends Graphics
     /** Hides a border. */
     hideBorder()
     {
-        this.clear();
+        this.border.clear();
     }
 }

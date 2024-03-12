@@ -64,8 +64,8 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
                 list.addChild(radioGroup.innerView);
 
                 centerElement(list);
-                view.addChild(list);
             });
+            view.addChild(list);
         },
         resize: (view) => centerElement(view.children[0])
     });

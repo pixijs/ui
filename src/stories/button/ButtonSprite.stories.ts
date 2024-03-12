@@ -1,4 +1,4 @@
-import { isMobile, Sprite, Text, Texture } from 'pixi.js';
+import { Container, isMobile, Sprite, Text, Texture } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
@@ -16,8 +16,9 @@ const args = {
 
 export class SpriteButton extends Button
 {
+    private buttonView = new Container();
     private textView: Text;
-    private buttonView = new Sprite();
+    private buttonBg = new Sprite();
     private action: (event: string) => void;
 
     constructor(props: {
@@ -32,9 +33,9 @@ export class SpriteButton extends Button
 
         preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(() =>
         {
-            this.buttonView.texture = Texture.from('button.png');
+            this.buttonBg.texture = Texture.from('button.png');
 
-            this.buttonView.anchor.set(0.5);
+            this.buttonBg.anchor.set(0.5);
 
             this.textView = new Text({
                 text: props.text, style: {
@@ -46,7 +47,7 @@ export class SpriteButton extends Button
             this.textView.y = -10;
             this.textView.anchor.set(0.5);
 
-            this.buttonView.addChild(this.textView);
+            this.buttonView.addChild(this.buttonBg, this.textView);
 
             this.enabled = !props.disabled;
         });
@@ -56,13 +57,13 @@ export class SpriteButton extends Button
 
     override down()
     {
-        this.buttonView.texture = Texture.from('button_pressed.png');
+        this.buttonBg.texture = Texture.from('button_pressed.png');
         this.action('down');
     }
 
     override up()
     {
-        this.buttonView.texture = isMobile.any
+        this.buttonBg.texture = isMobile.any
             ? Texture.from('button.png')
             : Texture.from('button_hover.png');
 
@@ -71,7 +72,7 @@ export class SpriteButton extends Button
 
     override upOut()
     {
-        this.buttonView.texture = Texture.from('button.png');
+        this.buttonBg.texture = Texture.from('button.png');
         this.action('upOut');
     }
 
@@ -79,7 +80,7 @@ export class SpriteButton extends Button
     {
         if (!this.isDown)
         {
-            this.buttonView.texture = Texture.from('button.png');
+            this.buttonBg.texture = Texture.from('button.png');
         }
         this.action('out');
     }
@@ -93,7 +94,7 @@ export class SpriteButton extends Button
     {
         if (!this.isDown)
         {
-            this.buttonView.texture = Texture.from('button_hover.png');
+            this.buttonBg.texture = Texture.from('button_hover.png');
         }
         this.action('hover');
     }

@@ -1,4 +1,4 @@
-import { Graphics, Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerElement } from '../../utils/helpers/resize';
@@ -18,14 +18,15 @@ export const UseGraphics: StoryFn<typeof args> = ({ size, color, disabled, radiu
         context,
         init: (view) =>
         {
-            const buttonView = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
+            const buttonView = new Container();
+            const buttonBg = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
             const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
             text.anchor.set(0.5);
-            text.x = buttonView.width / 2;
-            text.y = buttonView.height / 2;
+            text.x = buttonBg.width / 2;
+            text.y = buttonBg.height / 2;
 
-            buttonView.addChild(text);
+            buttonView.addChild(buttonBg, text);
 
             // Component usage !!!
             const button = new Button(buttonView);

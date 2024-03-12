@@ -48,9 +48,11 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
                 button.iconView.scale.set(0.2);
                 button.iconOffset = { x: -100, y: -7 };
 
-                button.textView = new Text(text, {
-                    ...defaultTextStyle,
-                    fill: textColor || defaultTextStyle.fill
+                button.textView = new Text({
+                    text, style: {
+                        ...defaultTextStyle,
+                        fill: textColor || defaultTextStyle.fill
+                    }
                 });
                 button.textOffset = { x: 30, y: -7 };
 
@@ -77,7 +79,7 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
                     const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
                     const text = randomItem(texts.filter((text) => text !== button.text)) as string;
 
-                    button.textView = new Text(text, { fontSize: 70 });
+                    button.textView = new Text({ text, style: { fontSize: 70 } });
 
                     icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
 

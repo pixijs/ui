@@ -6,7 +6,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 
 const args = {
-    borderColor: '#FFFFFF',
+    borderColor: '#FF0FFF',
     borderWidth: 10,
     radius: 250
 };

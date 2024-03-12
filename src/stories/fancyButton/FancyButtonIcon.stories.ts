@@ -62,7 +62,7 @@ export const UseIcon: StoryFn<typeof args> = ({
 
                 const icon = new MaskedFrame({
                     target,
-                    mask: new Graphics().drawCircle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
+                    mask: new Graphics().circle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
                     borderWidth: 5,
                     borderColor: 0xffffff
                 });

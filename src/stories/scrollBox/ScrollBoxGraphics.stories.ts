@@ -80,7 +80,7 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
 
             view.addChild(scrollBox);
         },
-        resize: centerElement
+        resize: (view) => centerElement(view.children[0])
     });
 
 export default {

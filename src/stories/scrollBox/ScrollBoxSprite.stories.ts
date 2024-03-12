@@ -28,12 +28,13 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
 
             preload(assets).then(() =>
             {
-                const window = Sprite.from(`window.png`);
+                const window = new Container();
+                const windowBg = Sprite.from(`window.png`);
                 const title = new Text({ text: `Levels`, style: { fill: 0x000000, fontSize: 40 } });
 
                 title.anchor.set(0.5);
-                window.addChild(title);
-                title.x = window.width / 2;
+                window.addChild(windowBg, title);
+                title.x = windowBg.width / 2;
                 title.y = 25;
 
                 view.addChild(window);
