@@ -26,8 +26,7 @@
         "dist/"
     ],
     "scripts": {
-        "start": "vite --open",
-        "buildTest": "vite build",
+        "start": "npm run storybook",
         "build": "xs build",
         "clean": "xs clean",
         "deploy": "xs deploy",
@@ -63,7 +62,6 @@
     },
     "dependencies": {
         "pixi.js": "^8.0.0",
-        "tweakpane": "^4.0.3",
         "tweedle.js": "^2.1.0",
         "typed-signals": "^2.5.0"
     },
@@ -90,8 +88,7 @@
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^13.3.0",
         "storybook": "7.6.17",
-        "typescript": "^5.4.2",
-        "vite": "^4.5.2"
+        "typescript": "^5.4.2"
     },
     "peerDependencies": {
         "pixi.js": "^8.0.0"
