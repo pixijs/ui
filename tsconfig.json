@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "ScriptHost"
-    ],
+    "lib": ["ESNext", "DOM", "ScriptHost"],
     "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
@@ -25,10 +21,5 @@
     "skipLibCheck": true,
     "noImplicitOverride": true
   },
-  "include": [
-    "./src",
-    "./typings",
-    "./test",
-    "./docs-source"
-, "src/stories/checkbox/.ts"  ],
+  "include": ["./src", "./typings", "./test", "./docs-source"]
 }

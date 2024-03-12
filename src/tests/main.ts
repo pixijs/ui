@@ -13,7 +13,7 @@ import ScrollBoxGraphicsOpts, {
 import ScrollBoxSpriteOpts, { UseSprite as ScrollBoxSpriteStory } from '../stories/scrollBox/ScrollBoxSprite.stories';
 import SelectGraphicsOpts, { UseGraphics as SelectGraphicsStory } from '../stories/select/SelectGraphics.stories';
 import SelectSpriteOpts, { UseSprite as SelectSpriteStory } from '../stories/select/SelectSprite.stories';
-import SwitcherOpts, { Sprites as SwitcherStory } from '../stories/switcher/switcher.stories';
+import SwitcherOpts, { Sprites as SwitcherStory } from '../stories/test/Switcher.stories';
 import { getTitle } from './utils/getTitle';
 import { initPixi } from './utils/pixi';
 
