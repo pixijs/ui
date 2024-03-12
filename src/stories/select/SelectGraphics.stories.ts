@@ -1,4 +1,4 @@
-import { ColorSource, Graphics, Sprite } from 'pixi.js';
+import { ColorSource, Container, Graphics, Sprite } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
@@ -80,7 +80,10 @@ export const UseGraphics: StoryFn<typeof args> = ({
 
 function getClosedBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
+    const view = new Container();
     const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
+
+    view.addChild(closedBG);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -89,15 +92,18 @@ function getClosedBG(backgroundColor: ColorSource, width: number, height: number
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
         arrowDown.y = height / 2;
-        closedBG.addChild(arrowDown);
+        view.addChild(arrowDown);
     });
 
-    return closedBG;
+    return view;
 }
 
 function getOpenBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
+    const view = new Container();
     const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
+
+    view.addChild(openBG);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -107,10 +113,10 @@ function getOpenBG(backgroundColor: ColorSource, width: number, height: number, 
         arrowUp.anchor.set(0.5);
         arrowUp.x = width * 0.9;
         arrowUp.y = height / 2;
-        openBG.addChild(arrowUp);
+        view.addChild(arrowUp);
     });
 
-    return openBG;
+    return view;
 }
 
 function getItems(itemsAmount: number, text: string): string[]

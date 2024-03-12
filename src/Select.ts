@@ -68,6 +68,7 @@ export type SelectOptions = {
 
 export class Select extends Container
 {
+    protected view: Container = new Container();
     protected openButton!: FancyButton;
     protected closeButton!: FancyButton;
     protected openView!: Container;
@@ -83,6 +84,7 @@ export class Select extends Container
     {
         super();
 
+        this.addChild(this.view);
         this.onSelect = new Signal();
 
         if (options)
@@ -107,7 +109,7 @@ export class Select extends Container
     {
         if (this.openView && this.openView !== openBG)
         {
-            this.removeChild(this.openView);
+            this.view.removeChild(this.openView);
         }
 
         // openButton
@@ -133,8 +135,8 @@ export class Select extends Container
         if (this.openView !== openBG)
         {
             this.openView = getView(openBG);
-            this.openView.visible = false;
-            this.addChild(this.openView);
+            this.view.visible = false;
+            this.view.addChild(this.openView);
         }
 
         // closeButton
@@ -148,7 +150,7 @@ export class Select extends Container
                 textOffset: selectedTextOffset
             });
             this.closeButton.onPress.connect(() => this.toggle());
-            this.openView.addChild(this.closeButton);
+            this.view.addChild(this.closeButton);
         }
         else
         {
@@ -166,7 +168,7 @@ export class Select extends Container
         {
             this.scrollBox = new ScrollBox();
 
-            this.openView.addChild(this.scrollBox);
+            this.view.addChild(this.scrollBox);
         }
         else
         {
@@ -236,21 +238,21 @@ export class Select extends Container
     /** Toggle the select state (open if closed, closes - id open). */
     toggle()
     {
-        this.openView.visible = !this.openView.visible;
+        this.view.visible = !this.view.visible;
         this.openButton.visible = !this.openButton.visible;
     }
 
     /** Show dropdown. */
     open()
     {
-        this.openView.visible = true;
+        this.view.visible = true;
         this.openButton.visible = false;
     }
 
     /** Hide dropdown. */
     close()
     {
-        this.openView.visible = false;
+        this.view.visible = false;
         this.openButton.visible = true;
     }
 
