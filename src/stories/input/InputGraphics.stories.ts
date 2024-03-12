@@ -13,7 +13,7 @@ const args = {
     textColor: '#000000',
     backgroundColor: '#F1D583',
     borderColor: '#DCB000',
-    maxLength: 100,
+    maxLength: 20,
     fontSize: 24,
     border: 5,
     width: 320,
@@ -25,6 +25,7 @@ const args = {
     paddingBottom: 0,
     paddingLeft: 0,
     cleanOnFocus: true,
+    addMask: false,
     onChange: action('Change')
 };
 
@@ -47,7 +48,8 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
     paddingBottom,
     paddingLeft,
     onChange,
-    cleanOnFocus
+    cleanOnFocus,
+    addMask
 }, context) =>
     new PixiStory<typeof args>({
         context,
@@ -74,7 +76,8 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                     placeholder,
                     value: text,
                     padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
-                    cleanOnFocus
+                    cleanOnFocus,
+                    addMask
                 });
 
                 input.onEnter.connect((val) =>

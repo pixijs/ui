@@ -11,7 +11,7 @@ const args = {
     placeholder: 'Enter text',
     align: ['center', 'left', 'right'],
     textColor: '#000000',
-    maxLength: 100,
+    maxLength: 20,
     fontSize: 24,
     paddingTop: 0,
     paddingRight: 0,
@@ -20,6 +20,7 @@ const args = {
     amount: 1,
     width: 320,
     height: 80,
+    addMask: false,
     onChange: action('Input'),
 };
 
@@ -40,6 +41,7 @@ export const UseNineSliceSprite: StoryFn<
         placeholder,
         width,
         height,
+        addMask,
         onChange,
     },
     context
@@ -75,6 +77,7 @@ export const UseNineSliceSprite: StoryFn<
                         align,
                         placeholder,
                         value: text,
+                        addMask
                     });
 
                     input.width = width;

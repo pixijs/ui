@@ -12,13 +12,15 @@ const args = {
     placeholder: 'Enter text',
     align: ['center', 'left', 'right'],
     textColor: '#000000',
-    maxLength: 100,
+    maxLength: 20,
     fontSize: 24,
     paddingTop: 0,
     paddingRight: 0,
     paddingBottom: 0,
     paddingLeft: 0,
     amount: 1,
+    addMask: false,
+    maxTextLength: 10,
     onChange: action('Input')
 };
 
@@ -34,6 +36,7 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
     maxLength,
     align,
     placeholder,
+    addMask,
     onChange
 }, context) =>
     new PixiStory({
@@ -60,7 +63,8 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
                         maxLength,
                         align,
                         placeholder,
-                        value: text
+                        value: text,
+                        addMask,
                     });
 
                     input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));

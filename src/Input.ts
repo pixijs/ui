@@ -26,6 +26,7 @@ export type InputOptions = {
     padding?: Padding;
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
+    addMask?: boolean;
 };
 
 /**
@@ -230,44 +231,47 @@ export class Input extends Container
             this.init();
         }
 
-        if (this.inputMask)
+        if (this.options.addMask)
         {
-            this.inputField.mask = null;
-            this._cursor.mask = null;
-            this.inputMask.destroy();
-        }
-
-        if (this.options?.nineSliceSprite && typeof bg === 'string')
-        {
-            this.inputMask = new NineSliceSprite(Texture.from(bg));
-            this.inputMask = new NineSliceSprite({
-                texture: Texture.from(bg),
-                leftWidth: this.options.nineSliceSprite[0],
-                topHeight: this.options.nineSliceSprite[1],
-                rightWidth: this.options.nineSliceSprite[2],
-                bottomHeight: this.options.nineSliceSprite[3],
-            });
-        }
-        else
-            if (bg instanceof Sprite)
+            if (this.inputMask)
             {
-                this.inputMask = new Sprite(bg.texture);
+                this.inputField.mask = null;
+                this._cursor.mask = null;
+                this.inputMask.destroy();
+            }
+
+            if (this.options?.nineSliceSprite && typeof bg === 'string')
+            {
+                this.inputMask = new NineSliceSprite(Texture.from(bg));
+                this.inputMask = new NineSliceSprite({
+                    texture: Texture.from(bg),
+                    leftWidth: this.options.nineSliceSprite[0],
+                    topHeight: this.options.nineSliceSprite[1],
+                    rightWidth: this.options.nineSliceSprite[2],
+                    bottomHeight: this.options.nineSliceSprite[3],
+                });
             }
             else
-                if (bg instanceof Graphics)
+                if (bg instanceof Sprite)
                 {
-                    this.inputMask = bg.clone(true);
+                    this.inputMask = new Sprite(bg.texture);
                 }
                 else
-                {
-                    this.inputMask = getView(bg);
-                }
+                    if (bg instanceof Graphics)
+                    {
+                        this.inputMask = bg.clone(true);
+                    }
+                    else
+                    {
+                        this.inputMask = getView(bg);
+                    }
 
-        this.inputField.mask = this.inputMask;
+            this.inputField.mask = this.inputMask;
 
-        this._cursor.mask = this.inputMask;
+            this._cursor.mask = this.inputMask;
 
-        this.addChildAt(this.inputMask, 0);
+            this.addChildAt(this.inputMask, 0);
+        }
     }
 
     get bg(): Container | string
