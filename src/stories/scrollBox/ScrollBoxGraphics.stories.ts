@@ -22,6 +22,8 @@ const args = {
     elementsHeight: 80,
     itemsAmount: 100,
     disableEasing: false,
+    globalScroll: true,
+    shiftScroll: false,
     type: [undefined, 'vertical', 'horizontal'],
     onPress: action('Button pressed')
 };
@@ -39,7 +41,9 @@ export const UseGraphics: StoryFn = ({
     backgroundColor,
     disableEasing,
     type,
-    onPress
+    onPress,
+    globalScroll,
+    shiftScroll
 }: any) =>
 {
     const view = new Container();
@@ -76,7 +80,9 @@ export const UseGraphics: StoryFn = ({
         radius,
         padding: elementsPadding,
         disableEasing,
-        type
+        type,
+        globalScroll,
+        shiftScroll
     });
 
     scrollBox.addItems(items);

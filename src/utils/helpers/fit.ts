@@ -5,6 +5,11 @@ export function fitToView(parent: Container, child: Container, padding = 0)
     let scaleX = child.scale.x;
     let scaleY = child.scale.y;
 
+    if (!parent)
+    {
+        throw new Error('Parent is not defined');
+    }
+
     const maxWidth = parent.width - (padding * 2);
     const maxHeight = parent.height - (padding * 2);
 

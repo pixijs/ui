@@ -20,6 +20,8 @@ export type ScrollBoxOptions = {
     padding?: number;
     disableEasing?: boolean;
     dragTrashHold?: number;
+    globalScroll?: boolean;
+    shiftScroll?: boolean;
 };
 
 /**
@@ -83,6 +85,9 @@ export class ScrollBox extends Container
      * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
      * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
      * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
+     * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
+     * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
+     * is pressed, and the type is set to 'horizontal'.
      */
     constructor(options?: ScrollBoxOptions)
     {
@@ -109,6 +114,8 @@ export class ScrollBox extends Container
      * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
      * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
      * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
+     * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
+     * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
      */
     init(options: ScrollBoxOptions)
     {
@@ -146,6 +153,8 @@ export class ScrollBox extends Container
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
 
+        this.options.globalScroll = options.globalScroll ?? true;
+        this.options.shiftScroll = options.shiftScroll ?? false;
         this.resize();
     }
 
@@ -340,6 +349,16 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
+        this.on('pointerover', () =>
+        {
+            this.isOver = true;
+        });
+
+        this.on('pointerout', () =>
+        {
+            this.isOver = false;
+        });
+
         this.on('pointerupoutside', () =>
         {
             this.isDragging = 0;
@@ -528,12 +547,18 @@ export class ScrollBox extends Container
 
     protected onMouseScroll(event: WheelEvent): void
     {
-        if (!this.isOver) return;
+        if (!this.isOver && !this.options.globalScroll) return;
+
         this.renderAllItems();
 
-        if (this.options.type === 'horizontal' && typeof event.deltaX !== 'undefined')
+        const scrollOnX = this.options.shiftScroll
+            ? (typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined')
+            : typeof event.deltaX !== 'undefined';
+
+        if (this.options.type === 'horizontal' && scrollOnX)
         {
-            const targetPos = this.list.x - event.deltaX;
+            const delta = this.options.shiftScroll ? event.deltaX : event.deltaY;
+            const targetPos = this.list.x - delta;
 
             if (this.listWidth < this.__width)
             {
