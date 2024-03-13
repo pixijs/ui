@@ -1,16 +1,15 @@
 import { Container } from '@pixi/display';
-import { TextStyle, ITextStyle, Text } from '@pixi/text';
+import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
+import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
-
-type LabelStyle = TextStyle | Partial<ITextStyle>;
 
 type CheckBoxStyle = {
     checked: Container | string;
     unchecked: Container | string;
-    text?: LabelStyle;
+    text?: PixiTextStyle;
     textOffset?: {
         x?: number;
         y?: number;
@@ -20,6 +19,7 @@ type CheckBoxStyle = {
 export type CheckBoxOptions = {
     style: CheckBoxStyle;
     text?: string;
+    TextClass?: PixiTextClass;
     checked?: boolean;
 };
 
@@ -36,18 +36,20 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    label!: Text;
+    label!: PixiText;
 
     /** Signal emitted when checkbox state changes. */
     onCheck: Signal<(state: boolean) => void>;
 
     protected _style: CheckBoxStyle;
+    protected _textClass: PixiTextClass;
 
     constructor(options: CheckBoxOptions)
     {
         super();
 
         this.text = options.text;
+        this._textClass = options.TextClass ?? Text;
 
         this.style = options.style;
 
@@ -62,11 +64,11 @@ export class CheckBox extends Switcher
         this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
-    protected addLabel(text?: string, style?: LabelStyle)
+    protected addLabel(text?: string, style?: PixiTextStyle)
     {
         if (!text) return;
 
-        this.label = new Text(text ?? '', style ?? this._style?.text);
+        this.label = new this._textClass(text ?? '', style ?? this._style?.text);
         this.addChild(this.label);
 
         this.label.cursor = 'pointer';
@@ -120,7 +122,17 @@ export class CheckBox extends Switcher
 
         if (this.label)
         {
-            if (style.text) this.label.style = style.text;
+            if (style.text)
+            {
+                if ('style' in this.label)
+                {
+                    this.label.style = style.text;
+                }
+                else
+                {
+                    Object.assign(this.label, style.text);
+                }
+            }
 
             this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
             this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
