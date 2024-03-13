@@ -370,16 +370,6 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
-        this.on('pointerover', () =>
-        {
-            this.isOver = true;
-        });
-
-        this.on('pointerout', () =>
-        {
-            this.isOver = false;
-        });
-
         this.on('globalpointermove', (e: FederatedPointerEvent) =>
         {
             if (!this.isDragging) return;
