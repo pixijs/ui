@@ -52,6 +52,7 @@ export class ScrollBox extends Container
     protected lastHeight: number;
     protected __width = 0;
     protected __height = 0;
+    protected _dimensionChanged = false;
 
     protected list: List;
 
@@ -420,8 +421,11 @@ export class ScrollBox extends Container
         return this.list.width + (this.options.horPadding * 2);
     }
 
-    /** Controls item positions and visibility. */
-    resize(): void
+    /**
+     * Controls item positions and visibility.
+     * @param force
+     */
+    resize(force = false): void
     {
         if (!this.hasBounds) return;
 
@@ -429,7 +433,9 @@ export class ScrollBox extends Container
 
         if (
             this.borderMask
-            && (this.lastWidth !== this.listWidth
+            && (force
+                || this._dimensionChanged
+                || this.lastWidth !== this.listWidth
                 || this.lastHeight !== this.listHeight)
         )
         {
@@ -487,6 +493,7 @@ export class ScrollBox extends Container
 
             this.lastWidth = this.listWidth;
             this.lastHeight = this.listHeight;
+            this._dimensionChanged = false;
         }
 
         if (this._trackpad)
@@ -672,10 +679,24 @@ export class ScrollBox extends Container
         return this.__height;
     }
 
+    override set height(value: number)
+    {
+        this.__height = value;
+        this._dimensionChanged = true;
+        this.resize();
+    }
+
     /** Gets component width. */
     override get width(): number
     {
         return this.__width;
+    }
+
+    override set width(value: number)
+    {
+        this.__width = value;
+        this._dimensionChanged = true;
+        this.resize();
     }
 
     protected update()
