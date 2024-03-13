@@ -17,7 +17,6 @@ import { ButtonEvents } from './ButtonEvents';
  * button.onPress.connect(() => console.log('onPress'));
  *
  * container.addChild(button.view);
- * // or container.addChild(container); which is the same
  */
 export class Button extends ButtonEvents
 {
