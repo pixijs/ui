@@ -60,8 +60,10 @@
         "docsDescription": "API Documentation for UI components made with PixiJS",
         "docsKeyword": "PixiJS, UI, components"
     },
+    "peerDependencies": {
+        "pixi.js": "^8.0.2"
+    },
     "dependencies": {
-        "pixi.js": "^8.0.1",
         "tweedle.js": "^2.1.0",
         "typed-signals": "^2.5.0"
     },
@@ -88,6 +90,7 @@
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^13.3.0",
         "storybook": "7.6.17",
+        "pixi.js": "^8.0.2",
         "typescript": "^5.4.2"
     },
     "publishConfig": {
