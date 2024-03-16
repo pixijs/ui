@@ -2,7 +2,7 @@ import { ColorSource, Ticker, utils, Point } from '@pixi/core';
 import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
-import type { ListType } from './List';
+import type { ListOptions, ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
@@ -12,15 +12,11 @@ export type ScrollBoxOptions = {
     background?: ColorSource;
     type?: ListType;
     radius?: number;
-    elementsMargin?: number;
-    items?: Container[];
     disableDynamicRendering?: boolean;
-    vertPadding?: number;
-    horPadding?: number;
     padding?: number;
     disableEasing?: boolean;
     dragTrashHold?: number;
-};
+} & Omit<ListOptions, 'children'>;
 
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
@@ -116,9 +112,6 @@ export class ScrollBox extends Container
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
 
-        options.vertPadding = options.vertPadding ?? options.padding ?? 0;
-        options.horPadding = options.horPadding ?? options.padding ?? 0;
-
         if (!this.list)
         {
             this.list = new List();
@@ -129,8 +122,13 @@ export class ScrollBox extends Container
         this.list.init({
             type: options.type,
             elementsMargin: options.elementsMargin,
+            padding: options.padding,
             vertPadding: options.vertPadding,
             horPadding: options.horPadding,
+            topPadding: options.topPadding,
+            bottomPadding: options.bottomPadding,
+            leftPadding: options.leftPadding,
+            rightPadding: options.rightPadding,
         });
 
         this.addItems(options.items);
@@ -234,8 +232,8 @@ export class ScrollBox extends Container
             const posY = item.y + list.y;
 
             if (
-                posY + item.height + this.options.vertPadding >= 0
-                && posY - this.options.vertPadding <= this.options.height
+                posY + item.height + this.list.bottomPadding >= 0
+                && posY - this.list.topPadding <= this.options.height
             )
             {
                 isVisible = true;
@@ -401,12 +399,12 @@ export class ScrollBox extends Container
 
     protected get listHeight(): number
     {
-        return this.list.height + (this.options.vertPadding * 2);
+        return this.list.height + this.list.topPadding + this.list.bottomPadding;
     }
 
     protected get listWidth(): number
     {
-        return this.list.width + (this.options.horPadding * 2);
+        return this.list.width + this.list.leftPadding + this.list.rightPadding;
     }
 
     /** Controls item positions and visibility. */
@@ -422,9 +420,6 @@ export class ScrollBox extends Container
                 || this.lastHeight !== this.listHeight)
         )
         {
-            const verPadding = this.options.vertPadding;
-            const horPadding = this.options.horPadding;
-
             if (!this.options.width)
             {
                 this.__width += this.listWidth;
@@ -460,8 +455,8 @@ export class ScrollBox extends Container
             this.background.drawRoundedRect(
                 0,
                 0,
-                this.__width + horPadding,
-                this.__height + verPadding,
+                this.__width,
+                this.__height,
                 this.options.radius | 0,
             );
 
@@ -483,12 +478,14 @@ export class ScrollBox extends Container
             const maxWidth
                 = this.borderMask.width
                 - this.list.width
-                - (this.options.horPadding * 2);
+                - this.list.leftPadding
+                - this.list.rightPadding;
 
             const maxHeight
                 = this.borderMask.height
                 - this.list.height
-                - (this.options.vertPadding * 2);
+                - this.list.topPadding
+                - this.list.bottomPadding;
 
             if (this.options.type === 'vertical')
             {
@@ -528,13 +525,13 @@ export class ScrollBox extends Container
             }
             else if (
                 targetPos < 0
-                && targetPos + this.listWidth + this.options.horPadding
+                && targetPos + this.listWidth + this.list.rightPadding
                     < this.__width
             )
             {
                 this._trackpad.xAxis.value = this.__width - this.listWidth;
             }
-            else if (targetPos > this.options.horPadding)
+            else if (targetPos > this.list.leftPadding)
             {
                 this._trackpad.xAxis.value = 0;
             }
@@ -553,13 +550,13 @@ export class ScrollBox extends Container
             }
             else if (
                 targetPos < 0
-                && targetPos + this.listHeight + this.options.vertPadding
+                && targetPos + this.listHeight + this.list.bottomPadding
                     < this.__height
             )
             {
                 this._trackpad.yAxis.value = this.__height - this.listHeight;
             }
-            else if (targetPos > this.options.vertPadding)
+            else if (targetPos > this.list.topPadding)
             {
                 this._trackpad.yAxis.value = 0;
             }
@@ -664,7 +661,7 @@ export class ScrollBox extends Container
                 ? this.__width
                   - target.x
                   - target.width
-                  - this.options.horPadding
+                  - this.list.rightPadding
                 : 0;
 
         this._trackpad.yAxis.value
@@ -672,7 +669,7 @@ export class ScrollBox extends Container
                 ? this.__height
                   - target.y
                   - target.height
-                  - this.options.vertPadding
+                  - this.list.bottomPadding
                 : 0;
 
         this.stopRenderHiddenItems();
