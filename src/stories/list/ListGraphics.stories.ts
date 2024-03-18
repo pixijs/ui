@@ -11,15 +11,21 @@ import { List } from '../../List';
 
 const args = {
     type: [null, 'horizontal', 'vertical'],
+
     fontColor: '#000000',
     bgColor: '#f5e3a9',
-    width: 271,
+    width: 275,
     height: 270,
     radius: 20,
-    elementsMargin: 10,
-    topPadding: 20,
-    leftPadding: 20,
-    rightPadding: 20,
+
+    elementsMarginHor: 10,
+    elementsMarginVert: 10,
+
+    paddingTop: 20,
+    paddingRight: 11,
+    paddingBottom: 20,
+    paddingLeft: 20,
+
     elementsWidth: 70,
     elementsHeight: 70,
     itemsAmount: 9,
@@ -32,10 +38,14 @@ export const UseGraphics: StoryFn = ({
     bgColor,
     width,
     height,
-    elementsMargin,
-    topPadding,
-    leftPadding,
-    rightPadding,
+    elementsMarginHor,
+    elementsMarginVert,
+
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+
     elementsWidth,
     elementsHeight,
     radius,
@@ -80,11 +90,15 @@ export const UseGraphics: StoryFn = ({
     // Component usage !!!
     const list = new List();
 
-    list.elementsMargin = elementsMargin;
-    list.topPadding = topPadding;
-    list.leftPadding = leftPadding;
-    list.rightPadding = rightPadding;
     list.type = type;
+
+    list.elementsMarginHor = elementsMarginHor;
+    list.elementsMarginVert = elementsMarginVert;
+
+    list.paddingTop = paddingTop;
+    list.paddingRight = paddingRight;
+    list.paddingBottom = paddingBottom;
+    list.paddingLeft = paddingLeft;
 
     view.addChild(list);
     items.forEach((item) => list.addChild(item));

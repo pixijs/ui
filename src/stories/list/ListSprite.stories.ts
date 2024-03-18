@@ -63,13 +63,13 @@ export const UseSprite: StoryFn = ({
         // Component usage !!!
         const list = new List({
             type,
-            vertPadding: 70,
-            horPadding: 50,
+            paddingVert: 70,
+            paddingHor: 50,
             elementsMarginHor,
             elementsMarginVert,
-            topPadding,
-            leftPadding,
-            rightPadding,
+            paddingTop: topPadding,
+            paddingLeft: leftPadding,
+            paddingRight: rightPadding,
         });
 
         items.forEach((item) => list.addChild(item));

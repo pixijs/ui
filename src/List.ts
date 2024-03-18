@@ -8,12 +8,12 @@ export type ListOptions = {
     elementsMarginVert?: number;
     children?: Container[];
     padding?: number;
-    vertPadding?: number;
-    horPadding?: number;
-    topPadding?: number;
-    bottomPadding?: number;
-    leftPadding?: number;
-    rightPadding?: number;
+    paddingVert?: number;
+    paddingHor?: number;
+    paddingTop?: number;
+    paddingBottom?: number;
+    paddingLeft?: number;
+    paddingRight?: number;
     items?: Container[];
     alignHor?: 'left' | 'center' | 'right';
     verticalVert?: 'top' | 'center' | 'bottom';
@@ -182,9 +182,9 @@ export class List extends Container
      * Set vertical padding, overriding all top and bottom padding options.
      * @param padding - Vertical padding between list border and its elements.
      */
-    set vertPadding(padding: number)
+    set paddingVert(padding: number)
     {
-        this.options.vertPadding = padding;
+        this.options.paddingVert = padding;
         this.arrangeChildren();
     }
 
@@ -192,18 +192,18 @@ export class List extends Container
      * Get vertical padding.
      * @returns Vertical padding between list border and its elements.
      */
-    get vertPadding(): number
+    get paddingVert(): number
     {
-        return this.options?.vertPadding ?? 0;
+        return this.options?.paddingVert ?? 0;
     }
 
     /**
      * Set horizontal padding, overriding all left and right padding options.
      * @param padding - Horizontal padding between list border and its elements.
      */
-    set horPadding(padding: number)
+    set paddingHor(padding: number)
     {
-        this.options.horPadding = padding;
+        this.options.paddingHor = padding;
         this.arrangeChildren();
     }
 
@@ -211,18 +211,18 @@ export class List extends Container
      * Get horizontal padding.
      * @returns Horizontal padding between list border and its elements.
      */
-    get horPadding(): number
+    get paddingHor(): number
     {
-        return this.options?.horPadding ?? 0;
+        return this.options?.paddingHor ?? 0;
     }
 
     /**
      * Set left padding.
      * @param padding - Left padding between list border and its elements.
      */
-    set leftPadding(padding: number)
+    set paddingLeft(padding: number)
     {
-        this.options.leftPadding = padding;
+        this.options.paddingLeft = padding;
         this.arrangeChildren();
     }
 
@@ -230,18 +230,18 @@ export class List extends Container
      * Get left padding.
      * @returns Left padding between list border and its elements.
      */
-    get leftPadding(): number
+    get paddingLeft(): number
     {
-        return this.options?.leftPadding ?? 0;
+        return this.options?.paddingLeft ?? 0;
     }
 
     /**
      * Set right padding.
      * @param padding - Right padding between list border and its elements.
      */
-    set rightPadding(padding: number)
+    set paddingRight(padding: number)
     {
-        this.options.rightPadding = padding;
+        this.options.paddingRight = padding;
         this.arrangeChildren();
     }
 
@@ -249,18 +249,18 @@ export class List extends Container
      * Get right padding.
      * @returns Right padding between list border and its elements.
      */
-    get rightPadding(): number
+    get paddingRight(): number
     {
-        return this.options?.rightPadding ?? 0;
+        return this.options?.paddingRight ?? 0;
     }
 
     /**
      * Set top padding.
      * @param padding - Top padding between list border and its elements.
      */
-    set topPadding(padding: number)
+    set paddingTop(padding: number)
     {
-        this.options.topPadding = padding;
+        this.options.paddingTop = padding;
         this.arrangeChildren();
     }
 
@@ -268,18 +268,18 @@ export class List extends Container
      * Get top padding.
      * @returns Top padding between list border and its elements.
      */
-    get topPadding(): number
+    get paddingTop(): number
     {
-        return this.options?.topPadding ?? 0;
+        return this.options?.paddingTop ?? 0;
     }
 
     /**
      * Set bottom padding.
      * @param padding - Bottom padding between list border and its elements.
      */
-    set bottomPadding(padding: number)
+    set paddingBottom(padding: number)
     {
-        this.options.bottomPadding = padding;
+        this.options.paddingBottom = padding;
         this.arrangeChildren();
     }
 
@@ -287,9 +287,9 @@ export class List extends Container
      * Get bottom padding.
      * @returns Bottom padding between list border and its elements.
      */
-    get bottomPadding(): number
+    get paddingBottom(): number
     {
-        return this.options?.bottomPadding ?? 0;
+        return this.options?.paddingBottom ?? 0;
     }
 
     /**
@@ -299,27 +299,29 @@ export class List extends Container
     protected arrangeChildren()
     {
         const {
-            topPadding,
-            leftPadding,
-            rightPadding,
-            bottomPadding,
-            horPadding,
-            vertPadding,
+            paddingTop,
+            paddingLeft,
+            paddingRight,
+            paddingBottom,
+            paddingHor,
+            paddingVert,
             padding,
             elementsMargin,
             elementsMarginHor,
             elementsMarginVert,
         } = this.options;
 
-        let maxWidth = this.parent?.width;
+        let maxWidth = this.parent?.width - (paddingRight ?? 0);
 
-        if (this.rightPadding)
+        if (this.paddingRight)
         {
-            maxWidth -= this.rightPadding;
+            maxWidth -= this.paddingRight;
         }
 
-        let x = leftPadding ?? horPadding ?? padding ?? 0;
-        let y = topPadding ?? vertPadding ?? padding ?? 0;
+        const horStart = paddingLeft ?? paddingHor ?? padding ?? 0
+
+        let x = horStart;
+        let y = paddingTop ?? paddingVert ?? padding ?? 0;
         const marginHor = elementsMarginHor ?? elementsMargin ?? 0;
         const marginVert = elementsMarginVert ?? elementsMargin ?? 0;
 
@@ -348,7 +350,7 @@ export class List extends Container
                     if (child.x + child.width >= maxWidth && id > 0)
                     {
                         y += marginVert + child.height;
-                        x = this.leftPadding;
+                        x = horStart;
 
                         child.x = x;
                         child.y = y;
