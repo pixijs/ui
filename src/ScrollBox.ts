@@ -502,12 +502,6 @@ export class ScrollBox extends Container
 
             this.lastWidth = this.listWidth;
             this.lastHeight = this.listHeight;
-
-            if (this._dimensionChanged)
-            {
-                this.list.arrangeChildren();
-                this._dimensionChanged = false;
-            }
         }
 
         if (this._trackpad)
@@ -537,7 +531,17 @@ export class ScrollBox extends Container
             }
         }
 
-        this.updateVisibleItems();
+        if (this._dimensionChanged)
+        {
+            this.list.arrangeChildren();
+
+            // Since the scrolling adjustment can happen due to the resize,
+            // we shouldn't update the visible items immediately.
+            this.stopRenderHiddenItems();
+
+            this._dimensionChanged = false;
+        }
+        else this.updateVisibleItems();
     }
 
     protected onMouseScroll(event: WheelEvent): void
