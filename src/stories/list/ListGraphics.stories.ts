@@ -78,13 +78,13 @@ export const UseGraphics: StoryFn = ({
     }
 
     // Component usage !!!
-    const list = new List({
-        elementsMargin,
-        topPadding,
-        leftPadding,
-        rightPadding,
-        type,
-    });
+    const list = new List();
+
+    list.elementsMargin = elementsMargin;
+    list.topPadding = topPadding;
+    list.leftPadding = leftPadding;
+    list.rightPadding = rightPadding;
+    list.type = type;
 
     view.addChild(list);
     items.forEach((item) => list.addChild(item));
