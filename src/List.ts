@@ -3,6 +3,7 @@ import { Container } from '@pixi/display';
 export type ListType = 'horizontal' | 'vertical';
 
 export type ListOptions = {
+    type?: ListType;
     elementsMargin?: number;
     elementsMarginHor?: number;
     elementsMarginVert?: number;
@@ -40,18 +41,15 @@ export type ListOptions = {
  */
 export class List extends Container
 {
-    protected options: { type?: ListType } & ListOptions = {};
+    protected options: ListOptions = {};
 
     /** Container, that holds all inner elements. */
     view: Container;
 
-    /** Arrange direction. */
-    protected _type: ListType;
-
     /** Returns all arranged elements. */
     override readonly children: Container[] = [];
 
-    constructor(options?: { type?: ListType } & ListOptions)
+    constructor(options?: ListOptions)
     {
         super();
 
@@ -65,15 +63,10 @@ export class List extends Container
      * Initiates list component.
      * @param options
      */
-    init(options?: { type?: ListType } & ListOptions)
+    init(options?: ListOptions)
     {
         if (options) {
             this.options = options;
-
-            if (options.type)
-            {
-                this.type = options.type;
-            }
 
             options.children?.forEach((child) => this.addChild(child));
             options.items?.forEach((item) => this.addChild(item));
@@ -88,7 +81,7 @@ export class List extends Container
      */
     set type(type: ListType)
     {
-        this._type = type;
+        this.options.type = type;
         this.arrangeChildren();
     }
 
@@ -96,9 +89,9 @@ export class List extends Container
      * Get items arrange direction.
      * @returns Arrange direction.
      */
-    get type(): ListType
+    get type(): ListType | undefined
     {
-        return this._type;
+        return this.options.type;
     }
 
     /**

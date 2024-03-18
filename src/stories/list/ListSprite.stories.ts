@@ -16,9 +16,9 @@ const args = {
     fontColor: '#000000',
     elementsMarginHor: 83,
     elementsMarginVert: 27,
-    topPadding: 67,
-    leftPadding: 45,
-    rightPadding: 0,
+    paddingTop: 67,
+    paddingLeft: 45,
+    paddingRight: 0,
     itemsAmount: 9,
     onPress: action('Button pressed'),
 };
@@ -30,9 +30,9 @@ export const UseSprite: StoryFn = ({
     itemsAmount,
     onPress,
     type,
-    topPadding,
-    leftPadding,
-    rightPadding,
+    paddingTop,
+    paddingLeft,
+    paddingRight,
 }: any) =>
 {
     fontColor = getColor(fontColor);
@@ -67,9 +67,9 @@ export const UseSprite: StoryFn = ({
             paddingHor: 50,
             elementsMarginHor,
             elementsMarginVert,
-            paddingTop: topPadding,
-            paddingLeft: leftPadding,
-            paddingRight: rightPadding,
+            paddingTop,
+            paddingLeft,
+            paddingRight,
         });
 
         items.forEach((item) => list.addChild(item));
