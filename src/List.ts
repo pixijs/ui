@@ -302,7 +302,6 @@ export class List extends Container
             paddingTop,
             paddingLeft,
             paddingRight,
-            paddingBottom,
             paddingHor,
             paddingVert,
             padding,
