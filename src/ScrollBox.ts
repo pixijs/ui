@@ -502,7 +502,12 @@ export class ScrollBox extends Container
 
             this.lastWidth = this.listWidth;
             this.lastHeight = this.listHeight;
-            this._dimensionChanged = false;
+
+            if (this._dimensionChanged)
+            {
+                this.list.arrangeChildren();
+                this._dimensionChanged = false;
+            }
         }
 
         if (this._trackpad)
