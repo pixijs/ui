@@ -58,10 +58,10 @@ export class ScrollBox extends Container
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
-    protected pressedChild: Container;
+    protected pressedChild: Container | null = null;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions;
-    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
+    protected stopRenderHiddenItemsTimeout: NodeJS.Timeout | undefined;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point;
 
@@ -123,15 +123,17 @@ export class ScrollBox extends Container
             type: options.type,
             elementsMargin: options.elementsMargin,
             padding: options.padding,
-            vertPadding: options.vertPadding,
-            horPadding: options.horPadding,
-            topPadding: options.topPadding,
-            bottomPadding: options.bottomPadding,
-            leftPadding: options.leftPadding,
-            rightPadding: options.rightPadding,
+            paddingVert: options.paddingVert,
+            paddingHor: options.paddingHor,
+            paddingTop: options.paddingTop,
+            paddingBottom: options.paddingBottom,
+            paddingLeft: options.paddingLeft,
+            paddingRight: options.paddingRight,
         });
 
-        this.addItems(options.items);
+        if (options.items) {
+            this.addItems(options.items);
+        }
 
         if (this.hasBounds)
         {
@@ -232,8 +234,8 @@ export class ScrollBox extends Container
             const posY = item.y + list.y;
 
             if (
-                posY + item.height + this.list.bottomPadding >= 0
-                && posY - this.list.topPadding <= this.options.height
+                posY + item.height + this.list.paddingBottom >= 0
+                && posY - this.list.paddingTop <= this.options.height
             )
             {
                 isVisible = true;
@@ -399,12 +401,12 @@ export class ScrollBox extends Container
 
     protected get listHeight(): number
     {
-        return this.list.height + this.list.topPadding + this.list.bottomPadding;
+        return this.list.height + this.list.paddingTop + this.list.paddingBottom;
     }
 
     protected get listWidth(): number
     {
-        return this.list.width + this.list.leftPadding + this.list.rightPadding;
+        return this.list.width + this.list.paddingLeft + this.list.paddingRight;
     }
 
     /** Controls item positions and visibility. */
@@ -439,7 +441,7 @@ export class ScrollBox extends Container
                     0,
                     this.__width,
                     this.__height,
-                    this.options.radius | 0,
+                    this.options.radius ?? 0,
                 );
             this.borderMask.eventMode = 'none';
 
@@ -457,7 +459,7 @@ export class ScrollBox extends Container
                 0,
                 this.__width,
                 this.__height,
-                this.options.radius | 0,
+                this.options.radius ?? 0,
             );
 
             if (this.options.type === 'horizontal')
@@ -478,14 +480,14 @@ export class ScrollBox extends Container
             const maxWidth
                 = this.borderMask.width
                 - this.list.width
-                - this.list.leftPadding
-                - this.list.rightPadding;
+                - this.list.paddingLeft
+                - this.list.paddingRight;
 
             const maxHeight
                 = this.borderMask.height
                 - this.list.height
-                - this.list.topPadding
-                - this.list.bottomPadding;
+                - this.list.paddingTop
+                - this.list.paddingBottom;
 
             if (this.options.type === 'vertical')
             {
@@ -525,13 +527,13 @@ export class ScrollBox extends Container
             }
             else if (
                 targetPos < 0
-                && targetPos + this.listWidth + this.list.rightPadding
+                && targetPos + this.listWidth + this.list.paddingRight
                     < this.__width
             )
             {
                 this._trackpad.xAxis.value = this.__width - this.listWidth;
             }
-            else if (targetPos > this.list.leftPadding)
+            else if (targetPos > this.list.paddingLeft)
             {
                 this._trackpad.xAxis.value = 0;
             }
@@ -550,13 +552,13 @@ export class ScrollBox extends Container
             }
             else if (
                 targetPos < 0
-                && targetPos + this.listHeight + this.list.bottomPadding
+                && targetPos + this.listHeight + this.list.paddingBottom
                     < this.__height
             )
             {
                 this._trackpad.yAxis.value = this.__height - this.listHeight;
             }
-            else if (targetPos > this.list.topPadding)
+            else if (targetPos > this.list.paddingTop)
             {
                 this._trackpad.yAxis.value = 0;
             }
@@ -596,7 +598,7 @@ export class ScrollBox extends Container
     protected renderAllItems()
     {
         clearTimeout(this.stopRenderHiddenItemsTimeout);
-        this.stopRenderHiddenItemsTimeout = null;
+        this.stopRenderHiddenItemsTimeout = undefined;
 
         if (this.options.disableDynamicRendering)
         {
@@ -619,7 +621,7 @@ export class ScrollBox extends Container
         if (this.stopRenderHiddenItemsTimeout)
         {
             clearTimeout(this.stopRenderHiddenItemsTimeout);
-            this.stopRenderHiddenItemsTimeout = null;
+            this.stopRenderHiddenItemsTimeout = undefined;
         }
 
         this.stopRenderHiddenItemsTimeout = setTimeout(() => this.updateVisibleItems(), 2000);
@@ -661,7 +663,7 @@ export class ScrollBox extends Container
                 ? this.__width
                   - target.x
                   - target.width
-                  - this.list.rightPadding
+                  - this.list.paddingRight
                 : 0;
 
         this._trackpad.yAxis.value
@@ -669,7 +671,7 @@ export class ScrollBox extends Container
                 ? this.__height
                   - target.y
                   - target.height
-                  - this.list.bottomPadding
+                  - this.list.paddingBottom
                 : 0;
 
         this.stopRenderHiddenItems();
@@ -733,8 +735,8 @@ export class ScrollBox extends Container
         if (item.eventMode !== 'auto')
         {
             utils.isMobile.any
-                ? item.emit('pointerupoutside', null)
-                : item.emit('mouseupoutside', null);
+                ? item.emit('pointerupoutside', null as any)
+                : item.emit('mouseupoutside', null as any);
 
             this.interactiveStorage.push({
                 item,
