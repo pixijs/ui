@@ -708,6 +708,7 @@ export class ScrollBox extends Container
         this.__height = value;
         this._dimensionChanged = true;
         this.resize();
+        this.scrollTop();
     }
 
     /** Gets component width. */
@@ -721,6 +722,7 @@ export class ScrollBox extends Container
         this.__width = value;
         this._dimensionChanged = true;
         this.resize();
+        this.scrollTop();
     }
 
     protected update()
