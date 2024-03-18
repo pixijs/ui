@@ -20,6 +20,8 @@ export type ScrollBoxOptions = {
     padding?: number;
     disableEasing?: boolean;
     dragTrashHold?: number;
+    globalScroll?: boolean;
+    shiftScroll?: boolean;
 };
 
 /**
@@ -68,6 +70,7 @@ export class ScrollBox extends Container
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point;
+    protected isOver = false;
 
     /**
      * @param options
@@ -81,6 +84,9 @@ export class ScrollBox extends Container
      * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
      * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
      * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
+     * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
+     * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
+     * is pressed, and the type is set to 'horizontal'.
      */
     constructor(options?: ScrollBoxOptions)
     {
@@ -107,6 +113,8 @@ export class ScrollBox extends Container
      * @param {number} options.padding - padding of the ScrollBox (same horizontal and vertical).
      * @param {boolean} options.disableDynamicRendering - disables dynamic rendering of the ScrollBox,
      * so even elements the are not visible will be rendered. Be careful with this options as it can impact performance.
+     * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
+     * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
      */
     init(options: ScrollBoxOptions)
     {
@@ -144,6 +152,8 @@ export class ScrollBox extends Container
         this._trackpad.xAxis.value = 0;
         this._trackpad.yAxis.value = 0;
 
+        this.options.globalScroll = options.globalScroll ?? true;
+        this.options.shiftScroll = options.shiftScroll ?? false;
         this.resize();
     }
 
@@ -338,6 +348,16 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
+        this.on('pointerover', () =>
+        {
+            this.isOver = true;
+        });
+
+        this.on('pointerout', () =>
+        {
+            this.isOver = false;
+        });
+
         this.on('pointerupoutside', () =>
         {
             this.isDragging = 0;
@@ -510,37 +530,29 @@ export class ScrollBox extends Container
 
     protected onMouseScroll(event: WheelEvent): void
     {
+        if (!this.isOver && !this.options.globalScroll) return;
+
         this.renderAllItems();
 
-        if (
-            this.options.type === 'horizontal'
-            && (typeof event.deltaX !== 'undefined'
-                || typeof event.deltaY !== 'undefined')
-        )
+        const scrollOnX = this.options.shiftScroll
+            ? (typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined')
+            : typeof event.deltaX !== 'undefined';
+
+        if (this.options.type === 'horizontal' && scrollOnX)
         {
-            const targetPos = event.deltaY
-                ? this.list.x - event.deltaY
-                : this.list.x - event.deltaX;
+            const delta = this.options.shiftScroll ? event.deltaX : event.deltaY;
+            const targetPos = this.list.x - delta;
 
             if (this.listWidth < this.__width)
             {
                 this._trackpad.xAxis.value = 0;
             }
-            else if (
-                targetPos < 0
-                && targetPos + this.listWidth + this.options.horPadding
-                    < this.__width
-            )
-            {
-                this._trackpad.xAxis.value = this.__width - this.listWidth;
-            }
-            else if (targetPos > this.options.horPadding)
-            {
-                this._trackpad.xAxis.value = 0;
-            }
             else
             {
-                this._trackpad.xAxis.value = targetPos;
+                const min = this.__width - this.listWidth;
+                const max = 0;
+
+                this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
             }
         }
         else if (typeof event.deltaY !== 'undefined')
@@ -551,21 +563,12 @@ export class ScrollBox extends Container
             {
                 this._trackpad.yAxis.value = 0;
             }
-            else if (
-                targetPos < 0
-                && targetPos + this.listHeight + this.options.vertPadding
-                    < this.__height
-            )
-            {
-                this._trackpad.yAxis.value = this.__height - this.listHeight;
-            }
-            else if (targetPos > this.options.vertPadding)
-            {
-                this._trackpad.yAxis.value = 0;
-            }
             else
             {
-                this._trackpad.yAxis.value = targetPos;
+                const min = this.__height - this.listHeight;
+                const max = 0;
+
+                this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
             }
         }
 
