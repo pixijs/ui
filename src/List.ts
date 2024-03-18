@@ -67,17 +67,17 @@ export class List extends Container
      */
     init(options?: { type?: ListType } & ListOptions)
     {
-        if (!options) return;
+        if (options) {
+            this.options = options;
 
-        this.options = options;
+            if (options.type)
+            {
+                this.type = options.type;
+            }
 
-        if (options?.type)
-        {
-            this.type = options.type;
+            options.children?.forEach((child) => this.addChild(child));
+            options.items?.forEach((item) => this.addChild(item));
         }
-
-        options?.children?.forEach((child) => this.addChild(child));
-        options?.items?.forEach((item) => this.addChild(item));
 
         this.arrangeChildren();
     }
