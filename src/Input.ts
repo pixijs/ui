@@ -1,18 +1,20 @@
-import { Texture, utils, Ticker } from '@pixi/core';
+import { Texture, Ticker, utils } from '@pixi/core';
 import { Container, IDestroyOptions } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { TextStyle, Text } from '@pixi/text';
-import { Signal } from 'typed-signals';
-import { getView } from './utils/helpers/view';
-import { Padding } from './utils/HelpTypes';
-import { NineSlicePlane } from '@pixi/mesh-extras';
 import { Graphics } from '@pixi/graphics';
+import { NineSlicePlane } from '@pixi/mesh-extras';
+import { Sprite } from '@pixi/sprite';
+import { Text, TextStyle } from '@pixi/text';
+import { Signal } from 'typed-signals';
+import { Padding } from './utils/HelpTypes';
+import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
+import { getView } from './utils/helpers/view';
 
 type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
     bg: ViewType;
-    textStyle?: Partial<TextStyle>;
+    textStyle?: PixiTextStyle;
+    TextClass?: PixiTextClass;
     placeholder?: string;
     value?: string;
     maxLength?: number;
@@ -41,8 +43,8 @@ export class Input extends Container
     protected _bg?: Container | NineSlicePlane | Graphics;
     protected inputMask: Container | NineSlicePlane | Graphics;
     protected _cursor: Sprite;
-    protected inputField: Text;
-    protected placeholder: Text;
+    protected inputField: PixiText;
+    protected placeholder: PixiText;
     protected editing = false;
     protected tick = 0;
 
@@ -158,19 +160,26 @@ export class Input extends Container
         } as TextStyle;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
+        this.options.TextClass = options.TextClass ?? Text;
+        const textStyle = { ...defaultTextStyle, ...options.textStyle };
 
-        const textStyle = new TextStyle(options.textStyle ?? defaultTextStyle);
-
-        this.inputField = new Text('', textStyle);
+        this.inputField = new this.options.TextClass('', textStyle);
 
         this._cursor = new Sprite(Texture.WHITE);
-        this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
+        if ('tint' in options.textStyle)
+        {
+            this._cursor.tint = options.textStyle.tint;
+        }
+        else
+        {
+            this._cursor.tint = Number((options.textStyle as TextStyle).fill) || 0x000000;
+        }
         this._cursor.anchor.set(0.5);
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new Text(options.placeholder, textStyle ?? defaultTextStyle);
+        this.placeholder = new this.options.TextClass(options.placeholder, textStyle ?? defaultTextStyle);
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
