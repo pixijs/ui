@@ -1,7 +1,8 @@
-import { Container, FillStyleInputs, Graphics, Text, TextStyle } from 'pixi.js';
+import { Container, FillStyleInputs, Graphics, Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
+import { PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
 
 const defaultVisibleItems = 5;
@@ -17,14 +18,16 @@ export type SelectItemsOptions = {
     width: number;
     height: number;
     hoverColor?: FillStyleInputs;
-    textStyle?: Partial<TextStyle>;
+    textStyle?: PixiTextStyle;
+    TextClass?: PixiTextClass;
     radius?: number;
 };
 
 export type SelectOptions = {
     closedBG: string | Container;
     openBG: string | Container;
-    textStyle?: Partial<TextStyle>;
+    textStyle?: PixiTextStyle;
+    TextClass?: PixiTextClass;
     selected?: number;
     selectedTextOffset?: { x?: number; y?: number };
 
@@ -104,9 +107,13 @@ export class Select extends Container
      * @param root0.selectedTextOffset
      * @param root0.scrollBox
      * @param root0.visibleItems
+     * @param root0.TextClass
      */
-    init({ closedBG, textStyle, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems }: SelectOptions)
+    init({
+        closedBG, textStyle, TextClass, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems
+    }: SelectOptions)
     {
+        TextClass = TextClass ?? Text;
         if (this.openView && this.openView !== openBG)
         {
             this.view.removeChild(this.openView);
@@ -117,7 +124,7 @@ export class Select extends Container
         {
             this.openButton = new FancyButton({
                 defaultView: getView(closedBG),
-                text: new Text({ text: items?.items ? items.items[0] : '', style: textStyle }),
+                text: new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle }),
                 textOffset: selectedTextOffset
             });
             this.openButton.onPress.connect(() => this.toggle());
@@ -126,7 +133,7 @@ export class Select extends Container
         else
         {
             this.openButton.defaultView = getView(closedBG);
-            this.openButton.textView = new Text({ text: items?.items ? items.items[0] : '', style: textStyle });
+            this.openButton.textView = new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -146,7 +153,7 @@ export class Select extends Container
                 defaultView: new Graphics()
                     .rect(0, 0, this.openButton.width, this.openButton.height)
                     .fill({ color: 0x000000, alpha: 0.00001 }),
-                text: new Text({ text: items?.items ? items.items[0] : '', style: textStyle }),
+                text: new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle }),
                 textOffset: selectedTextOffset
             });
             this.closeButton.onPress.connect(() => this.toggle());
@@ -158,7 +165,7 @@ export class Select extends Container
                 .rect(0, 0, this.openButton.width, this.openButton.height)
                 .fill({ color: 0x000000, alpha: 0.00001 });
 
-            this.closeButton.textView = new Text({ text: items?.items ? items.items[0] : '', style: textStyle });
+            this.closeButton.textView = new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -263,9 +270,11 @@ export class Select extends Container
         width,
         height,
         textStyle,
+        TextClass,
         radius
     }: SelectItemsOptions): FancyButton[]
     {
+        TextClass = TextClass ?? Text;
         const buttons: FancyButton[] = [];
 
         items.forEach((item) =>
@@ -275,7 +284,7 @@ export class Select extends Container
             const color = hoverColor ?? backgroundColor;
             const hoverView = new Graphics().roundRect(0, 0, width, height, radius).fill(color);
 
-            const text = new Text({ text: item, style: textStyle });
+            const text = new TextClass({ text: item, style: textStyle });
 
             const button = new FancyButton({ defaultView, hoverView, text });
 

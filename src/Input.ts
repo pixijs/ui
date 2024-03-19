@@ -1,4 +1,5 @@
 import {
+    AnyTextStyle,
     Container,
     DestroyOptions,
     Graphics,
@@ -11,6 +12,7 @@ import {
     Ticker,
 } from 'pixi.js';
 import { Signal } from 'typed-signals';
+import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
 
@@ -18,7 +20,8 @@ type ViewType = Sprite | Graphics | string;
 
 export type InputOptions = {
     bg: ViewType;
-    textStyle?: Partial<TextStyleOptions>
+    textStyle?: PixiTextStyle;
+    TextClass?: PixiTextClass;
     placeholder?: string;
     value?: string;
     maxLength?: number;
@@ -48,8 +51,8 @@ export class Input extends Container
     protected _bg?: Container | NineSliceSprite | Graphics;
     protected inputMask: Container | NineSliceSprite | Graphics;
     protected _cursor: Sprite;
-    protected inputField: Text;
-    protected placeholder: Text;
+    protected inputField: PixiText;
+    protected placeholder: PixiText;
     protected editing = false;
     protected tick = 0;
 
@@ -83,7 +86,7 @@ export class Input extends Container
      * Creates an input.
      * @param { number } options - Options object to use.
      * @param { Sprite | Graphics | string } options.bg - Background of the Input.
-     * @param { Partial<TextStyle> } options.textStyle - Text style of the Input.
+     * @param { PixiTextStyle } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
      * @param { string } options.value - Value of the Input.
      * @param { number } options.maxLength - Max length of the Input.
@@ -165,23 +168,20 @@ export class Input extends Container
         } as TextStyleOptions;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
+        this.options.TextClass = options.TextClass ?? Text;
+        const textStyle = { ...defaultTextStyle, ...options.textStyle };
 
-        this.inputField = new Text({
-            text: '',
-            style: options.textStyle ?? defaultTextStyle
-        });
+        this.inputField = new this.options.TextClass({ text: '', style: textStyle });
 
         this._cursor = new Sprite(Texture.WHITE);
-        this._cursor.tint = Number(options.textStyle.fill) || 0x000000;
+
+        this._cursor.tint = Number((options.textStyle as AnyTextStyle).fill) || 0x000000;
         this._cursor.anchor.set(0.5);
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new Text({
-            text: options.placeholder ?? '',
-            style: options.textStyle ?? defaultTextStyle
-        });
+        this.placeholder = new this.options.TextClass({ text: options.placeholder, style: textStyle ?? defaultTextStyle });
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);

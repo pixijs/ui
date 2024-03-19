@@ -1,7 +1,9 @@
-import { BitmapText, HTMLText, Text } from 'pixi.js';
+import { AbstractText, AnyTextStyle, AnyTextStyleOptions, Text } from 'pixi.js';
 
-export type PixiText = Text | BitmapText | HTMLText;
+export type PixiText = AbstractText;
 export type AnyText = string | number | PixiText;
+export type PixiTextClass = new ({ text, style }: { text: string; style?: PixiTextStyle; [x: string]: any }) => PixiText;
+export type PixiTextStyle = AnyTextStyle | Partial<AnyTextStyleOptions>;
 
 export function getTextView(text: AnyText): PixiText
 {
