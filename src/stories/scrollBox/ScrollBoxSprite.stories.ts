@@ -14,11 +14,13 @@ const args = {
     itemsAmount: 100,
     disableEasing: false,
     type: [undefined, 'vertical', 'horizontal'],
-    onPress: action('Button pressed')
+    onPress: action('Button pressed'),
+    globalScroll: true,
+    shiftScroll: false
 };
 
 export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
-    { fontColor, elementsMargin, itemsAmount, disableEasing, type, onPress }, context
+    { fontColor, elementsMargin, itemsAmount, disableEasing, type, onPress, globalScroll, shiftScroll }, context
 ) =>
     new PixiStory<typeof args>({
         context,
@@ -49,7 +51,9 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
                     vertPadding: 18,
                     radius: 5,
                     disableEasing,
-                    type
+                    type,
+                    globalScroll,
+                    shiftScroll
                 });
 
                 scrollBox.addItems(items);
