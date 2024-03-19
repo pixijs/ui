@@ -48,8 +48,8 @@ export class CheckBox extends Switcher
     {
         super();
 
-        this.text = options.text;
         this._textClass = options.TextClass ?? Text;
+        this.text = options.text;
 
         this.style = options.style;
 
