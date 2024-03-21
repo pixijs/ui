@@ -15,8 +15,9 @@ const args = {
     height: 270,
     radius: 20,
     elementsMargin: 10,
-    vertPadding: 20,
-    horPadding: 20,
+    topPadding: 20,
+    leftPadding: 20,
+    rightPadding: 20,
     elementsWidth: 70,
     elementsHeight: 70,
     itemsAmount: 9,
@@ -30,8 +31,9 @@ export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical'
     width,
     height,
     elementsMargin,
-    vertPadding,
-    horPadding,
+    topPadding,
+    leftPadding,
+    rightPadding,
     elementsWidth,
     elementsHeight,
     radius,
@@ -70,8 +72,9 @@ export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical'
             // Component usage !!!
             const list = new List({
                 elementsMargin,
-                vertPadding,
-                horPadding,
+                topPadding,
+                leftPadding,
+                rightPadding
                 type
             });
 
