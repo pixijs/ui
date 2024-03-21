@@ -16,7 +16,7 @@ Here are some useful resources:
 
 Depending on your version of PixiJS, you'll need to figure out which major version of PixiJS UI to use.
 
-| PixiJS      | PixiJS Filters |
+| PixiJS      | PixiJS UI      |
 |-------------|----------------|
 | v7.x        | v1.x           |
 | v8.x        | v2.x           |
