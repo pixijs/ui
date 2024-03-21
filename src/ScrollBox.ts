@@ -9,11 +9,10 @@ import {
     Point,
     Ticker,
 } from 'pixi.js';
-import type { ListOptions, ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
-import type { ListType } from './List';
+import type { ListOptions, ListType } from './List';
 
 export type ScrollBoxOptions = {
     width: number;

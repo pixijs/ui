@@ -74,7 +74,7 @@ export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical'
                 elementsMargin,
                 topPadding,
                 leftPadding,
-                rightPadding
+                rightPadding,
                 type
             });
 
