@@ -1,5 +1,4 @@
-import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
+import { Container, Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
@@ -36,7 +35,7 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    label!: PixiText;
+    labelText!: PixiText;
 
     /** Signal emitted when checkbox state changes. */
     onCheck: Signal<(state: boolean) => void>;
@@ -68,12 +67,15 @@ export class CheckBox extends Switcher
     {
         if (!text) return;
 
-        this.label = new this._textClass(text ?? '', style ?? this._style?.text);
-        this.addChild(this.label);
+        this.labelText = new this._textClass({
+            text: text ?? '',
+            style: style ?? this._style?.text,
+        });
+        this.addChild(this.labelText);
 
-        this.label.cursor = 'pointer';
-        this.label.eventMode = 'static';
-        this.label.on('pointertap', () => (this.checked = !this.checked));
+        this.labelText.cursor = 'pointer';
+        this.labelText.eventMode = 'static';
+        this.labelText.on('pointertap', () => (this.checked = !this.checked));
     }
 
     /** Setter, which sets a checkbox text. */
@@ -81,18 +83,18 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            cleanup(this.label);
+            cleanup(this.labelText);
 
             return;
         }
 
-        this.label ? (this.label.text = text) : this.addLabel(text);
+        this.labelText ? (this.labelText.text = text) : this.addLabel(text);
     }
 
     /** Getter, which returns a checkbox text. */
     get text(): string | ''
     {
-        return this.label?.text ?? '';
+        return this.labelText?.text ?? '';
     }
 
     /** Setter, which sets a checkbox style settings. */
@@ -120,22 +122,21 @@ export class CheckBox extends Switcher
             uncheckedView.visible = true;
         }
 
-        if (this.label)
+        if (this.labelText)
         {
+            checkedView.visible = true;
+            this.active = 1;
             if (style.text)
             {
-                if ('style' in this.label)
-                {
-                    this.label.style = style.text;
-                }
-                else
-                {
-                    Object.assign(this.label, style.text);
-                }
+                this.labelText.style = style.text;
             }
 
-            this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
+            this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
+            this.labelText.y = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
+        }
+        else
+        {
+            uncheckedView.visible = true;
         }
     }
 

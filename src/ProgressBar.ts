@@ -1,9 +1,5 @@
-import { Container } from '@pixi/display';
-import { Texture } from '@pixi/core';
-import { Sprite } from '@pixi/sprite';
+import { Container, Graphics, NineSliceSprite as PixiNineSliceSprite, Sprite, Texture } from 'pixi.js';
 import { getSpriteView } from './utils/helpers/view';
-import { NineSlicePlane as PixiNineSlicePlane } from '@pixi/mesh-extras';
-import { Graphics } from '@pixi/graphics';
 
 type FillPaddings = {
     top?: number;
@@ -13,7 +9,7 @@ type FillPaddings = {
 };
 
 export type ProgressBarViewType = Sprite | Graphics | string;
-export type NineSlicePlane = {
+export type NineSliceSprite = {
     bg: [number, number, number, number],
     fill: [number, number, number, number]
 };
@@ -22,7 +18,7 @@ export type ProgressBarOptions = {
     bg: ProgressBarViewType;
     fill: ProgressBarViewType;
     fillPaddings?: FillPaddings;
-    nineSlicePlane?: NineSlicePlane,
+    nineSliceSprite?: NineSliceSprite,
     progress?: number;
 };
 
@@ -37,9 +33,9 @@ export type ProgressBarOptions = {
  */
 export class ProgressBar extends Container
 {
-    protected bg!: Sprite | PixiNineSlicePlane | Graphics;
-    protected fill!: Sprite | PixiNineSlicePlane | Graphics;
-    protected fillMask!: PixiNineSlicePlane | Graphics;
+    protected bg!: Sprite | PixiNineSliceSprite | Graphics;
+    protected fill!: Sprite | PixiNineSliceSprite | Graphics;
+    protected fillMask!: PixiNineSliceSprite | Graphics;
     protected progressStart = 0;
     protected _progress = 0;
 
@@ -61,9 +57,9 @@ export class ProgressBar extends Container
      * @param { number } options.fillPaddings.right - Fill right offset.
      * @param { number } options.fillPaddings.bottom - Fill bottom offset.
      * @param { number } options.fillPaddings.left - Fill left offset.
-     * @param { NineSlicePlane } options.nineSlicePlane - NineSlicePlane values for bg and fill.
-     * @param { Array } options.nineSlicePlane.bg - NineSlicePlane config for bg ([number, number, number, number]).
-     * @param { Array } options.nineSlicePlane.fill - NineSlicePlane config fill ([number, number, number, number]).
+     * @param { NineSliceSprite } options.nineSliceSprite - NineSliceSprite values for bg and fill.
+     * @param { Array } options.nineSliceSprite.bg - NineSliceSprite config for bg ([number, number, number, number]).
+     * @param { Array } options.nineSliceSprite.fill - NineSliceSprite config fill ([number, number, number, number]).
      * @param { number } options.progress - Initial progress value.
      */
     constructor(options?: ProgressBarOptions)
@@ -109,15 +105,21 @@ export class ProgressBar extends Container
             this.bg.destroy();
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof bg === 'string')
             {
-                this.bg = new PixiNineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
+                this.bg = new PixiNineSliceSprite({
+                    texture: Texture.from(bg),
+                    leftWidth: this.options.nineSliceSprite.bg[0],
+                    topHeight: this.options.nineSliceSprite.bg[1],
+                    rightWidth: this.options.nineSliceSprite.bg[2],
+                    bottomHeight: this.options.nineSliceSprite.bg[3],
+                });
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -154,15 +156,21 @@ export class ProgressBar extends Container
             return;
         }
 
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (typeof fill === 'string')
             {
-                this.fill = new PixiNineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
+                this.fill = new PixiNineSliceSprite({
+                    texture: Texture.from(fill),
+                    leftWidth: this.options.nineSliceSprite.fill[0],
+                    topHeight: this.options.nineSliceSprite.fill[1],
+                    rightWidth: this.options.nineSliceSprite.fill[2],
+                    bottomHeight: this.options.nineSliceSprite.fill[3],
+                });
             }
             else
             {
-                console.warn('NineSlicePlane can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -204,9 +212,10 @@ export class ProgressBar extends Container
             texture = this.fill.texture;
         }
 
-        this.fillMask = new PixiNineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+        this.fillMask = new PixiNineSliceSprite({ texture, leftWidth, topHeight, rightWidth, bottomHeight });
+        this.fillMask.position.copyFrom(this.fill);
 
-        this.fill.addChild(this.fillMask);
+        this.addChild(this.fillMask);
         this.fill.mask = this.fillMask;
     }
 
@@ -236,9 +245,11 @@ export class ProgressBar extends Container
 
         if (this.fillMask)
         {
-            this.fillMask.width = this.fill.width / 100 * (this._progress - this.progressStart);
-            this.fillMask.x = this.progressStart / 100 * this.fill.width;
+            this.fill.mask = null;
+            this.fillMask.width = (this.fill.width / 100 * (this._progress - this.progressStart));
+            this.fillMask.x = (this.progressStart / 100 * this.fill.width) + this.fill.x;
             this.fillMask.height = this.fill.height;
+            this.fill.mask = this.fillMask;
         }
     }
 
@@ -250,13 +261,13 @@ export class ProgressBar extends Container
 
     /**
      * Sets width of a ProgressBars background and fill.
-     * If nineSlicePlane is set, then width will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then width will control components width as Container.
+     * If nineSliceSprite is set, then width will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
     override set width(width: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this.bg)
             {
@@ -288,13 +299,13 @@ export class ProgressBar extends Container
 
     /**
      * Sets height of a ProgressBars background and fill.
-     * If nineSlicePlane is set, then height will be set to nineSlicePlane.
-     * If nineSlicePlane is not set, then height will control components height as Container.
+     * If nineSliceSprite is set, then height will be set to nineSliceSprite.
+     * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
     override set height(height: number)
     {
-        if (this.options?.nineSlicePlane)
+        if (this.options?.nineSliceSprite)
         {
             if (this.bg)
             {

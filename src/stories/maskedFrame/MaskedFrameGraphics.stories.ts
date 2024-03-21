@@ -1,11 +1,9 @@
-import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
+import { Graphics, Sprite } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { MaskedFrame } from '../../MaskedFrame';
+import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { centerElement } from '../../utils/helpers/resize';
-import { getColor } from '../utils/color';
 
 const args = {
     borderColor: '#FFFFFF',
@@ -14,33 +12,32 @@ const args = {
 };
 
 // TODO: implement preloading
-export const UseGraphics = ({ borderColor, radius, borderWidth }: any) =>
-{
-    const view = new Container();
+export const UseGraphics: StoryFn<typeof args> = ({ borderColor, radius, borderWidth }, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const assets = [`avatar-01.png`];
 
-    const assets = [`avatar-01.png`];
+            preload(assets).then(() =>
+            {
+                const target = Sprite.from(`avatar-01.png`);
 
-    preload(assets).then(() =>
-    {
-        borderColor = getColor(borderColor);
+                // Component usage !!!
+                const frame = new MaskedFrame({
+                    target,
+                    mask: getMask(target.width, target.height, radius),
+                    borderWidth,
+                    borderColor
+                });
 
-        const target = Sprite.from(`avatar-01.png`);
+                view.addChild(frame);
 
-        // Component usage !!!
-        const frame = new MaskedFrame({
-            target,
-            mask: getMask(target.width, target.height, radius),
-            borderWidth,
-            borderColor
-        });
-
-        view.addChild(frame);
-
-        centerElement(view);
+                centerElement(view);
+            });
+        },
+        resize: centerElement
     });
-
-    return { view, resize: () => centerElement(view) };
-};
 
 function getMask(width: number, height: number, radius: number): Graphics
 {
@@ -50,11 +47,11 @@ function getMask(width: number, height: number, radius: number): Graphics
 
     if (isCircle)
     {
-        mask.beginFill(0x000000).drawCircle(width / 2, height / 2, width / 2);
+        mask.circle(width / 2, height / 2, width / 2).fill(0x000000);
     }
     else
     {
-        mask.beginFill(0x000000).drawRoundedRect(0, 0, width, height, radius);
+        mask.roundRect(0, 0, width, height, radius).fill(0x000000);
     }
 
     return mask;

@@ -1,5 +1,5 @@
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
-import { DoubleSlider } from '../../DoubleSlider';
+import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
@@ -9,16 +9,25 @@ const args = {
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
-    value1: 15,
-    value2: 85,
+    value: 50,
     fontSize: 20,
     showValue: true,
+    width: 500,
+    height: 38,
     onChange: action('Slider')
 };
 
-export const Double: StoryFn<typeof args> = (
-    { min, max, value1, value2, fontSize, fontColor, showValue, onChange }, context
-) =>
+export const Single: StoryFn<typeof args> = ({
+    min,
+    max,
+    value,
+    fontSize,
+    fontColor,
+    onChange,
+    showValue,
+    width,
+    height
+}, context) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -28,15 +37,23 @@ export const Double: StoryFn<typeof args> = (
             preload(assets).then(() =>
             {
                 // Component usage !!!
-                const doubleSlider = new DoubleSlider({
+                const singleSlider = new Slider({
                     bg: 'slider_bg.png',
                     fill: 'slider_progress.png',
-                    slider1: 'slider.png',
-                    slider2: 'slider.png',
+                    slider: 'slider.png',
+                    nineSliceSprite: {
+                        bg: [22, 15, 22, 23],
+                        fill: [22, 15, 22, 15]
+                    },
+                    fillPaddings: {
+                        top: 2.5,
+                        left: 5,
+                        right: 5,
+                        bottom: 7,
+                    },
                     min,
                     max,
-                    value1,
-                    value2,
+                    value,
                     valueTextStyle: {
                         fill: fontColor,
                         fontSize
@@ -45,21 +62,14 @@ export const Double: StoryFn<typeof args> = (
                     valueTextOffset: {
                         y: -40
                     },
-                    fillPaddings: {
-                        left: 4.5,
-                        top: 2
-                    }
                 });
 
-                doubleSlider.value1 = value1;
-                doubleSlider.value2 = value2;
+                singleSlider.width = width;
+                singleSlider.height = height;
 
-                doubleSlider.onChange.connect((value1, value2) =>
-                {
-                    onChange(`${value1} - ${value2}`);
-                });
+                singleSlider.onChange.connect((value) => onChange(`${value}`));
 
-                view.addChild(doubleSlider);
+                view.addChild(singleSlider);
 
                 centerElement(view);
             });
@@ -68,7 +78,7 @@ export const Double: StoryFn<typeof args> = (
     });
 
 export default {
-    title: 'Components/Slider/Sprite',
+    title: 'Components/Slider/SpriteNineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

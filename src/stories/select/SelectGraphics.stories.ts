@@ -1,14 +1,11 @@
-import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { ColorSource, Container, Graphics, Sprite, TextStyle } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
-import { action } from '@storybook/addon-actions';
-import { preload } from '../utils/loader';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     backgroundColor: '#F5E3A9',
@@ -23,7 +20,7 @@ const args = {
     onSelect: action('Item selected')
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args> = ({
     fontColor,
     fontSize,
     width,
@@ -34,61 +31,59 @@ export const UseGraphics: StoryFn = ({
     dropDownBackgroundColor,
     dropDownHoverColor,
     onSelect
-}: any) =>
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize } as TextStyle;
+
+            const items = getItems(itemsAmount, 'Item');
+
+            // Component usage !!!
+            // Important: in order scroll to work, you have to call update() method in your game loop.
+            const select = new Select({
+                closedBG: getClosedBG(backgroundColor, width, height, radius),
+                openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
+                textStyle,
+                items: {
+                    items,
+                    backgroundColor,
+                    hoverColor: dropDownHoverColor,
+                    width,
+                    height,
+                    textStyle,
+                    radius
+                },
+                scrollBox: {
+                    width,
+                    height: height * 5,
+                    radius
+                }
+            });
+
+            select.y = 10;
+
+            select.onSelect.connect((_, text) =>
+            {
+                onSelect({
+                    id: select.value,
+                    text
+                });
+            });
+
+            view.addChild(select);
+        },
+
+        resize: (view) => centerElement(view, 0.5, 0)
+    });
+
+function getClosedBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
     const view = new Container();
+    const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
-    backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
-    dropDownBackgroundColor = getColor(dropDownBackgroundColor);
-    const hoverColor = getColor(dropDownHoverColor);
-    const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
-
-    const items = getItems(itemsAmount, 'Item');
-
-    // Component usage !!!
-    // Important: in order scroll to work, you have to call update() method in your game loop.
-    const select = new Select({
-        closedBG: getClosedBG(backgroundColor, width, height, radius),
-        openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
-        textStyle,
-        items: {
-            items,
-            backgroundColor,
-            hoverColor,
-            width,
-            height,
-            textStyle,
-            radius
-        },
-        scrollBox: {
-            width,
-            height: height * 5,
-            radius
-        }
-    });
-
-    select.y = 10;
-
-    select.onSelect.connect((_, text) =>
-    {
-        onSelect({
-            id: select.value,
-            text
-        });
-    });
-
-    view.addChild(select);
-
-    return {
-        view,
-        resize: () => centerElement(view, 0.5, 0)
-    };
-};
-
-function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
-{
-    const closedBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height, radius);
+    view.addChild(closedBG);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -97,15 +92,18 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
         arrowDown.anchor.set(0.5);
         arrowDown.x = width * 0.9;
         arrowDown.y = height / 2;
-        closedBG.addChild(arrowDown);
+        view.addChild(arrowDown);
     });
 
-    return closedBG;
+    return view;
 }
 
-function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
+function getOpenBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
 {
-    const openBG = new Graphics().beginFill(backgroundColor).drawRoundedRect(0, 0, width, height * 6, radius);
+    const view = new Container();
+    const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
+
+    view.addChild(openBG);
 
     preload(['arrow_down.png']).then(() =>
     {
@@ -115,10 +113,10 @@ function getOpenBG(backgroundColor: number, width: number, height: number, radiu
         arrowUp.anchor.set(0.5);
         arrowUp.x = width * 0.9;
         arrowUp.y = height / 2;
-        openBG.addChild(arrowUp);
+        view.addChild(arrowUp);
     });
 
-    return openBG;
+    return view;
 }
 
 function getItems(itemsAmount: number, text: string): string[]

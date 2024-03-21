@@ -1,6 +1,7 @@
 import { Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
+import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -11,8 +12,8 @@ const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
     padding: 11,
-    textOffsetX: 0,
-    textOffsetY: -7,
+    width: 300,
+    height: 137,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -20,23 +21,30 @@ const args = {
     onPress: action('button was pressed! (tap or click!)')
 };
 
-export const UseSprite: StoryFn<typeof args> = ({
+export const UseNineSliceSprite: StoryFn<typeof args> = ({
     text,
     textColor,
     disabled,
     onPress,
     padding,
-    textOffsetX,
-    textOffsetY,
     anchorX,
     anchorY,
-    animationDuration
+    animationDuration,
+    width,
+    height
 }, context) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
         {
-            const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
+            const assets = [
+                `button.png`,
+                `button_hover.png`,
+                `button_pressed.png`,
+                `button_disabled.png`,
+                `avatar-01.png`,
+                `avatar_mask.png`
+            ];
 
             preload(assets).then(() =>
             {
@@ -46,6 +54,9 @@ export const UseSprite: StoryFn<typeof args> = ({
                     hoverView: `button_hover.png`,
                     pressedView: `button_pressed.png`,
                     disabledView: `button_disabled.png`,
+                    nineSliceSprite: [
+                        150, 66, 150, 66
+                    ],
                     text: new Text({
                         text, style: {
                             ...defaultTextStyle,
@@ -53,7 +64,7 @@ export const UseSprite: StoryFn<typeof args> = ({
                         }
                     }),
                     padding,
-                    textOffset: { x: textOffsetX, y: textOffsetY },
+                    textOffset: { x: 30, y: -5 },
                     animations: {
                         hover: {
                             props: {
@@ -69,8 +80,17 @@ export const UseSprite: StoryFn<typeof args> = ({
                             },
                             duration: animationDuration
                         }
-                    }
+                    },
                 });
+
+                button.iconView = new MaskedFrame({
+                    target: `avatar-01.png`,
+                    mask: `avatar_mask.png`,
+                    borderWidth: 10,
+                    borderColor: 0xFFFFFF
+                });
+                button.iconView.scale.set(0.2);
+                button.iconOffset = { x: -100, y: -7 };
 
                 button.anchor.set(anchorX, anchorY);
 
@@ -78,6 +98,33 @@ export const UseSprite: StoryFn<typeof args> = ({
                 {
                     button.enabled = false;
                 }
+
+                const sizes: {w: number, h: number}[] = [
+                    { w: width, h: height },
+                    { w: 300, h: 300 },
+                    { w: 600, h: 137 },
+                    { w: 600, h: 300 }
+                ];
+
+                button.width = sizes[0].w;
+                button.height = sizes[0].h;
+
+                let currentSizeID = 0;
+
+                button.onPress.connect(() =>
+                {
+                    currentSizeID++;
+
+                    if (currentSizeID >= sizes.length)
+                    {
+                        currentSizeID = 0;
+                    }
+
+                    const size = sizes[currentSizeID];
+
+                    button.width = size.w;
+                    button.height = size.h;
+                });
 
                 button.onPress.connect(onPress);
 
@@ -90,7 +137,7 @@ export const UseSprite: StoryFn<typeof args> = ({
     });
 
 export default {
-    title: 'Components/FancyButton/Use Sprite',
+    title: 'Components/FancyButton/Use NineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args)
 };

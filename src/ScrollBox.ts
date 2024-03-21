@@ -1,10 +1,18 @@
-import { ColorSource, Ticker, utils, Point } from '@pixi/core';
-import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
-import { EventMode, FederatedPointerEvent } from '@pixi/events';
-import { Graphics } from '@pixi/graphics';
-import type { ListOptions, ListType } from './List';
+import {
+    ColorSource,
+    Container,
+    DestroyOptions,
+    EventMode,
+    FederatedPointerEvent,
+    Graphics,
+    isMobile,
+    Point,
+    Ticker,
+} from 'pixi.js';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
+
+import type { ListOptions, ListType } from './List';
 
 export type ScrollBoxOptions = {
     width: number;
@@ -30,13 +38,13 @@ export type ScrollBoxOptions = {
  *     width: 200,
  *     height: 300,
  *     items: [
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
- *         new Graphics().beginFill(0x000000).drawRect(0, 0, 200, 50),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
+ *         new Graphics().drawRect(0, 0, 200, 50).fill(0x000000),
  *     ],
  * });
  */
@@ -56,7 +64,7 @@ export class ScrollBox extends Container
     protected _trackpad: Trackpad;
     protected isDragging = 0;
     protected interactiveStorage: {
-        item: DisplayObject;
+        item: Container;
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
@@ -158,11 +166,6 @@ export class ScrollBox extends Container
     protected get hasBounds(): boolean
     {
         return !!this.__width || !!this.__height;
-    }
-
-    protected override onChildrenChange()
-    {
-        // do nothing we manage this in addItem
     }
 
     /**
@@ -457,33 +460,32 @@ export class ScrollBox extends Container
 
             this.borderMask
                 .clear()
-                .lineStyle(0)
-                .beginFill(0xffffff)
-                .drawRoundedRect(
+                .roundRect(
                     0,
                     0,
                     this.__width,
                     this.__height,
                     this.options.radius | 0,
-                );
+                )
+                .fill(0xff00ff)
+                .stroke(0x0);
             this.borderMask.eventMode = 'none';
-
-            this.background.clear().lineStyle(0);
 
             const color = this.options.background;
 
-            this.background.beginFill(
-                color ?? 0x000000,
-                color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
-            );
-
-            this.background.drawRoundedRect(
-                0,
-                0,
-                this.__width,
-                this.__height,
-                this.options.radius | 0,
-            );
+            this.background
+                .clear()
+                .roundRect(
+                    0,
+                    0,
+                    this.__width,
+                    this.__height,
+                    this.options.radius | 0,
+                )
+                .fill({
+                    color: color ?? 0x000000,
+                    alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
+                });
 
             if (this.options.type === 'horizontal')
             {
@@ -737,10 +739,10 @@ export class ScrollBox extends Container
 
     /**
      * Destroys the component.
-     * @param {boolean | IDestroyOptions} [options] - Options parameter.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
      * A boolean will act as if all options have been set to that value
      */
-    override destroy(options?: IDestroyOptions | boolean)
+    override destroy(options?: DestroyOptions | boolean)
     {
         this.ticker.remove(this.update, this);
 
@@ -762,11 +764,11 @@ export class ScrollBox extends Container
         this.interactiveStorage.length = 0;
     }
 
-    protected revertClick(item: DisplayObject)
+    protected revertClick(item: Container)
     {
         if (item.eventMode !== 'auto')
         {
-            utils.isMobile.any
+            isMobile.any
                 ? item.emit('pointerupoutside', null)
                 : item.emit('mouseupoutside', null);
 

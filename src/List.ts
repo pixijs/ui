@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display';
+import { Container } from 'pixi.js';
 
 export type ListType = 'horizontal' | 'vertical';
 
@@ -27,12 +27,12 @@ export type ListOptions = {
  * @example
  * const list = new List({
  *    children: [
-        new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50),
-        new Graphics().beginFill(0xFFFFFF).drawRect(0, 0, 50, 50),
+        new Graphics().rect(0, 0, 50, 50).fill(0x000000),
+        new Graphics().rect(0, 0, 50, 50).fill(0xFFFFFF),
  *    ],
  * });
  *
- * list.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 50, 50));
+ * list.addChild(new Graphics().rect(0, 0, 50, 50)).fill(0x000000);
  */
 export class List extends Container
 {

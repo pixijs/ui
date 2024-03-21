@@ -1,4 +1,3 @@
-import { Sprite } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
@@ -19,27 +18,35 @@ const args = {
     paddingBottom: 0,
     paddingLeft: 0,
     amount: 1,
+    width: 320,
+    height: 80,
     addMask: false,
-    maxTextLength: 10,
-    onChange: action('Input')
+    onChange: action('Input'),
 };
 
-export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
-    text,
-    amount,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-    textColor,
-    fontSize,
-    maxLength,
-    align,
-    placeholder,
-    addMask,
-    onChange
-}, context) =>
-    new PixiStory({
+export const UseNineSliceSprite: StoryFn<
+    typeof args & { align: 'center' | 'left' | 'right' }
+> = (
+    {
+        text,
+        amount,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+        textColor,
+        fontSize,
+        maxLength,
+        align,
+        placeholder,
+        width,
+        height,
+        addMask,
+        onChange,
+    },
+    context
+) =>
+    new PixiStory<typeof args>({
         context,
         init: (view) =>
         {
@@ -53,34 +60,46 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
                 {
                     // Component usage
                     const input = new Input({
-                        bg: Sprite.from('input.png'),
-                        padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
+                        bg: 'input.png',
+                        nineSliceSprite: [160, 27, 160, 27],
+                        padding: [
+                            paddingTop,
+                            paddingRight,
+                            paddingBottom,
+                            paddingLeft,
+                        ],
                         textStyle: {
                             fill: textColor,
                             fontSize,
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
                         },
                         maxLength,
                         align,
                         placeholder,
                         value: text,
-                        addMask,
+                        addMask
                     });
 
-                    input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
+                    input.width = width;
+                    input.height = height;
+
+                    input.onChange.connect(() =>
+                        onChange(`${i + 1} - ${input.value}`)
+                    );
 
                     list.addChild(input);
                 }
 
                 centerElement(list);
             });
+
             view.addChild(list);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
-    title: 'Components/Input/Use Sprite',
+    title: 'Components/Input/Use NineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

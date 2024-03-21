@@ -1,7 +1,6 @@
-import { Container } from '@pixi/display';
-import { ButtonEvents } from './ButtonEvents';
+import { Container, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { FederatedPointerEvent } from '@pixi/events';
+import { ButtonEvents } from './ButtonEvents';
 
 /**
  * Adds button events to a given container-based view
@@ -11,14 +10,13 @@ import { FederatedPointerEvent } from '@pixi/events';
  * const container = new Container();
  * const button = new Button(
  *      new Graphics()
- *          .beginFill(0xFFFFFF)
- *          .drawRoundedRect(0, 0, 100, 50, 15)
+ *          .rect(0, 0, 100, 50, 15)
+ *          .fill(0xFFFFFF)
  * );
  *
  * button.onPress.connect(() => console.log('onPress'));
  *
  * container.addChild(button.view);
- * // or container.addChild(container); which is the same
  */
 export class Button extends ButtonEvents
 {
@@ -92,8 +90,8 @@ export class Button extends ButtonEvents
  * @example
  * const button = new ButtonContainer(
  *      new Graphics()
- *          .beginFill(0xFFFFFF)
- *          .drawRoundedRect(0, 0, 100, 50, 15)
+ *          .fill(0xFFFFFF)
+ *          .roundRect(0, 0, 100, 50, 15)
  * );
  *
  * button.onPress.connect(() => console.log('onPress'));

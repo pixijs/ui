@@ -1,14 +1,11 @@
-import { Graphics } from '@pixi/graphics';
-import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { ScrollBox } from '../../ScrollBox';
+import { Graphics, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { action } from '@storybook/addon-actions';
+import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     fontColor: '#000000',
@@ -28,7 +25,7 @@ const args = {
     onPress: action('Button pressed')
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = ({
     fontColor,
     elementsMargin,
     elementsPadding,
@@ -44,56 +41,53 @@ export const UseGraphics: StoryFn = ({
     onPress,
     globalScroll,
     shiftScroll
-}: any) =>
-{
-    const view = new Container();
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const items = [];
 
-    backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
+            for (let i = 0; i < itemsAmount; i++)
+            {
+                const button = new FancyButton({
+                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
+                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
+                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    text: new Text({
+                        text: `Item ${i + 1}`, style: {
+                            ...defaultTextStyle,
+                            fill: fontColor
+                        }
+                    })
+                });
 
-    const items = [];
+                button.anchor.set(0);
+                button.onPress.connect(() => onPress(i + 1));
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
-        const button = new FancyButton({
-            defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            pressedView: new Graphics().beginFill(0xfe6048).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(`Item ${i + 1}`, {
-                ...defaultTextStyle,
-                fill: fontColor
-            })
-        });
+                items.push(button);
+            }
 
-        button.anchor.set(0);
-        button.onPress.connect(() => onPress(i + 1));
+            // Component usage !!!
+            const scrollBox = new ScrollBox({
+                background: backgroundColor,
+                elementsMargin,
+                width,
+                height,
+                radius,
+                padding: elementsPadding,
+                disableEasing,
+                type,
+                globalScroll,
+                shiftScroll
+            });
 
-        items.push(button);
-    }
+            scrollBox.addItems(items);
 
-    // Component usage !!!
-    const scrollBox = new ScrollBox({
-        background: backgroundColor,
-        elementsMargin,
-        width,
-        height,
-        radius,
-        padding: elementsPadding,
-        disableEasing,
-        type,
-        globalScroll,
-        shiftScroll
+            view.addChild(scrollBox);
+        },
+        resize: (view) => centerElement(view.children[0])
     });
-
-    scrollBox.addItems(items);
-
-    view.addChild(scrollBox);
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/ScrollBox/Use Graphics',

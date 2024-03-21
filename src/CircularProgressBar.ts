@@ -1,16 +1,14 @@
-import { DEG_TO_RAD } from '@pixi/core';
-import { Container } from '@pixi/display';
-import { Graphics, LINE_CAP } from '@pixi/graphics';
+import { ColorSource, Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
 
 export type MaskedProgressBarOptions = {
-    backgroundColor?: number;
-    fillColor: number;
+    backgroundColor?: ColorSource;
+    fillColor: ColorSource;
     lineWidth: number;
     radius: number;
     value?: number;
     backgroundAlpha?: number;
     fillAlpha?: number;
-    cap?: 'butt' | 'round' | 'square';
+    cap?: LineCap;
 };
 
 /**
@@ -42,8 +40,8 @@ export class CircularProgressBar extends Container
     /**
      * Creates a Circular ProgressBar.
      * @param { number } options - Options object to use.
-     * @param { number } options.backgroundColor - Background color.
-     * @param { number } options.fillColor - Fill color.
+     * @param { ColorSource } options.backgroundColor - Background color.
+     * @param { ColorSource } options.fillColor - Fill color.
      * @param { number } options.lineWidth - Line width.
      * @param { number } options.radius - Radius.
      * @param { number } options.value - Progress value.
@@ -90,11 +88,13 @@ export class CircularProgressBar extends Container
             alpha = 0.000001;
         }
 
-        this.bgCircle.lineStyle({
-            width: lineWidth,
-            color: backgroundColor,
-            alpha
-        }).drawCircle(0, 0, radius);
+        this.bgCircle
+            .circle(0, 0, radius)
+            .stroke({
+                width: lineWidth,
+                color: backgroundColor,
+                alpha
+            });
     }
 
     /**
@@ -135,13 +135,13 @@ export class CircularProgressBar extends Container
 
         this.fillCircle
             .clear()
-            .lineStyle({
+            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD)
+            .stroke({
                 width: lineWidth,
                 color: fillColor,
-                cap: cap as LINE_CAP,
+                cap,
                 alpha: fillAlpha
-            })
-            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD);
+            });
     }
 
     /**

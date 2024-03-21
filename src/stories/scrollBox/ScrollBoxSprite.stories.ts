@@ -1,15 +1,12 @@
-import { Sprite } from '@pixi/sprite';
-import { Container } from '@pixi/display';
-import { Text } from '@pixi/text';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { ScrollBox } from '../../ScrollBox';
+import { ColorSource, Container, Sprite, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { action } from '@storybook/addon-actions';
-import { preload } from '../utils/loader';
+import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     fontColor: '#000000',
@@ -22,60 +19,58 @@ const args = {
     shiftScroll: false
 };
 
-export const UseSprite: StoryFn = ({
-    fontColor, elementsMargin, itemsAmount, onPress, disableEasing, type, globalScroll, shiftScroll
-}: any) =>
-{
-    fontColor = getColor(fontColor);
+export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
+    { fontColor, elementsMargin, itemsAmount, disableEasing, type, onPress, globalScroll, shiftScroll }, context
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const assets = [`window.png`, `SmallButton.png`, `SmallButton-hover.png`, `SmallButton-pressed.png`];
 
-    const view = new Container();
+            preload(assets).then(() =>
+            {
+                const window = new Container();
+                const windowBg = Sprite.from(`window.png`);
+                const title = new Text({ text: `Levels`, style: { fill: 0x000000, fontSize: 40 } });
 
-    const assets = [`window.png`, `SmallButton.png`, `SmallButton-hover.png`, `SmallButton-pressed.png`];
+                title.anchor.set(0.5);
+                window.addChild(windowBg, title);
+                title.x = windowBg.width / 2;
+                title.y = 25;
 
-    preload(assets).then(() =>
-    {
-        const window = Sprite.from(`window.png`);
-        const title = new Text(`Levels`, { fill: 0x000000, fontSize: 40 });
+                view.addChild(window);
 
-        title.anchor.set(0.5);
-        window.addChild(title);
-        title.x = window.width / 2;
-        title.y = 25;
+                const items: Container[] = createItems(itemsAmount, fontColor, onPress);
 
-        view.addChild(window);
+                // Component usage !!!
+                const scrollBox = new ScrollBox({
+                    elementsMargin,
+                    width: window.width - 80,
+                    height: window.height - 90,
+                    vertPadding: 18,
+                    radius: 5,
+                    disableEasing,
+                    type,
+                    globalScroll,
+                    shiftScroll
+                });
 
-        const items: Container[] = createItems(itemsAmount, fontColor, onPress);
+                scrollBox.addItems(items);
 
-        // Component usage !!!
-        const scrollBox = new ScrollBox({
-            elementsMargin,
-            width: window.width - 80,
-            height: window.height - 90,
-            vertPadding: 18,
-            radius: 5,
-            disableEasing,
-            type,
-            globalScroll,
-            shiftScroll
-        });
+                scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
+                scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
 
-        scrollBox.addItems(items);
+                window.addChild(scrollBox);
 
-        scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
-        scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
+                centerElement(view);
+            });
+        },
 
-        window.addChild(scrollBox);
-
-        centerElement(view);
+        resize:  centerElement
     });
 
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
-
-function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID: number) => void): FancyButton[]
+function createItems(itemsAmount: number, fontColor: ColorSource, onPress: (buttonID: number) => void): FancyButton[]
 {
     const items = [];
 
@@ -85,10 +80,12 @@ function createItems(itemsAmount: number, fontColor: number, onPress: (buttonID:
             defaultView: `SmallButton.png`,
             hoverView: `SmallButton-hover.png`,
             pressedView: `SmallButton-pressed.png`,
-            text: new Text(i + 1, {
-                ...defaultTextStyle,
-                fontSize: 68,
-                fill: fontColor
+            text: new Text({
+                text: i + 1, style: {
+                    ...defaultTextStyle,
+                    fontSize: 68,
+                    fill: fontColor
+                }
             }),
             textOffset: {
                 x: 0,

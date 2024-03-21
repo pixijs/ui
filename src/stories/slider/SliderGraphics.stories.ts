@@ -1,11 +1,10 @@
-import { Graphics } from '@pixi/graphics';
-import { action } from '@storybook/addon-actions';
+import { Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     meshColor: '#a5e34d',
@@ -26,7 +25,7 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Single: StoryFn = ({
+export const Single: StoryFn<typeof args> = ({
     min,
     max,
     value,
@@ -43,60 +42,55 @@ export const Single: StoryFn = ({
     border,
     onChange,
     showValue,
-}: any) =>
-{
-    const view = new List({ type: 'vertical', elementsMargin: 10 });
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
+            const bg = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .fill(backgroundColor);
 
-    meshColor = getColor(meshColor);
-    fillColor = getColor(fillColor);
-    borderColor = getColor(borderColor);
-    backgroundColor = getColor(backgroundColor);
+            const fill = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .fill(fillColor);
 
-    const bg = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(backgroundColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+            const slider = new Graphics()
+                .circle(0, 0, 20 + handleBorder)
+                .fill(borderColor)
+                .circle(0, 0, 20)
+                .fill(meshColor);
 
-    const fill = new Graphics()
-        .beginFill(borderColor)
-        .drawRoundedRect(0, 0, width, height, radius)
-        .beginFill(fillColor)
-        .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+            // Component usage
+            const singleSlider = new Slider({
+                bg,
+                fill,
+                slider,
+                min,
+                max,
+                value,
+                valueTextStyle: {
+                    fill: fontColor,
+                    fontSize
+                },
+                showValue
+            });
 
-    const slider = new Graphics()
-        .beginFill(borderColor)
-        .drawCircle(0, 0, 20 + handleBorder)
-        .beginFill(meshColor)
-        .drawCircle(0, 0, 20)
-        .endFill();
+            singleSlider.value = value;
 
-    // Component usage
-    const singleSlider = new Slider({
-        bg,
-        fill,
-        slider,
-        min,
-        max,
-        value,
-        valueTextStyle: {
-            fill: fontColor,
-            fontSize
+            singleSlider.onUpdate.connect((value) => onChange(`${value}`));
+
+            list.addChild(singleSlider);
+
+            view.addChild(list);
         },
-        showValue
+        resize: (view) => centerElement(view.children[0])
     });
-
-    singleSlider.value = value;
-
-    singleSlider.onUpdate.connect((value) => onChange(`${value}`));
-
-    view.addChild(singleSlider);
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/Slider/Graphics',

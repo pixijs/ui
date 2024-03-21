@@ -1,11 +1,9 @@
-import { Container } from '@pixi/display';
-import { FederatedPointerEvent } from '@pixi/events';
-import { Sprite } from '@pixi/sprite';
-import { Text } from '@pixi/text';
+import { Container, FederatedPointerEvent, Sprite, Text } from 'pixi.js';
 import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
-import type { DragObject } from './utils/HelpTypes';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
+
+import type { DragObject } from './utils/HelpTypes';
 
 export type BaseSliderOptions = ProgressBarOptions & {
     min?: number;
@@ -88,7 +86,7 @@ export class SliderBase extends ProgressBar
         {
             const TextClass = this.settings.valueTextClass ?? Text;
 
-            this.value1Text = new TextClass('', this.settings.valueTextStyle || { fill: 0xffffff });
+            this.value1Text = new TextClass({ text: '', style: this.settings.valueTextStyle || { fill: 0xffffff } });
             this.value1Text.anchor.set(0.5);
             this.addChild(this.value1Text);
         }
@@ -120,7 +118,7 @@ export class SliderBase extends ProgressBar
         {
             const TextClass = this.settings.valueTextClass ?? Text;
 
-            this.value2Text = new TextClass('', this.settings.valueTextStyle || { fill: 0xffffff });
+            this.value2Text = new TextClass({ text: '', style: this.settings.valueTextStyle || { fill: 0xffffff } });
             this.value2Text.anchor.set(0.5);
             this.addChild(this.value2Text);
         }

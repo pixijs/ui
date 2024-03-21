@@ -1,13 +1,11 @@
-import { Graphics } from '@pixi/graphics';
-import { Text } from '@pixi/text';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { Graphics, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { action } from '@storybook/addon-actions';
-import { centerElement } from '../../utils/helpers/resize';
-import type { StoryFn } from '@storybook/types';
-import { getColor } from '../utils/color';
 import { List } from '../../List';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     type: [null, 'horizontal', 'vertical'],
@@ -26,7 +24,7 @@ const args = {
     onPress: action('Button pressed')
 };
 
-export const UseGraphics: StoryFn = ({
+export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical' }> = ({
     type,
     fontColor,
     bgColor,
@@ -41,51 +39,51 @@ export const UseGraphics: StoryFn = ({
     radius,
     itemsAmount,
     onPress
-}: any) =>
-{
-    fontColor = getColor(fontColor);
-    bgColor = getColor(bgColor);
+}, context) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const viewGraphics = new Graphics().roundRect(0, 0, width, height, radius).fill(bgColor);
 
-    const view = new Graphics().beginFill(bgColor).drawRoundedRect(0, 0, width, height, radius);
+            const items = [];
 
-    const items = [];
+            for (let i = 0; i < itemsAmount; i++)
+            {
+                const button = new FancyButton({
+                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
+                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
+                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    text: new Text({
+                        text: i + 1, style: {
+                            ...defaultTextStyle,
+                            fontSize: 28,
+                            fill: fontColor
+                        }
+                    })
+                });
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
-        const button = new FancyButton({
-            defaultView: new Graphics().beginFill(0xa5e24d).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            hoverView: new Graphics().beginFill(0xfec230).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            pressedView: new Graphics().beginFill(0xfe6048).drawRoundedRect(0, 0, elementsWidth, elementsHeight, radius),
-            text: new Text(i + 1, {
-                ...defaultTextStyle,
-                fontSize: 28,
-                fill: fontColor
-            })
-        });
+                button.anchor.set(0);
+                button.onPress.connect(() => onPress(i + 1));
 
-        button.anchor.set(0);
-        button.onPress.connect(() => onPress(i + 1));
+                items.push(button);
+            }
 
-        items.push(button);
-    }
+            // Component usage !!!
+            const list = new List({
+                elementsMargin,
+                topPadding,
+                leftPadding,
+                rightPadding,
+                type
+            });
 
-    // Component usage !!!
-    const list = new List({
-        elementsMargin,
-        topPadding,
-        leftPadding,
-        rightPadding,
-        type
+            viewGraphics.addChild(list);
+            view.addChild(viewGraphics);
+            items.forEach((item) => list.addChild(item));
+        },
+        resize: (view) => centerElement(view.children[0])
     });
-
-    view.addChild(list);
-    items.forEach((item) => list.addChild(item));
-
-    return {
-        view,
-        resize: () => centerElement(view)
-    };
-};
 
 export default {
     title: 'Components/List/Use Graphics',

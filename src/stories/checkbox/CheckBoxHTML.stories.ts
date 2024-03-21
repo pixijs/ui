@@ -1,12 +1,11 @@
-import { Graphics } from '@pixi/graphics';
+import { Graphics, HTMLText } from 'pixi.js';
 import { CheckBox } from '../../CheckBox';
-import { action } from '@storybook/addon-actions';
 import { List } from '../../List';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { defaultTextStyle } from '../../utils/helpers/styles';
 import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
-import { HTMLText } from '@pixi/text-html';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Checkbox',
@@ -56,19 +55,19 @@ export const UseHtml = ({
             checked,
             style: {
                 unchecked: new Graphics()
-                    .beginFill(borderColor)
-                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
-                    .beginFill(color)
-                    .drawRoundedRect(0, 0, width, height, radius),
+                    .roundRect(-2, -2, width + 4, height + 4, radius)
+                    .fill(borderColor)
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(color),
                 checked: new Graphics()
-                    .beginFill(borderColor)
-                    .drawRoundedRect(-2, -2, width + 4, height + 4, radius)
-                    .beginFill(color)
-                    .drawRoundedRect(0, 0, width, height, radius)
-                    .beginFill(fillBorderColor)
-                    .drawRoundedRect(3, 3, width - 6, height - 6, radius)
-                    .beginFill(fillColor)
-                    .drawRoundedRect(5, 5, width - 10, height - 10, radius),
+                    .roundRect(-2, -2, width + 4, height + 4, radius)
+                    .fill(borderColor)
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(color)
+                    .roundRect(3, 3, width - 6, height - 6, radius)
+                    .fill(fillBorderColor)
+                    .roundRect(5, 5, width - 10, height - 10, radius)
+                    .fill(fillColor),
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,
