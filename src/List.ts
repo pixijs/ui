@@ -274,7 +274,7 @@ export class List extends Container
      * Arrange all elements basing in their sizes and component options.
      * Can be arranged vertically, horizontally or bidirectional.
      */
-    protected arrangeChildren()
+    public arrangeChildren()
     {
         let x = this.leftPadding;
         let y = this.topPadding;
@@ -309,7 +309,7 @@ export class List extends Container
                     child.x = x;
                     child.y = y;
 
-                    if (child.x + child.width >= maxWidth && id > 0)
+                    if (child.x + child.width > maxWidth && id > 0)
                     {
                         y += elementsMargin + child.height;
                         x = this.leftPadding;
