@@ -12,6 +12,16 @@ Here are some useful resources:
 
 **We are now a part of the [Open Collective](https://opencollective.com/pixijs) and with your support you can help us make PixiJS even better. To make a donation, simply click the button below and we'll love you forever!**
 
+## Compatibility
+
+Depending on your version of PixiJS, you'll need to figure out which major version of PixiJS UI to use.
+
+| PixiJS      | PixiJS Filters |
+|-------------|----------------|
+| v7.x        | v1.x           |
+| v8.x        | v2.x           |
+
+
 ## Install
 
 ```sh
