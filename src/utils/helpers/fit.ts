@@ -1,6 +1,6 @@
 import { Container } from '@pixi/display';
 
-export function fitToView(parent: Container, child: Container, padding = 0)
+export function fitToView(parent: Container, child: Container, padding = 0, uniformScaling = true)
 {
     let scaleX = child.scale.x;
     let scaleY = child.scale.y;
@@ -18,18 +18,38 @@ export function fitToView(parent: Container, child: Container, padding = 0)
 
     if (widthOverflow < 0)
     {
-        scaleX = maxWidth / (child.width * scaleX);
+        scaleX = maxWidth / (child.width / scaleX);
     }
 
     if (heightOverflow < 0)
     {
-        scaleY = maxHeight / (child.height * scaleY);
+        scaleY = maxHeight / (child.height / scaleY);
     }
 
     if (scaleX <= 0 || scaleY <= 0)
     {
-        child.visible = false;
+        child.scale.set(0);
+
+        return;
     }
 
-    child.scale.set(Math.min(scaleX, scaleY));
+    if (uniformScaling || child.scale.x === child.scale.y)
+    {
+        const scale = Math.min(scaleX, scaleY);
+
+        child.scale.set(scale, scale);
+    }
+    else
+    {
+        const ratio = child.scale.x / child.scale.y;
+
+        if (widthOverflow < heightOverflow)
+        {
+            child.scale.set(scaleX, scaleX / ratio);
+        }
+        else
+        {
+            child.scale.set(scaleY * ratio, scaleY);
+        }
+    }
 }
