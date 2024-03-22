@@ -80,13 +80,16 @@ export const UseNineSlicePlane = ({
             },
         });
 
-        button.iconView = new MaskedFrame({
+        const buttonIcon = new MaskedFrame({
             target: `avatar-01.png`,
             mask: `avatar_mask.png`,
             borderWidth: 10,
             borderColor: 0xFFFFFF
         });
-        button.iconView.scale.set(0.2);
+
+        buttonIcon.scale.set(0.2);
+
+        button.iconView = buttonIcon;
         button.iconOffset = { x: -100, y: -7 };
 
         button.anchor.set(anchorX, anchorY);
