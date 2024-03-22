@@ -61,6 +61,8 @@ export type ButtonOptions = ViewsInput & {
     offset?: Offset;
     textOffset?: Offset;
     iconOffset?: Offset;
+    textScale?: Pos | number;
+    iconScale?: Pos | number;
     animations?: StateAnimations;
     nineSliceSprite?: [number, number, number, number];
     ignoreRefitting?: boolean;
@@ -136,8 +138,11 @@ export class FancyButton extends ButtonContainer
     /** Anchor point of the button. */
     anchor: ObservablePoint;
 
-    protected _textBaseScale = 1;
-    protected _iconBaseScale = 1;
+    /** Base text scaling to take into account when fitting inside the button */
+    protected _textBaseScale: Pos = { x: 1, y: 1 };
+
+    /** Base icon scaling to take into account when fitting inside the button */
+    protected _iconBaseScale: Pos = { x: 1, y: 1 };
 
     /**
      * Creates a button with a lot of tweaks.
@@ -176,6 +181,8 @@ export class FancyButton extends ButtonContainer
             offset,
             textOffset,
             iconOffset,
+            textScale,
+            iconScale,
             scale,
             anchor,
             anchorX,
@@ -195,6 +202,8 @@ export class FancyButton extends ButtonContainer
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+        this.textBaseScale = textScale;
+        this.iconBaseScale = iconScale;
         this.scale.set(scale ?? 1);
 
         if (animations)
@@ -303,7 +312,15 @@ export class FancyButton extends ButtonContainer
     protected createTextView(text: AnyText)
     {
         this._views.textView = getTextView(text);
-        this._textBaseScale = this._views.textView.scale.x;
+
+        // If text scale has not manually been set, we will overwrite the base scale with the new text view scale.
+        if (this.options?.textScale === undefined)
+        {
+            const { x, y } = this._views.textView.scale;
+
+            this._textBaseScale = { x, y };
+        }
+
         this._views.textView.anchor.set(0);
         this.innerView.addChild(this._views.textView);
 
@@ -379,12 +396,12 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            if (!this.options.ignoreRefitting)
+            if (this.options && !this.options.ignoreRefitting)
             {
-                this._views.textView.scale.set(this._textBaseScale);
+                this._views.textView.scale.set(this._textBaseScale.x, this._textBaseScale.y);
             }
 
-            fitToView(activeView, this._views.textView, this.padding);
+            fitToView(activeView, this._views.textView, this.padding, false);
 
             this._views.textView.x = activeView.x + (activeView.width / 2);
             this._views.textView.y = activeView.y + (activeView.height / 2);
@@ -413,12 +430,12 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (!this.options.ignoreRefitting)
+        if (this.options && !this.options.ignoreRefitting)
         {
-            this._views.iconView.scale.set(this._iconBaseScale);
+            this._views.iconView.scale.set(this._iconBaseScale.x, this._iconBaseScale.y);
         }
 
-        fitToView(activeView, this._views.iconView, this.padding);
+        fitToView(activeView, this._views.iconView, this.padding, false);
 
         (this._views.iconView as Sprite).anchor?.set(0);
 
@@ -648,7 +665,14 @@ export class FancyButton extends ButtonContainer
         }
 
         this._views.iconView = getView(view);
-        this._iconBaseScale = this._views.iconView.scale.x;
+
+        // If icon scale has not manually been set, we will overwrite the base scale with the new icon view scale.
+        if (this.options?.iconScale === undefined)
+        {
+            const { x, y } = this._views.iconView.scale;
+
+            this._iconBaseScale = { x, y };
+        }
 
         if (!this._views.iconView.parent)
         {
@@ -816,6 +840,50 @@ export class FancyButton extends ButtonContainer
     get textOffset(): Offset
     {
         return this._textOffset;
+    }
+
+    /**
+     * Sets the base scale for the text view to take into account when fitting inside the button.
+     * @param {Pos | number} scale - base scale of the text view.
+     */
+    set textBaseScale(scale: Pos | number)
+    {
+        // Apply to the options so that the manual scale is prioritized.
+        this.options.textScale = scale;
+        if (scale === undefined) return;
+        const isNumber = typeof scale === 'number';
+
+        this._textBaseScale.x = isNumber ? scale : scale.x ?? 1;
+        this._textBaseScale.y = isNumber ? scale : scale.y ?? 1;
+        this.adjustTextView(this.state);
+    }
+
+    /** Returns the text view base scale. */
+    get textBaseScale(): Pos
+    {
+        return this.textBaseScale;
+    }
+
+    /**
+     * Sets the base scale for the icon view to take into account when fitting inside the button.
+     * @param {Pos | number} scale - base scale of the icon view.
+     */
+    set iconBaseScale(scale: Pos | number)
+    {
+        // Apply to the options so that the manual scale is prioritized.
+        this.options.iconScale = scale;
+        if (scale === undefined) return;
+        const isNumber = typeof scale === 'number';
+
+        this._iconBaseScale.x = isNumber ? scale : scale.x ?? 1;
+        this._iconBaseScale.y = isNumber ? scale : scale.y ?? 1;
+        this.adjustIconView(this.state);
+    }
+
+    /** Returns the icon view base scale. */
+    get iconBaseScale(): Pos
+    {
+        return this.iconBaseScale;
     }
 
     /**
