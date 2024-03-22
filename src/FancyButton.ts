@@ -63,6 +63,7 @@ export type ButtonOptions = ViewsInput & {
     iconOffset?: Offset;
     animations?: StateAnimations;
     nineSliceSprite?: [number, number, number, number];
+    ignoreRefitting?: boolean;
 };
 
 /**
@@ -134,6 +135,9 @@ export class FancyButton extends ButtonContainer
 
     /** Anchor point of the button. */
     anchor: ObservablePoint;
+
+    protected _textBaseScale = 1;
+    protected _iconBaseScale = 1;
 
     /**
      * Creates a button with a lot of tweaks.
@@ -299,6 +303,7 @@ export class FancyButton extends ButtonContainer
     protected createTextView(text: AnyText)
     {
         this._views.textView = getTextView(text);
+        this._textBaseScale = this._views.textView.scale.x;
         this._views.textView.anchor.set(0);
         this.innerView.addChild(this._views.textView);
 
@@ -374,6 +379,11 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
+            if (!this.options.ignoreRefitting)
+            {
+                this._views.textView.scale.set(this._textBaseScale);
+            }
+
             fitToView(activeView, this._views.textView, this.padding);
 
             this._views.textView.x = activeView.x + (activeView.width / 2);
@@ -401,6 +411,11 @@ export class FancyButton extends ButtonContainer
         if (!activeView)
         {
             return;
+        }
+
+        if (!this.options.ignoreRefitting)
+        {
+            this._views.iconView.scale.set(this._iconBaseScale);
         }
 
         fitToView(activeView, this._views.iconView, this.padding);
@@ -633,6 +648,7 @@ export class FancyButton extends ButtonContainer
         }
 
         this._views.iconView = getView(view);
+        this._iconBaseScale = this._views.iconView.scale.x;
 
         if (!this._views.iconView.parent)
         {
