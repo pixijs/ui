@@ -848,6 +848,7 @@ export class FancyButton extends ButtonContainer
      */
     set textBaseScale(scale: Pos | number)
     {
+        if (!this.options) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.textScale = scale;
         if (scale === undefined) return;
@@ -870,6 +871,7 @@ export class FancyButton extends ButtonContainer
      */
     set iconBaseScale(scale: Pos | number)
     {
+        if (!this.options) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.iconScale = scale;
         if (scale === undefined) return;
