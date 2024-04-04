@@ -45,7 +45,7 @@ export const DynamicUpdate = ({
         let icon = avatars[0];
 
         button.iconView = Sprite.from(icon);
-        button.iconBaseScale = 0.2;
+        button.defaultIconScale = 0.2;
         button.iconOffset = { x: -100, y: -7 };
 
         button.textView = new Text(text, {

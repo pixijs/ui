@@ -69,7 +69,7 @@ export const UseNineSlicePlane = ({
             padding,
             textOffset: { x: 30, y: -5 },
             iconOffset: { x: -100, y: -7 },
-            iconScale: 0.2,
+            defaultIconScale: 0.2,
             animations: {
                 hover: {
                     props: {
