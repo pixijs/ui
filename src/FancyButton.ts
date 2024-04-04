@@ -169,7 +169,7 @@ export class FancyButton extends ButtonContainer
     {
         super();
 
-        this.options = options;
+        this.options = options ?? {};
 
         const {
             defaultView,
@@ -396,7 +396,7 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            if (this.options && !this.options.ignoreRefitting)
+            if (!this.options?.ignoreRefitting)
             {
                 this._views.textView.scale.set(this._textBaseScale.x, this._textBaseScale.y);
             }
@@ -430,7 +430,7 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (this.options && !this.options.ignoreRefitting)
+        if (!this.options?.ignoreRefitting)
         {
             this._views.iconView.scale.set(this._iconBaseScale.x, this._iconBaseScale.y);
         }
@@ -848,10 +848,9 @@ export class FancyButton extends ButtonContainer
      */
     set textBaseScale(scale: Pos | number)
     {
-        if (!this.options) return;
+        if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.textScale = scale;
-        if (scale === undefined) return;
         const isNumber = typeof scale === 'number';
 
         this._textBaseScale.x = isNumber ? scale : scale.x ?? 1;
@@ -871,10 +870,9 @@ export class FancyButton extends ButtonContainer
      */
     set iconBaseScale(scale: Pos | number)
     {
-        if (!this.options) return;
+        if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.iconScale = scale;
-        if (scale === undefined) return;
         const isNumber = typeof scale === 'number';
 
         this._iconBaseScale.x = isNumber ? scale : scale.x ?? 1;
