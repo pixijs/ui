@@ -1,13 +1,13 @@
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { Text } from '@pixi/text';
 import { FancyButton } from '../../FancyButton';
-import { action } from '@storybook/addon-actions';
+import { centerView } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { centerView } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { Text } from '@pixi/text';
 import { randomItem } from '../utils/random';
-import { Sprite } from '@pixi/sprite';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
@@ -45,7 +45,7 @@ export const DynamicUpdate = ({
         let icon = avatars[0];
 
         button.iconView = Sprite.from(icon);
-        button.iconView.scale.set(0.2);
+        button.iconBaseScale = 0.2;
         button.iconOffset = { x: -100, y: -7 };
 
         button.textView = new Text(text, {
