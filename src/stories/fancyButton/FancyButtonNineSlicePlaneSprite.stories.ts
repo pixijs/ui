@@ -14,6 +14,8 @@ const args = {
     padding: 11,
     width: 300,
     height: 137,
+    defaultTextScale: 0.99,
+    defaultIconScale: 0.2,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -31,7 +33,9 @@ export const UseNineSlicePlane = ({
     anchorY,
     animationDuration,
     width,
-    height
+    height,
+    defaultTextScale,
+    defaultIconScale,
 }: any) =>
 {
     const view = new Container();
@@ -69,7 +73,8 @@ export const UseNineSlicePlane = ({
             padding,
             textOffset: { x: 30, y: -5 },
             iconOffset: { x: -100, y: -7 },
-            defaultIconScale: 0.2,
+            defaultTextScale,
+            defaultIconScale,
             animations: {
                 hover: {
                     props: {

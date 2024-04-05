@@ -26,6 +26,8 @@ const args = {
     iconOffsetY: -30,
     textOffsetX: 0,
     textOffsetY: 140,
+    defaultTextScale: 0.99,
+    defaultIconScale: 0.99,
     defaultOffsetY: 0,
     hoverOffsetY: -1,
     pressedOffsetY: 5,
@@ -55,6 +57,8 @@ export const UseGraphics = ({
     iconOffsetY,
     textOffsetX,
     textOffsetY,
+    defaultTextScale,
+    defaultIconScale,
     defaultOffsetY,
     hoverOffsetY,
     pressedOffsetY,
@@ -111,6 +115,8 @@ export const UseGraphics = ({
                 x: iconOffsetX,
                 y: iconOffsetY
             },
+            defaultTextScale,
+            defaultIconScale,
             animations: {
                 default: {
                     props: {
