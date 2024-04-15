@@ -14,6 +14,8 @@ const args = {
     padding: 11,
     width: 300,
     height: 137,
+    defaultTextScale: 0.99,
+    defaultIconScale: 0.2,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -31,7 +33,9 @@ export const UseNineSlicePlane = ({
     anchorY,
     animationDuration,
     width,
-    height
+    height,
+    defaultTextScale,
+    defaultIconScale,
 }: any) =>
 {
     const view = new Container();
@@ -60,8 +64,17 @@ export const UseNineSlicePlane = ({
                 ...defaultTextStyle,
                 fill: textColor || defaultTextStyle.fill
             }),
+            icon: new MaskedFrame({
+                target: `avatar-01.png`,
+                mask: `avatar_mask.png`,
+                borderWidth: 10,
+                borderColor: 0xFFFFFF
+            }),
             padding,
             textOffset: { x: 30, y: -5 },
+            iconOffset: { x: -100, y: -7 },
+            defaultTextScale,
+            defaultIconScale,
             animations: {
                 hover: {
                     props: {
@@ -79,15 +92,6 @@ export const UseNineSlicePlane = ({
                 }
             },
         });
-
-        button.iconView = new MaskedFrame({
-            target: `avatar-01.png`,
-            mask: `avatar_mask.png`,
-            borderWidth: 10,
-            borderColor: 0xFFFFFF
-        });
-        button.iconView.scale.set(0.2);
-        button.iconOffset = { x: -100, y: -7 };
 
         button.anchor.set(anchorX, anchorY);
 

@@ -20,6 +20,7 @@ const args = {
     radius: 200,
     iconOffsetX: 0,
     iconOffsetY: 0,
+    defaultIconScale: 0.99,
     defaultOffset: 0,
     hoverOffset: -1,
     pressedOffset: 5,
@@ -43,6 +44,7 @@ export const UseIcon = ({
     padding,
     iconOffsetX,
     iconOffsetY,
+    defaultIconScale,
     defaultOffset,
     hoverOffset,
     pressedOffset,
@@ -80,6 +82,7 @@ export const UseIcon = ({
             pressedView: new Graphics().beginFill(pressedColor).drawRoundedRect(0, 0, width, height, radius),
             disabledView: new Graphics().beginFill(disabledColor).drawRoundedRect(0, 0, width, height, radius),
             icon,
+            defaultIconScale,
             padding,
             offset: {
                 default: { y: defaultOffset },

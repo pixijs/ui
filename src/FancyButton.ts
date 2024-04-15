@@ -62,8 +62,11 @@ export type ButtonOptions = ViewsInput & {
     offset?: Offset;
     textOffset?: Offset;
     iconOffset?: Offset;
+    defaultTextScale?: Pos | number;
+    defaultIconScale?: Pos | number;
     animations?: StateAnimations;
     nineSlicePlane?: [number, number, number, number];
+    ignoreRefitting?: boolean;
 };
 
 /**
@@ -136,6 +139,12 @@ export class FancyButton extends ButtonContainer
     /** Anchor point of the button. */
     anchor: ObservablePoint;
 
+    /** Base text scaling to take into account when fitting inside the button */
+    protected _defaultTextScale: Pos = { x: 1, y: 1 };
+
+    /** Base icon scaling to take into account when fitting inside the button */
+    protected _defaultIconScale: Pos = { x: 1, y: 1 };
+
     /**
      * Creates a button with a lot of tweaks.
      * @param {object} options - Button options.
@@ -152,6 +161,8 @@ export class FancyButton extends ButtonContainer
      * @param {Point} options.iconOffset - Offset of the icon view.
      * @param {number} options.scale - Scale of the button. Scale will be applied to a main container,
      * when all animations scales will be applied to the inner view.
+     * @param {number} options.defaultTextScale - Base text scaling to take into account when fitting inside the button.
+     * @param {number} options.defaultIconScale - Base icon scaling to take into account when fitting inside the button.
      * @param {number} options.anchor - Anchor point of the button.
      * @param {number} options.anchorX - Horizontal anchor point of the button.
      * @param {number} options.anchorY - Vertical anchor point of the button.
@@ -161,7 +172,7 @@ export class FancyButton extends ButtonContainer
     {
         super();
 
-        this.options = options;
+        this.options = options ?? {};
 
         const {
             defaultView,
@@ -173,6 +184,8 @@ export class FancyButton extends ButtonContainer
             offset,
             textOffset,
             iconOffset,
+            defaultTextScale: textScale,
+            defaultIconScale: iconScale,
             scale,
             anchor,
             anchorX,
@@ -190,6 +203,8 @@ export class FancyButton extends ButtonContainer
         this.offset = offset;
         this.textOffset = textOffset;
         this.iconOffset = iconOffset;
+        this.defaultTextScale = textScale;
+        this.defaultIconScale = iconScale;
         this.scale.set(scale ?? 1);
 
         if (animations)
@@ -298,6 +313,15 @@ export class FancyButton extends ButtonContainer
     protected createTextView(text: AnyText)
     {
         this._views.textView = getTextView(text);
+
+        // If text scale has not manually been set, we will overwrite the base scale with the new text view scale.
+        if (this.options?.defaultTextScale === undefined)
+        {
+            const { x, y } = this._views.textView.scale;
+
+            this._defaultTextScale = { x, y };
+        }
+
         this._views.textView.anchor.set(0);
         this.innerView.addChild(this._views.textView);
 
@@ -373,7 +397,12 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            fitToView(activeView, this._views.textView, this.padding);
+            if (!this.options?.ignoreRefitting)
+            {
+                this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
+            }
+
+            fitToView(activeView, this._views.textView, this.padding, false);
 
             this._views.textView.x = activeView.x + (activeView.width / 2);
             this._views.textView.y = activeView.y + (activeView.height / 2);
@@ -402,7 +431,12 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        fitToView(activeView, this._views.iconView, this.padding);
+        if (!this.options?.ignoreRefitting)
+        {
+            this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
+        }
+
+        fitToView(activeView, this._views.iconView, this.padding, false);
 
         (this._views.iconView as Sprite).anchor?.set(0);
 
@@ -627,6 +661,14 @@ export class FancyButton extends ButtonContainer
 
         this._views.iconView = getView(view);
 
+        // If icon scale has not manually been set, we will overwrite the base scale with the new icon view scale.
+        if (this.options?.defaultIconScale === undefined)
+        {
+            const { x, y } = this._views.iconView.scale;
+
+            this._defaultIconScale = { x, y };
+        }
+
         if (!this._views.iconView.parent)
         {
             this.innerView.addChild(this._views.iconView);
@@ -793,6 +835,50 @@ export class FancyButton extends ButtonContainer
     get textOffset(): Offset
     {
         return this._textOffset;
+    }
+
+    /**
+     * Sets the base scale for the text view to take into account when fitting inside the button.
+     * @param {Pos | number} scale - base scale of the text view.
+     */
+    set defaultTextScale(scale: Pos | number)
+    {
+        if (scale === undefined) return;
+        // Apply to the options so that the manual scale is prioritized.
+        this.options.defaultTextScale = scale;
+        const isNumber = typeof scale === 'number';
+
+        this._defaultTextScale.x = isNumber ? scale : scale.x ?? 1;
+        this._defaultTextScale.y = isNumber ? scale : scale.y ?? 1;
+        this.adjustTextView(this.state);
+    }
+
+    /** Returns the text view base scale. */
+    get defaultTextScale(): Pos
+    {
+        return this.defaultTextScale;
+    }
+
+    /**
+     * Sets the base scale for the icon view to take into account when fitting inside the button.
+     * @param {Pos | number} scale - base scale of the icon view.
+     */
+    set defaultIconScale(scale: Pos | number)
+    {
+        if (scale === undefined) return;
+        // Apply to the options so that the manual scale is prioritized.
+        this.options.defaultIconScale = scale;
+        const isNumber = typeof scale === 'number';
+
+        this._defaultIconScale.x = isNumber ? scale : scale.x ?? 1;
+        this._defaultIconScale.y = isNumber ? scale : scale.y ?? 1;
+        this.adjustIconView(this.state);
+    }
+
+    /** Returns the icon view base scale. */
+    get defaultIconScale(): Pos
+    {
+        return this.defaultIconScale;
     }
 
     /**

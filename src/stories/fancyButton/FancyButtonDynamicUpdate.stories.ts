@@ -1,17 +1,19 @@
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { Text } from '@pixi/text';
 import { FancyButton } from '../../FancyButton';
-import { action } from '@storybook/addon-actions';
+import { centerView } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
-import { centerView } from '../../utils/helpers/resize';
-import { Container } from '@pixi/display';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { Text } from '@pixi/text';
 import { randomItem } from '../utils/random';
-import { Sprite } from '@pixi/sprite';
+import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
+    defaultTextScale: 0.99,
+    defaultIconScale: 0.2,
     padding: 11,
     anchorX: 0.5,
     anchorY: 0.5,
@@ -22,6 +24,8 @@ const args = {
 export const DynamicUpdate = ({
     text,
     textColor,
+    defaultTextScale,
+    defaultIconScale,
     disabled,
     onPress,
     padding,
@@ -45,13 +49,14 @@ export const DynamicUpdate = ({
         let icon = avatars[0];
 
         button.iconView = Sprite.from(icon);
-        button.iconView.scale.set(0.2);
+        button.defaultIconScale = defaultIconScale;
         button.iconOffset = { x: -100, y: -7 };
 
         button.textView = new Text(text, {
             ...defaultTextStyle,
             fill: textColor || defaultTextStyle.fill
         });
+        button.defaultTextScale = defaultTextScale;
         button.textOffset = { x: 30, y: -7 };
 
         button.padding = padding;

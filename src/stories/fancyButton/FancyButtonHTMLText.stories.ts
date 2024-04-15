@@ -13,6 +13,7 @@ const args = {
     padding: 11,
     textOffsetX: 0,
     textOffsetY: -7,
+    defaultTextScale: 0.99,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -28,6 +29,7 @@ export const UsingSpriteAndHTMLText = ({
     padding,
     textOffsetX,
     textOffsetY,
+    defaultTextScale,
     anchorX,
     anchorY,
     animationDuration
@@ -53,6 +55,7 @@ export const UsingSpriteAndHTMLText = ({
             text: title,
             padding,
             textOffset: { x: textOffsetX, y: textOffsetY },
+            defaultTextScale,
             animations: {
                 hover: {
                     props: {
