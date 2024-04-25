@@ -13,6 +13,9 @@ const args = {
     padding: 11,
     textOffsetX: 0,
     textOffsetY: -7,
+    defaultTextScale: 0.99,
+    defaultTextAnchorX: 0.5,
+    defaultTextAnchorY: 0.5,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -21,7 +24,21 @@ const args = {
 };
 
 export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
-    { text, textColor, disabled, onPress, padding, textOffsetX, textOffsetY, anchorX, anchorY, animationDuration },
+    {
+        text,
+        textColor,
+        disabled,
+        onPress,
+        padding,
+        textOffsetX,
+        textOffsetY,
+        defaultTextScale,
+        defaultTextAnchorX,
+        defaultTextAnchorY,
+        anchorX,
+        anchorY,
+        animationDuration,
+    },
     context
 ) =>
     new PixiStory({
@@ -41,14 +58,13 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                     name: 'TitleFont',
                     style: {
                         ...defaultTextStyle,
-
                         fill: textColor || defaultTextStyle.fill,
                     },
                 });
 
                 const title = new BitmapText({
                     text,
-                    style: { fontFamily: 'TitleFont' },
+                    style: { fontFamily: 'TitleFont', fontSize: defaultTextStyle.fontSize },
                 });
 
                 // Component usage !!!
@@ -60,6 +76,8 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                     text: title,
                     padding,
                     textOffset: { x: textOffsetX, y: textOffsetY },
+                    defaultTextScale,
+                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
                     animations: {
                         hover: {
                             props: {

@@ -18,6 +18,9 @@ const args = {
     radius: 200,
     iconOffsetX: 0,
     iconOffsetY: 0,
+    defaultIconScale: 0.99,
+    defaultIconAnchorX: 0.5,
+    defaultIconAnchorY: 0.5,
     defaultOffset: 0,
     hoverOffset: -1,
     pressedOffset: 5,
@@ -41,6 +44,9 @@ export const UseIcon: StoryFn<typeof args> = ({
     padding,
     iconOffsetX,
     iconOffsetY,
+    defaultIconScale,
+    defaultIconAnchorX,
+    defaultIconAnchorY,
     defaultOffset,
     hoverOffset,
     pressedOffset,
@@ -83,6 +89,8 @@ export const UseIcon: StoryFn<typeof args> = ({
                         x: iconOffsetX,
                         y: iconOffsetY
                     },
+                    defaultIconScale,
+                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
                     animations: {
                         hover: {
                             props: {

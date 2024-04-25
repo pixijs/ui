@@ -14,6 +14,12 @@ const args = {
     padding: 11,
     width: 300,
     height: 137,
+    defaultTextScale: 0.99,
+    defaultIconScale: 0.2,
+    defaultTextAnchorX: 0.5,
+    defaultTextAnchorY: 0.5,
+    defaultIconAnchorX: 0.5,
+    defaultIconAnchorY: 0.5,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -31,7 +37,13 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
     anchorY,
     animationDuration,
     width,
-    height
+    height,
+    defaultTextScale,
+    defaultIconScale,
+    defaultTextAnchorX,
+    defaultTextAnchorY,
+    defaultIconAnchorX,
+    defaultIconAnchorY
 }, context) =>
     new PixiStory<typeof args>({
         context,
@@ -65,6 +77,11 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                     }),
                     padding,
                     textOffset: { x: 30, y: -5 },
+                    iconOffset: { x: -100, y: -7 },
+                    defaultTextScale,
+                    defaultIconScale,
+                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
+                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
                     animations: {
                         hover: {
                             props: {
@@ -89,8 +106,6 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                     borderWidth: 10,
                     borderColor: 0xFFFFFF
                 });
-                button.iconView.scale.set(0.2);
-                button.iconOffset = { x: -100, y: -7 };
 
                 button.anchor.set(anchorX, anchorY);
 
