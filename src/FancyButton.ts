@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Container, isMobile, NineSliceSprite, ObservablePoint, Rectangle, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { ButtonContainer } from './Button';
