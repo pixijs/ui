@@ -8,7 +8,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    proximityRange: 0,
+    proximityRange: 100,
     width: 320,
     height: 420,
     radius: 20,
