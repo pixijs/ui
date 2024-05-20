@@ -1,4 +1,5 @@
 import {
+    Bounds,
     ColorSource,
     Container,
     DestroyOptions,
@@ -9,6 +10,7 @@ import {
     Point,
     Ticker,
 } from 'pixi.js';
+import { Signal } from 'typed-signals';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
@@ -25,7 +27,17 @@ export type ScrollBoxOptions = {
     dragTrashHold?: number;
     globalScroll?: boolean;
     shiftScroll?: boolean;
+    proximityRange?: number;
 } & Omit<ListOptions, 'children'>;
+
+type ProximityEventData = {
+    item: Container;
+    index: number;
+    inRange: boolean;
+};
+
+const scrollerBounds = new Bounds();
+const itemBounds = new Bounds();
 
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
@@ -75,6 +87,12 @@ export class ScrollBox extends Container
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point;
     protected isOver = false;
+
+    protected proximityRange: number;
+    protected proximityCache: boolean[] = [];
+    private lastScrollX!: number | null;
+    private lastScrollY!: number | null;
+    public onProximityChange = new Signal<(data: ProximityEventData) => void>();
 
     /**
      * @param options
@@ -127,6 +145,8 @@ export class ScrollBox extends Container
 
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
+
+        this.proximityRange = options.proximityRange ?? 0;
 
         if (!this.list)
         {
@@ -182,6 +202,7 @@ export class ScrollBox extends Container
     /** Remove all items from a scrollable list. */
     removeItems()
     {
+        this.proximityCache.length = 0;
         this.list.removeChildren();
     }
 
@@ -207,6 +228,7 @@ export class ScrollBox extends Container
             child.eventMode = 'static';
 
             this.list.addChild(child);
+            this.proximityCache.push(false);
 
             if (!this.options.disableDynamicRendering)
             {
@@ -226,7 +248,7 @@ export class ScrollBox extends Container
     removeItem(itemID: number)
     {
         this.list.removeItem(itemID);
-
+        this.proximityCache.splice(itemID, 1);
         this.resize();
     }
 
@@ -734,6 +756,45 @@ export class ScrollBox extends Container
         if (this.list[type] !== this._trackpad[type])
         {
             this.list[type] = this._trackpad[type];
+        }
+
+        if (this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY)
+        {
+            /**
+             * Wait a frame to ensure that the transforms of the scene graph are up-to-date.
+             * Since we are skipping this step on the 'getBounds' calls for performance's sake,
+             * this is necessary to ensure that the bounds are accurate.
+             */
+            requestAnimationFrame(() => this.items.forEach((item, index) => this.checkItemProximity(item, index)));
+            this.lastScrollX = this._trackpad.x;
+            this.lastScrollY = this._trackpad.y;
+        }
+    }
+
+    private checkItemProximity(item: Container, index: number): void
+    {
+        /** Get the item bounds, capping the width and height to at least 1 for the purposes of intersection checking. */
+        item.getBounds(true, itemBounds);
+        itemBounds.width = Math.max(itemBounds.width, 1);
+        itemBounds.height = Math.max(itemBounds.height, 1);
+
+        // Get the scroller bounds, expanding them by the defined max distance.
+        this.getBounds(true, scrollerBounds);
+
+        scrollerBounds.x -= this.proximityRange;
+        scrollerBounds.y -= this.proximityRange;
+        scrollerBounds.width += this.proximityRange * 2;
+        scrollerBounds.height += this.proximityRange * 2;
+
+        // Check for intersection
+        const inRange = scrollerBounds.rectangle.intersects(itemBounds.rectangle);
+        const wasInRange = this.proximityCache[index];
+
+        // If the item's proximity state has changed, emit the event
+        if (inRange !== wasInRange)
+        {
+            this.proximityCache[index] = inRange;
+            this.onProximityChange.emit({ item, index, inRange });
         }
     }
 
