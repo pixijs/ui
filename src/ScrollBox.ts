@@ -19,6 +19,7 @@ export type ScrollBoxOptions = {
     globalScroll?: boolean;
     shiftScroll?: boolean;
     proximityRange?: number;
+    proximityDebounce?: number;
     disableProximityCheck?: boolean;
 } & Omit<ListOptions, 'children'>;
 
@@ -79,8 +80,9 @@ export class ScrollBox extends Container
 
     protected proximityRange: number;
     protected proximityStatusCache: boolean[] = [];
-    private lastScrollX!: number | null;
-    private lastScrollY!: number | null;
+    protected lastScrollX!: number | null;
+    protected lastScrollY!: number | null;
+    protected proximityCheckFrameCounter = 0;
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
 
     /**
@@ -755,24 +757,24 @@ export class ScrollBox extends Container
             this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY
         ))
         {
-            /**
-             * Wait a frame to ensure that the transforms of the scene graph are up-to-date.
-             * Since we are skipping this step on the 'getBounds' calls for performance's sake,
-             * this is necessary to ensure that the bounds are accurate.
-             */
-            requestAnimationFrame(() => this.items.forEach((item, index) =>
+            this.proximityCheckFrameCounter++;
+            if (this.proximityCheckFrameCounter >= (this.options.proximityDebounce ?? 10))
             {
-                const inRange = this.isItemVisible(item, this.proximityRange);
-                const wasInRange = this.proximityStatusCache[index];
-
-                if (inRange !== wasInRange)
+                this.items.forEach((item, index) =>
                 {
-                    this.proximityStatusCache[index] = inRange;
-                    this.onProximityChange.emit({ item, index, inRange });
-                }
-            }));
-            this.lastScrollX = this._trackpad.x;
-            this.lastScrollY = this._trackpad.y;
+                    const inRange = this.isItemVisible(item, this.proximityRange);
+                    const wasInRange = this.proximityStatusCache[index];
+
+                    if (inRange !== wasInRange)
+                    {
+                        this.proximityStatusCache[index] = inRange;
+                        this.onProximityChange.emit({ item, index, inRange });
+                    }
+                });
+                this.lastScrollX = this._trackpad.x;
+                this.lastScrollY = this._trackpad.y;
+                this.proximityCheckFrameCounter = 0;
+            }
         }
     }
 
