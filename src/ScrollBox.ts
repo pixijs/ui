@@ -769,31 +769,31 @@ export class ScrollBox extends Container
     }
 
     private checkItemProximity(item: Container, index: number): void
+    {
+        /** Get the item bounds, capping the width and height to at least 1 for the purposes of intersection checking. */
+        item.getBounds(true, itemBounds);
+        itemBounds.width = Math.max(itemBounds.width, 1);
+        itemBounds.height = Math.max(itemBounds.height, 1);
+
+        // Get the scroller bounds, expanding them by the defined max distance.
+        this.borderMask.getBounds(true, scrollerBounds);
+
+        scrollerBounds.x -= this.proximityRange;
+        scrollerBounds.y -= this.proximityRange;
+        scrollerBounds.width += this.proximityRange * 2;
+        scrollerBounds.height += this.proximityRange * 2;
+
+        // Check for intersection
+        const inRange = scrollerBounds.intersects(itemBounds);
+        const wasInRange = this.proximityCache[index];
+
+        // If the item's proximity state has changed, emit the event
+        if (inRange !== wasInRange)
         {
-            /** Get the item bounds, capping the width and height to at least 1 for the purposes of intersection checking. */
-            item.getBounds(true, itemBounds);
-            itemBounds.width = Math.max(itemBounds.width, 1);
-            itemBounds.height = Math.max(itemBounds.height, 1);
-    
-            // Get the scroller bounds, expanding them by the defined max distance.
-            this.borderMask.getBounds(true, scrollerBounds);
-    
-            scrollerBounds.x -= this.proximityRange;
-            scrollerBounds.y -= this.proximityRange;
-            scrollerBounds.width += this.proximityRange * 2;
-            scrollerBounds.height += this.proximityRange * 2;
-    
-            // Check for intersection
-            const inRange = scrollerBounds.intersects(itemBounds);
-            const wasInRange = this.proximityCache[index];
-    
-            // If the item's proximity state has changed, emit the event
-            if (inRange !== wasInRange)
-            {
-                this.proximityCache[index] = inRange;
-                this.onProximityChange.emit({ item, index, inRange });
-            }
+            this.proximityCache[index] = inRange;
+            this.onProximityChange.emit({ item, index, inRange });
         }
+    }
 
     /**
      * Destroys the component.
