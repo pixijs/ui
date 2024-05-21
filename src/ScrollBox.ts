@@ -1,4 +1,4 @@
-import { ColorSource, Ticker, utils, Point, Rectangle } from '@pixi/core';
+import { ColorSource, Ticker, utils, Point } from '@pixi/core';
 import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
@@ -19,6 +19,7 @@ export type ScrollBoxOptions = {
     globalScroll?: boolean;
     shiftScroll?: boolean;
     proximityRange?: number;
+    disableProximityCheck?: boolean;
 } & Omit<ListOptions, 'children'>;
 
 type ProximityEventData = {
@@ -26,9 +27,6 @@ type ProximityEventData = {
     index: number;
     inRange: boolean;
 };
-
-const scrollerBounds = new Rectangle();
-const itemBounds = new Rectangle();
 
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
@@ -80,7 +78,7 @@ export class ScrollBox extends Container
     protected isOver = false;
 
     protected proximityRange: number;
-    protected proximityCache: boolean[] = [];
+    protected proximityStatusCache: boolean[] = [];
     private lastScrollX!: number | null;
     private lastScrollY!: number | null;
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
@@ -198,7 +196,7 @@ export class ScrollBox extends Container
     /** Remove all items from a scrollable list. */
     removeItems()
     {
-        this.proximityCache.length = 0;
+        this.proximityStatusCache.length = 0;
         this.list.removeChildren();
     }
 
@@ -224,7 +222,7 @@ export class ScrollBox extends Container
             child.eventMode = 'static';
 
             this.list.addChild(child);
-            this.proximityCache.push(false);
+            this.proximityStatusCache.push(false);
 
             if (!this.options.disableDynamicRendering)
             {
@@ -244,15 +242,16 @@ export class ScrollBox extends Container
     removeItem(itemID: number)
     {
         this.list.removeItem(itemID);
-        this.proximityCache.splice(itemID, 1);
+        this.proximityStatusCache.splice(itemID, 1);
         this.resize();
     }
 
     /**
      * Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.
      * @param {Container} item - item to check.
+     * @param padding - proximity padding to consider the item visible.
      */
-    isItemVisible(item: Container): boolean
+    isItemVisible(item: Container, padding = 0): boolean
     {
         const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
@@ -262,10 +261,7 @@ export class ScrollBox extends Container
         {
             const posY = item.y + list.y;
 
-            if (
-                posY + item.height + this.list.bottomPadding >= 0
-                && posY - this.list.topPadding <= this.options.height
-            )
+            if (posY + item.height >= -padding && posY <= this.options.height + padding)
             {
                 isVisible = true;
             }
@@ -274,7 +270,7 @@ export class ScrollBox extends Container
         {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= 0 && posX <= this.options.width)
+            if (posX + item.width >= -padding && posX <= this.options.width + padding)
             {
                 isVisible = true;
             }
@@ -755,43 +751,28 @@ export class ScrollBox extends Container
             this.list[type] = this._trackpad[type];
         }
 
-        if (this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY)
+        if (!this.options.disableProximityCheck && (
+            this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY
+        ))
         {
             /**
              * Wait a frame to ensure that the transforms of the scene graph are up-to-date.
              * Since we are skipping this step on the 'getBounds' calls for performance's sake,
              * this is necessary to ensure that the bounds are accurate.
              */
-            requestAnimationFrame(() => this.items.forEach((item, index) => this.checkItemProximity(item, index)));
+            requestAnimationFrame(() => this.items.forEach((item, index) =>
+            {
+                const inRange = this.isItemVisible(item, this.proximityRange);
+                const wasInRange = this.proximityStatusCache[index];
+
+                if (inRange !== wasInRange)
+                {
+                    this.proximityStatusCache[index] = inRange;
+                    this.onProximityChange.emit({ item, index, inRange });
+                }
+            }));
             this.lastScrollX = this._trackpad.x;
             this.lastScrollY = this._trackpad.y;
-        }
-    }
-
-    private checkItemProximity(item: Container, index: number): void
-    {
-        /** Get the item bounds, capping the width and height to at least 1 for the purposes of intersection checking. */
-        item.getBounds(true, itemBounds);
-        itemBounds.width = Math.max(itemBounds.width, 1);
-        itemBounds.height = Math.max(itemBounds.height, 1);
-
-        // Get the scroller bounds, expanding them by the defined max distance.
-        this.borderMask.getBounds(true, scrollerBounds);
-
-        scrollerBounds.x -= this.proximityRange;
-        scrollerBounds.y -= this.proximityRange;
-        scrollerBounds.width += this.proximityRange * 2;
-        scrollerBounds.height += this.proximityRange * 2;
-
-        // Check for intersection
-        const inRange = scrollerBounds.intersects(itemBounds);
-        const wasInRange = this.proximityCache[index];
-
-        // If the item's proximity state has changed, emit the event
-        if (inRange !== wasInRange)
-        {
-            this.proximityCache[index] = inRange;
-            this.onProximityChange.emit({ item, index, inRange });
         }
     }
 
