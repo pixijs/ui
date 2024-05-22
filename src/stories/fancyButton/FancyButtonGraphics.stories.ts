@@ -28,6 +28,10 @@ const args = {
     textOffsetY: 140,
     defaultTextScale: 0.99,
     defaultIconScale: 0.99,
+    defaultTextAnchorX: 0.5,
+    defaultTextAnchorY: 0.5,
+    defaultIconAnchorX: 0.5,
+    defaultIconAnchorY: 0.5,
     defaultOffsetY: 0,
     hoverOffsetY: -1,
     pressedOffsetY: 5,
@@ -59,6 +63,10 @@ export const UseGraphics = ({
     textOffsetY,
     defaultTextScale,
     defaultIconScale,
+    defaultTextAnchorX,
+    defaultTextAnchorY,
+    defaultIconAnchorX,
+    defaultIconAnchorY,
     defaultOffsetY,
     hoverOffsetY,
     pressedOffsetY,
@@ -117,6 +125,14 @@ export const UseGraphics = ({
             },
             defaultTextScale,
             defaultIconScale,
+            defaultTextAnchor: {
+                x: defaultTextAnchorX,
+                y: defaultTextAnchorY
+            },
+            defaultIconAnchor: {
+                x: defaultIconAnchorX,
+                y: defaultIconAnchorY
+            },
             animations: {
                 default: {
                     props: {
