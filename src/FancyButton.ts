@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Container, isMobile, NineSliceSprite, ObservablePoint, Rectangle, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { ButtonContainer } from './Button';
@@ -63,6 +64,8 @@ export type ButtonOptions = ViewsInput & {
     iconOffset?: Offset;
     defaultTextScale?: Pos | number;
     defaultIconScale?: Pos | number;
+    defaultTextAnchor?: Pos | number;
+    defaultIconAnchor?: Pos | number;
     animations?: StateAnimations;
     nineSliceSprite?: [number, number, number, number];
     ignoreRefitting?: boolean;
@@ -144,6 +147,12 @@ export class FancyButton extends ButtonContainer
     /** Base icon scaling to take into account when fitting inside the button */
     protected _defaultIconScale: Pos = { x: 1, y: 1 };
 
+    /** Base text anchor to take into account when fitting and placing inside the button */
+    protected _defaultTextAnchor: Pos = { x: 0.5, y: 0.5 };
+
+    /** Base icon anchor to take into account when fitting and placing inside the button */
+    protected _defaultIconAnchor: Pos = { x: 0.5, y: 0.5 };
+
     /**
      * Creates a button with a lot of tweaks.
      * @param {object} options - Button options.
@@ -162,6 +171,8 @@ export class FancyButton extends ButtonContainer
      * when all animations scales will be applied to the inner view.
      * @param {number} options.defaultTextScale - Base text scaling to take into account when fitting inside the button.
      * @param {number} options.defaultIconScale - Base icon scaling to take into account when fitting inside the button.
+     * @param {number} options.defaultTextAnchor - Base text anchor to take into account when fitting and placing inside the button.
+     * @param {number} options.defaultIconAnchor - Base icon anchor to take into account when fitting and placing inside the button.
      * @param {number} options.anchor - Anchor point of the button.
      * @param {number} options.anchorX - Horizontal anchor point of the button.
      * @param {number} options.anchorY - Vertical anchor point of the button.
@@ -185,6 +196,8 @@ export class FancyButton extends ButtonContainer
             iconOffset,
             defaultTextScale: textScale,
             defaultIconScale: iconScale,
+            defaultTextAnchor: textAnchor,
+            defaultIconAnchor: iconAnchor,
             scale,
             anchor,
             anchorX,
@@ -206,6 +219,8 @@ export class FancyButton extends ButtonContainer
         this.iconOffset = iconOffset;
         this.defaultTextScale = textScale;
         this.defaultIconScale = iconScale;
+        this.defaultTextAnchor = textAnchor;
+        this.defaultIconAnchor = iconAnchor;
         this.scale.set(scale ?? 1);
 
         if (animations)
@@ -323,7 +338,6 @@ export class FancyButton extends ButtonContainer
             this._defaultTextScale = { x, y };
         }
 
-        this._views.textView.anchor.set(0);
         this.innerView.addChild(this._views.textView);
 
         this.adjustTextView(this.state);
@@ -395,6 +409,7 @@ export class FancyButton extends ButtonContainer
         if (!this.text) return;
 
         const activeView = this.getStateView(this.state);
+        const { x: anchorX, y: anchorY } = this._defaultTextAnchor;
 
         if (activeView)
         {
@@ -409,7 +424,7 @@ export class FancyButton extends ButtonContainer
             this._views.textView.y = activeView.y + (activeView.height / 2);
         }
 
-        this._views.textView.anchor.set(0.5);
+        this._views.textView.anchor.set(anchorX, anchorY);
 
         this.setOffset(this._views.textView, state, this.textOffset);
     }
@@ -437,12 +452,24 @@ export class FancyButton extends ButtonContainer
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
 
+        const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
+
         fitToView(activeView, this._views.iconView, this.padding, false);
 
-        (this._views.iconView as Sprite).anchor?.set(0);
+        if ('anchor' in this._views.iconView)
+        {
+            (this._views.iconView.anchor as ObservablePoint).set(anchorX, anchorY);
+        }
+        else
+        {
+            this._views.iconView.pivot.set(
+                anchorX * (this._views.iconView.width / this._views.iconView.scale.x),
+                anchorY * (this._views.iconView.height / this._views.iconView.scale.y)
+            );
+        }
 
-        this._views.iconView.x = activeView.x + (activeView.width / 2) - (this._views.iconView.width / 2);
-        this._views.iconView.y = activeView.y + (activeView.height / 2) - (this._views.iconView.height / 2);
+        this._views.iconView.x = activeView.x + (activeView.width / 2);
+        this._views.iconView.y = activeView.y + (activeView.height / 2);
 
         this.setOffset(this._views.iconView, state, this.iconOffset);
     }
@@ -886,6 +913,50 @@ export class FancyButton extends ButtonContainer
     get defaultIconScale(): Pos
     {
         return this.defaultIconScale;
+    }
+
+    /**
+     * Sets the base anchor for the text view to take into account when fitting and placing inside the button.
+     * @param {Pos | number} anchor - base anchor of the text view.
+     */
+    set defaultTextAnchor(anchor: Pos | number)
+    {
+        if (anchor === undefined) return;
+        // Apply to the options so that the manual anchor is prioritized.
+        this.options.defaultTextAnchor = anchor;
+        const isNumber = typeof anchor === 'number';
+
+        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 1;
+        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this.adjustTextView(this.state);
+    }
+
+    /** Returns the text view base anchor. */
+    get defaultTextAnchor(): Pos
+    {
+        return this.defaultTextAnchor;
+    }
+
+    /**
+     * Sets the base anchor for the icon view to take into account when fitting and placing inside the button.
+     * @param {Pos | number} anchor - base anchor of the icon view.
+     */
+    set defaultIconAnchor(anchor: Pos | number)
+    {
+        if (anchor === undefined) return;
+        // Apply to the options so that the manual anchor is prioritized.
+        this.options.defaultIconAnchor = anchor;
+        const isNumber = typeof anchor === 'number';
+
+        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 1;
+        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this.adjustIconView(this.state);
+    }
+
+    /** Returns the icon view base anchor. */
+    get defaultIconAnchor(): Pos
+    {
+        return this.defaultIconAnchor;
     }
 
     /**

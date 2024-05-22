@@ -9,6 +9,7 @@ import { action } from '@storybook/addon-actions';
 
 const args = {
     proximityRange: 100,
+    proximityDebounce: 10,
     width: 320,
     height: 420,
     radius: 20,
@@ -34,6 +35,7 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
     elementsHeight,
     itemsAmount,
     proximityRange,
+    proximityDebounce,
     type,
     fadeSpeed,
 }, context) =>
@@ -85,6 +87,7 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
                 shiftScroll,
                 type,
                 proximityRange,
+                proximityDebounce,
             });
 
             scrollBox.addItems(items);
