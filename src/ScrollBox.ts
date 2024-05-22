@@ -5,6 +5,7 @@ import { Graphics } from '@pixi/graphics';
 import type { ListOptions, ListType } from './List';
 import { List } from './List';
 import { Trackpad } from './utils/trackpad/Trackpad';
+import { Signal } from 'typed-signals';
 
 export type ScrollBoxOptions = {
     width: number;
@@ -17,7 +18,16 @@ export type ScrollBoxOptions = {
     dragTrashHold?: number;
     globalScroll?: boolean;
     shiftScroll?: boolean;
+    proximityRange?: number;
+    proximityDebounce?: number;
+    disableProximityCheck?: boolean;
 } & Omit<ListOptions, 'children'>;
+
+type ProximityEventData = {
+    item: Container;
+    index: number;
+    inRange: boolean;
+};
 
 /**
  * Scrollable view, for arranging lists of Pixi container-based elements.
@@ -67,6 +77,13 @@ export class ScrollBox extends Container
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point;
     protected isOver = false;
+
+    protected proximityRange: number;
+    protected proximityStatusCache: boolean[] = [];
+    protected lastScrollX!: number | null;
+    protected lastScrollY!: number | null;
+    protected proximityCheckFrameCounter = 0;
+    public onProximityChange = new Signal<(data: ProximityEventData) => void>();
 
     /**
      * @param options
@@ -119,6 +136,8 @@ export class ScrollBox extends Container
 
         this.__width = options.width | this.background.width;
         this.__height = options.height | this.background.height;
+
+        this.proximityRange = options.proximityRange ?? 0;
 
         if (!this.list)
         {
@@ -179,6 +198,7 @@ export class ScrollBox extends Container
     /** Remove all items from a scrollable list. */
     removeItems()
     {
+        this.proximityStatusCache.length = 0;
         this.list.removeChildren();
     }
 
@@ -204,6 +224,7 @@ export class ScrollBox extends Container
             child.eventMode = 'static';
 
             this.list.addChild(child);
+            this.proximityStatusCache.push(false);
 
             if (!this.options.disableDynamicRendering)
             {
@@ -223,15 +244,16 @@ export class ScrollBox extends Container
     removeItem(itemID: number)
     {
         this.list.removeItem(itemID);
-
+        this.proximityStatusCache.splice(itemID, 1);
         this.resize();
     }
 
     /**
      * Checks if the item is visible or scrolled out of the visible part of the view.* Adds an item to a scrollable list.
      * @param {Container} item - item to check.
+     * @param padding - proximity padding to consider the item visible.
      */
-    isItemVisible(item: Container): boolean
+    isItemVisible(item: Container, padding = 0): boolean
     {
         const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
@@ -241,10 +263,7 @@ export class ScrollBox extends Container
         {
             const posY = item.y + list.y;
 
-            if (
-                posY + item.height + this.list.bottomPadding >= 0
-                && posY - this.list.topPadding <= this.options.height
-            )
+            if (posY + item.height >= -padding && posY <= this.options.height + padding)
             {
                 isVisible = true;
             }
@@ -253,7 +272,7 @@ export class ScrollBox extends Container
         {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= 0 && posX <= this.options.width)
+            if (posX + item.width >= -padding && posX <= this.options.width + padding)
             {
                 isVisible = true;
             }
@@ -732,6 +751,30 @@ export class ScrollBox extends Container
         if (this.list[type] !== this._trackpad[type])
         {
             this.list[type] = this._trackpad[type];
+        }
+
+        if (!this.options.disableProximityCheck && (
+            this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY
+        ))
+        {
+            this.proximityCheckFrameCounter++;
+            if (this.proximityCheckFrameCounter >= (this.options.proximityDebounce ?? 10))
+            {
+                this.items.forEach((item, index) =>
+                {
+                    const inRange = this.isItemVisible(item, this.proximityRange);
+                    const wasInRange = this.proximityStatusCache[index];
+
+                    if (inRange !== wasInRange)
+                    {
+                        this.proximityStatusCache[index] = inRange;
+                        this.onProximityChange.emit({ item, index, inRange });
+                    }
+                });
+                this.lastScrollX = this._trackpad.x;
+                this.lastScrollY = this._trackpad.y;
+                this.proximityCheckFrameCounter = 0;
+            }
         }
     }
 
