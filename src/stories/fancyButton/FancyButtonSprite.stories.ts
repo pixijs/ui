@@ -14,6 +14,8 @@ const args = {
     textOffsetX: 0,
     textOffsetY: -7,
     defaultTextScale: 0.99,
+    defaultTextAnchorX: 0.5,
+    defaultTextAnchorY: 0.5,
     anchorX: 0.5,
     anchorY: 0.5,
     animationDuration: 100,
@@ -30,6 +32,8 @@ export const UseSprite: StoryFn<typeof args> = ({
     textOffsetX,
     textOffsetY,
     defaultTextScale,
+    defaultTextAnchorX,
+    defaultTextAnchorY,
     anchorX,
     anchorY,
     animationDuration
@@ -57,6 +61,7 @@ export const UseSprite: StoryFn<typeof args> = ({
                     padding,
                     textOffset: { x: textOffsetX, y: textOffsetY },
                     defaultTextScale,
+                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
                     animations: {
                         hover: {
                             props: {
