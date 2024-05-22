@@ -11,6 +11,7 @@ import type { StoryFn } from '@storybook/types';
 
 const args = {
     proximityRange: 100,
+    proximityDebounce: 10,
     width: 320,
     height: 420,
     radius: 20,
@@ -36,6 +37,7 @@ export const ProximityEvent: StoryFn = ({
     elementsHeight,
     itemsAmount,
     proximityRange,
+    proximityDebounce,
     type,
     fadeSpeed,
 }: any) =>
@@ -84,6 +86,7 @@ export const ProximityEvent: StoryFn = ({
         shiftScroll,
         type,
         proximityRange,
+        proximityDebounce,
     });
 
     scrollBox.addItems(items);
