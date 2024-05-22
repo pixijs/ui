@@ -276,6 +276,7 @@ export class List extends Container
      */
     public arrangeChildren()
     {
+        let maxHeight = 0;
         let x = this.leftPadding;
         let y = this.topPadding;
 
@@ -311,13 +312,15 @@ export class List extends Container
 
                     if (child.x + child.width > maxWidth && id > 0)
                     {
-                        y += elementsMargin + child.height;
+                        y += elementsMargin + maxHeight;
                         x = this.leftPadding;
 
                         child.x = x;
                         child.y = y;
+                        maxHeight = 0;
                     }
 
+                    maxHeight = Math.max(maxHeight, child.height);
                     x += elementsMargin + child.width;
                     break;
             }
