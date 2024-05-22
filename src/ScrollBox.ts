@@ -1,4 +1,4 @@
-import { ColorSource, Ticker, utils, Point } from '@pixi/core';
+import { ColorSource, Ticker, utils, Point, IPointData } from '@pixi/core';
 import { Container, DisplayObject, IDestroyOptions } from '@pixi/display';
 import { EventMode, FederatedPointerEvent } from '@pixi/events';
 import { Graphics } from '@pixi/graphics';
@@ -712,6 +712,21 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
     }
 
+    /**
+     * Scrolls to the given position.
+     * @param position - x and y position object.
+     * @param position.x - x position.
+     * @param position.y - y position.
+     */
+    scrollToPosition({ x, y }: Partial<IPointData>)
+    {
+        if (x === undefined && y === undefined) return;
+        this.renderAllItems();
+        if (x !== undefined) this.scrollX = -x;
+        if (y !== undefined) this.scrollY = -y;
+        this.stopRenderHiddenItems();
+    }
+
     /** Gets component height. */
     override get height(): number
     {
@@ -738,6 +753,30 @@ export class ScrollBox extends Container
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
+    }
+
+    /** Gets the current raw scroll position on the x-axis (Negated Value). */
+    get scrollX(): number
+    {
+        return this._trackpad.xAxis.value;
+    }
+
+    /** Sets the current raw scroll position on the x-axis (Negated Value). */
+    set scrollX(value: number)
+    {
+        this._trackpad.xAxis.value = value;
+    }
+
+    /** Gets the current raw scroll position on the y-axis (Negated Value). */
+    get scrollY(): number
+    {
+        return this._trackpad.yAxis.value;
+    }
+
+    /** Sets the current raw scroll position on the y-axis (Negated Value). */
+    set scrollY(value: number)
+    {
+        this._trackpad.yAxis.value = value;
     }
 
     protected update()
