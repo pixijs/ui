@@ -557,6 +557,9 @@ export class ScrollBox extends Container
             this._dimensionChanged = false;
         }
         else this.updateVisibleItems();
+
+        this.lastScrollX = null;
+        this.lastScrollY = null;
     }
 
     protected onMouseScroll(event: WheelEvent): void
