@@ -47,6 +47,7 @@ export class Input extends Container
     protected placeholder: PixiText;
     protected editing = false;
     protected tick = 0;
+    protected lastInputData: string;
 
     protected activation = false;
     protected readonly options: InputOptions;
@@ -55,6 +56,7 @@ export class Input extends Container
     protected handleActivationBinding = this.handleActivation.bind(this);
     protected onKeyUpBinding = this.onKeyUp.bind(this);
     protected stopEditingBinding = this.stopEditing.bind(this);
+    protected onInputBinding = this.onInput.bind(this);
 
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
@@ -118,6 +120,8 @@ export class Input extends Container
             window.addEventListener('click', this.handleActivationBinding);
 
             window.addEventListener('keyup', this.onKeyUpBinding);
+
+            window.addEventListener('input', this.onInputBinding as EventListener);
         }
 
         this.onEnter = new Signal();
@@ -135,6 +139,11 @@ export class Input extends Container
         }
     }
 
+    protected onInput(e: InputEvent)
+    {
+        this.lastInputData = e.data;
+    }
+
     protected onKeyUp(e: KeyboardEvent)
     {
         const key = e.key;
@@ -147,7 +156,11 @@ export class Input extends Container
         {
             this.stopEditing();
         }
-        else if (key.length === 1) this._add(key);
+        else if (key.length === 1)
+        {
+            this._add(key);
+        }
+        else if (this.lastInputData && this.lastInputData.length === 1) this._add(this.lastInputData);
     }
 
     protected init()
@@ -315,6 +328,7 @@ export class Input extends Container
         {
             this.input.removeEventListener('blur', this.stopEditingBinding);
             this.input.removeEventListener('keyup', this.onKeyUpBinding);
+            this.input.removeEventListener('input', this.onInputBinding as EventListener);
 
             this.input?.blur();
             this.input?.remove();
@@ -352,6 +366,7 @@ export class Input extends Container
 
         input.addEventListener('blur', this.stopEditingBinding);
         input.addEventListener('keyup', this.onKeyUpBinding);
+        input.addEventListener('input', this.onInputBinding as EventListener);
 
         this.input = input;
 
@@ -541,6 +556,8 @@ export class Input extends Container
             window.removeEventListener('click', this.handleActivationBinding);
 
             window.removeEventListener('keyup', this.onKeyUpBinding);
+
+            window.removeEventListener('input', this.onInputBinding as EventListener);
         }
 
         super.destroy(options);
