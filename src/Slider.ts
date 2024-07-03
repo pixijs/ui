@@ -137,11 +137,9 @@ export class Slider extends SliderBase
 
     protected updateSlider()
     {
-        const steppedFactor = 100 / this.step;
+        this.progress = ((this.value ?? this.min) - this.min) / (this.max - this.min) * 100;
 
-        this.progress = ((this.value ?? this.min) - this.min) / (this.max - this.min) * steppedFactor;
-
-        this._slider1.x = ((this.bg?.width / steppedFactor) * this.progress) - (this._slider1.width / 2);
+        this._slider1.x = ((this.bg?.width / 100) * this.progress) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;
 
         if (this.sliderOptions?.showValue)

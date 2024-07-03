@@ -250,11 +250,9 @@ export class ProgressBar extends Container
 
         if (this.fillMask)
         {
-            const steppedFactor = 100 / this.step;
-
             this.fill.mask = null;
-            this.fillMask.width = (this.fill.width / steppedFactor * (this._progress - this.progressStart));
-            this.fillMask.x = (this.progressStart / steppedFactor * this.fill.width) + this.fill.x;
+            this.fillMask.width = (this.fill.width / 100 * (this._progress - this.progressStart));
+            this.fillMask.x = (this.progressStart / 100 * this.fill.width) + this.fill.x;
             this.fillMask.height = this.fill.height;
             this.fill.mask = this.fillMask;
         }
