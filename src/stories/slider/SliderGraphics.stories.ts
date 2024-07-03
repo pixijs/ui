@@ -14,6 +14,7 @@ const args = {
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
+    step: 1,
     value: 50,
     width: 450,
     height: 35,
@@ -28,6 +29,7 @@ const args = {
 export const Single: StoryFn<typeof args> = ({
     min,
     max,
+    step,
     value,
     meshColor,
     borderColor,
@@ -73,6 +75,7 @@ export const Single: StoryFn<typeof args> = ({
                 slider,
                 min,
                 max,
+                step,
                 value,
                 valueTextStyle: {
                     fill: fontColor,

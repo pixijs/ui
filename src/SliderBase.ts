@@ -11,6 +11,7 @@ export type BaseSliderOptions = ProgressBarOptions & {
     valueTextStyle?: PixiTextStyle;
     valueTextClass?: PixiTextClass;
     showValue?: boolean;
+    step?: number;
     valueTextOffset?: {
         x?: number;
         y?: number;
@@ -45,6 +46,9 @@ export class SliderBase extends ProgressBar
     /** Maximal value. */
     protected _max = 100;
 
+    /** Progress value step */
+    protected _step = 1;
+
     protected startX!: number;
     protected startUpdateValue1!: number;
     protected startUpdateValue2!: number;
@@ -62,17 +66,20 @@ export class SliderBase extends ProgressBar
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
+
+        // Avoid zero value
+        this.step = options.step || 1;
     }
 
     override init(progressBarOptions: ProgressBarOptions)
     {
         super.init(progressBarOptions);
 
-        if (this.fill) {
+        if (this.fill)
+        {
             this.fill.eventMode = 'none';
         }
     }
-
 
     /**
      * Sets Slider1 instance.
@@ -266,5 +273,20 @@ export class SliderBase extends ProgressBar
     get min(): number
     {
         return this._min;
+    }
+
+    /**
+     * Set step value.
+     * @param value
+     */
+    override set step(value: number)
+    {
+        this._step = value;
+    }
+
+    /** Get step value. */
+    override get step(): number
+    {
+        return this._step;
     }
 }
