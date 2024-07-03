@@ -244,9 +244,9 @@ export class ProgressBar extends Container
     /** Set current progress percentage value. */
     set progress(progress: number)
     {
-        if (!this.fill) return;
-
         this._progress = this.validate(progress);
+
+        if (!this.fill) return;
 
         if (this.fillMask)
         {
