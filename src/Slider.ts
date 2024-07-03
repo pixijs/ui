@@ -6,6 +6,7 @@ import type { DragObject } from './utils/HelpTypes';
 
 export type SliderOptions = BaseSliderOptions & {
     slider: Container | string;
+    step?: number;
     value?: number;
 };
 
@@ -44,6 +45,10 @@ export class Slider extends SliderBase
         });
 
         this.sliderOptions = options;
+
+        // Avoid zero value
+        this.step = options.step || 1;
+
         this.value = options.value ?? this.min;
         this.updateSlider();
     }
