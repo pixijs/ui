@@ -80,7 +80,7 @@ export class RadioGroup extends Container
     {
         this.options = options;
 
-        this.value = options.items[options.selectedItem || 0].labelText.text;
+        this.value = options.items[options.selectedItem || 0].labelText?.text;
 
         this.selected = options.selectedItem ?? 0; // first item by default
 
@@ -153,10 +153,10 @@ export class RadioGroup extends Container
 
         if (this.selected !== id)
         {
-            this.onChange.emit(id, this.items[id].labelText.text);
+            this.onChange.emit(id, this.items[id].labelText?.text);
         }
 
-        this.value = this.options.items[id].labelText.text;
+        this.value = this.options.items[id].labelText?.text;
         this.selected = id;
     }
 }
