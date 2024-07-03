@@ -275,13 +275,13 @@ export class SliderBase extends ProgressBar
      * Set step value.
      * @param value
      */
-    override set step(value: number)
+    set step(value: number)
     {
         this._step = value;
     }
 
     /** Get step value. */
-    override get step(): number
+    get step(): number
     {
         return this._step;
     }

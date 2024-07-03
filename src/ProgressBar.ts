@@ -236,11 +236,6 @@ export class ProgressBar extends Container
         return progress;
     }
 
-    get step(): number
-    {
-        return 1;
-    }
-
     /** Set current progress percentage value. */
     set progress(progress: number)
     {
