@@ -123,7 +123,7 @@ export class Slider extends SliderBase
 
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
-        const positionRatio = x / (this.bg?.width ?? 1);
+        const positionRatio = x / (this.bg?.width || 1);
         const rawValue = this.min + (positionRatio * (this.max - this.min));
 
         // Snap the raw value to the nearest step
