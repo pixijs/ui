@@ -204,7 +204,9 @@ export class SliderBase extends ProgressBar
     {
         this.dragging = 1;
 
-        this.startX = this.bg.parent.worldTransform.applyInverse(event.global).x;
+        const obj = event.currentTarget as DragObject;
+
+        this.startX = obj.parent.worldTransform.applyInverse(event.global).x;
 
         this.startUpdateValue1 = this._value1;
         this.startUpdateValue2 = this._value2;
