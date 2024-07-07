@@ -178,7 +178,6 @@ export class SliderBase extends ProgressBar
         };
 
         slider.eventMode = 'static';
-        slider.x = slider.width / 2;
         slider.on('pointerdown', onPointerDown)
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
