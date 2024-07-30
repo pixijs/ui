@@ -16,7 +16,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noImplicitOverride": true

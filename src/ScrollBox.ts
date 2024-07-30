@@ -62,32 +62,32 @@ type ProximityEventData = {
 
 export class ScrollBox extends Container
 {
-    protected background: Graphics;
-    protected borderMask: Graphics;
-    protected lastWidth: number;
-    protected lastHeight: number;
+    protected background!: Graphics;
+    protected borderMask!: Graphics;
+    protected lastWidth!: number;
+    protected lastHeight!: number;
     protected __width = 0;
     protected __height = 0;
     protected _dimensionChanged = false;
 
-    protected list: List;
+    protected list!: List;
 
-    protected _trackpad: Trackpad;
+    protected _trackpad!: Trackpad;
     protected isDragging = 0;
     protected interactiveStorage: {
         item: Container;
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
-    protected pressedChild: Container;
+    protected pressedChild!: Container | null;
     protected ticker = Ticker.shared;
-    protected options: ScrollBoxOptions;
-    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
+    protected options!: ScrollBoxOptions;
+    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout | null;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
-    protected dragStarTouchPoint: Point;
+    protected dragStarTouchPoint!: Point;
     protected isOver = false;
 
-    protected proximityRange: number;
+    protected proximityRange!: number;
     protected proximityStatusCache: boolean[] = [];
     protected lastScrollX!: number | null;
     protected lastScrollY!: number | null;
@@ -168,7 +168,9 @@ export class ScrollBox extends Container
             rightPadding: options.rightPadding,
         });
 
-        this.addItems(options.items);
+        if (options.items) {
+            this.addItems(options.items);
+        }
 
         if (this.hasBounds)
         {
@@ -486,7 +488,7 @@ export class ScrollBox extends Container
                     0,
                     this.__width,
                     this.__height,
-                    this.options.radius | 0,
+                    this.options.radius ?? 0,
                 )
                 .fill(0xff00ff)
                 .stroke(0x0);
@@ -501,7 +503,7 @@ export class ScrollBox extends Container
                     0,
                     this.__width,
                     this.__height,
-                    this.options.radius | 0,
+                    this.options.radius ?? 0,
                 )
                 .fill({
                     color: color ?? 0x000000,
@@ -649,8 +651,10 @@ export class ScrollBox extends Container
 
     protected renderAllItems()
     {
-        clearTimeout(this.stopRenderHiddenItemsTimeout);
-        this.stopRenderHiddenItemsTimeout = null;
+        if (this.stopRenderHiddenItemsTimeout) {
+            clearTimeout(this.stopRenderHiddenItemsTimeout);
+            this.stopRenderHiddenItemsTimeout = null;
+        }
 
         if (this.options.disableDynamicRendering)
         {
@@ -866,8 +870,8 @@ export class ScrollBox extends Container
         if (item.eventMode !== 'auto')
         {
             isMobile.any
-                ? item.emit('pointerupoutside', null)
-                : item.emit('mouseupoutside', null);
+                ? item.emit('pointerupoutside', null as any)
+                : item.emit('mouseupoutside', null as any);
 
             this.interactiveStorage.push({
                 item,
