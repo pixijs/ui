@@ -9,6 +9,7 @@ const args = {
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
+    step: 1,
     value: 50,
     fontSize: 20,
     showValue: true,
@@ -20,6 +21,7 @@ const args = {
 export const Single: StoryFn<typeof args> = ({
     min,
     max,
+    step,
     value,
     fontSize,
     fontColor,
@@ -53,6 +55,7 @@ export const Single: StoryFn<typeof args> = ({
                     },
                     min,
                     max,
+                    step,
                     value,
                     valueTextStyle: {
                         fill: fontColor,

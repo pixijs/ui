@@ -45,6 +45,9 @@ export class SliderBase extends ProgressBar
     /** Maximal value. */
     protected _max = 100;
 
+    /** Progress value step */
+    protected _step = 1;
+
     protected startX!: number;
     protected startUpdateValue1!: number;
     protected startUpdateValue2!: number;
@@ -68,11 +71,11 @@ export class SliderBase extends ProgressBar
     {
         super.init(progressBarOptions);
 
-        if (this.fill) {
+        if (this.fill)
+        {
             this.fill.eventMode = 'none';
         }
     }
-
 
     /**
      * Sets Slider1 instance.
@@ -278,5 +281,20 @@ export class SliderBase extends ProgressBar
     get min(): number
     {
         return this._min;
+    }
+
+    /**
+     * Set step value.
+     * @param value
+     */
+    set step(value: number)
+    {
+        this._step = value;
+    }
+
+    /** Get step value. */
+    get step(): number
+    {
+        return this._step;
     }
 }
