@@ -87,6 +87,12 @@ export const UseGraphics: StoryFn = ({
 
     scrollBox.addItems(items);
 
+    scrollBox.onScroll.connect((scroll) => console.log({
+        scroll,
+        scrollHeight: scrollBox.scrollHeight,
+        scrollWidth: scrollBox.scrollWidth
+    }));
+
     view.addChild(scrollBox);
 
     return {

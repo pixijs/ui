@@ -84,6 +84,7 @@ export class ScrollBox extends Container
     protected lastScrollY!: number | null;
     protected proximityCheckFrameCounter = 0;
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
+    public onScroll: Signal<(value: number) => void> = new Signal();
 
     /**
      * @param options
@@ -564,6 +565,9 @@ export class ScrollBox extends Container
 
     protected onMouseScroll(event: WheelEvent): void
     {
+        const isVertical: boolean = this.options.type !== 'horizontal';
+        const oldScrollPos = isVertical ? this.scrollY : this.scrollX;
+
         if (!this.isOver && !this.options.globalScroll) return;
 
         this.renderAllItems();
@@ -607,6 +611,13 @@ export class ScrollBox extends Container
         }
 
         this.stopRenderHiddenItems();
+
+
+        const newScrollPos = isVertical ? this.scrollY : this.scrollX;
+
+        if (newScrollPos !== oldScrollPos) {
+            this.onScroll?.emit(newScrollPos);
+        }
     }
 
     /** Makes it scroll down to the last element. */
@@ -868,5 +879,13 @@ export class ScrollBox extends Container
         {
             item.children.forEach((child) => this.revertClick(child));
         }
+    }
+
+    get scrollHeight(): number {
+        return this.list.height;
+    }
+
+    get scrollWidth(): number {
+        return this.list.width;
     }
 }
