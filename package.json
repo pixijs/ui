@@ -26,7 +26,7 @@
         "dist/"
     ],
     "scripts": {
-        "start": "npm run storybook",
+        "start": "npm i && npm run storybook",
         "build": "xs build",
         "clean": "xs clean",
         "deploy": "xs deploy",
