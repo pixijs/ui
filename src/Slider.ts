@@ -7,6 +7,7 @@ import { BaseSliderOptions, SliderBase } from './SliderBase';
 
 export type SliderOptions = BaseSliderOptions & {
     slider: Container | string;
+    step?: number;
     value?: number;
 };
 
@@ -45,6 +46,10 @@ export class Slider extends SliderBase
         });
 
         this.sliderOptions = options;
+
+        // Avoid zero value
+        this.step = options.step || 1;
+
         this.value = options.value ?? this.min;
         this.updateSlider();
     }
@@ -92,6 +97,17 @@ export class Slider extends SliderBase
         return super.min;
     }
 
+    override set step(value: number)
+    {
+        super.step = value;
+        this.updateSlider();
+    }
+
+    override get step(): number
+    {
+        return super.step;
+    }
+
     /** Set slider instance ot texture. */
     // eslint-disable-next-line accessor-pairs
     set slider(value: Container | string)
@@ -108,9 +124,11 @@ export class Slider extends SliderBase
 
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
+        const positionRatio = x / (this.bg?.width || 1);
+        const rawValue = this.min + (positionRatio * (this.max - this.min));
 
-        this.progress = this.validate((x / this.bg?.width) * 100);
-        this.value = this.min + (((this.max - this.min) / 100) * this.progress);
+        // Snap the raw value to the nearest step
+        this.value = Math.round(rawValue / this.step) * this.step;
     }
 
     protected override change()
