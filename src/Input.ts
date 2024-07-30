@@ -168,7 +168,8 @@ export class Input extends Container
         {
             this._add(key);
         }
-        else if (this.lastInputData && this.lastInputData.length === 1) {
+        else if (this.lastInputData && this.lastInputData.length === 1)
+        {
             this._add(this.lastInputData);
         }
     }

@@ -615,10 +615,10 @@ export class ScrollBox extends Container
 
         this.stopRenderHiddenItems();
 
-
         const newScrollPos = isVertical ? this.scrollY : this.scrollX;
 
-        if (newScrollPos !== oldScrollPos) {
+        if (newScrollPos !== oldScrollPos)
+        {
             this.onScroll?.emit(newScrollPos);
         }
     }
@@ -884,11 +884,13 @@ export class ScrollBox extends Container
         }
     }
 
-    get scrollHeight(): number {
+    get scrollHeight(): number
+    {
         return this.list.height;
     }
 
-    get scrollWidth(): number {
+    get scrollWidth(): number
+    {
         return this.list.width;
     }
 }
