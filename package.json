@@ -34,7 +34,7 @@
         "lint": "xs lint --max-warnings 0",
         "lint:fix": "xs lint --fix",
         "prepare": "husky install",
-        "release": "xs bump,build,docs && npm run release:dist && xs git-push",
+        "release": "npm i && xs bump,build,docs && npm run release:dist && xs git-push",
         "release:dist": "npm publish --tag latest-1.x",
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
