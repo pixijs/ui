@@ -10,6 +10,7 @@ const args = {
     fontColor: '#FFFFFF',
     min: 0,
     max: 100,
+    step: 1,
     value: 50,
     fontSize: 20,
     showValue: true,
@@ -17,7 +18,7 @@ const args = {
     onChange: action('Slider')
 };
 
-export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, amount }: any) =>
+export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange, showValue, amount, step }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -34,6 +35,7 @@ export const Single: StoryFn = ({ min, max, value, fontSize, fontColor, onChange
                 slider: 'slider.png',
                 min,
                 max,
+                step,
                 value,
                 valueTextStyle: {
                     fill: fontColor,
