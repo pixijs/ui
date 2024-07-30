@@ -172,8 +172,20 @@ export class SliderBase extends ProgressBar
     protected createSlider(sliderData: Container | string): Container
     {
         const slider = getView(sliderData);
+        const onPointerDown = (event: FederatedPointerEvent) =>
+        {
+            // This is needed to do proper calculations in update method calls
+            if (this.bg)
+            {
+                event.currentTarget = this.bg;
+            }
+            this.startUpdate(event);
+        };
 
-        slider.eventMode = 'none';
+        slider.eventMode = 'static';
+        slider.on('pointerdown', onPointerDown)
+            .on('pointerup', this.endUpdate, this)
+            .on('pointerupoutside', this.endUpdate, this);
         slider.x = slider.width / 2;
 
         const container = new Container();
