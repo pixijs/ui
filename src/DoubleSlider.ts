@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent } from 'pixi.js';
+import { Container, FederatedPointerEvent, Optional, Size } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { DoubleSliderOptions, SliderBase } from './SliderBase';
 
@@ -306,5 +306,13 @@ export class DoubleSlider extends SliderBase
     override get height(): number
     {
         return super.height;
+    }
+
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        super.setSize(value, height);
+
+        this.updateSlider1();
+        this.updateSlider2();
     }
 }

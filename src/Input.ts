@@ -5,6 +5,8 @@ import {
     Graphics,
     isMobile,
     NineSliceSprite,
+    Optional,
+    Size,
     Sprite,
     Text,
     TextStyleOptions,
@@ -651,5 +653,41 @@ export class Input extends Container
     override get height(): number
     {
         return super.height;
+    }
+
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._bg)
+            {
+                this._bg.setSize(value, height);
+            }
+
+            if (this.inputMask)
+            {
+                if (typeof value === 'object')
+                {
+                    height = value.height ?? value.width;
+                    value = value.width;
+                }
+                else
+                {
+                    height = height ?? value;
+                }
+
+                this.inputMask.setSize(
+                    value - this.paddingLeft - this.paddingRight,
+                    height - this.paddingTop - this.paddingBottom
+                );
+                this.inputMask.position.set(this.paddingLeft, this.paddingTop);
+            }
+
+            this.align();
+        }
+        else
+        {
+            super.setSize(value, height);
+        }
     }
 }
