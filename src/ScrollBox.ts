@@ -6,8 +6,10 @@ import {
     FederatedPointerEvent,
     Graphics,
     isMobile,
+    Optional,
     Point,
     PointData,
+    Size,
     Ticker,
 } from 'pixi.js';
 import { Signal } from 'typed-signals';
@@ -770,6 +772,34 @@ export class ScrollBox extends Container
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
+    }
+
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (typeof value === 'object')
+        {
+            height = value.height ?? value.width;
+            value = value.width;
+        }
+        else
+        {
+            height = height ?? value;
+        }
+
+        this.__width = value;
+        this.__height = height;
+        this._dimensionChanged = true;
+        this.resize();
+        this.scrollTop();
+    }
+
+    override getSize(out?: Size): Size
+    {
+        out = out || { width: 0, height: 0 };
+        out.width = this.__width;
+        out.height = this.__height;
+
+        return out;
     }
 
     /** Gets the current raw scroll position on the x-axis (Negated Value). */

@@ -6,7 +6,7 @@ import { fitToView } from './utils/helpers/fit';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
 
-import type { Sprite } from 'pixi.js';
+import type { Optional, Size, Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -1043,5 +1043,36 @@ export class FancyButton extends ButtonContainer
     override get height(): number
     {
         return super.height;
+    }
+
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._views.defaultView)
+            {
+                this._views.defaultView.setSize(value, height);
+            }
+            if (this._views.hoverView)
+            {
+                this._views.hoverView.setSize(value, height);
+            }
+            if (this._views.pressedView)
+            {
+                this._views.pressedView.setSize(value, height);
+            }
+            if (this._views.disabledView)
+            {
+                this._views.disabledView.setSize(value, height);
+            }
+
+            this.adjustTextView(this.state);
+            this.adjustIconView(this.state);
+            this.updateAnchor();
+        }
+        else
+        {
+            super.setSize(value, height);
+        }
     }
 }

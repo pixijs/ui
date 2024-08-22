@@ -1,4 +1,4 @@
-import { Container, Graphics, NineSliceSprite as PixiNineSliceSprite, Sprite, Texture } from 'pixi.js';
+import { Container, Graphics, NineSliceSprite as PixiNineSliceSprite, Optional, Size, Sprite, Texture } from 'pixi.js';
 import { getSpriteView } from './utils/helpers/view';
 
 type FillPaddings = {
@@ -333,5 +333,43 @@ export class ProgressBar extends Container
     override get height(): number
     {
         return super.height;
+    }
+
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this.bg)
+            {
+                this.bg.setSize(value, height);
+            }
+
+            if (this.fill)
+            {
+                if (typeof value === 'object')
+                {
+                    height = value.height ?? value.width;
+                    value = value.width;
+                }
+                else
+                {
+                    height = height ?? value;
+                }
+
+                const topPadding = this.options.fillPaddings?.top ?? 0;
+                const bottomPadding = this.options.fillPaddings?.bottom ?? 0;
+                const leftPadding = this.options.fillPaddings?.left ?? 0;
+                const rightPadding = this.options.fillPaddings?.right ?? 0;
+
+                this.fill.setSize(value - leftPadding - rightPadding, height - topPadding - bottomPadding);
+                this.fillMask.setSize(value - leftPadding - rightPadding, height - topPadding - bottomPadding);
+            }
+
+            this.progress = this._progress;
+        }
+        else
+        {
+            super.setSize(value, height);
+        }
     }
 }
