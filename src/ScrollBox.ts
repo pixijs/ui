@@ -397,6 +397,7 @@ export class ScrollBox extends Container
         {
             if (!this.isDragging) return;
 
+            const isVertical: boolean = this.options.type !== 'horizontal';
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
             if (this.dragStarTouchPoint)
@@ -430,9 +431,10 @@ export class ScrollBox extends Container
             if (this.pressedChild)
             {
                 this.revertClick(this.pressedChild);
-
                 this.pressedChild = null;
             }
+
+            this.onScroll?.emit(isVertical ? this.scrollY : this.scrollX);
         });
 
         document.addEventListener('wheel', this.onMouseScrollBinding, true);
@@ -570,9 +572,6 @@ export class ScrollBox extends Container
 
     protected onMouseScroll(event: WheelEvent): void
     {
-        const isVertical: boolean = this.options.type !== 'horizontal';
-        const oldScrollPos = isVertical ? this.scrollY : this.scrollX;
-
         if (!this.isOver && !this.options.globalScroll) return;
 
         this.renderAllItems();
@@ -597,6 +596,8 @@ export class ScrollBox extends Container
 
                 this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
             }
+
+            this.onScroll?.emit(this._trackpad.xAxis.value);
         }
         else if (typeof event.deltaY !== 'undefined')
         {
@@ -613,16 +614,11 @@ export class ScrollBox extends Container
 
                 this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
             }
+
+            this.onScroll?.emit(this._trackpad.yAxis.value);
         }
 
         this.stopRenderHiddenItems();
-
-        const newScrollPos = isVertical ? this.scrollY : this.scrollX;
-
-        if (newScrollPos !== oldScrollPos)
-        {
-            this.onScroll?.emit(newScrollPos);
-        }
     }
 
     /** Makes it scroll down to the last element. */
