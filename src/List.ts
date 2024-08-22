@@ -1,10 +1,10 @@
-import { Container } from 'pixi.js';
+import { Container, ContainerChild } from 'pixi.js';
 
 export type ListType = 'horizontal' | 'vertical';
 
-export type ListOptions = {
+export type ListOptions<C extends ContainerChild = ContainerChild> = {
     elementsMargin?: number;
-    children?: Container[];
+    children?: C[];
     padding?: number;
     vertPadding?: number;
     horPadding?: number;
@@ -12,7 +12,7 @@ export type ListOptions = {
     bottomPadding?: number;
     leftPadding?: number;
     rightPadding?: number;
-    items?: Container[];
+    items?: C[];
 };
 
 /**
@@ -34,9 +34,9 @@ export type ListOptions = {
  *
  * list.addChild(new Graphics().rect(0, 0, 50, 50)).fill(0x000000);
  */
-export class List extends Container
+export class List<C extends ContainerChild = ContainerChild> extends Container<C>
 {
-    protected options?: { type?: ListType } & ListOptions;
+    protected options?: { type?: ListType } & ListOptions<C>;
 
     /** Container, that holds all inner elements. */
     view: Container;
@@ -45,9 +45,9 @@ export class List extends Container
     protected _type: ListType;
 
     /** Returns all arranged elements. */
-    override readonly children: Container[] = [];
+    override readonly children: C[] = [];
 
-    constructor(options?: { type?: ListType } & ListOptions)
+    constructor(options?: { type?: ListType } & ListOptions<C>)
     {
         super();
 
@@ -66,7 +66,7 @@ export class List extends Container
      * Initiates list component.
      * @param options
      */
-    init(options?: { type?: ListType } & ListOptions)
+    init(options?: { type?: ListType } & ListOptions<C>)
     {
         this.options = options;
 
