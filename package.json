@@ -1,6 +1,6 @@
 {
     "name": "@pixi/ui",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "description": "It is a library that contains commonly used UI components, that are extensible to allow them to be used in any project",
     "homepage": "https://github.com/pixijs/ui",
     "bugs": "https://github.com/pixijs/ui/issues",
