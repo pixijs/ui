@@ -18,12 +18,13 @@ const args = {
     disableEasing: false,
     type: [undefined, 'vertical', 'horizontal'],
     onPress: action('Button pressed'),
+    onScroll: action('Scrolled'),
     globalScroll: true,
     shiftScroll: false
 };
 
 export const UseSprite: StoryFn = ({
-    fontColor, elementsMargin, itemsAmount, onPress, disableEasing, type, globalScroll, shiftScroll
+    fontColor, elementsMargin, itemsAmount, onPress, onScroll, disableEasing, type, globalScroll, shiftScroll
 }: any) =>
 {
     fontColor = getColor(fontColor);
@@ -60,6 +61,8 @@ export const UseSprite: StoryFn = ({
         });
 
         scrollBox.addItems(items);
+
+        scrollBox.onScroll.connect((val) => onScroll(val));
 
         scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
         scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
