@@ -16,7 +16,7 @@ export type Offset = Pos & PosList;
 
 type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
 
-type ButtonView = string | Container;
+type ButtonView = string | Texture | Container;
 
 type BasicButtonViews = {
     [K in ButtonViewType]?: Container | NineSliceSprite;
@@ -578,7 +578,7 @@ export class FancyButton extends ButtonContainer
     /**
      * Helper method to update or cleanup button views.
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
-     * @param { string | Container | null } view - new view
+     * @param { string | Texture | Container | null } view - new view
      */
     protected updateView(viewType: ButtonViewType, view: ButtonView | null)
     {
@@ -597,6 +597,16 @@ export class FancyButton extends ButtonContainer
             {
                 this._views[viewType] = new NineSliceSprite({
                     texture: Texture.from(view),
+                    leftWidth: this.options.nineSliceSprite[0],
+                    topHeight: this.options.nineSliceSprite[1],
+                    rightWidth: this.options.nineSliceSprite[2],
+                    bottomHeight: this.options.nineSliceSprite[3],
+                });
+            }
+            else if (view instanceof Texture)
+            {
+                this._views[viewType] = new NineSliceSprite({
+                    texture: view,
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
                     rightWidth: this.options.nineSliceSprite[2],
@@ -680,7 +690,7 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets the iconView of the button.
-     * @param { string | Container } view - string (path to the image) or a Container-based view
+     * @param { string | Texture | Container } view - string (path to the image), texture instance or a Container-based view
      */
     set iconView(view: ButtonView | null)
     {
