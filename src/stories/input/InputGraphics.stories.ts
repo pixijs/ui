@@ -9,6 +9,7 @@ import { action } from '@storybook/addon-actions';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     backgroundColor: '#F1D583',
@@ -43,6 +44,7 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
     maxLength,
     align,
     placeholder,
+    secure,
     paddingTop,
     paddingRight,
     paddingBottom,
@@ -74,6 +76,7 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                     maxLength,
                     align,
                     placeholder,
+                    secure,
                     value: text,
                     padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                     cleanOnFocus,
