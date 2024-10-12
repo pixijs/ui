@@ -27,12 +27,15 @@ export type InputOptions = {
     placeholder?: string;
     value?: string;
     maxLength?: number;
+    secure?: boolean;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
 };
+
+const SECURE_CHARACTER = '*';
 
 /**
  * Container-based component that creates an input to read the user's text.
@@ -53,6 +56,8 @@ export class Input extends Container
     protected _bg?: Container | NineSliceSprite | Graphics;
     protected inputMask: Container | NineSliceSprite | Graphics;
     protected _cursor: Sprite;
+    protected _value: string = '';
+    protected _secure: boolean;
     protected inputField: PixiText;
     protected placeholder: PixiText;
     protected editing = false;
@@ -111,6 +116,7 @@ export class Input extends Container
 
         this.options = options;
         this.padding = options.padding;
+        this._secure = options.secure;
 
         this.cursor = 'text';
         this.interactive = true;
@@ -501,9 +507,12 @@ export class Input extends Container
     /** Sets the input text. */
     set value(text: string)
     {
-        this.inputField.text = text;
+        const textLength = text.length;
 
-        if (text.length !== 0)
+        this._value = text;
+        this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
+
+        if (textLength !== 0)
         {
             this.placeholder.visible = false;
         }
@@ -518,7 +527,20 @@ export class Input extends Container
     /** Return text of the input. */
     get value(): string
     {
-        return this.inputField.text;
+        return this._value;
+    }
+
+    set secure(val: boolean)
+    {
+        this._secure = val;
+
+        // Update text based on secure state (useful for show/hide password implementations)
+        this.value = this._value;
+    }
+
+    get secure(): boolean
+    {
+        return this._secure;
     }
 
     /**
