@@ -315,11 +315,11 @@ export class Input extends Container
 
     protected _delete(): void
     {
-        if (!this.editing || this.value.length === 0) return;
-        const array = this.value.split('');
+        const length = this.value.length;
 
-        array.pop();
-        this.value = array.join('');
+        if (!this.editing || length === 0) return;
+
+        this.value = this.value.substring(0, length - 1);
 
         this.onChange.emit(this.value);
     }
