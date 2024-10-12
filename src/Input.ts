@@ -116,7 +116,7 @@ export class Input extends Container
 
         this.options = options;
         this.padding = options.padding;
-        this._secure = options.secure;
+        this._secure = options.secure ?? false;
 
         this.cursor = 'text';
         this.interactive = true;
