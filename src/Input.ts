@@ -1,5 +1,6 @@
 import {
     AnyTextStyle,
+    Color,
     Container,
     DestroyOptions,
     Graphics,
@@ -188,12 +189,13 @@ export class Input extends Container
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
         this.options.TextClass = options.TextClass ?? Text;
         const textStyle = { ...defaultTextStyle, ...options.textStyle };
+        const colorSource = Color.isColorLike(this.options.textStyle.fill) ? this.options.textStyle.fill : 0x000000;
 
         this.inputField = new this.options.TextClass({ text: '', style: textStyle });
 
         this._cursor = new Sprite(Texture.WHITE);
 
-        this._cursor.tint = Number((options.textStyle as AnyTextStyle).fill) || 0x000000;
+        this._cursor.tint = colorSource;
         this._cursor.anchor.set(0.5);
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
