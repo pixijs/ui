@@ -1,5 +1,4 @@
 import {
-    AnyTextStyle,
     Color,
     Container,
     DestroyOptions,
