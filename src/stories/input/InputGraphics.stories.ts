@@ -80,6 +80,7 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                     addMask
                 });
 
+
                 input.onEnter.connect((val) =>
                 {
                     onChange(`Input ${i + 1} (${val})`);
@@ -87,6 +88,10 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
 
                 list.addChild(input);
                 view.addChild(list);
+
+                input.rotation += 0.1;
+                console.log(view.width, input.getBounds());
+
             }
         },
         resize: (view) => centerElement(view.children[0])
