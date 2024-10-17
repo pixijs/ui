@@ -8,7 +8,7 @@ type FillPaddings = {
     left?: number;
 };
 
-export type ProgressBarViewType = Sprite | Graphics | string;
+export type ProgressBarViewType = Sprite | Graphics | Texture | string;
 export type NineSliceSprite = {
     bg: [number, number, number, number],
     fill: [number, number, number, number]
@@ -50,8 +50,8 @@ export class ProgressBar extends Container
     /**
      * Creates a ProgressBar.
      * @param options - Options.
-     * @param { Sprite | Graphics | string } options.bg - Background of the ProgressBar.
-     * @param { Sprite | Graphics | string } options.fill - Fill of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.bg - Background of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.fill - Fill of the ProgressBar.
      * @param { FillPaddings } options.fillPaddings - Fill offsets.
      * @param { number } options.fillPaddings.top - Fill top offset.
      * @param { number } options.fillPaddings.right - Fill right offset.
@@ -117,6 +117,16 @@ export class ProgressBar extends Container
                     bottomHeight: this.options.nineSliceSprite.bg[3],
                 });
             }
+            else if (bg instanceof Texture)
+            {
+                this.bg = new PixiNineSliceSprite({
+                    texture: bg,
+                    leftWidth: this.options.nineSliceSprite.bg[0],
+                    topHeight: this.options.nineSliceSprite.bg[1],
+                    rightWidth: this.options.nineSliceSprite.bg[2],
+                    bottomHeight: this.options.nineSliceSprite.bg[3],
+                });
+            }
             else
             {
                 console.warn('NineSliceSprite can not be used with views set as Container.');
@@ -162,6 +172,16 @@ export class ProgressBar extends Container
             {
                 this.fill = new PixiNineSliceSprite({
                     texture: Texture.from(fill),
+                    leftWidth: this.options.nineSliceSprite.fill[0],
+                    topHeight: this.options.nineSliceSprite.fill[1],
+                    rightWidth: this.options.nineSliceSprite.fill[2],
+                    bottomHeight: this.options.nineSliceSprite.fill[3],
+                });
+            }
+            else if (fill instanceof Texture)
+            {
+                this.fill = new PixiNineSliceSprite({
+                    texture: fill,
                     leftWidth: this.options.nineSliceSprite.fill[0],
                     topHeight: this.options.nineSliceSprite.fill[1],
                     rightWidth: this.options.nineSliceSprite.fill[2],
