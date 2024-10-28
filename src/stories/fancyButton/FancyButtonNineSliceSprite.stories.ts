@@ -9,44 +9,46 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
-    textColor: '#FFFFFF',
-    padding: 11,
-    width: 300,
-    height: 137,
-    defaultTextScale: 0.99,
-    defaultIconScale: 0.2,
-    defaultTextAnchorX: 0.5,
-    defaultTextAnchorY: 0.5,
-    defaultIconAnchorX: 0.5,
-    defaultIconAnchorY: 0.5,
-    anchorX: 0.5,
-    anchorY: 0.5,
-    animationDuration: 100,
-    disabled: false,
-    onPress: action('button was pressed! (tap or click!)'),
+  text: "Click me!",
+  textColor: "#FFFFFF",
+  padding: 11,
+  width: 300,
+  height: 137,
+  defaultTextScale: 0.99,
+  defaultIconScale: 0.2,
+  defaultTextAnchorX: 0.5,
+  defaultTextAnchorY: 0.5,
+  defaultIconAnchorX: 0.5,
+  defaultIconAnchorY: 0.5,
+  anchorX: 0.5,
+  anchorY: 0.5,
+  animationDuration: 100,
+  disabled: false,
+  contentFittingMode: ["default", "fill", "none"],
+  onPress: action("button was pressed! (tap or click!)"),
 };
 
-export const UseNineSliceSprite: StoryFn<typeof args> = (
-    {
-        text,
-        textColor,
-        disabled,
-        onPress,
-        padding,
-        anchorX,
-        anchorY,
-        animationDuration,
-        width,
-        height,
-        defaultTextScale,
-        defaultIconScale,
-        defaultTextAnchorX,
-        defaultTextAnchorY,
-        defaultIconAnchorX,
-        defaultIconAnchorY,
-    },
-    context,
+export const UseNineSliceSprite: StoryFn<typeof args & { contentFittingMode: "default" | "fill" | "none" }> = (
+  {
+    text,
+    textColor,
+    disabled,
+    onPress,
+    padding,
+    anchorX,
+    anchorY,
+    animationDuration,
+    width,
+    height,
+    defaultTextScale,
+    defaultIconScale,
+    defaultTextAnchorX,
+    defaultTextAnchorY,
+    defaultIconAnchorX,
+    defaultIconAnchorY,
+    contentFittingMode,
+  },
+  context,
 ) =>
     new PixiStory<typeof args>({
         context,
@@ -61,46 +63,46 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
                 `avatar_mask.png`,
             ];
 
-            preload(assets).then(() =>
-            {
-                // Component usage !!!
-                const button = new FancyButton({
-                    defaultView: `button.png`,
-                    hoverView: `button_hover.png`,
-                    pressedView: `button_pressed.png`,
-                    disabledView: `button_disabled.png`,
-                    nineSliceSprite: [150, 66, 150, 66],
-                    text: new Text({
-                        text,
-                        style: {
-                            ...defaultTextStyle,
-                            fill: textColor || defaultTextStyle.fill,
-                        },
-                    }),
-                    padding,
-                    textOffset: { x: 30, y: -5 },
-                    iconOffset: { x: -100, y: -7 },
-                    defaultTextScale,
-                    defaultIconScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: { x: 1.03, y: 1.03 },
-                                y: 0,
-                            },
-                            duration: animationDuration,
-                        },
-                        pressed: {
-                            props: {
-                                scale: { x: 0.9, y: 0.9 },
-                                y: 10,
-                            },
-                            duration: animationDuration,
-                        },
-                    },
-                });
+      preload(assets).then(() => {
+        // Component usage !!!
+        const button = new FancyButton({
+          defaultView: `button.png`,
+          hoverView: `button_hover.png`,
+          pressedView: `button_pressed.png`,
+          disabledView: `button_disabled.png`,
+          nineSliceSprite: [150, 66, 150, 66],
+          text: new Text({
+            text,
+            style: {
+              ...defaultTextStyle,
+              fill: textColor || defaultTextStyle.fill,
+            },
+          }),
+          padding,
+          textOffset: { x: 30, y: -5 },
+          iconOffset: { x: -100, y: -7 },
+          defaultTextScale,
+          defaultIconScale,
+          defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
+          defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+          animations: {
+            hover: {
+              props: {
+                scale: { x: 1.03, y: 1.03 },
+                y: 0,
+              },
+              duration: animationDuration,
+            },
+            pressed: {
+              props: {
+                scale: { x: 0.9, y: 0.9 },
+                y: 10,
+              },
+              duration: animationDuration,
+            },
+          },
+          contentFittingMode,
+        });
 
                 button.iconView = new MaskedFrame({
                     target: `avatar-01.png`,
