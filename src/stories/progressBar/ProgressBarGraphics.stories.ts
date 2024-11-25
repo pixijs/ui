@@ -1,108 +1,117 @@
-import { Graphics } from "pixi.js";
-import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
-import { List } from "../../List";
-import { ProgressBar } from "../../ProgressBar";
-import { centerElement } from "../../utils/helpers/resize";
-import { argTypes, getDefaultArgs } from "../utils/argTypes";
+import { Graphics } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { List } from '../../List';
+import { ProgressBar } from '../../ProgressBar';
+import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
-  fillColor: "#00b1dd",
-  borderColor: "#FFFFFF",
-  backgroundColor: "#fe6048",
-  value: 50,
-  width: 450,
-  height: 35,
-  radius: 25,
-  border: 3,
-  animate: true,
-  vertical: false,
+    fillColor: '#00b1dd',
+    borderColor: '#FFFFFF',
+    backgroundColor: '#fe6048',
+    value: 50,
+    width: 450,
+    height: 35,
+    radius: 25,
+    border: 3,
+    animate: true,
+    vertical: false,
 };
 
 export const UseGraphics: StoryFn<typeof args> = (
-  {
-    value,
-    borderColor,
-    backgroundColor,
-    fillColor,
-    width,
-    height,
-    radius,
-    border,
-    animate,
-    vertical,
-  },
-  context,
-) => {
-  let isFilling = true;
-  let progressBar: ProgressBar;
-
-  return new PixiStory<typeof args>({
+    {
+        value,
+        borderColor,
+        backgroundColor,
+        fillColor,
+        width,
+        height,
+        radius,
+        border,
+        animate,
+        vertical,
+    },
     context,
-    init: (view) => {
-      const list = new List({ type: "vertical", elementsMargin: 10 });
+) =>
+{
+    let isFilling = true;
+    let progressBar: ProgressBar;
 
-      const bg = new Graphics()
-        .roundRect(0, 0, width, height, radius)
-        .fill(borderColor)
-        .roundRect(
-          border,
-          border,
-          width - border * 2,
-          height - border * 2,
-          radius,
-        )
-        .fill(backgroundColor);
+    return new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-      const fill = new Graphics()
-        .roundRect(0, 0, width, height, radius)
-        .fill(borderColor)
-        .roundRect(
-          border,
-          border,
-          width - border * 2,
-          height - border * 2,
-          radius,
-        )
-        .fill(fillColor);
+            const bg = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
+                .fill(backgroundColor);
 
-      // Component usage
-      progressBar = new ProgressBar({
-        bg,
-        fill,
-        progress: value,
-      });
+            const fill = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(borderColor)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
+                .fill(fillColor);
 
-      if (vertical) {
-        progressBar.rotation = -Math.PI / 2;
-      }
+            // Component usage
+            progressBar = new ProgressBar({
+                bg,
+                fill,
+                progress: value,
+            });
 
-      list.addChild(progressBar);
-      view.addChild(list);
-    },
-    resize: (view) => {
-      centerElement(view);
-      view.y += view.height;
-    },
-    update: () => {
-      if (!animate || !progressBar) {
-        return;
-      }
+            if (vertical)
+            {
+                progressBar.rotation = -Math.PI / 2;
+            }
 
-      isFilling ? value++ : value--;
+            list.addChild(progressBar);
+            view.addChild(list);
+        },
+        resize: (view) =>
+        {
+            centerElement(view);
+            view.y += view.height;
+        },
+        update: () =>
+        {
+            if (!animate || !progressBar)
+            {
+                return;
+            }
 
-      if (value > 150) {
-        isFilling = false;
-      } else if (value < -50) {
-        isFilling = true;
-      }
+            isFilling ? value++ : value--;
 
-      progressBar.progress = value;
-    },
-  });
+            if (value > 150)
+            {
+                isFilling = false;
+            }
+            else if (value < -50)
+            {
+                isFilling = true;
+            }
+
+            progressBar.progress = value;
+        },
+    });
 };
 
 export default {
-  title: "Components/ProgressBar/UseGraphics",
-  argTypes: argTypes(args),
-  args: getDefaultArgs(args),
+    title: 'Components/ProgressBar/UseGraphics',
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args),
 };
