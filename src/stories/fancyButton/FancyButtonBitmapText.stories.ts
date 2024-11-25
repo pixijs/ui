@@ -39,7 +39,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
         anchorY,
         animationDuration,
     },
-    context
+    context,
 ) =>
     new PixiStory({
         context,
@@ -64,7 +64,10 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 
                 const title = new BitmapText({
                     text,
-                    style: { fontFamily: 'TitleFont', fontSize: defaultTextStyle.fontSize },
+                    style: {
+                        fontFamily: 'TitleFont',
+                        fontSize: defaultTextStyle.fontSize,
+                    },
                 });
 
                 // Component usage !!!

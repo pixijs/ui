@@ -21,21 +21,24 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const UseGraphics: StoryFn<typeof args> = ({
-    amount,
-    text,
+export const UseGraphics: StoryFn<typeof args> = (
+    {
+        amount,
+        text,
 
-    textColor,
-    fillColor,
-    bgColor,
+        textColor,
+        fillColor,
+        bgColor,
 
-    width,
-    height,
-    padding,
-    radius,
+        width,
+        height,
+        padding,
+        radius,
 
-    onChange,
-}, context) =>
+        onChange,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -81,8 +84,9 @@ export const UseGraphics: StoryFn<typeof args> = ({
                 elementsMargin: 10,
             });
 
-            radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-                onChange({ id: selectedItemID, val: selectedVal }),
+            radioGroup.onChange.connect(
+                (selectedItemID: number, selectedVal: string) =>
+                    onChange({ id: selectedItemID, val: selectedVal }),
             );
 
             view.addChild(radioGroup.innerView);
@@ -90,7 +94,14 @@ export const UseGraphics: StoryFn<typeof args> = ({
         resize: (view) => centerElement(view),
     });
 
-function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
+function drawRadio({
+    color,
+    fillColor,
+    width,
+    height,
+    radius,
+    padding,
+}: GraphicsType)
 {
     const graphics = new Graphics();
 

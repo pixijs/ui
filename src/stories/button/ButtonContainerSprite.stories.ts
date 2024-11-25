@@ -10,10 +10,13 @@ const args = {
     size: 150,
     radius: 150,
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
-export const ButtonContainerSprite: StoryFn<typeof args> = ({ size, color, disabled, radius, action }, context) =>
+export const ButtonContainerSprite: StoryFn<typeof args> = (
+    { size, color, disabled, radius, action },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init(view)
@@ -31,7 +34,9 @@ export const ButtonContainerSprite: StoryFn<typeof args> = ({ size, color, disab
             button.onUpOut.connect(() => action('onUpOut'));
 
             const buttonView = new Container();
-            const buttonBg = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
+            const buttonBg = new Graphics()
+                .roundRect(0, 0, size, size, radius)
+                .fill(color);
             const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
             text.anchor.set(0.5);
@@ -45,11 +50,11 @@ export const ButtonContainerSprite: StoryFn<typeof args> = ({ size, color, disab
 
             centerElement(button);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Button/Button Container Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

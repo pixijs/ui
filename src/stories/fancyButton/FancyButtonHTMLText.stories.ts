@@ -37,7 +37,7 @@ export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
         defaultTextAnchorY,
         anchorX,
         anchorY,
-        animationDuration
+        animationDuration,
     },
     context,
 ) =>
@@ -102,7 +102,7 @@ export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
                 view.addChild(button);
             });
         },
-        resize: centerView
+        resize: centerView,
     });
 
 export default {

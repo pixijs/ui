@@ -23,28 +23,31 @@ const args = {
     border: 3,
     handleBorder: 3,
     showValue: true,
-    onChange: action('Slider')
+    onChange: action('Slider'),
 };
 
-export const Single: StoryFn<typeof args> = ({
-    min,
-    max,
-    step,
-    value,
-    meshColor,
-    borderColor,
-    backgroundColor,
-    fillColor,
-    handleBorder,
-    width,
-    height,
-    radius,
-    fontSize,
-    fontColor,
-    border,
-    onChange,
-    showValue,
-}, context) =>
+export const Single: StoryFn<typeof args> = (
+    {
+        min,
+        max,
+        step,
+        value,
+        meshColor,
+        borderColor,
+        backgroundColor,
+        fillColor,
+        handleBorder,
+        width,
+        height,
+        radius,
+        fontSize,
+        fontColor,
+        border,
+        onChange,
+        showValue,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -53,13 +56,25 @@ export const Single: StoryFn<typeof args> = ({
             const bg = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
                 .fill(backgroundColor);
 
             const fill = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
                 .fill(fillColor);
 
             const slider = new Graphics()
@@ -79,9 +94,9 @@ export const Single: StoryFn<typeof args> = ({
                 value,
                 valueTextStyle: {
                     fill: fontColor,
-                    fontSize
+                    fontSize,
                 },
-                showValue
+                showValue,
             });
 
             singleSlider.value = value;
@@ -92,11 +107,11 @@ export const Single: StoryFn<typeof args> = ({
 
             view.addChild(list);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Slider/Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

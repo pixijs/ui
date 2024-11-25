@@ -25,7 +25,7 @@ const args = {
 };
 
 export const UseNineSliceSprite: StoryFn<
-    typeof args & { align: 'center' | 'left' | 'right' }
+  typeof args & { align: 'center' | 'left' | 'right' }
 > = (
     {
         text,
@@ -44,7 +44,7 @@ export const UseNineSliceSprite: StoryFn<
         addMask,
         onChange,
     },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
@@ -62,12 +62,7 @@ export const UseNineSliceSprite: StoryFn<
                     const input = new Input({
                         bg: 'input.png',
                         nineSliceSprite: [160, 27, 160, 27],
-                        padding: [
-                            paddingTop,
-                            paddingRight,
-                            paddingBottom,
-                            paddingLeft,
-                        ],
+                        padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                         textStyle: {
                             fill: textColor,
                             fontSize,
@@ -77,15 +72,13 @@ export const UseNineSliceSprite: StoryFn<
                         align,
                         placeholder,
                         value: text,
-                        addMask
+                        addMask,
                     });
 
                     input.width = width;
                     input.height = height;
 
-                    input.onChange.connect(() =>
-                        onChange(`${i + 1} - ${input.value}`)
-                    );
+                    input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
 
                     list.addChild(input);
                 }

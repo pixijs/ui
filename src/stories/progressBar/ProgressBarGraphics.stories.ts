@@ -15,21 +15,24 @@ const args = {
     radius: 25,
     border: 3,
     animate: true,
-    vertical: false
+    vertical: false,
 };
 
-export const UseGraphics: StoryFn<typeof args> = ({
-    value,
-    borderColor,
-    backgroundColor,
-    fillColor,
-    width,
-    height,
-    radius,
-    border,
-    animate,
-    vertical
-}, context) =>
+export const UseGraphics: StoryFn<typeof args> = (
+    {
+        value,
+        borderColor,
+        backgroundColor,
+        fillColor,
+        width,
+        height,
+        radius,
+        border,
+        animate,
+        vertical,
+    },
+    context,
+) =>
 {
     let isFilling = true;
     let progressBar: ProgressBar;
@@ -43,20 +46,32 @@ export const UseGraphics: StoryFn<typeof args> = ({
             const bg = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
                 .fill(backgroundColor);
 
             const fill = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                .roundRect(
+                    border,
+                    border,
+                    width - (border * 2),
+                    height - (border * 2),
+                    radius,
+                )
                 .fill(fillColor);
 
             // Component usage
             progressBar = new ProgressBar({
                 bg,
                 fill,
-                progress: value
+                progress: value,
             });
 
             if (vertical)
@@ -91,12 +106,12 @@ export const UseGraphics: StoryFn<typeof args> = ({
             }
 
             progressBar.progress = value;
-        }
+        },
     });
 };
 
 export default {
     title: 'Components/ProgressBar/UseGraphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

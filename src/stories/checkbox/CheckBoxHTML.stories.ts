@@ -19,7 +19,7 @@ const args = {
     radius: 11,
     amount: 3,
     checked: false,
-    onPress: action('Checkbox')
+    onPress: action('Checkbox'),
 };
 
 export const UseHtml = ({
@@ -36,7 +36,7 @@ export const UseHtml = ({
     height,
     radius,
 
-    onPress
+    onPress,
 }: any) =>
 {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
@@ -71,9 +71,9 @@ export const UseHtml = ({
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,
-                    fill: textColor
+                    fill: textColor,
                 },
-            }
+            },
         });
 
         checkBox.onCheck.connect((checked) =>
@@ -90,5 +90,5 @@ export const UseHtml = ({
 export default {
     title: 'Components/Checkbox/Use Html',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

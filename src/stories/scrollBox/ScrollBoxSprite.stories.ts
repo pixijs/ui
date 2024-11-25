@@ -16,23 +16,43 @@ const args = {
     type: [undefined, 'vertical', 'horizontal'],
     onPress: action('Button pressed'),
     globalScroll: true,
-    shiftScroll: false
+    shiftScroll: false,
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
-    { fontColor, elementsMargin, itemsAmount, disableEasing, type, onPress, globalScroll, shiftScroll }, context
+export const UseSprite: StoryFn<
+  typeof args & { type: 'vertical' | 'horizontal' | undefined }
+> = (
+    {
+        fontColor,
+        elementsMargin,
+        itemsAmount,
+        disableEasing,
+        type,
+        onPress,
+        globalScroll,
+        shiftScroll,
+    },
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
         {
-            const assets = [`window.png`, `SmallButton.png`, `SmallButton-hover.png`, `SmallButton-pressed.png`];
+            const assets = [
+                `window.png`,
+                `SmallButton.png`,
+                `SmallButton-hover.png`,
+                `SmallButton-pressed.png`,
+            ];
 
             preload(assets).then(() =>
             {
                 const window = new Container();
                 const windowBg = Sprite.from(`window.png`);
-                const title = new Text({ text: `Levels`, style: { fill: 0x000000, fontSize: 40 } });
+                const title = new Text({
+                    text: `Levels`,
+                    style: { fill: 0x000000, fontSize: 40 },
+                });
 
                 title.anchor.set(0.5);
                 window.addChild(windowBg, title);
@@ -53,7 +73,7 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
                     disableEasing,
                     type,
                     globalScroll,
-                    shiftScroll
+                    shiftScroll,
                 });
 
                 scrollBox.addItems(items);
@@ -67,10 +87,14 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
             });
         },
 
-        resize:  centerElement
+        resize: centerElement,
     });
 
-function createItems(itemsAmount: number, fontColor: ColorSource, onPress: (buttonID: number) => void): FancyButton[]
+function createItems(
+    itemsAmount: number,
+    fontColor: ColorSource,
+    onPress: (buttonID: number) => void,
+): FancyButton[]
 {
     const items = [];
 
@@ -81,16 +105,17 @@ function createItems(itemsAmount: number, fontColor: ColorSource, onPress: (butt
             hoverView: `SmallButton-hover.png`,
             pressedView: `SmallButton-pressed.png`,
             text: new Text({
-                text: i + 1, style: {
+                text: i + 1,
+                style: {
                     ...defaultTextStyle,
                     fontSize: 68,
-                    fill: fontColor
-                }
+                    fill: fontColor,
+                },
             }),
             textOffset: {
                 x: 0,
-                y: -7
-            }
+                y: -7,
+            },
         });
 
         button.anchor.set(0);
@@ -107,5 +132,5 @@ function createItems(itemsAmount: number, fontColor: ColorSource, onPress: (butt
 export default {
     title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

@@ -14,7 +14,7 @@ const args = {
 };
 
 export const Sprites: StoryFn<
-    typeof args & {
+  typeof args & {
     triggerEvent1: string;
     triggerEvent2: string;
     triggerEvent3: string;
@@ -24,7 +24,13 @@ export const Sprites: StoryFn<
         context,
         init: (view) =>
         {
-            const assets = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
+            const assets = [
+                `avatar-01.png`,
+                `avatar-02.png`,
+                `avatar-03.png`,
+                `avatar-04.png`,
+                `avatar-05.png`,
+            ];
 
             preload(assets).then(() =>
             {

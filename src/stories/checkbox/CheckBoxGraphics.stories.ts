@@ -40,7 +40,7 @@ export const UseGraphics: StoryFn<typeof args> = (
 
         onPress,
     },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,

@@ -13,7 +13,10 @@ const args = {
     vertical: false,
 };
 
-export const NineSliceSprite: StoryFn<typeof args> = ({ value, animate, vertical, width, height }, context) =>
+export const NineSliceSprite: StoryFn<typeof args> = (
+    { value, animate, vertical, width, height },
+    context,
+) =>
 {
     let isFilling = true;
     let progressBar: ProgressBar;
@@ -34,15 +37,15 @@ export const NineSliceSprite: StoryFn<typeof args> = ({ value, animate, vertical
                     fill: 'slider_progress.png',
                     nineSliceSprite: {
                         bg: [22, 15, 22, 23],
-                        fill: [22, 15, 22, 15]
+                        fill: [22, 15, 22, 15],
                     },
                     progress: value,
                     fillPaddings: {
                         top: 3,
                         right: 5,
                         bottom: 4.5,
-                        left: 4.5
-                    }
+                        left: 4.5,
+                    },
                 });
 
                 progressBar.width = width;
@@ -94,12 +97,12 @@ export const NineSliceSprite: StoryFn<typeof args> = ({ value, animate, vertical
             {
                 progressBar.progress = value;
             }
-        }
+        },
     });
 };
 
 export default {
     title: 'Components/ProgressBar/NineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

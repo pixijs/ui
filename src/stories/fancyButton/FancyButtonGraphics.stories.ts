@@ -38,40 +38,43 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
-export const UseGraphics: StoryFn<typeof args> = ({
-    width,
-    height,
-    radius,
-    text,
-    color,
-    hoverColor,
-    pressedColor,
-    disabledColor,
-    disabled,
-    padding,
-    anchorX,
-    anchorY,
-    textColor,
-    iconOffsetX,
-    iconOffsetY,
-    textOffsetX,
-    textOffsetY,
-    defaultTextScale,
-    defaultIconScale,
-    defaultTextAnchorX,
-    defaultTextAnchorY,
-    defaultIconAnchorX,
-    defaultIconAnchorY,
-    defaultOffsetY,
-    hoverOffsetY,
-    pressedOffsetY,
-    disabledOffsetY,
-    animationDuration,
-    action
-}, context) =>
+export const UseGraphics: StoryFn<typeof args> = (
+    {
+        width,
+        height,
+        radius,
+        text,
+        color,
+        hoverColor,
+        pressedColor,
+        disabledColor,
+        disabled,
+        padding,
+        anchorX,
+        anchorY,
+        textColor,
+        iconOffsetX,
+        iconOffsetY,
+        textOffsetX,
+        textOffsetY,
+        defaultTextScale,
+        defaultIconScale,
+        defaultTextAnchorX,
+        defaultTextAnchorY,
+        defaultIconAnchorX,
+        defaultIconAnchorY,
+        defaultOffsetY,
+        hoverOffsetY,
+        pressedOffsetY,
+        disabledOffsetY,
+        animationDuration,
+        action,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -86,38 +89,49 @@ export const UseGraphics: StoryFn<typeof args> = ({
                 // Component usage !!!
                 const icon = new MaskedFrame({
                     target,
-                    mask: new Graphics().circle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
+                    mask: new Graphics()
+                        .circle(target.width / 2, target.height / 2, target.width / 2)
+                        .fill(0x000000),
                     borderWidth: 10,
-                    borderColor: fill
+                    borderColor: fill,
                 });
 
                 // Component usage !!!
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
-                    hoverView: new Graphics().roundRect(0, 0, width, height, radius).fill(hoverColor),
-                    pressedView: new Graphics().roundRect(0, 0, width, height, radius).fill(pressedColor),
-                    disabledView: new Graphics().roundRect(0, 0, width, height, radius).fill(disabledColor),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(color),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(hoverColor),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(pressedColor),
+                    disabledView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(disabledColor),
                     icon,
                     text: new Text({
-                        text, style: {
+                        text,
+                        style: {
                             ...defaultTextStyle,
-                            fill
-                        }
+                            fill,
+                        },
                     }),
                     padding,
                     offset: {
                         default: { y: defaultOffsetY },
                         hover: { y: hoverOffsetY },
                         pressed: { y: pressedOffsetY },
-                        disabled: { y: disabledOffsetY }
+                        disabled: { y: disabledOffsetY },
                     },
                     textOffset: {
                         x: textOffsetX,
-                        y: textOffsetY
+                        y: textOffsetY,
                     },
                     iconOffset: {
                         x: iconOffsetX,
-                        y: iconOffsetY
+                        y: iconOffsetY,
                     },
                     defaultTextScale,
                     defaultIconScale,
@@ -127,25 +141,25 @@ export const UseGraphics: StoryFn<typeof args> = ({
                         default: {
                             props: {
                                 scale: { x: 1, y: 1 },
-                                y: defaultOffsetY
+                                y: defaultOffsetY,
                             },
-                            duration: animationDuration
+                            duration: animationDuration,
                         },
                         hover: {
                             props: {
                                 scale: { x: 1.03, y: 1.03 },
-                                y: hoverOffsetY
+                                y: hoverOffsetY,
                             },
-                            duration: animationDuration
+                            duration: animationDuration,
                         },
                         pressed: {
                             props: {
                                 scale: { x: 0.9, y: 0.9 },
-                                y: pressedOffsetY
+                                y: pressedOffsetY,
                             },
-                            duration: animationDuration
-                        }
-                    }
+                            duration: animationDuration,
+                        },
+                    },
                 });
 
                 if (disabled)
@@ -167,11 +181,11 @@ export const UseGraphics: StoryFn<typeof args> = ({
                 centerView(view);
             });
         },
-        resize: centerView
+        resize: centerView,
     });
 
 export default {
     title: 'Components/FancyButton/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

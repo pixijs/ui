@@ -25,20 +25,25 @@ const args = {
 const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
-export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = ({
-    width,
-    height,
-    radius,
-    elementsMargin,
-    elementsPadding,
-    elementsWidth,
-    elementsHeight,
-    itemsAmount,
-    proximityRange,
-    proximityDebounce,
-    type,
-    fadeSpeed,
-}, context) =>
+export const ProximityEvent: StoryFn<
+  typeof args & { type: 'vertical' | 'horizontal' | undefined }
+> = (
+    {
+        width,
+        height,
+        radius,
+        elementsMargin,
+        elementsPadding,
+        elementsWidth,
+        elementsHeight,
+        itemsAmount,
+        proximityRange,
+        proximityDebounce,
+        type,
+        fadeSpeed,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -56,15 +61,22 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
             for (let i = 0; i < itemsAmount; i++)
             {
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xa5e24d),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfec230),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfe6048),
                     text: new Text({
-                        text: `Item ${i + 1}`, style: {
+                        text: `Item ${i + 1}`,
+                        style: {
                             ...defaultTextStyle,
-                            fill: fontColor
-                        }
-                    })
+                            fill: fontColor,
+                        },
+                    }),
                 });
 
                 button.anchor.set(0);
@@ -117,5 +129,5 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
 export default {
     title: 'Components/ScrollBox/Proximity Event',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

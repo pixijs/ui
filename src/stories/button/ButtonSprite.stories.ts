@@ -11,7 +11,7 @@ const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
 export class SpriteButton extends Button
@@ -22,35 +22,39 @@ export class SpriteButton extends Button
     private action: (event: string) => void;
 
     constructor(props: {
-        text: string,
-        textColor: string,
-        disabled: boolean,
-        action: (event: string) => void})
+        text: string;
+        textColor: string;
+        disabled: boolean;
+        action: (event: string) => void;
+    })
     {
         super(/* we can set a view for button later */);
 
         this.view = this.buttonView;
 
-        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(() =>
-        {
-            this.buttonBg.texture = Texture.from('button.png');
+        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(
+            () =>
+            {
+                this.buttonBg.texture = Texture.from('button.png');
 
-            this.buttonBg.anchor.set(0.5);
+                this.buttonBg.anchor.set(0.5);
 
-            this.textView = new Text({
-                text: props.text, style: {
-                    ...defaultTextStyle,
-                    fontSize: 40,
-                    fill: props.textColor
-                }
-            });
-            this.textView.y = -10;
-            this.textView.anchor.set(0.5);
+                this.textView = new Text({
+                    text: props.text,
+                    style: {
+                        ...defaultTextStyle,
+                        fontSize: 40,
+                        fill: props.textColor,
+                    },
+                });
+                this.textView.y = -10;
+                this.textView.anchor.set(0.5);
 
-            this.buttonView.addChild(this.buttonBg, this.textView);
+                this.buttonView.addChild(this.buttonBg, this.textView);
 
-            this.enabled = !props.disabled;
-        });
+                this.enabled = !props.disabled;
+            },
+        );
 
         this.action = props.action;
     }
@@ -100,20 +104,22 @@ export class SpriteButton extends Button
     }
 }
 
-export const UseSprite: StoryFn<typeof args> = (params, context) => new PixiStory({
-    context, init: (view) =>
-    {
-        const buttonView = new SpriteButton(params);
+export const UseSprite: StoryFn<typeof args> = (params, context) =>
+    new PixiStory({
+        context,
+        init: (view) =>
+        {
+            const buttonView = new SpriteButton(params);
 
-        view.addChild(buttonView.view);
+            view.addChild(buttonView.view);
 
-        centerView(view);
-    },
-    resize: centerView
-});
+            centerView(view);
+        },
+        resize: centerView,
+    });
 
 export default {
     title: 'Components/Button/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

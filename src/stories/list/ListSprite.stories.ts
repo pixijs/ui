@@ -17,10 +17,9 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
-    { fontColor, elementsMargin, itemsAmount, onPress, type },
-    context
-) =>
+export const UseSprite: StoryFn<
+  typeof args & { type: 'horizontal' | 'vertical' }
+> = ({ fontColor, elementsMargin, itemsAmount, onPress, type }, context) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -47,7 +46,11 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
 
                 view.addChild(window);
 
-                const items: Container[] = createItems(itemsAmount, getColor(fontColor), onPress);
+                const items: Container[] = createItems(
+                    itemsAmount,
+                    getColor(fontColor),
+                    onPress,
+                );
 
                 // Component usage !!!
                 const list = new List({
@@ -64,13 +67,13 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 function createItems(
     itemsAmount: number,
     fontColor: number,
-    onPress: (buttonID: number) => void
+    onPress: (buttonID: number) => void,
 ): FancyButton[]
 {
     const items = [];

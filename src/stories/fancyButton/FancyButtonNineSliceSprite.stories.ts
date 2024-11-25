@@ -24,27 +24,30 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
-    onPress: action('button was pressed! (tap or click!)')
+    onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const UseNineSliceSprite: StoryFn<typeof args> = ({
-    text,
-    textColor,
-    disabled,
-    onPress,
-    padding,
-    anchorX,
-    anchorY,
-    animationDuration,
-    width,
-    height,
-    defaultTextScale,
-    defaultIconScale,
-    defaultTextAnchorX,
-    defaultTextAnchorY,
-    defaultIconAnchorX,
-    defaultIconAnchorY
-}, context) =>
+export const UseNineSliceSprite: StoryFn<typeof args> = (
+    {
+        text,
+        textColor,
+        disabled,
+        onPress,
+        padding,
+        anchorX,
+        anchorY,
+        animationDuration,
+        width,
+        height,
+        defaultTextScale,
+        defaultIconScale,
+        defaultTextAnchorX,
+        defaultTextAnchorY,
+        defaultIconAnchorX,
+        defaultIconAnchorY,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -55,7 +58,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                 `button_pressed.png`,
                 `button_disabled.png`,
                 `avatar-01.png`,
-                `avatar_mask.png`
+                `avatar_mask.png`,
             ];
 
             preload(assets).then(() =>
@@ -66,14 +69,13 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                     hoverView: `button_hover.png`,
                     pressedView: `button_pressed.png`,
                     disabledView: `button_disabled.png`,
-                    nineSliceSprite: [
-                        150, 66, 150, 66
-                    ],
+                    nineSliceSprite: [150, 66, 150, 66],
                     text: new Text({
-                        text, style: {
+                        text,
+                        style: {
                             ...defaultTextStyle,
-                            fill: textColor || defaultTextStyle.fill
-                        }
+                            fill: textColor || defaultTextStyle.fill,
+                        },
                     }),
                     padding,
                     textOffset: { x: 30, y: -5 },
@@ -86,17 +88,17 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                         hover: {
                             props: {
                                 scale: { x: 1.03, y: 1.03 },
-                                y: 0
+                                y: 0,
                             },
-                            duration: animationDuration
+                            duration: animationDuration,
                         },
                         pressed: {
                             props: {
                                 scale: { x: 0.9, y: 0.9 },
-                                y: 10
+                                y: 10,
                             },
-                            duration: animationDuration
-                        }
+                            duration: animationDuration,
+                        },
                     },
                 });
 
@@ -104,7 +106,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                     target: `avatar-01.png`,
                     mask: `avatar_mask.png`,
                     borderWidth: 10,
-                    borderColor: 0xFFFFFF
+                    borderColor: 0xffffff,
                 });
 
                 button.anchor.set(anchorX, anchorY);
@@ -114,11 +116,11 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                     button.enabled = false;
                 }
 
-                const sizes: {w: number, h: number}[] = [
+                const sizes: { w: number; h: number }[] = [
                     { w: width, h: height },
                     { w: 300, h: 300 },
                     { w: 600, h: 137 },
-                    { w: 600, h: 300 }
+                    { w: 600, h: 300 },
                 ];
 
                 button.width = sizes[0].w;
@@ -148,11 +150,11 @@ export const UseNineSliceSprite: StoryFn<typeof args> = ({
                 view.addChild(button);
             });
         },
-        resize: centerView
+        resize: centerView,
     });
 
 export default {
     title: 'Components/FancyButton/Use NineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

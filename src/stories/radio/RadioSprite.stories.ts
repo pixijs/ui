@@ -12,17 +12,20 @@ const args = {
     text: 'Radio',
     textColor: '#FFFFFF',
     amount: 3,
-    onChange: action('Radio changed')
+    onChange: action('Radio changed'),
 };
 
-export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onChange }, context) =>
+export const UseSprite: StoryFn<typeof args> = (
+    { amount, text, textColor, onChange },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
         {
             const list = new List({
                 type: 'vertical',
-                elementsMargin: 20
+                elementsMargin: 20,
             });
 
             const assets = [`radio.png`, `radio_checked.png`];
@@ -42,10 +45,10 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
                                 text: {
                                     ...defaultTextStyle,
                                     fontSize: 22,
-                                    fill: textColor
-                                }
-                            }
-                        })
+                                    fill: textColor,
+                                },
+                            },
+                        }),
                     );
                 }
 
@@ -54,11 +57,12 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
                     selectedItem: 0,
                     items,
                     type: 'vertical',
-                    elementsMargin: 10
+                    elementsMargin: 10,
                 });
 
-                radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-                    onChange({ id: selectedItemID, val: selectedVal })
+                radioGroup.onChange.connect(
+                    (selectedItemID: number, selectedVal: string) =>
+                        onChange({ id: selectedItemID, val: selectedVal }),
                 );
 
                 list.addChild(radioGroup.innerView);
@@ -67,11 +71,11 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
             });
             view.addChild(list);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/RadioGroup/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

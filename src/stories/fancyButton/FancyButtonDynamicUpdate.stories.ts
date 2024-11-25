@@ -21,30 +21,44 @@ const args = {
     anchorX: 0.5,
     anchorY: 0.5,
     disabled: false,
-    onPress: action('button was pressed! (tap or click!)')
+    onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const DynamicUpdate: StoryFn<typeof args> = ({
-    text,
-    textColor,
-    defaultTextScale,
-    defaultIconScale,
-    defaultTextAnchorX,
-    defaultTextAnchorY,
-    defaultIconAnchorX,
-    defaultIconAnchorY,
-    disabled,
-    onPress,
-    padding,
-    anchorX,
-    anchorY,
-}, context) =>
+export const DynamicUpdate: StoryFn<typeof args> = (
+    {
+        text,
+        textColor,
+        defaultTextScale,
+        defaultIconScale,
+        defaultTextAnchorX,
+        defaultTextAnchorY,
+        defaultIconAnchorX,
+        defaultIconAnchorY,
+        disabled,
+        onPress,
+        padding,
+        anchorX,
+        anchorY,
+    },
+    context,
+) =>
     new PixiStory({
         context,
         init: (view) =>
         {
-            const assets = [`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`];
-            const avatars = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
+            const assets = [
+                `button.png`,
+                `button_hover.png`,
+                `button_pressed.png`,
+                `button_disabled.png`,
+            ];
+            const avatars = [
+                `avatar-01.png`,
+                `avatar-02.png`,
+                `avatar-03.png`,
+                `avatar-04.png`,
+                `avatar-05.png`,
+            ];
 
             preload([...assets, ...avatars]).then(() =>
             {
@@ -58,17 +72,24 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
 
                 button.iconView = Sprite.from(icon);
                 button.defaultIconScale = defaultIconScale;
-                button.defaultIconAnchor = { x: defaultIconAnchorX, y: defaultIconAnchorY };
+                button.defaultIconAnchor = {
+                    x: defaultIconAnchorX,
+                    y: defaultIconAnchorY,
+                };
                 button.iconOffset = { x: -100, y: -7 };
 
                 button.textView = new Text({
-                    text, style: {
+                    text,
+                    style: {
                         ...defaultTextStyle,
-                        fill: textColor || defaultTextStyle.fill
-                    }
+                        fill: textColor || defaultTextStyle.fill,
+                    },
                 });
                 button.defaultTextScale = defaultTextScale;
-                button.defaultTextAnchor = { x: defaultTextAnchorX, y: defaultTextAnchorY };
+                button.defaultTextAnchor = {
+                    x: defaultTextAnchorX,
+                    y: defaultTextAnchorY,
+                };
                 button.textOffset = { x: 30, y: -7 };
 
                 button.padding = padding;
@@ -83,20 +104,35 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
 
                 button.onPress.connect(() =>
                 {
-                    currentTexture = randomItem([
-                        `button_hover.png`,
-                        `button_pressed.png`,
-                        `button_disabled.png`
-                    ].filter((texture) => texture !== currentTexture)) as string;
+                    currentTexture = randomItem(
+                        [
+                            `button_hover.png`,
+                            `button_pressed.png`,
+                            `button_disabled.png`,
+                        ].filter((texture) => texture !== currentTexture),
+                    ) as string;
 
                     button.hoverView = currentTexture;
 
-                    const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
-                    const text = randomItem(texts.filter((text) => text !== button.text)) as string;
+                    const texts: string[] = [
+                        '🤙',
+                        '👌',
+                        '👍',
+                        '👏',
+                        '👋',
+                        '🤟',
+                        '🤘',
+                        '🤞',
+                    ];
+                    const text = randomItem(
+                        texts.filter((text) => text !== button.text),
+                    ) as string;
 
                     button.textView = new Text({ text, style: { fontSize: 70 } });
 
-                    icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
+                    icon = randomItem(
+                        avatars.filter((avatar) => avatar !== icon),
+                    ) as string;
 
                     const sprite = Sprite.from(icon);
 
@@ -110,11 +146,11 @@ export const DynamicUpdate: StoryFn<typeof args> = ({
                 view.addChild(button);
             });
         },
-        resize: centerView
+        resize: centerView,
     });
 
 export default {
     title: 'Components/FancyButton/Dynamic Update',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

@@ -8,10 +8,13 @@ import { preload } from '../utils/loader';
 const args = {
     value: 50,
     animate: true,
-    vertical: false
+    vertical: false,
 };
 
-export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, context) =>
+export const Sprite: StoryFn<typeof args> = (
+    { value, animate, vertical },
+    context,
+) =>
 {
     let isFilling = true;
     let progressBar: ProgressBar;
@@ -33,7 +36,7 @@ export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, conte
                     fillPaddings: {
                         top: 3,
                         left: 4.5,
-                    }
+                    },
                 });
 
                 list.addChild(progressBar);
@@ -82,12 +85,12 @@ export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, conte
             {
                 progressBar.progress = value;
             }
-        }
+        },
     });
 };
 
 export default {
     title: 'Components/ProgressBar/Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

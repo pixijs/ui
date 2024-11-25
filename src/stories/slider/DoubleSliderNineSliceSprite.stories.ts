@@ -15,21 +15,24 @@ const args = {
     showValue: true,
     width: 500,
     height: 38,
-    onChange: action('Slider')
+    onChange: action('Slider'),
 };
 
-export const Double: StoryFn<typeof args> = ({
-    min,
-    max,
-    value1,
-    value2,
-    fontSize,
-    fontColor,
-    onChange,
-    showValue,
-    width,
-    height
-}, context) =>
+export const Double: StoryFn<typeof args> = (
+    {
+        min,
+        max,
+        value1,
+        value2,
+        fontSize,
+        fontColor,
+        onChange,
+        showValue,
+        width,
+        height,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -46,7 +49,7 @@ export const Double: StoryFn<typeof args> = ({
                     slider2: 'slider.png',
                     nineSliceSprite: {
                         bg: [22, 15, 22, 23],
-                        fill: [22, 15, 22, 15]
+                        fill: [22, 15, 22, 15],
                     },
                     fillPaddings: {
                         top: 2.5,
@@ -60,11 +63,11 @@ export const Double: StoryFn<typeof args> = ({
                     value2,
                     valueTextStyle: {
                         fill: fontColor,
-                        fontSize
+                        fontSize,
                     },
                     showValue,
                     valueTextOffset: {
-                        y: -40
+                        y: -40,
                     },
                 });
 
@@ -78,11 +81,11 @@ export const Double: StoryFn<typeof args> = ({
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 export default {
     title: 'Components/Slider/SpriteNineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

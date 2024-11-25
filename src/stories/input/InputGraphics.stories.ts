@@ -26,31 +26,36 @@ const args = {
     paddingLeft: 0,
     cleanOnFocus: true,
     addMask: false,
-    onChange: action('Change')
+    onChange: action('Change'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
-    text,
-    amount,
-    border,
-    textColor,
-    fontSize,
-    backgroundColor,
-    borderColor,
-    width,
-    height,
-    radius,
-    maxLength,
-    align,
-    placeholder,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-    onChange,
-    cleanOnFocus,
-    addMask
-}, context) =>
+export const UseGraphics: StoryFn<
+  typeof args & { align: 'center' | 'left' | 'right' }
+> = (
+    {
+        text,
+        amount,
+        border,
+        textColor,
+        fontSize,
+        backgroundColor,
+        borderColor,
+        width,
+        height,
+        radius,
+        maxLength,
+        align,
+        placeholder,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+        onChange,
+        cleanOnFocus,
+        addMask,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
         init: (view) =>
@@ -59,17 +64,23 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
 
             for (let i = 0; i < amount; i++)
             {
-            // Component usage
+                // Component usage
                 const input = new Input({
                     bg: new Graphics()
                         .roundRect(0, 0, width, height, radius + border)
                         .fill(borderColor)
-                        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                        .roundRect(
+                            border,
+                            border,
+                            width - (border * 2),
+                            height - (border * 2),
+                            radius,
+                        )
                         .fill(backgroundColor),
                     textStyle: {
                         fill: textColor,
                         fontSize,
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
                     },
                     maxLength,
                     align,
@@ -77,7 +88,7 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                     value: text,
                     padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                     cleanOnFocus,
-                    addMask
+                    addMask,
                 });
 
                 input.onEnter.connect((val) =>
@@ -89,11 +100,11 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                 view.addChild(list);
             }
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Input/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };
