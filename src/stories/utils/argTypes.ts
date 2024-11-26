@@ -56,7 +56,17 @@ export const argTypes = (args: Types) =>
 
             if (arg >= 0)
             {
-                if (arg >= 100)
+                if (arg >= 1000)
+                {
+                    exportArgTypes[key] = {
+                        control: {
+                            type: 'range',
+                            min,
+                            max: 10000,
+                            step: 100
+                        }
+                    };
+                } else if (arg >= 100)
                 {
                     exportArgTypes[key] = {
                         control: {
@@ -202,7 +212,6 @@ export const getDefaultArgs = (args: Types) =>
             case 'object':
                 if (Array.isArray(args[key]))
                 {
-                    // @ts-expect-error - we are lazy
                     exportArgs[key] = args[key][0] as any;
                 }
                 break;

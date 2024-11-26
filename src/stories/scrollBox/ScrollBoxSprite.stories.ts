@@ -11,7 +11,7 @@ import { action } from "@storybook/addon-actions";
 const args = {
   fontColor: "#000000",
   elementsMargin: 6,
-  itemsAmount: 100,
+  itemsAmount: 10000,
   disableEasing: false,
   type: [undefined, "vertical", "horizontal"],
   onPress: action("Button pressed"),
@@ -59,22 +59,34 @@ export const UseSprite: StoryFn<
 
         view.addChild(window);
 
+
+        console.time(`Create ${itemsAmount} items`);
         const items: Container[] = createItems(itemsAmount, fontColor, onPress);
+        console.timeEnd(`Create ${itemsAmount} items`);
+
+        // console.time(`AddChild ${itemsAmount} items`);
+        // items.forEach((item, index) => {
+        //     window.addChild(item);
+        // })
+        // console.timeEnd(`AddChild ${itemsAmount} items`);
+        // //AddChild 10000 items: 7.036865234375 ms
 
         // Component usage !!!
         const scrollBox = new ScrollBox({
-          elementsMargin,
-          width: window.width - 80,
-          height: window.height - 90,
-          vertPadding: 18,
-          radius: 5,
-          disableEasing,
-          type,
-          globalScroll,
-          shiftScroll,
+            elementsMargin,
+            width: window.width - 80,
+            height: window.height - 90,
+            vertPadding: 18,
+            radius: 5,
+            disableEasing,
+            type,
+            globalScroll,
+            shiftScroll,
         });
 
+        console.time(`Add ${itemsAmount} items`);
         scrollBox.addItems(items);
+        console.timeEnd(`Add ${itemsAmount} items`);
 
         scrollBox.x = window.width / 2 - scrollBox.width / 2;
         scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
@@ -82,7 +94,7 @@ export const UseSprite: StoryFn<
         window.addChild(scrollBox);
 
         centerElement(view);
-      });
+        });
     },
 
     resize: centerElement,

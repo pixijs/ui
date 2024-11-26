@@ -1,3 +1,4 @@
+import { DisplayObject } from '@pixi/display';
 import { Container, ContainerChild } from 'pixi.js';
 
 export type ListType = 'horizontal' | 'vertical';
@@ -57,9 +58,40 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         }
 
         options?.items?.forEach((item) => this.addChild(item));
+    }
 
-        this.on('added', () => this.arrangeChildren());
-        this.on('childAdded', () => this.arrangeChildren());
+    /**
+     * Adds 1 or more items to the list.
+     * This is an efficient way to add and arrange multiple items at once.
+     * @param items - Item or items to add.
+     * @returns First added item.
+     */
+    addItems(items: DisplayObject | DisplayObject[])
+    {
+        if (Array.isArray(items))
+        {
+            items.forEach((item) => this.addChild(item));
+        } else {
+            super.addChild(items);
+        }
+
+        this.arrangeChildren();
+    }
+
+    /**
+     * Remove 1 or more items from the list.
+     * This is an efficient way to remove and arrange multiple items at once.
+     * @param items - Item or items to remove.
+     */
+    removeItems(items: DisplayObject | DisplayObject[]) {
+        if (Array.isArray(items))
+        {
+            items.forEach((item) => this.removeChild(item));
+        } else {
+            super.removeChild(items);
+        }
+
+        this.arrangeChildren();
     }
 
     /**
@@ -290,6 +322,13 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         this.children.forEach((child, id) =>
         {
+            // const parentX = this.getGlobalPosition().x;
+            // const parentY = this.getGlobalPosition().y;
+
+            // if (parentX + x > window.innerWidth * 2 || parentY + y > window.innerHeight * 2) {
+            //     return;
+            // }
+
             switch (this.type)
             {
                 case 'vertical':
@@ -309,7 +348,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
                 default: // bidirectional
                     child.x = x;
                     child.y = y;
-
+                    console.log(`arrangeChildren`);
                     if (child.x + child.width > maxWidth && id > 0)
                     {
                         y += elementsMargin + maxHeight;
@@ -318,6 +357,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
                         child.x = x;
                         child.y = y;
                         maxHeight = 0;
+                        console.log(child.x, child.y);
                     }
 
                     maxHeight = Math.max(maxHeight, child.height);

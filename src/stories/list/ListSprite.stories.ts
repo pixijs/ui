@@ -13,7 +13,7 @@ const args = {
   type: [null, "horizontal", "vertical"],
   fontColor: "#000000",
   elementsMargin: 29,
-  itemsAmount: 10,
+  itemsAmount: 10000,
   onPress: action("Button pressed"),
 };
 
@@ -24,26 +24,12 @@ export const UseSprite: StoryFn<
     context,
     init: (view) => {
       const assets = [
-        `window.png`,
         `SmallButton.png`,
         `SmallButton-hover.png`,
         `SmallButton-pressed.png`,
       ];
 
       preload(assets).then(() => {
-        const window = Sprite.from(`window.png`);
-        const title = new Text({
-          text: `Levels`,
-          style: { fill: 0x000000, fontSize: 40 },
-        });
-
-        title.anchor.set(0.5);
-        window.addChild(title);
-        title.x = window.width / 2;
-        title.y = 25;
-
-        view.addChild(window);
-
         const items: Container[] = createItems(
           itemsAmount,
           getColor(fontColor),
@@ -58,14 +44,16 @@ export const UseSprite: StoryFn<
           elementsMargin,
         });
 
-        items.forEach((item) => list.addChild(item));
+        console.time(`Add ${itemsAmount} items`);
+        list.addItems(items);
+        console.timeEnd(`Add ${itemsAmount} items`);
 
-        window.addChild(list);
+        view.addChild(list);
 
         centerElement(view);
       });
     },
-    resize: centerElement,
+    // resize: centerElement,
   });
 
 function createItems(

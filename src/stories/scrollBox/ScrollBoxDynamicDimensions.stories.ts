@@ -1,4 +1,4 @@
-import { Graphics, Text } from "pixi.js";
+import { Graphics, RenderTexture, Sprite, Text, Texture } from "pixi.js";
 import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
 import { FancyButton } from "../../FancyButton";
 import { ScrollBox } from "../../ScrollBox";
@@ -9,7 +9,7 @@ import { argTypes, getDefaultArgs } from "../utils/argTypes";
 const args = {
   fontColor: "#000000",
   backgroundColor: "#F5E3A9",
-  itemsAmount: 100,
+  itemsAmount: 1000,
 };
 
 export const UseDynamicDimensions: StoryFn<typeof args> = (
@@ -54,17 +54,41 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
         scrollBox.height = size.h;
       };
 
+      const defaultView = Sprite.from(Texture.WHITE);
+      defaultView.width = elementsWidth;
+      defaultView.height = elementsHeight;
+      defaultView.tint = 0xa5e24d;
+
+      const hoverView = Sprite.from(Texture.WHITE);
+        hoverView.width = elementsWidth;
+        hoverView.height = elementsHeight;
+        hoverView.tint = 0xfec230;
+
+        const pressedView = Sprite.from(Texture.WHITE);
+        pressedView.width = elementsWidth;
+        pressedView.height = elementsHeight;
+        pressedView.tint = 0xfe6048;
+
       for (let i = 0; i < itemsAmount; i++) {
+        const defaultView = Sprite.from(Texture.WHITE);
+        defaultView.width = elementsWidth;
+        defaultView.height = elementsHeight;
+        defaultView.tint = 0xa5e24d;
+
+        const hoverView = Sprite.from(Texture.WHITE);
+        hoverView.width = elementsWidth;
+        hoverView.height = elementsHeight;
+        hoverView.tint = 0xfec230;
+
+        const pressedView = Sprite.from(Texture.WHITE);
+        pressedView.width = elementsWidth;
+        pressedView.height = elementsHeight;
+        pressedView.tint = 0xfe6048;
+
         const button = new FancyButton({
-          defaultView: new Graphics()
-            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-            .fill(0xa5e24d),
-          hoverView: new Graphics()
-            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-            .fill(0xfec230),
-          pressedView: new Graphics()
-            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-            .fill(0xfe6048),
+          defaultView,
+          hoverView,
+          pressedView,
           text: new Text({
             text: `Item ${i + 1}`,
             style: {
@@ -80,7 +104,9 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
         items.push(button);
       }
 
+      console.time(`add ${itemsAmount} Items`);
       scrollBox.addItems(items);
+      console.timeEnd(`add ${itemsAmount} Items`);
 
       view.addChild(scrollBox);
     },
