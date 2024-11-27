@@ -1,7 +1,7 @@
-import { Container, FederatedPointerEvent, Sprite, Text } from 'pixi.js';
+import { Container, FederatedPointerEvent, Sprite, Text, Texture } from 'pixi.js';
 import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 import type { DragObject } from './utils/HelpTypes';
 
@@ -77,7 +77,7 @@ export class SliderBase extends ProgressBar {
      * Sets Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    set slider1(value: Container | string) {
+    set slider1(value: Container | Texture | string) {
         if (!value) return;
 
         if (this._slider1) {
@@ -158,7 +158,7 @@ export class SliderBase extends ProgressBar {
             .on('pointerupoutside', this.endUpdate, this);
     }
 
-    protected createSlider(sliderData: Container | string): Container {
+    protected createSlider(sliderData: GetViewSettings): Container {
         const slider = getView(sliderData);
         const onPointerDown = (event: FederatedPointerEvent) => {
             // This is needed to do proper calculations in update method calls
@@ -183,7 +183,7 @@ export class SliderBase extends ProgressBar {
             slider.anchor.set(0.5);
         }
 
-        container.y = this.bg?.height / 2 ?? 0;
+        container.y = this.bg?.height ? this.bg?.height / 2 : 0;
 
         this.addChild(container);
 

@@ -4,6 +4,7 @@ import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+import { Texture } from 'pixi.js';
 
 const args = {
     value: 50,
@@ -24,7 +25,7 @@ export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, conte
             preload(assets).then(() => {
                 // Component usage !!!
                 progressBar = new ProgressBar({
-                    bg: 'slider_bg.png',
+                    bg: Texture.from('slider_bg.png'),
                     fill: 'slider_progress.png',
                     progress: value,
                     fillPaddings: {

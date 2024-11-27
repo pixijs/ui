@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent, Optional, Size } from 'pixi.js';
+import { Container, FederatedPointerEvent, Optional, Size, Texture } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { DoubleSliderOptions, SliderBase } from './SliderBase';
 
@@ -165,7 +165,7 @@ export class DoubleSlider extends SliderBase {
      * Set Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    override set slider1(value: Container | string) {
+    override set slider1(value: Container | Texture | string) {
         super.slider1 = value;
         this.updateSlider1();
     }

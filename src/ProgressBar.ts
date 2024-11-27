@@ -7,7 +7,7 @@ import {
     Sprite,
     Texture,
 } from 'pixi.js';
-import { getSpriteView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 type FillPaddings = {
     top?: number;
@@ -16,7 +16,7 @@ type FillPaddings = {
     left?: number;
 };
 
-export type ProgressBarViewType = Sprite | Graphics | string;
+export type ProgressBarViewType = GetViewSettings;
 export type NineSliceSprite = {
     bg: [number, number, number, number];
     fill: [number, number, number, number];
@@ -57,8 +57,8 @@ export class ProgressBar extends Container {
     /**
      * Creates a ProgressBar.
      * @param options - Options.
-     * @param { Sprite | Graphics | string } options.bg - Background of the ProgressBar.
-     * @param { Sprite | Graphics | string } options.fill - Fill of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.bg - Background of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.fill - Fill of the ProgressBar.
      * @param { FillPaddings } options.fillPaddings - Fill offsets.
      * @param { number } options.fillPaddings.top - Fill top offset.
      * @param { number } options.fillPaddings.right - Fill right offset.
@@ -116,17 +116,21 @@ export class ProgressBar extends Container {
                     rightWidth: this.options.nineSliceSprite.bg[2],
                     bottomHeight: this.options.nineSliceSprite.bg[3],
                 });
+            } else if (bg instanceof Texture) {
+                this.bg = new PixiNineSliceSprite({
+                    texture: bg,
+                    leftWidth: this.options.nineSliceSprite.bg[0],
+                    topHeight: this.options.nineSliceSprite.bg[1],
+                    rightWidth: this.options.nineSliceSprite.bg[2],
+                    bottomHeight: this.options.nineSliceSprite.bg[3],
+                });
             } else {
                 console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
-        if (bg instanceof Graphics) {
-            this.bg = bg;
-        }
-
-        if (!this.bg && (typeof bg === 'string' || bg instanceof Sprite)) {
-            this.bg = getSpriteView(bg);
+        if (!this.bg) {
+            this.bg = getView(bg) as Sprite | Graphics;
         }
 
         this.innerView.addChildAt(this.bg, 0);
@@ -158,17 +162,19 @@ export class ProgressBar extends Container {
                     rightWidth: this.options.nineSliceSprite.fill[2],
                     bottomHeight: this.options.nineSliceSprite.fill[3],
                 });
+            } else if (fill instanceof Texture) {
+                this.fill = new PixiNineSliceSprite({
+                    texture: fill,
+                    leftWidth: this.options.nineSliceSprite.fill[0],
+                    topHeight: this.options.nineSliceSprite.fill[1],
+                    rightWidth: this.options.nineSliceSprite.fill[2],
+                    bottomHeight: this.options.nineSliceSprite.fill[3],
+                });
             } else {
                 console.warn('NineSliceSprite can not be used with views set as Container.');
             }
-        }
-
-        if (!this.fill) {
-            if (fill instanceof Graphics) {
-                this.fill = fill;
-            } else {
-                this.fill = getSpriteView(fill);
-            }
+        } else {
+            this.fill = getView(fill) as Sprite | Graphics;
         }
 
         this.innerView.addChildAt(this.fill, 1);
