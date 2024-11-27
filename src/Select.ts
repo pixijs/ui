@@ -1,9 +1,9 @@
-import { Container, FillStyleInputs, Graphics, Text } from "pixi.js";
-import { Signal } from "typed-signals";
-import { FancyButton } from "./FancyButton";
-import { ScrollBox, ScrollBoxOptions } from "./ScrollBox";
-import { PixiTextClass, PixiTextStyle } from "./utils/helpers/text";
-import { getView, type GetViewSettings } from "./utils/helpers/view";
+import { Container, FillStyleInputs, Graphics, Text } from 'pixi.js';
+import { Signal } from 'typed-signals';
+import { FancyButton } from './FancyButton';
+import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
+import { PixiTextClass, PixiTextStyle } from './utils/helpers/text';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 const defaultVisibleItems = 5;
 
@@ -127,7 +127,7 @@ export class Select extends Container {
             this.openButton = new FancyButton({
                 defaultView: closedBG,
                 text: new TextClass({
-                    text: items?.items ? items.items[0] : "",
+                    text: items?.items ? items.items[0] : '',
                     style: textStyle,
                 }),
                 textOffset: selectedTextOffset,
@@ -137,7 +137,7 @@ export class Select extends Container {
         } else {
             this.openButton.defaultView = getView(closedBG);
             this.openButton.textView = new TextClass({
-                text: items?.items ? items.items[0] : "",
+                text: items?.items ? items.items[0] : '',
                 style: textStyle,
             });
 
@@ -158,7 +158,7 @@ export class Select extends Container {
                     .rect(0, 0, this.openButton.width, this.openButton.height)
                     .fill({ color: 0x000000, alpha: 0.00001 }),
                 text: new TextClass({
-                    text: items?.items ? items.items[0] : "",
+                    text: items?.items ? items.items[0] : '',
                     style: textStyle,
                 }),
                 textOffset: selectedTextOffset,
@@ -171,7 +171,7 @@ export class Select extends Container {
                 .fill({ color: 0x000000, alpha: 0.00001 });
 
             this.closeButton.textView = new TextClass({
-                text: items?.items ? items.items[0] : "",
+                text: items?.items ? items.items[0] : '',
                 style: textStyle,
             });
 
@@ -188,11 +188,10 @@ export class Select extends Container {
         }
 
         this.scrollBox.init({
-            type: "vertical",
+            type: 'vertical',
             elementsMargin: 0,
             width: this.openButton.width,
-            height:
-                this.openButton.height * (visibleItems ?? defaultVisibleItems),
+            height: this.openButton.height * (visibleItems ?? defaultVisibleItems),
             radius: 0,
             padding: 0,
             ...scrollBox,
@@ -279,9 +278,7 @@ export class Select extends Container {
                 .fill(backgroundColor);
 
             const color = hoverColor ?? backgroundColor;
-            const hoverView = new Graphics()
-                .roundRect(0, 0, width, height, radius)
-                .fill(color);
+            const hoverView = new Graphics().roundRect(0, 0, width, height, radius).fill(color);
 
             const text = new TextClass({ text: item, style: textStyle });
 

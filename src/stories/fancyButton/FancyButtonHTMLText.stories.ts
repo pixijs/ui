@@ -43,8 +43,7 @@ export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -52,8 +51,7 @@ export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
                 `button_disabled.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const title = new HTMLText({
                     text,
                     style: {
@@ -93,8 +91,7 @@ export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 

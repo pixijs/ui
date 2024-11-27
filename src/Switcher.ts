@@ -1,7 +1,7 @@
-import { Container } from "pixi.js";
-import { Signal } from "typed-signals";
-import { getView, type GetViewSettings } from "./utils/helpers/view";
-import { ButtonEvent } from "./utils/HelpTypes";
+import { Container } from 'pixi.js';
+import { Signal } from 'typed-signals';
+import { getView, type GetViewSettings } from './utils/helpers/view';
+import { ButtonEvent } from './utils/HelpTypes';
 
 /**
  * Container based component that switches visibility of a given containers by any of the interaction events.
@@ -19,7 +19,7 @@ import { ButtonEvent } from "./utils/HelpTypes";
  * button.events.onPress.connect(() => console.log('button pressed'));
  */
 export class Switcher extends Container {
-    protected _triggerEvents: Set<ButtonEvent> = new Set(["onPress"]);
+    protected _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
 
     /** Container that holds all the content of the component. */
     innerView: Container;
@@ -38,7 +38,7 @@ export class Switcher extends Container {
     constructor(
         views?: Array<Container | string>,
         triggerEvents?: ButtonEvent | ButtonEvent[],
-        activeViewID?: number
+        activeViewID?: number,
     ) {
         super();
 
@@ -55,14 +55,14 @@ export class Switcher extends Container {
     }
 
     protected setInteractionEvents() {
-        this.innerView.eventMode = "static";
+        this.innerView.eventMode = 'static';
 
-        this.innerView.on("pointerdown", () => this.handleEvents("onDown"));
-        this.innerView.on("pointerup", () => this.handleEvents("onUp"));
-        this.innerView.on("pointerupoutside", () => this.handleEvents("onUpOut"));
-        this.innerView.on("pointerout", () => this.handleEvents("onOut"));
-        this.innerView.on("pointertap", () => this.handleEvents("onPress"));
-        this.innerView.on("pointerover", () => this.handleEvents("onHover"));
+        this.innerView.on('pointerdown', () => this.handleEvents('onDown'));
+        this.innerView.on('pointerup', () => this.handleEvents('onUp'));
+        this.innerView.on('pointerupoutside', () => this.handleEvents('onUpOut'));
+        this.innerView.on('pointerout', () => this.handleEvents('onOut'));
+        this.innerView.on('pointertap', () => this.handleEvents('onPress'));
+        this.innerView.on('pointerover', () => this.handleEvents('onHover'));
     }
 
     protected handleEvents(event: ButtonEvent) {
@@ -124,7 +124,7 @@ export class Switcher extends Container {
      */
     set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[]) {
         this._triggerEvents = new Set(
-            Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents]
+            Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents],
         );
     }
 

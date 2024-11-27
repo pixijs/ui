@@ -1,14 +1,8 @@
-import {
-    Container,
-    FederatedPointerEvent,
-    Optional,
-    Size,
-    Texture,
-} from "pixi.js";
-import { Signal } from "typed-signals";
-import { DoubleSliderOptions, SliderBase } from "./SliderBase";
+import { Container, FederatedPointerEvent, Optional, Size, Texture } from 'pixi.js';
+import { Signal } from 'typed-signals';
+import { DoubleSliderOptions, SliderBase } from './SliderBase';
 
-import type { DragObject } from "./utils/HelpTypes";
+import type { DragObject } from './utils/HelpTypes';
 
 /**
  * Creates a slider with range selection option.
@@ -28,7 +22,7 @@ import type { DragObject } from "./utils/HelpTypes";
 export class DoubleSlider extends SliderBase {
     protected sliderOptions: DoubleSliderOptions;
 
-    protected activeValue: "value1" | "value2";
+    protected activeValue: 'value1' | 'value2';
 
     /** Signal that fires when value have changed. */
     onChange: Signal<(value1: number, value2: number) => void> = new Signal();
@@ -55,8 +49,7 @@ export class DoubleSlider extends SliderBase {
     }
 
     protected updateProgress(value1 = this.value1, value2 = this.value2) {
-        this.progressStart =
-            ((value1 - this.min) / (this.max - this.min)) * 100;
+        this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
         this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
     }
 
@@ -137,18 +130,17 @@ export class DoubleSlider extends SliderBase {
 
         if (!this.activeValue) {
             if (this.slider1 && x < this.slider1.x) {
-                this.activeValue = "value1";
+                this.activeValue = 'value1';
             } else if (this.slider2 && x > this.slider2.x) {
-                this.activeValue = "value2";
+                this.activeValue = 'value2';
             } else {
-                this.activeValue =
-                    slider1Dist < slider2Dist ? "value1" : "value2";
+                this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
             }
         }
 
         const progress = this.validate((x / this.bg?.width) * 100);
 
-        if (this.activeValue === "value1") {
+        if (this.activeValue === 'value1') {
             this.progressStart = progress;
             this.value1 = this.min + ((this.max - this.min) / 100) * progress;
             this.updateProgress(this.value1, this.value2);
@@ -200,9 +192,7 @@ export class DoubleSlider extends SliderBase {
     protected updateSlider1() {
         this.updateProgress(this.value1, this.value2);
 
-        this._slider1.x =
-            (this.bg?.width / 100) * this.progressStart -
-            this._slider1.width / 2;
+        this._slider1.x = (this.bg?.width / 100) * this.progressStart - this._slider1.width / 2;
         this._slider1.y = this.bg?.height / 2;
 
         if (this._slider2 && this._slider1.x > this._slider2.x) {
@@ -215,18 +205,15 @@ export class DoubleSlider extends SliderBase {
             const sliderPosX = this._slider1.x + this._slider1.width / 2;
             const sliderPosY = this._slider1.y;
 
-            this.value1Text.x =
-                sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
-            this.value1Text.y =
-                sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
+            this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value1Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 
     protected updateSlider2() {
         this.updateProgress(this.value1, this.value2);
 
-        this._slider2.x =
-            (this.bg?.width / 100) * this.progress - this._slider2.width / 2;
+        this._slider2.x = (this.bg?.width / 100) * this.progress - this._slider2.width / 2;
         this._slider2.y = this.bg?.height / 2;
 
         if (this._slider2.x < this._slider1.x) {
@@ -239,10 +226,8 @@ export class DoubleSlider extends SliderBase {
             const sliderPosX = this._slider2.x + this._slider2.width / 2;
             const sliderPosY = this._slider2.y;
 
-            this.value2Text.x =
-                sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
-            this.value2Text.y =
-                sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
+            this.value2Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
+            this.value2Text.y = sliderPosY + (this.sliderOptions.valueTextOffset?.y ?? 0);
         }
     }
 
@@ -282,10 +267,7 @@ export class DoubleSlider extends SliderBase {
         return super.height;
     }
 
-    override setSize(
-        value: number | Optional<Size, "height">,
-        height?: number,
-    ): void {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
         super.setSize(value, height);
 
         this.updateSlider1();

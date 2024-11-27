@@ -43,8 +43,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -52,8 +51,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                 `button_disabled.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 BitmapFontManager.install({
                     name: 'TitleFont',
                     style: {
@@ -101,8 +99,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 

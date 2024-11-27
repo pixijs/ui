@@ -15,14 +15,10 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const UseSprite: StoryFn<typeof args> = (
-    { amount, text, textColor, onChange },
-    context,
-) =>
+export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onChange }, context) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({
                 type: 'vertical',
                 elementsMargin: 20,
@@ -30,12 +26,10 @@ export const UseSprite: StoryFn<typeof args> = (
 
             const assets = [`radio.png`, `radio_checked.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const items = [];
 
-                for (let i = 0; i < amount; i++)
-                {
+                for (let i = 0; i < amount; i++) {
                     items.push(
                         new CheckBox({
                             text: `${text} ${i + 1}`,
@@ -60,9 +54,8 @@ export const UseSprite: StoryFn<typeof args> = (
                     elementsMargin: 10,
                 });
 
-                radioGroup.onChange.connect(
-                    (selectedItemID: number, selectedVal: string) =>
-                        onChange({ id: selectedItemID, val: selectedVal }),
+                radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+                    onChange({ id: selectedItemID, val: selectedVal }),
                 );
 
                 list.addChild(radioGroup.innerView);

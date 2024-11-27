@@ -6,8 +6,8 @@ import {
     Size,
     Sprite,
     Texture,
-} from "pixi.js";
-import { getView, type GetViewSettings } from "./utils/helpers/view";
+} from 'pixi.js';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 type FillPaddings = {
     top?: number;
@@ -108,7 +108,7 @@ export class ProgressBar extends Container {
         }
 
         if (this.options?.nineSliceSprite) {
-            if (typeof bg === "string") {
+            if (typeof bg === 'string') {
                 this.bg = new PixiNineSliceSprite({
                     texture: Texture.from(bg),
                     leftWidth: this.options.nineSliceSprite.bg[0],
@@ -125,9 +125,7 @@ export class ProgressBar extends Container {
                     bottomHeight: this.options.nineSliceSprite.bg[3],
                 });
             } else {
-                console.warn(
-                    "NineSliceSprite can not be used with views set as Container.",
-                );
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -150,13 +148,13 @@ export class ProgressBar extends Container {
 
         // in case if user is trying to use same instance for bg and fill
         if (this.bg instanceof Sprite && fill === this.bg) {
-            console.warn("Can not use same Sprite instance for bg and fill.");
+            console.warn('Can not use same Sprite instance for bg and fill.');
 
             return;
         }
 
         if (this.options?.nineSliceSprite) {
-            if (typeof fill === "string") {
+            if (typeof fill === 'string') {
                 this.fill = new PixiNineSliceSprite({
                     texture: Texture.from(fill),
                     leftWidth: this.options.nineSliceSprite.fill[0],
@@ -173,9 +171,7 @@ export class ProgressBar extends Container {
                     bottomHeight: this.options.nineSliceSprite.fill[3],
                 });
             } else {
-                console.warn(
-                    "NineSliceSprite can not be used with views set as Container.",
-                );
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         } else {
             this.fill = getView(fill) as Sprite | Graphics;
@@ -240,10 +236,8 @@ export class ProgressBar extends Container {
 
         if (this.fillMask) {
             this.fill.mask = null;
-            this.fillMask.width =
-                (this.fill.width / 100) * (this._progress - this.progressStart);
-            this.fillMask.x =
-                (this.progressStart / 100) * this.fill.width + this.fill.x;
+            this.fillMask.width = (this.fill.width / 100) * (this._progress - this.progressStart);
+            this.fillMask.x = (this.progressStart / 100) * this.fill.width + this.fill.x;
             this.fillMask.height = this.fill.height;
             this.fill.mask = this.fillMask;
         }
@@ -316,17 +310,14 @@ export class ProgressBar extends Container {
         return super.height;
     }
 
-    override setSize(
-        value: number | Optional<Size, "height">,
-        height?: number,
-    ): void {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
         if (this.options?.nineSliceSprite) {
             if (this.bg) {
                 this.bg.setSize(value, height);
             }
 
             if (this.fill) {
-                if (typeof value === "object") {
+                if (typeof value === 'object') {
                     height = value.height ?? value.width;
                     value = value.width;
                 } else {

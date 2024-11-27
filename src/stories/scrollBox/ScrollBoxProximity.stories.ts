@@ -26,7 +26,7 @@ const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
 export const ProximityEvent: StoryFn<
-  typeof args & { type: 'vertical' | 'horizontal' | undefined }
+    typeof args & { type: 'vertical' | 'horizontal' | undefined }
 > = (
     {
         width,
@@ -46,8 +46,7 @@ export const ProximityEvent: StoryFn<
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const fontColor = '#000000';
             const backgroundColor = '#F5E3A9';
             const disableEasing = false;
@@ -58,8 +57,7 @@ export const ProximityEvent: StoryFn<
             items.length = 0;
             inRangeCache.length = 0;
 
-            for (let i = 0; i < itemsAmount; i++)
-            {
+            for (let i = 0; i < itemsAmount; i++) {
                 const button = new FancyButton({
                     defaultView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
@@ -105,18 +103,15 @@ export const ProximityEvent: StoryFn<
             scrollBox.addItems(items);
 
             // Handle on proximity change event.
-            scrollBox.onProximityChange.connect(({ index, inRange }) =>
-            {
+            scrollBox.onProximityChange.connect(({ index, inRange }) => {
                 inRangeCache[index] = inRange;
             });
 
             view.addChild(scrollBox);
         },
         resize: (view) => centerElement(view.children[0]),
-        update: () =>
-        {
-            items.forEach((item, index) =>
-            {
+        update: () => {
+            items.forEach((item, index) => {
                 const inRange = inRangeCache[index];
 
                 // Fade in/out according to whether the item is within the specified range.

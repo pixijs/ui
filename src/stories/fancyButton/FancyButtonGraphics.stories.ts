@@ -77,12 +77,10 @@ export const UseGraphics: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`avatar-01.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const fill = getColor(textColor);
                 const target = Sprite.from(`avatar-01.png`);
 
@@ -98,9 +96,7 @@ export const UseGraphics: StoryFn<typeof args> = (
 
                 // Component usage !!!
                 const button = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(color),
+                    defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
                     hoverView: new Graphics()
                         .roundRect(0, 0, width, height, radius)
                         .fill(hoverColor),
@@ -162,8 +158,7 @@ export const UseGraphics: StoryFn<typeof args> = (
                     },
                 });
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 

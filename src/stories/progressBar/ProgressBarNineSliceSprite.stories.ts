@@ -1,10 +1,10 @@
-import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
-import { List } from "../../List";
-import { ProgressBar } from "../../ProgressBar";
-import { centerElement } from "../../utils/helpers/resize";
-import { argTypes, getDefaultArgs } from "../utils/argTypes";
-import { preload } from "../utils/loader";
-import { Sprite } from "pixi.js";
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { List } from '../../List';
+import { ProgressBar } from '../../ProgressBar';
+import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
+import { Sprite } from 'pixi.js';
 
 const args = {
     value: 50,
@@ -24,15 +24,15 @@ export const NineSliceSprite: StoryFn<typeof args> = (
     return new PixiStory<typeof args>({
         context,
         init: (view) => {
-            const list = new List({ type: "vertical", elementsMargin: 10 });
+            const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-            const assets = ["slider_bg.png", "slider_progress.png"];
+            const assets = ['slider_bg.png', 'slider_progress.png'];
 
             preload(assets).then(() => {
                 // Component usage !!!
                 progressBar = new ProgressBar({
-                    bg: Sprite.from("slider_bg.png"),
-                    fill: "slider_progress.png",
+                    bg: Sprite.from('slider_bg.png'),
+                    fill: 'slider_progress.png',
                     nineSliceSprite: {
                         bg: [22, 15, 22, 23],
                         fill: [22, 15, 22, 15],
@@ -89,7 +89,7 @@ export const NineSliceSprite: StoryFn<typeof args> = (
 };
 
 export default {
-    title: "Components/ProgressBar/NineSliceSprite",
+    title: 'Components/ProgressBar/NineSliceSprite',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

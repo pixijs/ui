@@ -37,8 +37,7 @@ export const UseHtml = ({
     radius,
 
     onPress,
-}: any) =>
-{
+}: any) => {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     color = getColor(color);
@@ -46,9 +45,8 @@ export const UseHtml = ({
     fillColor = getColor(fillColor);
     fillBorderColor = getColor(fillBorderColor);
 
-    for (let i = 0; i < amount; i++)
-    {
-    // Component usage !!!
+    for (let i = 0; i < amount; i++) {
+        // Component usage !!!
         const checkBox = new CheckBox({
             text: `${text} ${i + 1}`,
             TextClass: HTMLText,
@@ -76,8 +74,7 @@ export const UseHtml = ({
             },
         });
 
-        checkBox.onCheck.connect((checked) =>
-        {
+        checkBox.onCheck.connect((checked) => {
             onPress(`checkBox ${i + 1} ${checked}`);
         });
 

@@ -44,8 +44,7 @@ export const DynamicUpdate: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -60,8 +59,7 @@ export const DynamicUpdate: StoryFn<typeof args> = (
                 `avatar-05.png`,
             ];
 
-            preload([...assets, ...avatars]).then(() =>
-            {
+            preload([...assets, ...avatars]).then(() => {
                 // Component usage !!!
                 const button = new FancyButton();
 
@@ -102,37 +100,21 @@ export const DynamicUpdate: StoryFn<typeof args> = (
 
                 let currentTexture = 'button_hover.png';
 
-                button.onPress.connect(() =>
-                {
+                button.onPress.connect(() => {
                     currentTexture = randomItem(
-                        [
-                            `button_hover.png`,
-                            `button_pressed.png`,
-                            `button_disabled.png`,
-                        ].filter((texture) => texture !== currentTexture),
+                        [`button_hover.png`, `button_pressed.png`, `button_disabled.png`].filter(
+                            (texture) => texture !== currentTexture,
+                        ),
                     ) as string;
 
                     button.hoverView = currentTexture;
 
-                    const texts: string[] = [
-                        '🤙',
-                        '👌',
-                        '👍',
-                        '👏',
-                        '👋',
-                        '🤟',
-                        '🤘',
-                        '🤞',
-                    ];
-                    const text = randomItem(
-                        texts.filter((text) => text !== button.text),
-                    ) as string;
+                    const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
+                    const text = randomItem(texts.filter((text) => text !== button.text)) as string;
 
                     button.textView = new Text({ text, style: { fontSize: 70 } });
 
-                    icon = randomItem(
-                        avatars.filter((avatar) => avatar !== icon),
-                    ) as string;
+                    icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
 
                     const sprite = Sprite.from(icon);
 

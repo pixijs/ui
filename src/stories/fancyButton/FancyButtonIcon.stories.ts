@@ -61,12 +61,10 @@ export const UseIcon: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`avatar-01.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const target = Sprite.from(`avatar-01.png`);
 
                 const icon = new MaskedFrame({
@@ -80,9 +78,7 @@ export const UseIcon: StoryFn<typeof args> = (
 
                 // Component usage !!!
                 const button = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(color),
+                    defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
                     hoverView: new Graphics()
                         .roundRect(0, 0, width, height, radius)
                         .fill(hoverColor),
@@ -124,8 +120,7 @@ export const UseIcon: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 

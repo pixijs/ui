@@ -7,26 +7,22 @@ import {
     Rectangle,
     Texture,
     Ticker,
-} from "pixi.js";
-import { Group, Tween } from "tweedle.js";
-import { ButtonContainer } from "./Button";
-import { fitToView } from "./utils/helpers/fit";
-import { AnyText, getTextView, PixiText } from "./utils/helpers/text";
-import { getView, type GetViewSettings } from "./utils/helpers/view";
+} from 'pixi.js';
+import { Group, Tween } from 'tweedle.js';
+import { ButtonContainer } from './Button';
+import { fitToView } from './utils/helpers/fit';
+import { AnyText, getTextView, PixiText } from './utils/helpers/text';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
-import type { Optional, Size, Sprite } from "pixi.js";
+import type { Optional, Size, Sprite } from 'pixi.js';
 
-type State = "default" | "hover" | "pressed" | "disabled";
+type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
 type PosList = { [K in State]?: Pos };
 
 export type Offset = Pos & PosList;
 
-type ButtonViewType =
-    | "defaultView"
-    | "hoverView"
-    | "pressedView"
-    | "disabledView";
+type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
 
 type BasicButtonViews = {
     [K in ButtonViewType]?: Container | NineSliceSprite;
@@ -236,7 +232,7 @@ export class FancyButton extends ButtonContainer {
             Ticker.shared.add(() => Group.shared.update());
         }
 
-        this.setState("default");
+        this.setState('default');
 
         this.defaultView = defaultView;
         this.hoverView = hoverView;
@@ -254,7 +250,7 @@ export class FancyButton extends ButtonContainer {
      */
     set text(text: AnyText) {
         if (!text || text === 0) {
-            this.removeView("textView");
+            this.removeView('textView');
 
             return;
         }
@@ -280,7 +276,7 @@ export class FancyButton extends ButtonContainer {
     override set enabled(enabled: boolean) {
         this.button.enabled = enabled;
 
-        this.setState(enabled ? "default" : "disabled");
+        this.setState(enabled ? 'default' : 'disabled');
     }
 
     override get enabled(): boolean {
@@ -375,26 +371,18 @@ export class FancyButton extends ButtonContainer {
         if (!this._views) return undefined;
 
         switch (state) {
-            case "hover":
-                return (
-                    this._views.hoverView ??
-                    this._views.defaultView ??
-                    undefined
-                );
-            case "pressed":
+            case 'hover':
+                return this._views.hoverView ?? this._views.defaultView ?? undefined;
+            case 'pressed':
                 return (
                     this._views.pressedView ??
                     this._views.hoverView ??
                     this._views.defaultView ??
                     undefined
                 );
-            case "disabled":
-                return (
-                    this._views.disabledView ??
-                    this._views.defaultView ??
-                    undefined
-                );
-            case "default":
+            case 'disabled':
+                return this._views.disabledView ?? this._views.defaultView ?? undefined;
+            case 'default':
                 return this._views.defaultView ?? undefined;
             default:
                 return undefined;
@@ -413,10 +401,7 @@ export class FancyButton extends ButtonContainer {
 
         if (activeView) {
             if (!this.options?.ignoreRefitting) {
-                this._views.textView.scale.set(
-                    this._defaultTextScale.x,
-                    this._defaultTextScale.y,
-                );
+                this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
             fitToView(activeView, this._views.textView, this.padding, false);
@@ -446,28 +431,19 @@ export class FancyButton extends ButtonContainer {
         }
 
         if (!this.options?.ignoreRefitting) {
-            this._views.iconView.scale.set(
-                this._defaultIconScale.x,
-                this._defaultIconScale.y,
-            );
+            this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
 
         const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
 
         fitToView(activeView, this._views.iconView, this.padding, false);
 
-        if ("anchor" in this._views.iconView) {
-            (this._views.iconView.anchor as ObservablePoint).set(
-                anchorX,
-                anchorY,
-            );
+        if ('anchor' in this._views.iconView) {
+            (this._views.iconView.anchor as ObservablePoint).set(anchorX, anchorY);
         } else {
             this._views.iconView.pivot.set(
-                anchorX *
-                    (this._views.iconView.width / this._views.iconView.scale.x),
-                anchorY *
-                    (this._views.iconView.height /
-                        this._views.iconView.scale.y),
+                anchorX * (this._views.iconView.width / this._views.iconView.scale.x),
+                anchorY * (this._views.iconView.height / this._views.iconView.scale.y),
             );
         }
 
@@ -519,7 +495,7 @@ export class FancyButton extends ButtonContainer {
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
     set defaultView(view: GetViewSettings | null) {
-        this.updateView("defaultView", view);
+        this.updateView('defaultView', view);
     }
 
     /** Returns the default view of the button. */
@@ -532,8 +508,8 @@ export class FancyButton extends ButtonContainer {
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
     set hoverView(view: GetViewSettings | null) {
-        this.updateView("hoverView", view);
-        if (this._views.hoverView && this.state !== "hover") {
+        this.updateView('hoverView', view);
+        if (this._views.hoverView && this.state !== 'hover') {
             this._views.hoverView.visible = false;
         }
     }
@@ -545,7 +521,7 @@ export class FancyButton extends ButtonContainer {
 
     /** Sets the pressed view of the button. */
     set pressedView(view: GetViewSettings | null) {
-        this.updateView("pressedView", view);
+        this.updateView('pressedView', view);
         if (this._views.pressedView) {
             this._views.pressedView.visible = false;
         }
@@ -558,7 +534,7 @@ export class FancyButton extends ButtonContainer {
 
     /** Sets the disabled view of the button. */
     set disabledView(view: GetViewSettings | null) {
-        this.updateView("disabledView", view);
+        this.updateView('disabledView', view);
         if (this._views.disabledView) {
             this._views.disabledView.visible = false;
         }
@@ -574,10 +550,7 @@ export class FancyButton extends ButtonContainer {
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
      * @param { string | Texture | Container | null } view - new view
      */
-    protected updateView(
-        viewType: ButtonViewType,
-        view: GetViewSettings | null,
-    ) {
+    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null) {
         if (view === undefined) return;
 
         this.removeView(viewType);
@@ -587,7 +560,7 @@ export class FancyButton extends ButtonContainer {
         }
 
         if (this.options?.nineSliceSprite) {
-            if (typeof view === "string") {
+            if (typeof view === 'string') {
                 this._views[viewType] = new NineSliceSprite({
                     texture: Texture.from(view),
                     leftWidth: this.options.nineSliceSprite[0],
@@ -604,9 +577,7 @@ export class FancyButton extends ButtonContainer {
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             } else {
-                console.warn(
-                    "NineSliceSprite can not be used with views set as Container.",
-                );
+                console.warn('NineSliceSprite can not be used with views set as Container.');
             }
         }
 
@@ -639,7 +610,7 @@ export class FancyButton extends ButtonContainer {
      * Removes button view by type
      * @param {'defaultView' | 'hoverView' | 'pressedView' | 'disabledView'} viewType - type of the view to remove
      */
-    removeView(viewType: ButtonViewType | "textView" | "iconView") {
+    removeView(viewType: ButtonViewType | 'textView' | 'iconView') {
         if (this._views[viewType]) {
             this.innerView.removeChild(this._views[viewType]);
             this._views[viewType] = null;
@@ -653,7 +624,7 @@ export class FancyButton extends ButtonContainer {
     set textView(textView: AnyText | null) {
         if (textView === undefined) return;
 
-        this.removeView("textView");
+        this.removeView('textView');
 
         if (textView === null) {
             return;
@@ -677,7 +648,7 @@ export class FancyButton extends ButtonContainer {
     set iconView(view: GetViewSettings | null) {
         if (view === undefined) return;
 
-        this.removeView("iconView");
+        this.removeView('iconView');
 
         if (view === null) {
             return;
@@ -711,7 +682,7 @@ export class FancyButton extends ButtonContainer {
     protected playAnimations(state: State) {
         if (!this.animations) return;
 
-        if (state === "default" && !this.originalInnerViewState) {
+        if (state === 'default' && !this.originalInnerViewState) {
             this.originalInnerViewState = {
                 x: this.innerView.x,
                 y: this.innerView.y,
@@ -728,31 +699,22 @@ export class FancyButton extends ButtonContainer {
             const defaultStateAnimation = this.animations?.default;
 
             if (defaultStateAnimation) {
-                this.innerView.x =
-                    defaultStateAnimation.props.x ??
-                    this.originalInnerViewState.x;
-                this.innerView.y =
-                    defaultStateAnimation.props.y ??
-                    this.originalInnerViewState.y;
+                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
+                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
                 this.innerView.width =
-                    defaultStateAnimation.props.width ??
-                    this.originalInnerViewState.width;
+                    defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
                 this.innerView.height =
-                    defaultStateAnimation.props.height ??
-                    this.originalInnerViewState.height;
+                    defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
                 this.innerView.scale.x =
-                    defaultStateAnimation.props.scale.x ??
-                    this.originalInnerViewState.scale.x;
+                    defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
                 this.innerView.scale.y =
-                    defaultStateAnimation.props.scale.y ??
-                    this.originalInnerViewState.scale.y;
+                    defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
 
                 return;
             }
         }
 
-        const stateAnimation =
-            this.animations[state] ?? this.animations.default;
+        const stateAnimation = this.animations[state] ?? this.animations.default;
 
         if (stateAnimation) {
             const data = stateAnimation;
@@ -765,39 +727,35 @@ export class FancyButton extends ButtonContainer {
         }
 
         // if there is no animation for the current state, animate the button to the default state
-        new Tween(this.innerView)
-            .to(this.originalInnerViewState, this.defaultDuration)
-            .start();
+        new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
 
     protected initStateControl() {
         this.onDown.connect(() => {
-            this.setState("pressed");
+            this.setState('pressed');
         });
 
         this.onUp.connect(() => {
-            isMobile.any ? this.setState("default") : this.setState("hover");
+            isMobile.any ? this.setState('default') : this.setState('hover');
         });
 
         this.onUpOut.connect(() => {
-            this.setState("default");
+            this.setState('default');
         });
 
         this.onOut.connect(() => {
             if (!this.button.isDown) {
-                this.setState("default");
+                this.setState('default');
             }
         });
 
         this.onPress.connect(() => {
-            isMobile.any ? this.setState("default") : this.setState("hover");
+            isMobile.any ? this.setState('default') : this.setState('hover');
         });
 
         this.onHover.connect(() => {
             if (!this.button.isDown) {
-                isMobile.any
-                    ? this.setState("default")
-                    : this.setState("hover");
+                isMobile.any ? this.setState('default') : this.setState('hover');
             }
         });
     }
@@ -858,10 +816,10 @@ export class FancyButton extends ButtonContainer {
         if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.defaultTextScale = scale;
-        const isNumber = typeof scale === "number";
+        const isNumber = typeof scale === 'number';
 
-        this._defaultTextScale.x = isNumber ? scale : (scale.x ?? 1);
-        this._defaultTextScale.y = isNumber ? scale : (scale.y ?? 1);
+        this._defaultTextScale.x = isNumber ? scale : scale.x ?? 1;
+        this._defaultTextScale.y = isNumber ? scale : scale.y ?? 1;
         this.adjustTextView(this.state);
     }
 
@@ -878,10 +836,10 @@ export class FancyButton extends ButtonContainer {
         if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.defaultIconScale = scale;
-        const isNumber = typeof scale === "number";
+        const isNumber = typeof scale === 'number';
 
-        this._defaultIconScale.x = isNumber ? scale : (scale.x ?? 1);
-        this._defaultIconScale.y = isNumber ? scale : (scale.y ?? 1);
+        this._defaultIconScale.x = isNumber ? scale : scale.x ?? 1;
+        this._defaultIconScale.y = isNumber ? scale : scale.y ?? 1;
         this.adjustIconView(this.state);
     }
 
@@ -898,10 +856,10 @@ export class FancyButton extends ButtonContainer {
         if (anchor === undefined) return;
         // Apply to the options so that the manual anchor is prioritized.
         this.options.defaultTextAnchor = anchor;
-        const isNumber = typeof anchor === "number";
+        const isNumber = typeof anchor === 'number';
 
-        this._defaultTextAnchor.x = isNumber ? anchor : (anchor.x ?? 1);
-        this._defaultTextAnchor.y = isNumber ? anchor : (anchor.y ?? 1);
+        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 1;
+        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 1;
         this.adjustTextView(this.state);
     }
 
@@ -918,10 +876,10 @@ export class FancyButton extends ButtonContainer {
         if (anchor === undefined) return;
         // Apply to the options so that the manual anchor is prioritized.
         this.options.defaultIconAnchor = anchor;
-        const isNumber = typeof anchor === "number";
+        const isNumber = typeof anchor === 'number';
 
-        this._defaultIconAnchor.x = isNumber ? anchor : (anchor.x ?? 1);
-        this._defaultIconAnchor.y = isNumber ? anchor : (anchor.y ?? 1);
+        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 1;
+        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 1;
         this.adjustIconView(this.state);
     }
 
@@ -998,10 +956,7 @@ export class FancyButton extends ButtonContainer {
         return super.height;
     }
 
-    override setSize(
-        value: number | Optional<Size, "height">,
-        height?: number,
-    ): void {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
         if (this.options?.nineSliceSprite) {
             if (this._views.defaultView) {
                 this._views.defaultView.setSize(value, height);

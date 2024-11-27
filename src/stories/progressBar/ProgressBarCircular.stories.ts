@@ -1,23 +1,21 @@
-import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
-import { CircularProgressBar } from "../../CircularProgressBar";
-import { centerElement } from "../../utils/helpers/resize";
-import { argTypes, getDefaultArgs } from "../utils/argTypes";
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { CircularProgressBar } from '../../CircularProgressBar';
+import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
-    backgroundColor: "#3d3d3d",
-    fillColor: "#00b1dd",
+    backgroundColor: '#3d3d3d',
+    fillColor: '#00b1dd',
     radius: 50,
     lineWidth: 15,
     value: 50,
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
     animate: true,
-    cap: ["round", "butt", "square"],
+    cap: ['round', 'butt', 'square'],
 };
 
-export const circular: StoryFn<
-    typeof args & { cap: "round" | "butt" | "square" }
-> = (
+export const circular: StoryFn<typeof args & { cap: 'round' | 'butt' | 'square' }> = (
     {
         backgroundColor,
         fillColor,
@@ -77,7 +75,7 @@ export const circular: StoryFn<
 };
 
 export default {
-    title: "Components/ProgressBar/Circular",
+    title: 'Components/ProgressBar/Circular',
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };
