@@ -28,7 +28,9 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const UseNineSliceSprite: StoryFn<typeof args & { contentFittingMode: 'default' | 'fill' | 'none' }> = (
+export const UseNineSliceSprite: StoryFn<
+    typeof args & { contentFittingMode: 'default' | 'fill' | 'none' }
+> = (
     {
         text,
         textColor,

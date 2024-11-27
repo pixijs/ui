@@ -25,22 +25,25 @@ const args = {
     onChange: action('Input'),
 };
 
-export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
-    text,
-    amount,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-    textColor,
-    fontSize,
-    maxLength,
-    align,
-    placeholder,
-    secure,
-    addMask,
-    onChange
-}, context) =>
+export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = (
+    {
+        text,
+        amount,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+        textColor,
+        fontSize,
+        maxLength,
+        align,
+        placeholder,
+        secure,
+        addMask,
+        onChange,
+    },
+    context,
+) =>
     new PixiStory({
         context,
         init: (view) => {

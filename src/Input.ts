@@ -175,7 +175,9 @@ export class Input extends Container {
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
         this.options.TextClass = options.TextClass ?? Text;
         const textStyle = { ...defaultTextStyle, ...options.textStyle };
-        const colorSource = Color.isColorLike(this.options.textStyle.fill) ? this.options.textStyle.fill : 0x000000;
+        const colorSource = Color.isColorLike(this.options.textStyle.fill)
+            ? this.options.textStyle.fill
+            : 0x000000;
 
         this.inputField = new this.options.TextClass({
             text: '',
@@ -464,8 +466,7 @@ export class Input extends Container {
         this._value = text;
         this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
 
-        if (textLength !== 0)
-        {
+        if (textLength !== 0) {
             this.placeholder.visible = false;
         } else {
             this.placeholder.visible = !this.editing;

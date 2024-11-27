@@ -411,35 +411,32 @@ export class FancyButton extends ButtonContainer {
         const { x: anchorX, y: anchorY } = this._defaultTextAnchor;
 
         if (activeView) {
-            if (!this.options?.ignoreRefitting) {
-        if (activeView)
-        {
-            if (!this.options.ignoreRefitting)
-            {
+            if (!this.options.ignoreRefitting) {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
-            if (this.contentFittingMode === 'default')
-            {
+            if (this.contentFittingMode === 'default') {
                 fitToView(activeView, this._views.textView, this.padding, false);
             }
 
-            if (this.contentFittingMode === 'fill')
-            {
+            if (this.contentFittingMode === 'fill') {
                 // reset to base dimensions for calculations
                 this._views.textView.scale.set(1);
 
-                const availableWidth = activeView.width - (this.padding * 2);
-                const availableHeight = activeView.height - (this.padding * 2);
+                const availableWidth = activeView.width - this.padding * 2;
+                const availableHeight = activeView.height - this.padding * 2;
                 const targetScaleX = availableWidth / this._views.textView.width;
                 const targetScaleY = availableHeight / this._views.textView.height;
                 const scale = Math.min(targetScaleX, targetScaleY);
 
-                this._views.textView.scale.set(scale * this._defaultTextScale.x, scale * this._defaultTextScale.y);
+                this._views.textView.scale.set(
+                    scale * this._defaultTextScale.x,
+                    scale * this._defaultTextScale.y,
+                );
             }
 
-            this._views.textView.x = activeView.x + (activeView.width / 2);
-            this._views.textView.y = activeView.y + (activeView.height / 2);
+            this._views.textView.x = activeView.x + activeView.width / 2;
+            this._views.textView.y = activeView.y + activeView.height / 2;
         }
 
         this._views.textView.anchor.set(anchorX, anchorY);
@@ -462,34 +459,33 @@ export class FancyButton extends ButtonContainer {
             return;
         }
 
-        if (!this.options.ignoreRefitting)
-        {
+        if (!this.options.ignoreRefitting) {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
 
-        if (this.contentFittingMode === 'default')
-        {
+        if (this.contentFittingMode === 'default') {
             fitToView(activeView, this._views.iconView, this.padding, false);
         }
 
-        if (this.contentFittingMode === 'fill')
-        {
+        if (this.contentFittingMode === 'fill') {
             // reset to base dimensions for calculations
             this._views.iconView.scale.set(1);
 
-            const availableWidth = activeView.width - (this.padding * 2);
-            const availableHeight = activeView.height - (this.padding * 2);
+            const availableWidth = activeView.width - this.padding * 2;
+            const availableHeight = activeView.height - this.padding * 2;
             const targetScaleX = availableWidth / this._views.iconView.width;
             const targetScaleY = availableHeight / this._views.iconView.height;
             const scale = Math.min(targetScaleX, targetScaleY);
 
-            this._views.iconView.scale.set(scale * this._defaultIconScale.x, scale * this._defaultIconScale.y);
+            this._views.iconView.scale.set(
+                scale * this._defaultIconScale.x,
+                scale * this._defaultIconScale.y,
+            );
         }
 
         const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
 
-        if ('anchor' in this._views.iconView)
-        {
+        if ('anchor' in this._views.iconView) {
             (this._views.iconView.anchor as ObservablePoint).set(anchorX, anchorY);
         } else {
             this._views.iconView.pivot.set(
@@ -545,14 +541,12 @@ export class FancyButton extends ButtonContainer {
      * Sets the fitting mode for the button's content.
      * @param {ContentFittingMode} mode - fitting mode type.
      */
-    set contentFittingMode(mode: ContentFittingMode)
-    {
+    set contentFittingMode(mode: ContentFittingMode) {
         this.options.contentFittingMode = mode;
     }
 
     /** Returns the fitting mode for the button's content, defaulting to 'default'. */
-    get contentFittingMode(): ContentFittingMode
-    {
+    get contentFittingMode(): ContentFittingMode {
         return this.options.contentFittingMode ?? 'default';
     }
 
