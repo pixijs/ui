@@ -24,10 +24,11 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
+    contentFittingMode: ['default', 'fill', 'none'],
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const UseNineSliceSprite: StoryFn<typeof args> = (
+export const UseNineSliceSprite: StoryFn<typeof args & { contentFittingMode: 'default' | 'fill' | 'none' }> = (
     {
         text,
         textColor,
@@ -45,6 +46,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
         defaultTextAnchorY,
         defaultIconAnchorX,
         defaultIconAnchorY,
+        contentFittingMode,
     },
     context,
 ) =>
@@ -104,6 +106,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
                             duration: animationDuration,
                         },
                     },
+                    contentFittingMode,
                 });
 
                 button.iconView = new MaskedFrame({
