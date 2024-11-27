@@ -10,6 +10,7 @@ import { action } from '@storybook/addon-actions';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     maxLength: 20,
@@ -24,24 +25,22 @@ const args = {
     onChange: action('Input'),
 };
 
-export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = (
-    {
-        text,
-        amount,
-        paddingTop,
-        paddingRight,
-        paddingBottom,
-        paddingLeft,
-        textColor,
-        fontSize,
-        maxLength,
-        align,
-        placeholder,
-        addMask,
-        onChange,
-    },
-    context,
-) =>
+export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
+    text,
+    amount,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    textColor,
+    fontSize,
+    maxLength,
+    align,
+    placeholder,
+    secure,
+    addMask,
+    onChange
+}, context) =>
     new PixiStory({
         context,
         init: (view) => {
@@ -63,6 +62,7 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
                         maxLength,
                         align,
                         placeholder,
+                        secure,
                         value: text,
                         addMask,
                     });

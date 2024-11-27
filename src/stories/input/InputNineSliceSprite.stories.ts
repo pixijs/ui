@@ -9,6 +9,7 @@ import { action } from '@storybook/addon-actions';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     maxLength: 20,
@@ -37,6 +38,7 @@ export const UseNineSliceSprite: StoryFn<typeof args & { align: 'center' | 'left
         maxLength,
         align,
         placeholder,
+        secure,
         width,
         height,
         addMask,
@@ -66,6 +68,7 @@ export const UseNineSliceSprite: StoryFn<typeof args & { align: 'center' | 'left
                         maxLength,
                         align,
                         placeholder,
+                        secure,
                         value: text,
                         addMask,
                     });
