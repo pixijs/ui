@@ -43,8 +43,7 @@ export const UseSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -52,8 +51,7 @@ export const UseSprite: StoryFn<typeof args> = (
                 `button_disabled.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const button = new FancyButton({
                     defaultView: `button.png`,
@@ -70,7 +68,10 @@ export const UseSprite: StoryFn<typeof args> = (
                     padding,
                     textOffset: { x: textOffsetX, y: textOffsetY },
                     defaultTextScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {
@@ -91,8 +92,7 @@ export const UseSprite: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 

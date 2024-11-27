@@ -1,8 +1,7 @@
 import { Container, FederatedPointerEvent, Point } from 'pixi.js';
 
 /** TODO */
-export interface DragObject extends Container
-{
+export interface DragObject extends Container {
     dragData: FederatedPointerEvent;
     dragging: number;
     dragPointerStart: Container;
@@ -12,15 +11,15 @@ export interface DragObject extends Container
 
 export const BUTTON_EVENTS = ['onPress', 'onDown', 'onUp', 'onHover', 'onOut', 'onUpOut'];
 
-export type ButtonEvent = typeof BUTTON_EVENTS[number];
+export type ButtonEvent = (typeof BUTTON_EVENTS)[number];
 
 export type Padding =
-  | number
-  | [number, number]
-  | [number, number, number, number]
-  | {
-      left?: number;
-      right?: number;
-      top?: number;
-      bottom?: number;
-  };
+    | number
+    | [number, number]
+    | [number, number, number, number]
+    | {
+          left?: number;
+          right?: number;
+          top?: number;
+          bottom?: number;
+      };

@@ -19,12 +19,9 @@ export const UseGraphics: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const buttonView = new Container();
-            const buttonBg = new Graphics()
-                .roundRect(0, 0, size, size, radius)
-                .fill(color);
+            const buttonBg = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
             const text = new Text({ text: '🤙', style: { fontSize: 70 } });
 
             text.anchor.set(0.5);

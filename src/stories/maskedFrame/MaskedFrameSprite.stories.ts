@@ -9,18 +9,13 @@ const args = {
     borderWidth: 10,
 };
 
-export const UseSprite: StoryFn<typeof args> = (
-    { borderColor, borderWidth },
-    context,
-) =>
+export const UseSprite: StoryFn<typeof args> = ({ borderColor, borderWidth }, context) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`avatar-01.png`, `avatar_mask.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const frame = new MaskedFrame({
                     target: `avatar-01.png`,

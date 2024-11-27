@@ -10,6 +10,7 @@ import { action } from '@storybook/addon-actions';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     maxLength: 20,
@@ -24,38 +25,31 @@ const args = {
     onChange: action('Input'),
 };
 
-export const UseSprite: StoryFn<
-  typeof args & { align: 'center' | 'left' | 'right' }
-> = (
-    {
-        text,
-        amount,
-        paddingTop,
-        paddingRight,
-        paddingBottom,
-        paddingLeft,
-        textColor,
-        fontSize,
-        maxLength,
-        align,
-        placeholder,
-        addMask,
-        onChange,
-    },
-    context,
-) =>
+export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
+    text,
+    amount,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    textColor,
+    fontSize,
+    maxLength,
+    align,
+    placeholder,
+    secure,
+    addMask,
+    onChange
+}, context) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage
                     const input = new Input({
                         bg: Sprite.from('input.png'),
@@ -68,6 +62,7 @@ export const UseSprite: StoryFn<
                         maxLength,
                         align,
                         placeholder,
+                        secure,
                         value: text,
                         addMask,
                     });

@@ -26,8 +26,7 @@ export type SliderOptions = BaseSliderOptions & {
  *     console.log(`Slider changed to ${value}`);
  * });
  */
-export class Slider extends SliderBase
-{
+export class Slider extends SliderBase {
     protected sliderOptions: SliderOptions;
 
     /** Fires when value is changing, on every move of slider. */
@@ -36,12 +35,11 @@ export class Slider extends SliderBase
     /** Fires when value changed, only when slider is released. */
     onChange: Signal<(value: number) => void> = new Signal();
 
-    constructor(options: SliderOptions)
-    {
+    constructor(options: SliderOptions) {
         super({
             slider1: options.slider,
             value1: options.value,
-            ...options
+            ...options,
         });
 
         this.sliderOptions = options;
@@ -54,14 +52,12 @@ export class Slider extends SliderBase
     }
 
     /** Return selected value. */
-    get value(): number
-    {
+    get value(): number {
         return this._value1;
     }
 
     /** Set selected value. */
-    set value(value: number)
-    {
+    set value(value: number) {
         if (value === this._value1) return;
 
         if (value < this.min) value = this.min;
@@ -74,49 +70,41 @@ export class Slider extends SliderBase
         this.onUpdate?.emit(this.value);
     }
 
-    override set max(value: number)
-    {
+    override set max(value: number) {
         super.max = value;
         this.updateSlider();
     }
 
-    override get max(): number
-    {
+    override get max(): number {
         return super.max;
     }
 
-    override set min(value: number)
-    {
+    override set min(value: number) {
         super.min = value;
         this.updateSlider();
     }
 
-    override get min(): number
-    {
+    override get min(): number {
         return super.min;
     }
 
-    override set step(value: number)
-    {
+    override set step(value: number) {
         super.step = value;
         this.updateSlider();
     }
 
-    override get step(): number
-    {
+    override get step(): number {
         return super.step;
     }
 
     /** Set slider instance ot texture. */
     // eslint-disable-next-line accessor-pairs
-    set slider(value: Container | string)
-    {
+    set slider(value: Container | string) {
         this.slider1 = value;
         this.updateSlider();
     }
 
-    protected override update(event: FederatedPointerEvent)
-    {
+    protected override update(event: FederatedPointerEvent) {
         super.update(event);
 
         if (!this.dragging) return;
@@ -124,29 +112,26 @@ export class Slider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
         const positionRatio = x / (this.bg?.width || 1);
-        const rawValue = this.min + (positionRatio * (this.max - this.min));
+        const rawValue = this.min + positionRatio * (this.max - this.min);
 
         // Snap the raw value to the nearest step
         this.value = Math.round(rawValue / this.step) * this.step;
     }
 
-    protected override change()
-    {
+    protected override change() {
         this.onChange?.emit(this.value);
     }
 
-    protected updateSlider()
-    {
-        this.progress = ((this.value ?? this.min) - this.min) / (this.max - this.min) * 100;
+    protected updateSlider() {
+        this.progress = (((this.value ?? this.min) - this.min) / (this.max - this.min)) * 100;
 
-        this._slider1.x = ((this.bg?.width / 100) * this.progress) - (this._slider1.width / 2);
+        this._slider1.x = (this.bg?.width / 100) * this.progress - this._slider1.width / 2;
         this._slider1.y = this.bg?.height / 2;
 
-        if (this.sliderOptions?.showValue)
-        {
+        if (this.sliderOptions?.showValue) {
             this.value1Text.text = `${Math.round(this.value)}`;
 
-            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosX = this._slider1.x + this._slider1.width / 2;
             const sliderPosY = this._slider1.y;
 
             this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
@@ -160,16 +145,14 @@ export class Slider extends SliderBase
      * If nineSliceSprite is not set, then width will control components width as Container.
      * @param value - Width value.
      */
-    override set width(value: number)
-    {
+    override set width(value: number) {
         super.width = value;
 
         this.updateSlider();
     }
 
     /** Gets width of a Slider. */
-    override get width(): number
-    {
+    override get width(): number {
         return super.width;
     }
 
@@ -179,21 +162,18 @@ export class Slider extends SliderBase
      * If nineSliceSprite is not set, then height will control components height as Container.
      * @param value - Height value.
      */
-    override set height(value: number)
-    {
+    override set height(value: number) {
         super.height = value;
 
         this.updateSlider();
     }
 
     /** Gets height of a Slider. */
-    override get height(): number
-    {
+    override get height(): number {
         return super.height;
     }
 
-    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
-    {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
         super.setSize(value, height);
         this.updateSlider();
     }

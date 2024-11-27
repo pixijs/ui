@@ -14,8 +14,7 @@ const args = {
     action: action('Button'),
 };
 
-export class SpriteButton extends Button
-{
+export class SpriteButton extends Button {
     private buttonView = new Container();
     private textView: Text;
     private buttonBg = new Sprite();
@@ -26,47 +25,41 @@ export class SpriteButton extends Button
         textColor: string;
         disabled: boolean;
         action: (event: string) => void;
-    })
-    {
+    }) {
         super(/* we can set a view for button later */);
 
         this.view = this.buttonView;
 
-        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(
-            () =>
-            {
-                this.buttonBg.texture = Texture.from('button.png');
+        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(() => {
+            this.buttonBg.texture = Texture.from('button.png');
 
-                this.buttonBg.anchor.set(0.5);
+            this.buttonBg.anchor.set(0.5);
 
-                this.textView = new Text({
-                    text: props.text,
-                    style: {
-                        ...defaultTextStyle,
-                        fontSize: 40,
-                        fill: props.textColor,
-                    },
-                });
-                this.textView.y = -10;
-                this.textView.anchor.set(0.5);
+            this.textView = new Text({
+                text: props.text,
+                style: {
+                    ...defaultTextStyle,
+                    fontSize: 40,
+                    fill: props.textColor,
+                },
+            });
+            this.textView.y = -10;
+            this.textView.anchor.set(0.5);
 
-                this.buttonView.addChild(this.buttonBg, this.textView);
+            this.buttonView.addChild(this.buttonBg, this.textView);
 
-                this.enabled = !props.disabled;
-            },
-        );
+            this.enabled = !props.disabled;
+        });
 
         this.action = props.action;
     }
 
-    override down()
-    {
+    override down() {
         this.buttonBg.texture = Texture.from('button_pressed.png');
         this.action('down');
     }
 
-    override up()
-    {
+    override up() {
         this.buttonBg.texture = isMobile.any
             ? Texture.from('button.png')
             : Texture.from('button_hover.png');
@@ -74,30 +67,24 @@ export class SpriteButton extends Button
         this.action('up');
     }
 
-    override upOut()
-    {
+    override upOut() {
         this.buttonBg.texture = Texture.from('button.png');
         this.action('upOut');
     }
 
-    override out()
-    {
-        if (!this.isDown)
-        {
+    override out() {
+        if (!this.isDown) {
             this.buttonBg.texture = Texture.from('button.png');
         }
         this.action('out');
     }
 
-    override press()
-    {
+    override press() {
         this.action('onPress');
     }
 
-    override hover()
-    {
-        if (!this.isDown)
-        {
+    override hover() {
+        if (!this.isDown) {
             this.buttonBg.texture = Texture.from('button_hover.png');
         }
         this.action('hover');
@@ -107,8 +94,7 @@ export class SpriteButton extends Button
 export const UseSprite: StoryFn<typeof args> = (params, context) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const buttonView = new SpriteButton(params);
 
             view.addChild(buttonView.view);

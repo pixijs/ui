@@ -26,8 +26,7 @@ export type MaskedProgressBarOptions = {
  *
  * progressBar.progress = 100;
  */
-export class CircularProgressBar extends Container
-{
+export class CircularProgressBar extends Container {
     private _progress = 0;
     private options: MaskedProgressBarOptions;
 
@@ -49,8 +48,7 @@ export class CircularProgressBar extends Container
      * @param { number } options.fillAlpha - Fill alpha.
      * @param { 'butt' | 'round' | 'square' } options.cap - Line cap.
      */
-    constructor(options?: MaskedProgressBarOptions)
-    {
+    constructor(options?: MaskedProgressBarOptions) {
         super();
 
         this.options = options;
@@ -61,86 +59,71 @@ export class CircularProgressBar extends Container
 
         this.addBackground();
 
-        if (options.value)
-        {
+        if (options.value) {
             this.progress = options.value;
         }
     }
 
-    private addBackground()
-    {
-        const {
-            backgroundColor,
-            lineWidth,
-            radius,
-            backgroundAlpha,
-        } = this.options;
+    private addBackground() {
+        const { backgroundColor, lineWidth, radius, backgroundAlpha } = this.options;
 
         let alpha = 1;
 
-        if (backgroundAlpha > 0)
-        {
+        if (backgroundAlpha > 0) {
             alpha = backgroundAlpha;
         }
 
-        if (backgroundColor === undefined)
-        {
+        if (backgroundColor === undefined) {
             alpha = 0.000001;
         }
 
-        this.bgCircle
-            .circle(0, 0, radius)
-            .stroke({
-                width: lineWidth,
-                color: backgroundColor,
-                alpha
-            });
+        this.bgCircle.circle(0, 0, radius).stroke({
+            width: lineWidth,
+            color: backgroundColor,
+            alpha,
+        });
     }
 
     /**
      * Set progress value.
      * @param { number } value - Progress value.
      */
-    set progress(value: number)
-    {
-        if (value > 100)
-        {
+    set progress(value: number) {
+        if (value > 100) {
             value = 100;
         }
 
-        if (value < 0)
-        {
+        if (value < 0) {
             value = 0;
         }
 
         this._progress = value;
 
-        const {
-            lineWidth,
-            radius,
-            fillColor,
-            fillAlpha,
-            cap
-        } = this.options;
+        const { lineWidth, radius, fillColor, fillAlpha, cap } = this.options;
 
-        if (value === 0 && fillAlpha === 0)
-        {
+        if (value === 0 && fillAlpha === 0) {
             this.fillCircle.clear();
 
             return;
         }
 
         const startAngle = 0;
-        const endAngle = 360 / 100 * value;
+        const endAngle = (360 / 100) * value;
 
         this.fillCircle
             .clear()
-            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD)
+            .arc(
+                0,
+                0,
+                radius,
+                (0 - 90 + startAngle) * DEG_TO_RAD,
+                (0 - 90 + startAngle + endAngle) * DEG_TO_RAD,
+            )
             .stroke({
                 width: lineWidth,
                 color: fillColor,
                 cap,
-                alpha: fillAlpha
+                alpha: fillAlpha,
             });
     }
 
@@ -148,8 +131,7 @@ export class CircularProgressBar extends Container
      * Current progress value.
      * @returns { number } - Progress value.
      */
-    get progress(): number
-    {
+    get progress(): number {
         return this._progress;
     }
 }

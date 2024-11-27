@@ -21,14 +21,12 @@ export const UseSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`select_closed.png`, `select_open.png`];
 
             let select: Select;
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const textStyle = {
                     ...defaultTextStyle,
                     fill: fontColor,
@@ -68,8 +66,7 @@ export const UseSprite: StoryFn<typeof args> = (
 
                 select.y = 10;
 
-                select.onSelect.connect((_, text) =>
-                {
+                select.onSelect.connect((_, text) => {
                     onSelect({
                         id: select.value,
                         text,
@@ -85,12 +82,10 @@ export const UseSprite: StoryFn<typeof args> = (
         resize: (view) => centerElement(view, 0.5, 0),
     });
 
-function getItems(itemsAmount: number, text: string): string[]
-{
+function getItems(itemsAmount: number, text: string): string[] {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         items.push(`${text} ${i + 1}`);
     }
 

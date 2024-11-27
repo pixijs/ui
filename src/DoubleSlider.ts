@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent, Optional, Size } from 'pixi.js';
+import { Container, FederatedPointerEvent, Optional, Size, Texture } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { DoubleSliderOptions, SliderBase } from './SliderBase';
 
@@ -19,8 +19,7 @@ import type { DragObject } from './utils/HelpTypes';
  * );
  */
 
-export class DoubleSlider extends SliderBase
-{
+export class DoubleSlider extends SliderBase {
     protected sliderOptions: DoubleSliderOptions;
 
     protected activeValue: 'value1' | 'value2';
@@ -31,16 +30,14 @@ export class DoubleSlider extends SliderBase
     /** Signal that fires when value is changing. */
     onUpdate: Signal<(value1: number, value2: number) => void> = new Signal();
 
-    constructor(options: DoubleSliderOptions)
-    {
+    constructor(options: DoubleSliderOptions) {
         super(options);
 
         this.sliderOptions = options;
         this.setInitialState();
     }
 
-    protected setInitialState()
-    {
+    protected setInitialState() {
         this.validateValues();
 
         const { value1, value2 } = this.sliderOptions;
@@ -51,54 +48,44 @@ export class DoubleSlider extends SliderBase
         this.value1 = value1;
     }
 
-    protected updateProgress(value1 = this.value1, value2 = this.value2)
-    {
+    protected updateProgress(value1 = this.value1, value2 = this.value2) {
         this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
         this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
     }
 
-    protected validateValues()
-    {
-        if (!this.sliderOptions.value1)
-        {
+    protected validateValues() {
+        if (!this.sliderOptions.value1) {
             this.sliderOptions.value1 = this.min;
         }
 
-        if (!this.sliderOptions.value2)
-        {
+        if (!this.sliderOptions.value2) {
             this.sliderOptions.value2 = this.sliderOptions.max;
         }
 
-        if (this.sliderOptions.value2 < this.sliderOptions.value1)
-        {
+        if (this.sliderOptions.value2 < this.sliderOptions.value1) {
             this.sliderOptions.value2 = this.sliderOptions.value1;
         }
 
-        if (this.sliderOptions.value1 < this.sliderOptions.min)
-        {
+        if (this.sliderOptions.value1 < this.sliderOptions.min) {
             this.sliderOptions.value1 = this.sliderOptions.min;
         }
 
-        if (this.sliderOptions.value1 > this.sliderOptions.max)
-        {
+        if (this.sliderOptions.value1 > this.sliderOptions.max) {
             this.sliderOptions.value1 = this.sliderOptions.max;
         }
 
-        if (this.sliderOptions.value2 > this.sliderOptions.max)
-        {
+        if (this.sliderOptions.value2 > this.sliderOptions.max) {
             this.sliderOptions.value2 = this.sliderOptions.max;
         }
     }
 
     /** Returns left value. */
-    get value1(): number
-    {
+    get value1(): number {
         return this._value1;
     }
 
     /** Sets left value. */
-    set value1(value1: number)
-    {
+    set value1(value1: number) {
         if (value1 === this._value1) return;
 
         if (value1 < this.min) value1 = this.min;
@@ -112,14 +99,12 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Returns right value. */
-    get value2(): number
-    {
+    get value2(): number {
         return this._value2;
     }
 
     /** Sets right value. */
-    set value2(value2: number)
-    {
+    set value2(value2: number) {
         if (value2 === this._value2) return;
 
         if (value2 < this._value1) value2 = this._value1;
@@ -132,8 +117,7 @@ export class DoubleSlider extends SliderBase
         this.onUpdate?.emit(this.value1, this.value2);
     }
 
-    protected override update(event: FederatedPointerEvent)
-    {
+    protected override update(event: FederatedPointerEvent) {
         super.update(event);
 
         if (!this.dragging) return;
@@ -144,47 +128,36 @@ export class DoubleSlider extends SliderBase
         const slider1Dist = Math.abs(x - this._slider1.x - this._slider1.width);
         const slider2Dist = Math.abs(x - this._slider2.x);
 
-        if (!this.activeValue)
-        {
-            if (this.slider1 && x < this.slider1.x)
-            {
+        if (!this.activeValue) {
+            if (this.slider1 && x < this.slider1.x) {
                 this.activeValue = 'value1';
-            }
-            else if (this.slider2 && x > this.slider2.x)
-            {
+            } else if (this.slider2 && x > this.slider2.x) {
                 this.activeValue = 'value2';
-            }
-            else
-            {
+            } else {
                 this.activeValue = slider1Dist < slider2Dist ? 'value1' : 'value2';
             }
         }
 
         const progress = this.validate((x / this.bg?.width) * 100);
 
-        if (this.activeValue === 'value1')
-        {
+        if (this.activeValue === 'value1') {
             this.progressStart = progress;
-            this.value1 = this.min + (((this.max - this.min) / 100) * progress);
+            this.value1 = this.min + ((this.max - this.min) / 100) * progress;
             this.updateProgress(this.value1, this.value2);
-        }
-        else
-        {
+        } else {
             this.progress = progress;
-            this.value2 = this.min + (((this.max - this.min) / 100) * progress);
+            this.value2 = this.min + ((this.max - this.min) / 100) * progress;
             this.updateProgress(this.value1, this.value2);
         }
     }
 
-    protected override endUpdate()
-    {
+    protected override endUpdate() {
         super.endUpdate();
 
         this.activeValue = null;
     }
 
-    protected override change()
-    {
+    protected override change() {
         this.onChange?.emit(this.value1, this.value2);
     }
 
@@ -192,15 +165,13 @@ export class DoubleSlider extends SliderBase
      * Set Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    override set slider1(value: Container | string)
-    {
+    override set slider1(value: Container | Texture | string) {
         super.slider1 = value;
         this.updateSlider1();
     }
 
     /** Get Slider1 instance. */
-    override get slider1(): Container
-    {
+    override get slider1(): Container {
         return this._slider1;
     }
 
@@ -208,35 +179,30 @@ export class DoubleSlider extends SliderBase
      * Sets Slider instance.
      * @param value - Container or string with texture name.
      */
-    override set slider2(value: Container | string)
-    {
+    override set slider2(value: Container | string) {
         super.slider2 = value;
         this.updateSlider2();
     }
 
     /** Get Slider2 instance. */
-    override get slider2(): Container
-    {
+    override get slider2(): Container {
         return this._slider2;
     }
 
-    protected updateSlider1()
-    {
+    protected updateSlider1() {
         this.updateProgress(this.value1, this.value2);
 
-        this._slider1.x = (this.bg?.width / 100 * this.progressStart) - (this._slider1.width / 2);
+        this._slider1.x = (this.bg?.width / 100) * this.progressStart - this._slider1.width / 2;
         this._slider1.y = this.bg?.height / 2;
 
-        if (this._slider2 && this._slider1.x > this._slider2.x)
-        {
+        if (this._slider2 && this._slider1.x > this._slider2.x) {
             this._slider1.x = this._slider2.x;
         }
 
-        if (this.sliderOptions?.showValue)
-        {
+        if (this.sliderOptions?.showValue) {
             this.value1Text.text = `${Math.round(this.value1)}`;
 
-            const sliderPosX = this._slider1.x + (this._slider1.width / 2);
+            const sliderPosX = this._slider1.x + this._slider1.width / 2;
             const sliderPosY = this._slider1.y;
 
             this.value1Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
@@ -244,23 +210,20 @@ export class DoubleSlider extends SliderBase
         }
     }
 
-    protected updateSlider2()
-    {
+    protected updateSlider2() {
         this.updateProgress(this.value1, this.value2);
 
-        this._slider2.x = ((this.bg?.width / 100) * this.progress) - (this._slider2.width / 2);
+        this._slider2.x = (this.bg?.width / 100) * this.progress - this._slider2.width / 2;
         this._slider2.y = this.bg?.height / 2;
 
-        if (this._slider2.x < this._slider1.x)
-        {
+        if (this._slider2.x < this._slider1.x) {
             this._slider2.x = this._slider1.x;
         }
 
-        if (this.sliderOptions?.showValue)
-        {
+        if (this.sliderOptions?.showValue) {
             this.value2Text.text = `${Math.round(this.value2)}`;
 
-            const sliderPosX = this._slider2.x + (this._slider2.width / 2);
+            const sliderPosX = this._slider2.x + this._slider2.width / 2;
             const sliderPosY = this._slider2.y;
 
             this.value2Text.x = sliderPosX + (this.sliderOptions.valueTextOffset?.x ?? 0);
@@ -274,8 +237,7 @@ export class DoubleSlider extends SliderBase
      * If nineSliceSprite is not set, then width will control components width as Container.
      * @param value - Width value.
      */
-    override set width(value: number)
-    {
+    override set width(value: number) {
         super.width = value;
 
         this.updateSlider1();
@@ -283,8 +245,7 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Gets width of a Slider. */
-    override get width(): number
-    {
+    override get width(): number {
         return super.width;
     }
 
@@ -294,8 +255,7 @@ export class DoubleSlider extends SliderBase
      * If nineSliceSprite is not set, then height will control components height as Container.
      * @param value - Height value.
      */
-    override set height(value: number)
-    {
+    override set height(value: number) {
         super.height = value;
 
         this.updateSlider1();
@@ -303,13 +263,11 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Gets height of a Slider. */
-    override get height(): number
-    {
+    override get height(): number {
         return super.height;
     }
 
-    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
-    {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
         super.setSize(value, height);
 
         this.updateSlider1();

@@ -32,39 +32,25 @@ export const UseGraphics: StoryFn<typeof args> = (
         vertical,
     },
     context,
-) =>
-{
+) => {
     let isFilling = true;
     let progressBar: ProgressBar;
 
     return new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const bg = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(
-                    border,
-                    border,
-                    width - (border * 2),
-                    height - (border * 2),
-                    radius,
-                )
+                .roundRect(border, border, width - border * 2, height - border * 2, radius)
                 .fill(backgroundColor);
 
             const fill = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(
-                    border,
-                    border,
-                    width - (border * 2),
-                    height - (border * 2),
-                    radius,
-                )
+                .roundRect(border, border, width - border * 2, height - border * 2, radius)
                 .fill(fillColor);
 
             // Component usage
@@ -74,34 +60,27 @@ export const UseGraphics: StoryFn<typeof args> = (
                 progress: value,
             });
 
-            if (vertical)
-            {
+            if (vertical) {
                 progressBar.rotation = -Math.PI / 2;
             }
 
             list.addChild(progressBar);
             view.addChild(list);
         },
-        resize: (view) =>
-        {
+        resize: (view) => {
             centerElement(view);
             view.y += view.height;
         },
-        update: () =>
-        {
-            if (!animate || !progressBar)
-            {
+        update: () => {
+            if (!animate || !progressBar) {
                 return;
             }
 
             isFilling ? value++ : value--;
 
-            if (value > 150)
-            {
+            if (value > 150) {
                 isFilling = false;
-            }
-            else if (value < -50)
-            {
+            } else if (value < -50) {
                 isFilling = true;
             }
 
