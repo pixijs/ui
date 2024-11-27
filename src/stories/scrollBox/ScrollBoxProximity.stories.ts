@@ -25,24 +25,28 @@ const args = {
 const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
-export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = ({
-    width,
-    height,
-    radius,
-    elementsMargin,
-    elementsPadding,
-    elementsWidth,
-    elementsHeight,
-    itemsAmount,
-    proximityRange,
-    proximityDebounce,
-    type,
-    fadeSpeed,
-}, context) =>
+export const ProximityEvent: StoryFn<
+    typeof args & { type: 'vertical' | 'horizontal' | undefined }
+> = (
+    {
+        width,
+        height,
+        radius,
+        elementsMargin,
+        elementsPadding,
+        elementsWidth,
+        elementsHeight,
+        itemsAmount,
+        proximityRange,
+        proximityDebounce,
+        type,
+        fadeSpeed,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const fontColor = '#000000';
             const backgroundColor = '#F5E3A9';
             const disableEasing = false;
@@ -53,18 +57,24 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
             items.length = 0;
             inRangeCache.length = 0;
 
-            for (let i = 0; i < itemsAmount; i++)
-            {
+            for (let i = 0; i < itemsAmount; i++) {
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xa5e24d),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfec230),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfe6048),
                     text: new Text({
-                        text: `Item ${i + 1}`, style: {
+                        text: `Item ${i + 1}`,
+                        style: {
                             ...defaultTextStyle,
-                            fill: fontColor
-                        }
-                    })
+                            fill: fontColor,
+                        },
+                    }),
                 });
 
                 button.anchor.set(0);
@@ -93,18 +103,15 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
             scrollBox.addItems(items);
 
             // Handle on proximity change event.
-            scrollBox.onProximityChange.connect(({ index, inRange }) =>
-            {
+            scrollBox.onProximityChange.connect(({ index, inRange }) => {
                 inRangeCache[index] = inRange;
             });
 
             view.addChild(scrollBox);
         },
         resize: (view) => centerElement(view.children[0]),
-        update: () =>
-        {
-            items.forEach((item, index) =>
-            {
+        update: () => {
+            items.forEach((item, index) => {
                 const inRange = inRangeCache[index];
 
                 // Fade in/out according to whether the item is within the specified range.
@@ -117,5 +124,5 @@ export const ProximityEvent: StoryFn<typeof args & { type: 'vertical' | 'horizon
 export default {
     title: 'Components/ScrollBox/Proximity Event',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

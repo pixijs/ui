@@ -62,8 +62,7 @@ type ProximityEventData = {
  * });
  */
 
-export class ScrollBox extends Container
-{
+export class ScrollBox extends Container {
     protected background: Graphics;
     protected borderMask: Graphics;
     protected lastWidth: number;
@@ -113,12 +112,10 @@ export class ScrollBox extends Container
      * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
      * is pressed, and the type is set to 'horizontal'.
      */
-    constructor(options?: ScrollBoxOptions)
-    {
+    constructor(options?: ScrollBoxOptions) {
         super();
 
-        if (options)
-        {
+        if (options) {
             this.init(options);
         }
 
@@ -141,8 +138,7 @@ export class ScrollBox extends Container
      * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
      * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
      */
-    init(options: ScrollBoxOptions)
-    {
+    init(options: ScrollBoxOptions) {
         this.options = options;
         this.setBackground(options.background);
 
@@ -151,8 +147,7 @@ export class ScrollBox extends Container
 
         this.proximityRange = options.proximityRange ?? 0;
 
-        if (!this.list)
-        {
+        if (!this.list) {
             this.list = new List();
 
             super.addChild(this.list);
@@ -172,8 +167,7 @@ export class ScrollBox extends Container
 
         this.addItems(options.items);
 
-        if (this.hasBounds)
-        {
+        if (this.hasBounds) {
             this.addMask();
             this.makeScrollable();
         }
@@ -186,8 +180,7 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    protected get hasBounds(): boolean
-    {
+    protected get hasBounds(): boolean {
         return !!this.__width || !!this.__height;
     }
 
@@ -195,16 +188,14 @@ export class ScrollBox extends Container
      *  Adds array of items to a scrollable list.
      * @param {Container[]} items - items to add.
      */
-    addItems(items: Container[])
-    {
+    addItems(items: Container[]) {
         if (!items?.length) return;
 
         items.forEach((item) => this.addItem(item));
     }
 
     /** Remove all items from a scrollable list. */
-    removeItems()
-    {
+    removeItems() {
         this.proximityStatusCache.length = 0;
         this.list.removeChildren();
     }
@@ -213,18 +204,13 @@ export class ScrollBox extends Container
      * Adds one or more items to a scrollable list.
      * @param {Container} items - one or more items to add.
      */
-    addItem<T extends Container[]>(...items: T): T[0]
-    {
-        if (items.length > 1)
-        {
+    addItem<T extends Container[]>(...items: T): T[0] {
+        if (items.length > 1) {
             items.forEach((item) => this.addItem(item));
-        }
-        else
-        {
+        } else {
             const child = items[0];
 
-            if (!child.width || !child.height)
-            {
+            if (!child.width || !child.height) {
                 console.error('ScrollBox item should have size');
             }
 
@@ -233,8 +219,7 @@ export class ScrollBox extends Container
             this.list.addChild(child);
             this.proximityStatusCache.push(false);
 
-            if (!this.options.disableDynamicRendering)
-            {
+            if (!this.options.disableDynamicRendering) {
                 child.renderable = this.isItemVisible(child);
             }
         }
@@ -248,8 +233,7 @@ export class ScrollBox extends Container
      * Removes an item from a scrollable list.
      * @param {number} itemID - id of the item to remove.
      */
-    removeItem(itemID: number)
-    {
+    removeItem(itemID: number) {
         this.list.removeItem(itemID);
         this.proximityStatusCache.splice(itemID, 1);
         this.resize();
@@ -260,27 +244,21 @@ export class ScrollBox extends Container
      * @param {Container} item - item to check.
      * @param padding - proximity padding to consider the item visible.
      */
-    isItemVisible(item: Container, padding = 0): boolean
-    {
+    isItemVisible(item: Container, padding = 0): boolean {
         const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
         const list = this.list;
 
-        if (isVertical)
-        {
+        if (isVertical) {
             const posY = item.y + list.y;
 
-            if (posY + item.height >= -padding && posY <= this.options.height + padding)
-            {
+            if (posY + item.height >= -padding && posY <= this.options.height + padding) {
                 isVisible = true;
             }
-        }
-        else
-        {
+        } else {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= -padding && posX <= this.options.width + padding)
-            {
+            if (posX + item.width >= -padding && posX <= this.options.width + padding) {
                 isVisible = true;
             }
         }
@@ -292,8 +270,7 @@ export class ScrollBox extends Container
      * Returns all inner items in a list.
      * @returns {Array<Container> | Array} - list of items.
      */
-    get items(): Container[] | []
-    {
+    get items(): Container[] | [] {
         return this.list?.children ?? [];
     }
 
@@ -301,10 +278,8 @@ export class ScrollBox extends Container
      * Set ScrollBox background.
      * @param {number | string} background - background color or texture.
      */
-    setBackground(background?: ColorSource)
-    {
-        if (this.background)
-        {
+    setBackground(background?: ColorSource) {
+        if (this.background) {
             this.removeChild(this.background);
         }
 
@@ -317,10 +292,8 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    protected addMask()
-    {
-        if (!this.borderMask)
-        {
+    protected addMask() {
+        if (!this.borderMask) {
             this.borderMask = new Graphics();
             super.addChild(this.borderMask);
             this.mask = this.borderMask;
@@ -329,17 +302,14 @@ export class ScrollBox extends Container
         this.resize();
     }
 
-    protected makeScrollable()
-    {
-        if (!this._trackpad)
-        {
+    protected makeScrollable() {
+        if (!this._trackpad) {
             this._trackpad = new Trackpad({
                 disableEasing: this.options.disableEasing,
             });
         }
 
-        this.on('pointerdown', (e: FederatedPointerEvent) =>
-        {
+        this.on('pointerdown', (e: FederatedPointerEvent) => {
             this.renderAllItems();
 
             this.isDragging = 1;
@@ -349,20 +319,19 @@ export class ScrollBox extends Container
 
             const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
 
-            this.visibleItems.forEach((item) =>
-            {
-                if (item.x < listTouchPoint.x
-                    && item.x + item.width > listTouchPoint.x
-                    && item.y < listTouchPoint.y
-                    && item.y + item.height > listTouchPoint.y)
-                {
+            this.visibleItems.forEach((item) => {
+                if (
+                    item.x < listTouchPoint.x &&
+                    item.x + item.width > listTouchPoint.x &&
+                    item.y < listTouchPoint.y &&
+                    item.y + item.height > listTouchPoint.y
+                ) {
                     this.pressedChild = item;
                 }
             });
         });
 
-        this.on('pointerup', () =>
-        {
+        this.on('pointerup', () => {
             this.isDragging = 0;
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
@@ -372,18 +341,15 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
-        this.on('pointerover', () =>
-        {
+        this.on('pointerover', () => {
             this.isOver = true;
         });
 
-        this.on('pointerout', () =>
-        {
+        this.on('pointerout', () => {
             this.isOver = false;
         });
 
-        this.on('pointerupoutside', () =>
-        {
+        this.on('pointerupoutside', () => {
             this.isDragging = 0;
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
@@ -393,32 +359,25 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
         });
 
-        this.on('globalpointermove', (e: FederatedPointerEvent) =>
-        {
+        this.on('globalpointermove', (e: FederatedPointerEvent) => {
             if (!this.isDragging) return;
 
             const isVertical: boolean = this.options.type !== 'horizontal';
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
-            if (this.dragStarTouchPoint)
-            {
+            if (this.dragStarTouchPoint) {
                 const dragTrashHold = this.options.dragTrashHold ?? 10;
 
-                if (this.options.type === 'horizontal')
-                {
+                if (this.options.type === 'horizontal') {
                     const xDist = touchPoint.x - this.dragStarTouchPoint.x;
 
-                    if (Math.abs(xDist) > dragTrashHold)
-                    {
+                    if (Math.abs(xDist) > dragTrashHold) {
                         this.isDragging = 2;
                     }
-                }
-                else
-                {
+                } else {
                     const yDist = touchPoint.y - this.dragStarTouchPoint.y;
 
-                    if (Math.abs(yDist) > dragTrashHold)
-                    {
+                    if (Math.abs(yDist) > dragTrashHold) {
                         this.isDragging = 2;
                     }
                 }
@@ -428,8 +387,7 @@ export class ScrollBox extends Container
 
             this._trackpad.pointerMove(touchPoint);
 
-            if (this.pressedChild)
-            {
+            if (this.pressedChild) {
                 this.revertClick(this.pressedChild);
                 this.pressedChild = null;
             }
@@ -440,18 +398,15 @@ export class ScrollBox extends Container
         document.addEventListener('wheel', this.onMouseScrollBinding, true);
     }
 
-    protected setInteractive(interactive: boolean)
-    {
+    protected setInteractive(interactive: boolean) {
         this.eventMode = interactive ? 'static' : 'auto';
     }
 
-    protected get listHeight(): number
-    {
+    protected get listHeight(): number {
         return this.list.height + this.list.topPadding + this.list.bottomPadding;
     }
 
-    protected get listWidth(): number
-    {
+    protected get listWidth(): number {
         return this.list.width + this.list.leftPadding + this.list.rightPadding;
     }
 
@@ -459,39 +414,29 @@ export class ScrollBox extends Container
      * Controls item positions and visibility.
      * @param force
      */
-    resize(force = false): void
-    {
+    resize(force = false): void {
         if (!this.hasBounds) return;
 
         this.renderAllItems();
 
         if (
-            this.borderMask
-            && (force
-                || this._dimensionChanged
-                || this.lastWidth !== this.listWidth
-                || this.lastHeight !== this.listHeight)
-        )
-        {
-            if (!this.options.width)
-            {
+            this.borderMask &&
+            (force ||
+                this._dimensionChanged ||
+                this.lastWidth !== this.listWidth ||
+                this.lastHeight !== this.listHeight)
+        ) {
+            if (!this.options.width) {
                 this.__width += this.listWidth;
             }
 
-            if (!this.options.height)
-            {
+            if (!this.options.height) {
                 this.__height += this.listHeight;
             }
 
             this.borderMask
                 .clear()
-                .roundRect(
-                    0,
-                    0,
-                    this.__width,
-                    this.__height,
-                    this.options.radius | 0,
-                )
+                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
             this.borderMask.eventMode = 'none';
@@ -500,24 +445,15 @@ export class ScrollBox extends Container
 
             this.background
                 .clear()
-                .roundRect(
-                    0,
-                    0,
-                    this.__width,
-                    this.__height,
-                    this.options.radius | 0,
-                )
+                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
                 .fill({
                     color: color ?? 0x000000,
                     alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
                 });
 
-            if (this.options.type === 'horizontal')
-            {
+            if (this.options.type === 'horizontal') {
                 this.setInteractive(this.listWidth > this.__width);
-            }
-            else
-            {
+            } else {
                 this.setInteractive(this.listHeight > this.__height);
             }
 
@@ -525,37 +461,30 @@ export class ScrollBox extends Container
             this.lastHeight = this.listHeight;
         }
 
-        if (this._trackpad)
-        {
-            const maxWidth
-                = this.borderMask.width
-                - this.list.width
-                - this.list.leftPadding
-                - this.list.rightPadding;
+        if (this._trackpad) {
+            const maxWidth =
+                this.borderMask.width -
+                this.list.width -
+                this.list.leftPadding -
+                this.list.rightPadding;
 
-            const maxHeight
-                = this.borderMask.height
-                - this.list.height
-                - this.list.topPadding
-                - this.list.bottomPadding;
+            const maxHeight =
+                this.borderMask.height -
+                this.list.height -
+                this.list.topPadding -
+                this.list.bottomPadding;
 
-            if (this.options.type === 'vertical')
-            {
+            if (this.options.type === 'vertical') {
                 this._trackpad.yAxis.max = -Math.abs(maxHeight);
-            }
-            else if (this.options.type === 'horizontal')
-            {
+            } else if (this.options.type === 'horizontal') {
                 this._trackpad.xAxis.max = -Math.abs(maxWidth);
-            }
-            else
-            {
+            } else {
                 this._trackpad.yAxis.max = -Math.abs(maxHeight);
                 this._trackpad.xAxis.max = -Math.abs(maxWidth);
             }
         }
 
-        if (this._dimensionChanged)
-        {
+        if (this._dimensionChanged) {
             this.list.arrangeChildren();
 
             // Since the scrolling adjustment can happen due to the resize,
@@ -563,34 +492,28 @@ export class ScrollBox extends Container
             this.stopRenderHiddenItems();
 
             this._dimensionChanged = false;
-        }
-        else this.updateVisibleItems();
+        } else this.updateVisibleItems();
 
         this.lastScrollX = null;
         this.lastScrollY = null;
     }
 
-    protected onMouseScroll(event: WheelEvent): void
-    {
+    protected onMouseScroll(event: WheelEvent): void {
         if (!this.isOver && !this.options.globalScroll) return;
 
         this.renderAllItems();
 
         const scrollOnX = this.options.shiftScroll
-            ? (typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined')
+            ? typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined'
             : typeof event.deltaX !== 'undefined';
 
-        if (this.options.type === 'horizontal' && scrollOnX)
-        {
+        if (this.options.type === 'horizontal' && scrollOnX) {
             const delta = this.options.shiftScroll ? event.deltaX : event.deltaY;
             const targetPos = this.list.x - delta;
 
-            if (this.listWidth < this.__width)
-            {
+            if (this.listWidth < this.__width) {
                 this._trackpad.xAxis.value = 0;
-            }
-            else
-            {
+            } else {
                 const min = this.__width - this.listWidth;
                 const max = 0;
 
@@ -598,17 +521,12 @@ export class ScrollBox extends Container
             }
 
             this.onScroll?.emit(this._trackpad.xAxis.value);
-        }
-        else if (typeof event.deltaY !== 'undefined')
-        {
+        } else if (typeof event.deltaY !== 'undefined') {
             const targetPos = this.list.y - event.deltaY;
 
-            if (this.listHeight < this.__height)
-            {
+            if (this.listHeight < this.__height) {
                 this._trackpad.yAxis.value = 0;
-            }
-            else
-            {
+            } else {
                 const min = this.__height - this.listHeight;
                 const max = 0;
 
@@ -622,21 +540,16 @@ export class ScrollBox extends Container
     }
 
     /** Makes it scroll down to the last element. */
-    scrollBottom()
-    {
-        if (!this.interactive)
-        {
+    scrollBottom() {
+        if (!this.interactive) {
             this.scrollTop();
-        }
-        else
-        {
+        } else {
             this.scrollTo(this.list.children.length - 1);
         }
     }
 
     /** Makes it scroll up to the first element. */
-    scrollTop()
-    {
+    scrollTop() {
         this.renderAllItems();
 
         this._trackpad.xAxis.value = 0;
@@ -645,31 +558,25 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItems();
     }
 
-    protected renderAllItems()
-    {
+    protected renderAllItems() {
         clearTimeout(this.stopRenderHiddenItemsTimeout);
         this.stopRenderHiddenItemsTimeout = null;
 
-        if (this.options.disableDynamicRendering)
-        {
+        if (this.options.disableDynamicRendering) {
             return;
         }
 
-        this.items.forEach((child) =>
-        {
+        this.items.forEach((child) => {
             child.renderable = true;
         });
     }
 
-    protected stopRenderHiddenItems()
-    {
-        if (this.options.disableDynamicRendering)
-        {
+    protected stopRenderHiddenItems() {
+        if (this.options.disableDynamicRendering) {
             return;
         }
 
-        if (this.stopRenderHiddenItemsTimeout)
-        {
+        if (this.stopRenderHiddenItemsTimeout) {
             clearTimeout(this.stopRenderHiddenItemsTimeout);
             this.stopRenderHiddenItemsTimeout = null;
         }
@@ -677,12 +584,10 @@ export class ScrollBox extends Container
         this.stopRenderHiddenItemsTimeout = setTimeout(() => this.updateVisibleItems(), 2000);
     }
 
-    protected updateVisibleItems()
-    {
+    protected updateVisibleItems() {
         this.visibleItems.length = 0;
 
-        this.items.forEach((child) =>
-        {
+        this.items.forEach((child) => {
             child.renderable = this.isItemVisible(child);
             this.visibleItems.push(child);
         });
@@ -692,36 +597,27 @@ export class ScrollBox extends Container
      * Scrolls to the element with the given ID.
      * @param elementID
      */
-    scrollTo(elementID: number)
-    {
-        if (!this.interactive)
-        {
+    scrollTo(elementID: number) {
+        if (!this.interactive) {
             return;
         }
 
         const target = this.list.children[elementID];
 
-        if (!target)
-        {
+        if (!target) {
             return;
         }
 
         this.renderAllItems();
 
-        this._trackpad.xAxis.value
-            = this.options.type === 'horizontal'
-                ? this.__width
-                  - target.x
-                  - target.width
-                  - this.list.rightPadding
+        this._trackpad.xAxis.value =
+            this.options.type === 'horizontal'
+                ? this.__width - target.x - target.width - this.list.rightPadding
                 : 0;
 
-        this._trackpad.yAxis.value
-            = !this.options.type || this.options.type === 'vertical'
-                ? this.__height
-                  - target.y
-                  - target.height
-                  - this.list.bottomPadding
+        this._trackpad.yAxis.value =
+            !this.options.type || this.options.type === 'vertical'
+                ? this.__height - target.y - target.height - this.list.bottomPadding
                 : 0;
 
         this.stopRenderHiddenItems();
@@ -733,8 +629,7 @@ export class ScrollBox extends Container
      * @param position.x - x position.
      * @param position.y - y position.
      */
-    scrollToPosition({ x, y }: Partial<PointData>)
-    {
+    scrollToPosition({ x, y }: Partial<PointData>) {
         if (x === undefined && y === undefined) return;
         this.renderAllItems();
         if (x !== undefined) this.scrollX = -x;
@@ -743,13 +638,11 @@ export class ScrollBox extends Container
     }
 
     /** Gets component height. */
-    override get height(): number
-    {
+    override get height(): number {
         return this.__height;
     }
 
-    override set height(value: number)
-    {
+    override set height(value: number) {
         this.__height = value;
         this._dimensionChanged = true;
         this.resize();
@@ -757,28 +650,22 @@ export class ScrollBox extends Container
     }
 
     /** Gets component width. */
-    override get width(): number
-    {
+    override get width(): number {
         return this.__width;
     }
 
-    override set width(value: number)
-    {
+    override set width(value: number) {
         this.__width = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
     }
 
-    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
-    {
-        if (typeof value === 'object')
-        {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
+        if (typeof value === 'object') {
             height = value.height ?? value.width;
             value = value.width;
-        }
-        else
-        {
+        } else {
             height = height ?? value;
         }
 
@@ -789,8 +676,7 @@ export class ScrollBox extends Container
         this.scrollTop();
     }
 
-    override getSize(out?: Size): Size
-    {
+    override getSize(out?: Size): Size {
         out = out || { width: 0, height: 0 };
         out.width = this.__width;
         out.height = this.__height;
@@ -799,56 +685,47 @@ export class ScrollBox extends Container
     }
 
     /** Gets the current raw scroll position on the x-axis (Negated Value). */
-    get scrollX(): number
-    {
+    get scrollX(): number {
         return this._trackpad.xAxis.value;
     }
 
     /** Sets the current raw scroll position on the x-axis (Negated Value). */
-    set scrollX(value: number)
-    {
+    set scrollX(value: number) {
         this._trackpad.xAxis.value = value;
     }
 
     /** Gets the current raw scroll position on the y-axis (Negated Value). */
-    get scrollY(): number
-    {
+    get scrollY(): number {
         return this._trackpad.yAxis.value;
     }
 
     /** Sets the current raw scroll position on the y-axis (Negated Value). */
-    set scrollY(value: number)
-    {
+    set scrollY(value: number) {
         this._trackpad.yAxis.value = value;
     }
 
-    protected update()
-    {
+    protected update() {
         if (!this.list) return;
 
         this._trackpad.update();
 
         const type = this.options.type === 'horizontal' ? 'x' : 'y';
 
-        if (this.list[type] !== this._trackpad[type])
-        {
+        if (this.list[type] !== this._trackpad[type]) {
             this.list[type] = this._trackpad[type];
         }
 
-        if (!this.options.disableProximityCheck && (
-            this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY
-        ))
-        {
+        if (
+            !this.options.disableProximityCheck &&
+            (this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY)
+        ) {
             this.proximityCheckFrameCounter++;
-            if (this.proximityCheckFrameCounter >= (this.options.proximityDebounce ?? 10))
-            {
-                this.items.forEach((item, index) =>
-                {
+            if (this.proximityCheckFrameCounter >= (this.options.proximityDebounce ?? 10)) {
+                this.items.forEach((item, index) => {
                     const inRange = this.isItemVisible(item, this.proximityRange);
                     const wasInRange = this.proximityStatusCache[index];
 
-                    if (inRange !== wasInRange)
-                    {
+                    if (inRange !== wasInRange) {
                         this.proximityStatusCache[index] = inRange;
                         this.onProximityChange.emit({ item, index, inRange });
                     }
@@ -865,8 +742,7 @@ export class ScrollBox extends Container
      * @param {boolean | DestroyOptions} [options] - Options parameter.
      * A boolean will act as if all options have been set to that value
      */
-    override destroy(options?: DestroyOptions | boolean)
-    {
+    override destroy(options?: DestroyOptions | boolean) {
         this.ticker.remove(this.update, this);
 
         document.removeEventListener('wheel', this.onMouseScrollBinding, true);
@@ -877,23 +753,17 @@ export class ScrollBox extends Container
         super.destroy(options);
     }
 
-    protected restoreItemsInteractivity()
-    {
-        this.interactiveStorage.forEach((element) =>
-        {
+    protected restoreItemsInteractivity() {
+        this.interactiveStorage.forEach((element) => {
             element.item.eventMode = element.eventMode;
         });
 
         this.interactiveStorage.length = 0;
     }
 
-    protected revertClick(item: Container)
-    {
-        if (item.eventMode !== 'auto')
-        {
-            isMobile.any
-                ? item.emit('pointerupoutside', null)
-                : item.emit('mouseupoutside', null);
+    protected revertClick(item: Container) {
+        if (item.eventMode !== 'auto') {
+            isMobile.any ? item.emit('pointerupoutside', null) : item.emit('mouseupoutside', null);
 
             this.interactiveStorage.push({
                 item,
@@ -904,19 +774,16 @@ export class ScrollBox extends Container
         }
 
         // need to disable click for all children too
-        if (item instanceof Container && item.children)
-        {
+        if (item instanceof Container && item.children) {
             item.children.forEach((child) => this.revertClick(child));
         }
     }
 
-    get scrollHeight(): number
-    {
+    get scrollHeight(): number {
         return this.list.height;
     }
 
-    get scrollWidth(): number
-    {
+    get scrollWidth(): number {
         return this.list.width;
     }
 }

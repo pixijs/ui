@@ -19,7 +19,7 @@ const args = {
     height: 50,
     radius: 15,
     itemsAmount: 5,
-    onSelect: action('Item selected')
+    onSelect: action('Item selected'),
 };
 
 export const UseHTMLText: StoryFn = ({
@@ -32,9 +32,8 @@ export const UseHTMLText: StoryFn = ({
     backgroundColor,
     dropDownBackgroundColor,
     dropDownHoverColor,
-    onSelect
-}: any) =>
-{
+    onSelect,
+}: any) => {
     const view = new Container();
 
     backgroundColor = getColor(backgroundColor);
@@ -60,22 +59,21 @@ export const UseHTMLText: StoryFn = ({
             height,
             textStyle,
             TextClass: HTMLText,
-            radius
+            radius,
         },
         scrollBox: {
             width,
             height: height * 5,
-            radius
-        }
+            radius,
+        },
     });
 
     select.y = 10;
 
-    select.onSelect.connect((_, text) =>
-    {
+    select.onSelect.connect((_, text) => {
         onSelect({
             id: select.value,
-            text
+            text,
         });
     });
 
@@ -83,16 +81,14 @@ export const UseHTMLText: StoryFn = ({
 
     return {
         view,
-        resize: () => centerElement(view, 0.5, 0)
+        resize: () => centerElement(view, 0.5, 0),
     };
 };
 
-function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)
-{
+function getClosedBG(backgroundColor: number, width: number, height: number, radius: number) {
     const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowDown = Sprite.from('arrow_down.png');
 
         arrowDown.anchor.set(0.5);
@@ -104,12 +100,10 @@ function getClosedBG(backgroundColor: number, width: number, height: number, rad
     return closedBG;
 }
 
-function getOpenBG(backgroundColor: number, width: number, height: number, radius: number)
-{
+function getOpenBG(backgroundColor: number, width: number, height: number, radius: number) {
     const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowUp = Sprite.from('arrow_down.png');
 
         arrowUp.angle = 180;
@@ -122,12 +116,10 @@ function getOpenBG(backgroundColor: number, width: number, height: number, radiu
     return openBG;
 }
 
-function getItems(itemsAmount: number, text: string): string[]
-{
+function getItems(itemsAmount: number, text: string): string[] {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         items.push(`${text} ${i + 1}`);
     }
 
@@ -137,5 +129,5 @@ function getItems(itemsAmount: number, text: string): string[]
 export default {
     title: 'Components/Select/Use HTML Text',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

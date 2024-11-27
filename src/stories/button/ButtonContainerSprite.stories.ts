@@ -10,14 +10,16 @@ const args = {
     size: 150,
     radius: 150,
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
-export const ButtonContainerSprite: StoryFn<typeof args> = ({ size, color, disabled, radius, action }, context) =>
+export const ButtonContainerSprite: StoryFn<typeof args> = (
+    { size, color, disabled, radius, action },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init(view)
-        {
+        init(view) {
             // Component usage !!!
             const button = new ButtonContainer();
 
@@ -45,11 +47,11 @@ export const ButtonContainerSprite: StoryFn<typeof args> = ({ size, color, disab
 
             centerElement(button);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Button/Button Container Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

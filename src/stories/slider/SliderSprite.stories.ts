@@ -15,25 +15,22 @@ const args = {
     fontSize: 20,
     showValue: true,
     amount: 1,
-    onChange: action('Slider')
+    onChange: action('Slider'),
 };
 
 export const Single: StoryFn<typeof args> = (
     { min, max, step, value, fontSize, fontColor, onChange, showValue, amount },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage !!!
                     const singleSlider = new Slider({
                         bg: 'slider_bg.png',
@@ -45,19 +42,21 @@ export const Single: StoryFn<typeof args> = (
                         value,
                         valueTextStyle: {
                             fill: fontColor,
-                            fontSize
+                            fontSize,
                         },
                         showValue,
                         valueTextOffset: {
-                            y: -40
+                            y: -40,
                         },
                         fillPaddings: {
                             left: 4.5,
-                            top: 2
-                        }
+                            top: 2,
+                        },
                     });
 
-                    singleSlider.onChange.connect((value) => onChange(`onChange ${i + 1}: ${value}`));
+                    singleSlider.onChange.connect((value) =>
+                        onChange(`onChange ${i + 1}: ${value}`),
+                    );
 
                     list.addChild(singleSlider);
                 }
@@ -66,11 +65,11 @@ export const Single: StoryFn<typeof args> = (
 
             view.addChild(list);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Slider/Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

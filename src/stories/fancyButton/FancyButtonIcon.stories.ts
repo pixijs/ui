@@ -29,90 +29,101 @@ const args = {
     anchorX: 0.5,
     anchorY: 0.5,
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
-export const UseIcon: StoryFn<typeof args> = ({
-    width,
-    height,
-    radius,
-    color,
-    hoverColor,
-    pressedColor,
-    disabledColor,
-    disabled,
-    padding,
-    iconOffsetX,
-    iconOffsetY,
-    defaultIconScale,
-    defaultIconAnchorX,
-    defaultIconAnchorY,
-    defaultOffset,
-    hoverOffset,
-    pressedOffset,
-    disabledOffset,
-    action,
-    anchorX,
-    anchorY,
-    animationDuration
-}, context) =>
+export const UseIcon: StoryFn<typeof args> = (
+    {
+        width,
+        height,
+        radius,
+        color,
+        hoverColor,
+        pressedColor,
+        disabledColor,
+        disabled,
+        padding,
+        iconOffsetX,
+        iconOffsetY,
+        defaultIconScale,
+        defaultIconAnchorX,
+        defaultIconAnchorY,
+        defaultOffset,
+        hoverOffset,
+        pressedOffset,
+        disabledOffset,
+        action,
+        anchorX,
+        anchorY,
+        animationDuration,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`avatar-01.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const target = Sprite.from(`avatar-01.png`);
 
                 const icon = new MaskedFrame({
                     target,
-                    mask: new Graphics().circle(target.width / 2, target.height / 2, target.width / 2).fill(0x000000),
+                    mask: new Graphics()
+                        .circle(target.width / 2, target.height / 2, target.width / 2)
+                        .fill(0x000000),
                     borderWidth: 5,
-                    borderColor: 0xffffff
+                    borderColor: 0xffffff,
                 });
 
                 // Component usage !!!
                 const button = new FancyButton({
                     defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
-                    hoverView: new Graphics().roundRect(0, 0, width, height, radius).fill(hoverColor),
-                    pressedView: new Graphics().roundRect(0, 0, width, height, radius).fill(pressedColor),
-                    disabledView: new Graphics().roundRect(0, 0, width, height, radius).fill(disabledColor),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(hoverColor),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(pressedColor),
+                    disabledView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(disabledColor),
                     icon,
                     padding,
                     offset: {
                         default: { y: defaultOffset },
-                        disabled: { y: disabledOffset }
+                        disabled: { y: disabledOffset },
                     },
                     iconOffset: {
                         x: iconOffsetX,
-                        y: iconOffsetY
+                        y: iconOffsetY,
                     },
                     defaultIconScale,
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+                    defaultIconAnchor: {
+                        x: defaultIconAnchorX,
+                        y: defaultIconAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {
                                 scale: { x: 1.03, y: 1.03 },
-                                y: hoverOffset
+                                y: hoverOffset,
                             },
-                            duration: animationDuration
+                            duration: animationDuration,
                         },
                         pressed: {
                             props: {
                                 scale: { x: 0.9, y: 0.9 },
-                                y: pressedOffset
+                                y: pressedOffset,
                             },
-                            duration: animationDuration
-                        }
-                    }
+                            duration: animationDuration,
+                        },
+                    },
                 });
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 
@@ -128,11 +139,11 @@ export const UseIcon: StoryFn<typeof args> = ({
                 centerView(view);
             });
         },
-        resize: centerView
+        resize: centerView,
     });
 
 export default {
     title: 'Components/FancyButton/Use Icon',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

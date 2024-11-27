@@ -12,25 +12,25 @@ const args = {
     textColor: '#FFFFFF',
     amount: 3,
     checked: false,
-    onChange: action('Checkbox')
+    onChange: action('Checkbox'),
 };
 
-export const UseSprite: StoryFn<typeof args> = ({ checked, onChange, amount, textColor, text }, context) =>
+export const UseSprite: StoryFn<typeof args> = (
+    { checked, onChange, amount, textColor, text },
+    context,
+) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({
                 type: 'vertical',
-                elementsMargin: 5
+                elementsMargin: 5,
             });
 
             const assets = [`switch_off.png`, `switch_on.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage !!!
                     const checkBox = new CheckBox({
                         text: text ?? `${text} ${i + 1}`,
@@ -41,9 +41,9 @@ export const UseSprite: StoryFn<typeof args> = ({ checked, onChange, amount, tex
                             text: {
                                 ...defaultTextStyle,
                                 fontSize: 22,
-                                fill: textColor
-                            }
-                        }
+                                fill: textColor,
+                            },
+                        },
                     });
 
                     checkBox.onCheck.connect((checked) => onChange(`${i + 1} ${checked}`));
@@ -56,11 +56,11 @@ export const UseSprite: StoryFn<typeof args> = ({ checked, onChange, amount, tex
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 export default {
     title: 'Components/Checkbox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

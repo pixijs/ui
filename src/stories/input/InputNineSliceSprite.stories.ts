@@ -25,9 +25,7 @@ const args = {
     onChange: action('Input'),
 };
 
-export const UseNineSliceSprite: StoryFn<
-    typeof args & { align: 'center' | 'left' | 'right' }
-> = (
+export const UseNineSliceSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = (
     {
         text,
         amount,
@@ -46,30 +44,22 @@ export const UseNineSliceSprite: StoryFn<
         addMask,
         onChange,
     },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage
                     const input = new Input({
                         bg: 'input.png',
                         nineSliceSprite: [160, 27, 160, 27],
-                        padding: [
-                            paddingTop,
-                            paddingRight,
-                            paddingBottom,
-                            paddingLeft,
-                        ],
+                        padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                         textStyle: {
                             fill: textColor,
                             fontSize,
@@ -80,15 +70,13 @@ export const UseNineSliceSprite: StoryFn<
                         placeholder,
                         secure,
                         value: text,
-                        addMask
+                        addMask,
                     });
 
                     input.width = width;
                     input.height = height;
 
-                    input.onChange.connect(() =>
-                        onChange(`${i + 1} - ${input.value}`)
-                    );
+                    input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
 
                     list.addChild(input);
                 }

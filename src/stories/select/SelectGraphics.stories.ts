@@ -17,26 +17,32 @@ const args = {
     height: 50,
     radius: 15,
     itemsAmount: 100,
-    onSelect: action('Item selected')
+    onSelect: action('Item selected'),
 };
 
-export const UseGraphics: StoryFn<typeof args> = ({
-    fontColor,
-    fontSize,
-    width,
-    height,
-    radius,
-    itemsAmount,
-    backgroundColor,
-    dropDownBackgroundColor,
-    dropDownHoverColor,
-    onSelect
-}, context) =>
+export const UseGraphics: StoryFn<typeof args> = (
+    {
+        fontColor,
+        fontSize,
+        width,
+        height,
+        radius,
+        itemsAmount,
+        backgroundColor,
+        dropDownBackgroundColor,
+        dropDownHoverColor,
+        onSelect,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
-            const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize } as TextStyle;
+        init: (view) => {
+            const textStyle = {
+                ...defaultTextStyle,
+                fill: fontColor,
+                fontSize,
+            } as TextStyle;
 
             const items = getItems(itemsAmount, 'Item');
 
@@ -53,40 +59,37 @@ export const UseGraphics: StoryFn<typeof args> = ({
                     width,
                     height,
                     textStyle,
-                    radius
+                    radius,
                 },
                 scrollBox: {
                     width,
                     height: height * 5,
-                    radius
-                }
+                    radius,
+                },
             });
 
             select.y = 10;
 
-            select.onSelect.connect((_, text) =>
-            {
+            select.onSelect.connect((_, text) => {
                 onSelect({
                     id: select.value,
-                    text
+                    text,
                 });
             });
 
             view.addChild(select);
         },
 
-        resize: (view) => centerElement(view, 0.5, 0)
+        resize: (view) => centerElement(view, 0.5, 0),
     });
 
-function getClosedBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
-{
+function getClosedBG(backgroundColor: ColorSource, width: number, height: number, radius: number) {
     const view = new Container();
     const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
     view.addChild(closedBG);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowDown = Sprite.from('arrow_down.png');
 
         arrowDown.anchor.set(0.5);
@@ -98,15 +101,13 @@ function getClosedBG(backgroundColor: ColorSource, width: number, height: number
     return view;
 }
 
-function getOpenBG(backgroundColor: ColorSource, width: number, height: number, radius: number)
-{
+function getOpenBG(backgroundColor: ColorSource, width: number, height: number, radius: number) {
     const view = new Container();
     const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
 
     view.addChild(openBG);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowUp = Sprite.from('arrow_down.png');
 
         arrowUp.angle = 180;
@@ -119,12 +120,10 @@ function getOpenBG(backgroundColor: ColorSource, width: number, height: number, 
     return view;
 }
 
-function getItems(itemsAmount: number, text: string): string[]
-{
+function getItems(itemsAmount: number, text: string): string[] {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         items.push(`${text} ${i + 1}`);
     }
 
@@ -134,5 +133,5 @@ function getItems(itemsAmount: number, text: string): string[]
 export default {
     title: 'Components/Select/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

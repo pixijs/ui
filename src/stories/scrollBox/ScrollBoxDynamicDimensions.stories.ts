@@ -12,20 +12,18 @@ const args = {
     itemsAmount: 100,
 };
 
-export const UseDynamicDimensions: StoryFn<typeof args> = ({
-    fontColor,
-    itemsAmount,
-    backgroundColor,
-}, context) =>
+export const UseDynamicDimensions: StoryFn<typeof args> = (
+    { fontColor, itemsAmount, backgroundColor },
+    context,
+) =>
     new PixiStory({
         context,
-        init(view)
-        {
-            const sizes: {w: number, h: number}[] = [
+        init(view) {
+            const sizes: { w: number; h: number }[] = [
                 { w: 320, h: 440 },
                 { w: 630, h: 440 },
                 { w: 630, h: 360 },
-                { w: 320, h: 200 }
+                { w: 320, h: 200 },
             ];
             const elementsWidth = 300;
             const elementsHeight = 80;
@@ -43,12 +41,10 @@ export const UseDynamicDimensions: StoryFn<typeof args> = ({
             });
 
             const items = [];
-            const resizeScrollBox = () =>
-            {
+            const resizeScrollBox = () => {
                 currentSizeID++;
 
-                if (currentSizeID >= sizes.length)
-                {
+                if (currentSizeID >= sizes.length) {
                     currentSizeID = 0;
                 }
 
@@ -58,18 +54,24 @@ export const UseDynamicDimensions: StoryFn<typeof args> = ({
                 scrollBox.height = size.h;
             };
 
-            for (let i = 0; i < itemsAmount; i++)
-            {
+            for (let i = 0; i < itemsAmount; i++) {
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xa5e24d),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfec230),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfe6048),
                     text: new Text({
-                        text: `Item ${i + 1}`, style: {
+                        text: `Item ${i + 1}`,
+                        style: {
                             ...defaultTextStyle,
-                            fill: fontColor
-                        }
-                    })
+                            fill: fontColor,
+                        },
+                    }),
                 });
 
                 button.anchor.set(0);
@@ -82,11 +84,11 @@ export const UseDynamicDimensions: StoryFn<typeof args> = ({
 
             view.addChild(scrollBox);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/ScrollBox/Use Dynamic Dimensions',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

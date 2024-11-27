@@ -40,16 +40,14 @@ export const UseGraphics: StoryFn<typeof args> = (
 
         onPress,
     },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-            for (let i = 0; i < amount; i++)
-            {
+            for (let i = 0; i < amount; i++) {
                 // Component usage !!!
                 const checkBox = new CheckBox({
                     text: `${text} ${i + 1}`,
@@ -77,8 +75,7 @@ export const UseGraphics: StoryFn<typeof args> = (
                     },
                 });
 
-                checkBox.onCheck.connect((checked) =>
-                {
+                checkBox.onCheck.connect((checked) => {
                     onPress(`checkBox ${i + 1} ${checked}`);
                 });
 

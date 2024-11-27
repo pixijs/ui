@@ -22,7 +22,7 @@ const args = {
     amount: 1,
     addMask: false,
     maxTextLength: 10,
-    onChange: action('Input')
+    onChange: action('Input'),
 };
 
 export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = ({
@@ -43,16 +43,13 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
 }, context) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage
                     const input = new Input({
                         bg: Sprite.from('input.png'),
@@ -60,7 +57,7 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
                         textStyle: {
                             fill: textColor,
                             fontSize,
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
                         },
                         maxLength,
                         align,
@@ -79,11 +76,11 @@ export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'righ
             });
             view.addChild(list);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Input/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

@@ -6,24 +6,22 @@ import { preload } from '../utils/loader';
 
 const args = {
     borderColor: '#FFFFFF',
-    borderWidth: 10
+    borderWidth: 10,
 };
 
 export const UseSprite: StoryFn<typeof args> = ({ borderColor, borderWidth }, context) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`avatar-01.png`, `avatar_mask.png`];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const frame = new MaskedFrame({
                     target: `avatar-01.png`,
                     mask: `avatar_mask.png`,
                     borderWidth,
-                    borderColor
+                    borderColor,
                 });
 
                 view.addChild(frame);
@@ -31,11 +29,11 @@ export const UseSprite: StoryFn<typeof args> = ({ borderColor, borderWidth }, co
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 export default {
     title: 'Components/MaskedFrame/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

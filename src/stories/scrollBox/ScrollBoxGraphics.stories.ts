@@ -22,44 +22,52 @@ const args = {
     globalScroll: true,
     shiftScroll: false,
     type: [undefined, 'vertical', 'horizontal'],
-    onPress: action('Button pressed')
+    onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = ({
-    fontColor,
-    elementsMargin,
-    elementsPadding,
-    elementsWidth,
-    elementsHeight,
-    width,
-    height,
-    radius,
-    itemsAmount,
-    backgroundColor,
-    disableEasing,
-    type,
-    onPress,
-    globalScroll,
-    shiftScroll
-}, context) =>
+export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
+    {
+        fontColor,
+        elementsMargin,
+        elementsPadding,
+        elementsWidth,
+        elementsHeight,
+        width,
+        height,
+        radius,
+        itemsAmount,
+        backgroundColor,
+        disableEasing,
+        type,
+        onPress,
+        globalScroll,
+        shiftScroll,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const items = [];
 
-            for (let i = 0; i < itemsAmount; i++)
-            {
+            for (let i = 0; i < itemsAmount; i++) {
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xa5e24d),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfec230),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfe6048),
                     text: new Text({
-                        text: `Item ${i + 1}`, style: {
+                        text: `Item ${i + 1}`,
+                        style: {
                             ...defaultTextStyle,
-                            fill: fontColor
-                        }
-                    })
+                            fill: fontColor,
+                        },
+                    }),
                 });
 
                 button.anchor.set(0);
@@ -79,18 +87,18 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
                 disableEasing,
                 type,
                 globalScroll,
-                shiftScroll
+                shiftScroll,
             });
 
             scrollBox.addItems(items);
 
             view.addChild(scrollBox);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

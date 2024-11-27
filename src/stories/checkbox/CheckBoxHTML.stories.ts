@@ -19,7 +19,7 @@ const args = {
     radius: 11,
     amount: 3,
     checked: false,
-    onPress: action('Checkbox')
+    onPress: action('Checkbox'),
 };
 
 export const UseHtml = ({
@@ -36,9 +36,8 @@ export const UseHtml = ({
     height,
     radius,
 
-    onPress
-}: any) =>
-{
+    onPress,
+}: any) => {
     const view = new List({ type: 'vertical', elementsMargin: 10 });
 
     color = getColor(color);
@@ -46,9 +45,8 @@ export const UseHtml = ({
     fillColor = getColor(fillColor);
     fillBorderColor = getColor(fillBorderColor);
 
-    for (let i = 0; i < amount; i++)
-    {
-    // Component usage !!!
+    for (let i = 0; i < amount; i++) {
+        // Component usage !!!
         const checkBox = new CheckBox({
             text: `${text} ${i + 1}`,
             TextClass: HTMLText,
@@ -71,13 +69,12 @@ export const UseHtml = ({
                 text: {
                     ...defaultTextStyle,
                     fontSize: 22,
-                    fill: textColor
+                    fill: textColor,
                 },
-            }
+            },
         });
 
-        checkBox.onCheck.connect((checked) =>
-        {
+        checkBox.onCheck.connect((checked) => {
             onPress(`checkBox ${i + 1} ${checked}`);
         });
 
@@ -90,5 +87,5 @@ export const UseHtml = ({
 export default {
     title: 'Components/Checkbox/Use Html',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

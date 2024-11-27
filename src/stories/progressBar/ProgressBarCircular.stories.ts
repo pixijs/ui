@@ -12,28 +12,29 @@ const args = {
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
     animate: true,
-    cap: ['round', 'butt', 'square']
+    cap: ['round', 'butt', 'square'],
 };
 
-export const circular: StoryFn<typeof args & {cap: 'round' | 'butt' | 'square'}> = ({
-    backgroundColor,
-    fillColor,
-    radius,
-    lineWidth,
-    value,
-    backgroundAlpha,
-    fillAlpha,
-    animate,
-    cap
-}, context) =>
-{
+export const circular: StoryFn<typeof args & { cap: 'round' | 'butt' | 'square' }> = (
+    {
+        backgroundColor,
+        fillColor,
+        radius,
+        lineWidth,
+        value,
+        backgroundAlpha,
+        fillAlpha,
+        animate,
+        cap,
+    },
+    context,
+) => {
     let isFilling = true;
     let progressBar1: CircularProgressBar;
 
     return new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             progressBar1 = new CircularProgressBar({
                 backgroundColor,
                 lineWidth,
@@ -42,7 +43,7 @@ export const circular: StoryFn<typeof args & {cap: 'round' | 'butt' | 'square'}>
                 value,
                 backgroundAlpha,
                 fillAlpha,
-                cap
+                cap,
             });
 
             progressBar1.x += progressBar1.width / 2;
@@ -50,37 +51,31 @@ export const circular: StoryFn<typeof args & {cap: 'round' | 'butt' | 'square'}>
 
             view.addChild(progressBar1);
         },
-        resize: (view) =>
-        {
+        resize: (view) => {
             centerElement(view);
             view.y += view.height;
         },
-        update: () =>
-        {
-            if (!animate)
-            {
+        update: () => {
+            if (!animate) {
                 return;
             }
 
             isFilling ? value++ : value--;
 
-            if (value >= 100)
-            {
+            if (value >= 100) {
                 isFilling = false;
-            }
-            else if (value <= 0)
-            {
+            } else if (value <= 0) {
                 isFilling = true;
             }
 
             progressBar1.progress = value;
             progressBar1.rotation += 0.1;
-        }
+        },
     });
 };
 
 export default {
     title: 'Components/ProgressBar/Circular',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

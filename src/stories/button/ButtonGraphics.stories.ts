@@ -10,14 +10,16 @@ const args = {
     size: 150,
     radius: 150,
     disabled: false,
-    action: action('Button')
+    action: action('Button'),
 };
 
-export const UseGraphics: StoryFn<typeof args> = ({ size, color, disabled, radius, action }, context) =>
+export const UseGraphics: StoryFn<typeof args> = (
+    { size, color, disabled, radius, action },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const buttonView = new Container();
             const buttonBg = new Graphics().roundRect(0, 0, size, size, radius).fill(color);
             const text = new Text({ text: '🤙', style: { fontSize: 70 } });
@@ -43,11 +45,11 @@ export const UseGraphics: StoryFn<typeof args> = ({ size, color, disabled, radiu
 
             centerElement(buttonView);
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/Button/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

@@ -9,6 +9,6 @@ export const defaultTextStyle: TextStyleOptions = {
         alpha: 0.5,
         distance: 0,
         blur: 3,
-        angle: 0
-    }
+        angle: 0,
+    },
 };

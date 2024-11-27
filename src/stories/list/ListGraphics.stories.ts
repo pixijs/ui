@@ -21,46 +21,56 @@ const args = {
     elementsWidth: 70,
     elementsHeight: 70,
     itemsAmount: 9,
-    onPress: action('Button pressed')
+    onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical' }> = ({
-    type,
-    fontColor,
-    bgColor,
-    width,
-    height,
-    elementsMargin,
-    topPadding,
-    leftPadding,
-    rightPadding,
-    elementsWidth,
-    elementsHeight,
-    radius,
-    itemsAmount,
-    onPress
-}, context) =>
+export const UseGraphics: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
+    {
+        type,
+        fontColor,
+        bgColor,
+        width,
+        height,
+        elementsMargin,
+        topPadding,
+        leftPadding,
+        rightPadding,
+        elementsWidth,
+        elementsHeight,
+        radius,
+        itemsAmount,
+        onPress,
+    },
+    context,
+) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
-            const viewGraphics = new Graphics().roundRect(0, 0, width, height, radius).fill(bgColor);
+        init: (view) => {
+            const viewGraphics = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(bgColor);
 
             const items = [];
 
-            for (let i = 0; i < itemsAmount; i++)
-            {
+            for (let i = 0; i < itemsAmount; i++) {
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xa5e24d),
-                    hoverView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfec230),
-                    pressedView: new Graphics().roundRect(0, 0, elementsWidth, elementsHeight, radius).fill(0xfe6048),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xa5e24d),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfec230),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                        .fill(0xfe6048),
                     text: new Text({
-                        text: i + 1, style: {
+                        text: i + 1,
+                        style: {
                             ...defaultTextStyle,
                             fontSize: 28,
-                            fill: fontColor
-                        }
-                    })
+                            fill: fontColor,
+                        },
+                    }),
                 });
 
                 button.anchor.set(0);
@@ -75,18 +85,18 @@ export const UseGraphics: StoryFn<typeof args & {type: 'horizontal' | 'vertical'
                 topPadding,
                 leftPadding,
                 rightPadding,
-                type
+                type,
             });
 
             viewGraphics.addChild(list);
             view.addChild(viewGraphics);
             items.forEach((item) => list.addChild(item));
         },
-        resize: (view) => centerElement(view.children[0])
+        resize: (view) => centerElement(view.children[0]),
     });
 
 export default {
     title: 'Components/List/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

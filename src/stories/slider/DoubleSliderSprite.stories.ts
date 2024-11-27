@@ -13,20 +13,19 @@ const args = {
     value2: 85,
     fontSize: 20,
     showValue: true,
-    onChange: action('Slider')
+    onChange: action('Slider'),
 };
 
 export const Double: StoryFn<typeof args> = (
-    { min, max, value1, value2, fontSize, fontColor, showValue, onChange }, context
+    { min, max, value1, value2, fontSize, fontColor, showValue, onChange },
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const doubleSlider = new DoubleSlider({
                     bg: 'slider_bg.png',
@@ -39,23 +38,22 @@ export const Double: StoryFn<typeof args> = (
                     value2,
                     valueTextStyle: {
                         fill: fontColor,
-                        fontSize
+                        fontSize,
                     },
                     showValue,
                     valueTextOffset: {
-                        y: -40
+                        y: -40,
                     },
                     fillPaddings: {
                         left: 4.5,
-                        top: 2
-                    }
+                        top: 2,
+                    },
                 });
 
                 doubleSlider.value1 = value1;
                 doubleSlider.value2 = value2;
 
-                doubleSlider.onChange.connect((value1, value2) =>
-                {
+                doubleSlider.onChange.connect((value1, value2) => {
                     onChange(`${value1} - ${value2}`);
                 });
 
@@ -64,11 +62,11 @@ export const Double: StoryFn<typeof args> = (
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 export default {
     title: 'Components/Slider/Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args)
+    args: getDefaultArgs(args),
 };

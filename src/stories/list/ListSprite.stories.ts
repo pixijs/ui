@@ -19,12 +19,11 @@ const args = {
 
 export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
     { fontColor, elementsMargin, itemsAmount, onPress, type },
-    context
+    context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `window.png`,
                 `SmallButton.png`,
@@ -32,8 +31,7 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
                 `SmallButton-pressed.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const window = Sprite.from(`window.png`);
                 const title = new Text({
                     text: `Levels`,
@@ -64,19 +62,17 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
                 centerElement(view);
             });
         },
-        resize: centerElement
+        resize: centerElement,
     });
 
 function createItems(
     itemsAmount: number,
     fontColor: number,
-    onPress: (buttonID: number) => void
-): FancyButton[]
-{
+    onPress: (buttonID: number) => void,
+): FancyButton[] {
     const items = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         const button = new FancyButton({
             defaultView: `SmallButton.png`,
             hoverView: `SmallButton-hover.png`,

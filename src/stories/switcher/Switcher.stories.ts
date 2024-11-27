@@ -15,25 +15,25 @@ const args = {
 
 export const Sprites: StoryFn<
     typeof args & {
-    triggerEvent1: string;
-    triggerEvent2: string;
-    triggerEvent3: string;
-}
+        triggerEvent1: string;
+        triggerEvent2: string;
+        triggerEvent3: string;
+    }
 > = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }, context) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
-            const assets = [`avatar-01.png`, `avatar-02.png`, `avatar-03.png`, `avatar-04.png`, `avatar-05.png`];
+        init: (view) => {
+            const assets = [
+                `avatar-01.png`,
+                `avatar-02.png`,
+                `avatar-03.png`,
+                `avatar-04.png`,
+                `avatar-05.png`,
+            ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
-                const swich = new Switcher(assets, [
-                    triggerEvent1,
-                    triggerEvent2,
-                    triggerEvent3,
-                ]);
+                const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
 
                 swich.onChange.connect((state) => action(`state ${state}`));
 

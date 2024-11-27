@@ -18,8 +18,7 @@ export type MaskedFrameOptions = {
  *     borderColor: 0xFFFFFF,
  * });
  */
-export class MaskedFrame extends Container
-{
+export class MaskedFrame extends Container {
     /** Target container. */
     target: Container;
     border = new Graphics();
@@ -28,12 +27,10 @@ export class MaskedFrame extends Container
     protected borderWidth: number;
     protected borderColor: FillStyleInputs;
 
-    constructor(options?: MaskedFrameOptions)
-    {
+    constructor(options?: MaskedFrameOptions) {
         super();
 
-        if (options?.target)
-        {
+        if (options?.target) {
             this.init(options);
         }
     }
@@ -46,10 +43,8 @@ export class MaskedFrame extends Container
      * @param root0.borderWidth - Border width.
      * @param root0.borderColor - Border color.
      */
-    init({ target, mask, borderWidth, borderColor }: MaskedFrameOptions)
-    {
-        if (this.target)
-        {
+    init({ target, mask, borderWidth, borderColor }: MaskedFrameOptions) {
+        if (this.target) {
             this.removeChild(this.target);
         }
 
@@ -64,8 +59,7 @@ export class MaskedFrame extends Container
      * Applies a mask to a target container.
      * @param mask
      */
-    setMask(mask: string | Graphics)
-    {
+    setMask(mask: string | Graphics) {
         this.maskData = mask;
 
         this._targetMask = getView(mask);
@@ -78,16 +72,17 @@ export class MaskedFrame extends Container
      * @param borderWidth
      * @param borderColor
      */
-    setBorder(borderWidth: number, borderColor: FillStyleInputs)
-    {
+    setBorder(borderWidth: number, borderColor: FillStyleInputs) {
         this.borderWidth = borderWidth;
         this.borderColor = borderColor;
 
         this.showBorder();
 
-        if (this.maskData)
-        {
-            const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone(true);
+        if (this.maskData) {
+            const borderMask =
+                typeof this.maskData === 'string'
+                    ? Sprite.from(this.maskData)
+                    : this.maskData.clone(true);
 
             borderMask.width += borderWidth * 2;
             borderMask.height += borderWidth * 2;
@@ -99,11 +94,11 @@ export class MaskedFrame extends Container
     }
 
     /** Hides a border. */
-    showBorder()
-    {
+    showBorder() {
         const width = this.borderWidth * 2;
 
-        this.border.clear()
+        this.border
+            .clear()
             .rect(0, 0, this.target.width + width, this.target.height + width)
             .fill(this.borderColor);
 
@@ -112,8 +107,7 @@ export class MaskedFrame extends Container
     }
 
     /** Hides a border. */
-    hideBorder()
-    {
+    hideBorder() {
         this.border.clear();
     }
 }

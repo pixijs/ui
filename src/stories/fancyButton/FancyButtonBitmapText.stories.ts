@@ -39,12 +39,11 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
         anchorY,
         animationDuration,
     },
-    context
+    context,
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -52,8 +51,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                 `button_disabled.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 BitmapFontManager.install({
                     name: 'TitleFont',
                     style: {
@@ -64,7 +62,10 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 
                 const title = new BitmapText({
                     text,
-                    style: { fontFamily: 'TitleFont', fontSize: defaultTextStyle.fontSize },
+                    style: {
+                        fontFamily: 'TitleFont',
+                        fontSize: defaultTextStyle.fontSize,
+                    },
                 });
 
                 // Component usage !!!
@@ -77,7 +78,10 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                     padding,
                     textOffset: { x: textOffsetX, y: textOffsetY },
                     defaultTextScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {
@@ -98,8 +102,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 
