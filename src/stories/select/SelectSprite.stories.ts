@@ -1,18 +1,18 @@
-import { TextStyle } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
-import { Select } from '../../Select';
-import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { preload } from '../utils/loader';
-import { action } from '@storybook/addon-actions';
+import { TextStyle } from "pixi.js";
+import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
+import { Select } from "../../Select";
+import { centerElement } from "../../utils/helpers/resize";
+import { defaultTextStyle } from "../../utils/helpers/styles";
+import { argTypes, getDefaultArgs } from "../utils/argTypes";
+import { preload } from "../utils/loader";
+import { action } from "@storybook/addon-actions";
 
 const args = {
-    dropDownHoverColor: '#A5E24D',
-    fontColor: '#FFFFFF',
+    dropDownHoverColor: "#A5E24D",
+    fontColor: "#FFFFFF",
     fontSize: 28,
     itemsAmount: 100,
-    onSelect: action('Item selected'),
+    onSelect: action("Item selected"),
 };
 
 export const UseSprite: StoryFn<typeof args> = (
@@ -21,21 +21,19 @@ export const UseSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [`select_closed.png`, `select_open.png`];
 
             let select: Select;
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 const textStyle = {
                     ...defaultTextStyle,
                     fill: fontColor,
                     fontSize,
                 } as TextStyle;
 
-                const items = getItems(itemsAmount, 'Item');
+                const items = getItems(itemsAmount, "Item");
 
                 // Component usage !!!
                 // Important: in order scroll to work, you have to call update() method in your game loop.
@@ -45,7 +43,7 @@ export const UseSprite: StoryFn<typeof args> = (
                     textStyle,
                     items: {
                         items,
-                        backgroundColor: 'RGBA(0, 0, 0, 0.0001)',
+                        backgroundColor: "RGBA(0, 0, 0, 0.0001)",
                         hoverColor: dropDownHoverColor,
                         width: 200,
                         height: 50,
@@ -68,8 +66,7 @@ export const UseSprite: StoryFn<typeof args> = (
 
                 select.y = 10;
 
-                select.onSelect.connect((_, text) =>
-                {
+                select.onSelect.connect((_, text) => {
                     onSelect({
                         id: select.value,
                         text,
@@ -85,12 +82,10 @@ export const UseSprite: StoryFn<typeof args> = (
         resize: (view) => centerElement(view, 0.5, 0),
     });
 
-function getItems(itemsAmount: number, text: string): string[]
-{
+function getItems(itemsAmount: number, text: string): string[] {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         items.push(`${text} ${i + 1}`);
     }
 
@@ -98,7 +93,7 @@ function getItems(itemsAmount: number, text: string): string[]
 }
 
 export default {
-    title: 'Components/Select/Use Sprite',
+    title: "Components/Select/Use Sprite",
     argTypes: argTypes(args),
     args: getDefaultArgs(args),
 };

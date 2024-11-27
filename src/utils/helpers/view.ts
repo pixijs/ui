@@ -1,29 +1,13 @@
-import { Container, Sprite, Texture } from 'pixi.js';
+import { Sprite, Container, Texture, Graphics } from "pixi.js";
 
-export function getView(view: string | Texture | Container): Container
-{
-    if (typeof view === 'string')
-    {
+export type GetViewSettings = string | Texture | Container | Sprite | Graphics;
+
+export function getView(view: GetViewSettings): Container | Sprite | Graphics {
+    if (typeof view === "string") {
         return Sprite.from(view);
     }
 
-    if (view instanceof Texture)
-    {
-        return new Sprite(view);
-    }
-
-    return view;
-}
-
-export function getSpriteView(view: string | Texture | Sprite): Sprite
-{
-    if (typeof view === 'string')
-    {
-        return Sprite.from(view);
-    }
-
-    if (view instanceof Texture)
-    {
+    if (view instanceof Texture) {
         return new Sprite(view);
     }
 
