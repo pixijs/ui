@@ -131,8 +131,14 @@ export const UseGraphics: StoryFn<typeof args> = (
                     },
                     defaultTextScale,
                     defaultIconScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
+                    defaultIconAnchor: {
+                        x: defaultIconAnchorX,
+                        y: defaultIconAnchorY,
+                    },
                     animations: {
                         default: {
                             props: {

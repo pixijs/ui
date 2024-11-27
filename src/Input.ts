@@ -170,7 +170,10 @@ export class Input extends Container {
         this.options.TextClass = options.TextClass ?? Text;
         const textStyle = { ...defaultTextStyle, ...options.textStyle };
 
-        this.inputField = new this.options.TextClass({ text: '', style: textStyle });
+        this.inputField = new this.options.TextClass({
+            text: '',
+            style: textStyle,
+        });
 
         this._cursor = new Sprite(Texture.WHITE);
 

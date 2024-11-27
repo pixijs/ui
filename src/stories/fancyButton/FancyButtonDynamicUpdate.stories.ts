@@ -112,7 +112,10 @@ export const DynamicUpdate: StoryFn<typeof args> = (
                     const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
                     const text = randomItem(texts.filter((text) => text !== button.text)) as string;
 
-                    button.textView = new Text({ text, style: { fontSize: 70 } });
+                    button.textView = new Text({
+                        text,
+                        style: { fontSize: 70 },
+                    });
 
                     icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
 

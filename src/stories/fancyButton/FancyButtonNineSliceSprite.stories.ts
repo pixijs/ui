@@ -80,8 +80,14 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
                     iconOffset: { x: -100, y: -7 },
                     defaultTextScale,
                     defaultIconScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
+                    defaultIconAnchor: {
+                        x: defaultIconAnchorX,
+                        y: defaultIconAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {

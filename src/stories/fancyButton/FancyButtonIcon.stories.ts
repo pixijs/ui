@@ -99,7 +99,10 @@ export const UseIcon: StoryFn<typeof args> = (
                         y: iconOffsetY,
                     },
                     defaultIconScale,
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+                    defaultIconAnchor: {
+                        x: defaultIconAnchorX,
+                        y: defaultIconAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {
