@@ -50,8 +50,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -61,8 +60,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
                 `avatar_mask.png`,
             ];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const button = new FancyButton({
                     defaultView: `button.png`,
@@ -82,8 +80,14 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
                     iconOffset: { x: -100, y: -7 },
                     defaultTextScale,
                     defaultIconScale,
-                    defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
-                    defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
+                    defaultIconAnchor: {
+                        x: defaultIconAnchorX,
+                        y: defaultIconAnchorY,
+                    },
                     animations: {
                         hover: {
                             props: {
@@ -111,8 +115,7 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled)
-                {
+                if (disabled) {
                     button.enabled = false;
                 }
 
@@ -128,12 +131,10 @@ export const UseNineSliceSprite: StoryFn<typeof args> = (
 
                 let currentSizeID = 0;
 
-                button.onPress.connect(() =>
-                {
+                button.onPress.connect(() => {
                     currentSizeID++;
 
-                    if (currentSizeID >= sizes.length)
-                    {
+                    if (currentSizeID >= sizes.length) {
                         currentSizeID = 0;
                     }
 

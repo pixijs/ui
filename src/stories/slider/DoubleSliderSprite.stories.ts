@@ -22,12 +22,10 @@ export const Double: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const doubleSlider = new DoubleSlider({
                     bg: 'slider_bg.png',
@@ -55,8 +53,7 @@ export const Double: StoryFn<typeof args> = (
                 doubleSlider.value1 = value1;
                 doubleSlider.value2 = value2;
 
-                doubleSlider.onChange.connect((value1, value2) =>
-                {
+                doubleSlider.onChange.connect((value1, value2) => {
                     onChange(`${value1} - ${value2}`);
                 });
 

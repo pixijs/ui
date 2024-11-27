@@ -19,28 +19,15 @@ const args = {
 };
 
 export const Double: StoryFn<typeof args> = (
-    {
-        min,
-        max,
-        value1,
-        value2,
-        fontSize,
-        fontColor,
-        onChange,
-        showValue,
-        width,
-        height,
-    },
+    { min, max, value1, value2, fontSize, fontColor, onChange, showValue, width, height },
     context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 const singleSlider = new DoubleSlider({
                     bg: 'slider_bg.png',

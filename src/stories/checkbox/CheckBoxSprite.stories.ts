@@ -21,8 +21,7 @@ export const UseSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({
                 type: 'vertical',
                 elementsMargin: 5,
@@ -30,10 +29,8 @@ export const UseSprite: StoryFn<typeof args> = (
 
             const assets = [`switch_off.png`, `switch_on.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage !!!
                     const checkBox = new CheckBox({
                         text: text ?? `${text} ${i + 1}`,
@@ -49,9 +46,7 @@ export const UseSprite: StoryFn<typeof args> = (
                         },
                     });
 
-                    checkBox.onCheck.connect((checked) =>
-                        onChange(`${i + 1} ${checked}`),
-                    );
+                    checkBox.onCheck.connect((checked) => onChange(`${i + 1} ${checked}`));
 
                     list.addChild(checkBox);
                 }

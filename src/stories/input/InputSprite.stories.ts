@@ -24,9 +24,7 @@ const args = {
     onChange: action('Input'),
 };
 
-export const UseSprite: StoryFn<
-  typeof args & { align: 'center' | 'left' | 'right' }
-> = (
+export const UseSprite: StoryFn<typeof args & { align: 'center' | 'left' | 'right' }> = (
     {
         text,
         amount,
@@ -46,16 +44,13 @@ export const UseSprite: StoryFn<
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() =>
-            {
-                for (let i = 0; i < amount; i++)
-                {
+            preload(assets).then(() => {
+                for (let i = 0; i < amount; i++) {
                     // Component usage
                     const input = new Input({
                         bg: Sprite.from('input.png'),

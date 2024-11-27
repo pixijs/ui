@@ -42,8 +42,7 @@ export type RadioBoxOptions = {
  *     type: 'vertical'
  * });
  */
-export class RadioGroup extends Container
-{
+export class RadioGroup extends Container {
     protected items: CheckBox[] = [];
 
     /** {@link List}, that holds and control all inned checkboxes.  */
@@ -60,12 +59,10 @@ export class RadioGroup extends Container
 
     protected options: RadioBoxOptions;
 
-    constructor(options?: RadioBoxOptions)
-    {
+    constructor(options?: RadioBoxOptions) {
         super();
 
-        if (options)
-        {
+        if (options) {
             this.init(options);
         }
 
@@ -76,24 +73,20 @@ export class RadioGroup extends Container
      * Initiates a group.
      * @param options
      */
-    init(options: RadioBoxOptions)
-    {
+    init(options: RadioBoxOptions) {
         this.options = options;
 
         this.value = options.items[options.selectedItem || 0].labelText?.text;
 
         this.selected = options.selectedItem ?? 0; // first item by default
 
-        if (this.innerView)
-        {
+        if (this.innerView) {
             this.innerView.type = options.type;
             this.innerView.elementsMargin = options.elementsMargin;
-        }
-        else
-        {
+        } else {
             this.innerView = new List({
                 type: options.type,
-                elementsMargin: options.elementsMargin
+                elementsMargin: options.elementsMargin,
             });
         }
 
@@ -108,10 +101,8 @@ export class RadioGroup extends Container
      * Add items to a group.
      * @param {CheckBox[]} items - array of {@link CheckBox} instances.
      */
-    addItems(items: CheckBox[])
-    {
-        items.forEach((checkBox, id) =>
-        {
+    addItems(items: CheckBox[]) {
+        items.forEach((checkBox, id) => {
             checkBox.onChange.connect(() => this.selectItem(id));
 
             this.items.push(checkBox);
@@ -124,10 +115,8 @@ export class RadioGroup extends Container
      * Remove items from a group.
      * @param ids
      */
-    removeItems(ids: number[])
-    {
-        ids.forEach((id) =>
-        {
+    removeItems(ids: number[]) {
+        ids.forEach((id) => {
             const item = this.items[id];
 
             if (!item) return;
@@ -144,15 +133,12 @@ export class RadioGroup extends Container
      * Select item by ID.
      * @param id
      */
-    selectItem(id: number)
-    {
-        this.items.forEach((item, key) =>
-        {
+    selectItem(id: number) {
+        this.items.forEach((item, key) => {
             item.forceCheck(key === id);
         });
 
-        if (this.selected !== id)
-        {
+        if (this.selected !== id) {
             this.onChange.emit(id, this.items[id].labelText?.text);
         }
 

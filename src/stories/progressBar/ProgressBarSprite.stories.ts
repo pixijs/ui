@@ -11,23 +11,17 @@ const args = {
     vertical: false,
 };
 
-export const Sprite: StoryFn<typeof args> = (
-    { value, animate, vertical },
-    context,
-) =>
-{
+export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, context) => {
     let isFilling = true;
     let progressBar: ProgressBar;
 
     return new PixiStory<typeof args>({
         context,
-        init: (view) =>
-        {
+        init: (view) => {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
             const assets = ['slider_bg.png', 'slider_progress.png'];
 
-            preload(assets).then(() =>
-            {
+            preload(assets).then(() => {
                 // Component usage !!!
                 progressBar = new ProgressBar({
                     bg: 'slider_bg.png',
@@ -41,13 +35,10 @@ export const Sprite: StoryFn<typeof args> = (
 
                 list.addChild(progressBar);
 
-                if (vertical)
-                {
+                if (vertical) {
                     progressBar.rotation = -Math.PI / 2;
                     list.y += list.height / 2;
-                }
-                else
-                {
+                } else {
                     list.x += -list.width / 2;
                 }
             });
@@ -55,34 +46,26 @@ export const Sprite: StoryFn<typeof args> = (
             view.addChild(list);
         },
 
-        resize: (view) =>
-        {
+        resize: (view) => {
             centerElement(view);
-            if (vertical)
-            {
+            if (vertical) {
                 view.y += view.height;
             }
         },
-        update: () =>
-        {
-            if (!animate || !progressBar)
-            {
+        update: () => {
+            if (!animate || !progressBar) {
                 return;
             }
 
             isFilling ? value++ : value--;
 
-            if (value > 150)
-            {
+            if (value > 150) {
                 isFilling = false;
-            }
-            else if (value < -50)
-            {
+            } else if (value < -50) {
                 isFilling = true;
             }
 
-            if (progressBar)
-            {
+            if (progressBar) {
                 progressBar.progress = value;
             }
         },

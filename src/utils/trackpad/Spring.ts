@@ -1,12 +1,10 @@
-export interface SpringOptions
-{
+export interface SpringOptions {
     max?: number;
     damp?: number;
     springiness?: number;
 }
 
-export class Spring
-{
+export class Spring {
     x: number;
     ax: number;
     dx: number;
@@ -14,8 +12,7 @@ export class Spring
 
     protected _options: SpringOptions;
 
-    constructor(options: SpringOptions = {})
-    {
+    constructor(options: SpringOptions = {}) {
         this.x = 0;
         this.ax = 0;
         this.dx = 0;
@@ -28,8 +25,7 @@ export class Spring
         this._options.springiness = options.springiness || 0.1;
     }
 
-    update(): void
-    {
+    update(): void {
         this.ax = (this.tx - this.x) * this._options.springiness;
 
         this.dx += this.ax;
@@ -41,41 +37,34 @@ export class Spring
         this.x += this.dx;
     }
 
-    reset(): void
-    {
+    reset(): void {
         this.x = 0;
         this.ax = 0;
         this.dx = 0;
         this.tx = 0;
     }
 
-    get max(): number
-    {
+    get max(): number {
         return this._options.max;
     }
 
-    set max(value: number)
-    {
+    set max(value: number) {
         this._options.max = value;
     }
 
-    get damp(): number
-    {
+    get damp(): number {
         return this._options.damp;
     }
 
-    set damp(value: number)
-    {
+    set damp(value: number) {
         this._options.damp = value;
     }
 
-    get springiness(): number
-    {
+    get springiness(): number {
         return this._options.springiness;
     }
 
-    set springiness(value: number)
-    {
+    set springiness(value: number) {
         this._options.springiness = value;
     }
 }

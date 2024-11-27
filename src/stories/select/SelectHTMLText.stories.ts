@@ -33,8 +33,7 @@ export const UseHTMLText: StoryFn = ({
     dropDownBackgroundColor,
     dropDownHoverColor,
     onSelect,
-}: any) =>
-{
+}: any) => {
     const view = new Container();
 
     backgroundColor = getColor(backgroundColor);
@@ -71,8 +70,7 @@ export const UseHTMLText: StoryFn = ({
 
     select.y = 10;
 
-    select.onSelect.connect((_, text) =>
-    {
+    select.onSelect.connect((_, text) => {
         onSelect({
             id: select.value,
             text,
@@ -87,19 +85,10 @@ export const UseHTMLText: StoryFn = ({
     };
 };
 
-function getClosedBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
-{
-    const closedBG = new Graphics()
-        .roundRect(0, 0, width, height, radius)
-        .fill(backgroundColor);
+function getClosedBG(backgroundColor: number, width: number, height: number, radius: number) {
+    const closedBG = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowDown = Sprite.from('arrow_down.png');
 
         arrowDown.anchor.set(0.5);
@@ -111,19 +100,10 @@ function getClosedBG(
     return closedBG;
 }
 
-function getOpenBG(
-    backgroundColor: number,
-    width: number,
-    height: number,
-    radius: number,
-)
-{
-    const openBG = new Graphics()
-        .roundRect(0, 0, width, height * 6, radius)
-        .fill(backgroundColor);
+function getOpenBG(backgroundColor: number, width: number, height: number, radius: number) {
+    const openBG = new Graphics().roundRect(0, 0, width, height * 6, radius).fill(backgroundColor);
 
-    preload(['arrow_down.png']).then(() =>
-    {
+    preload(['arrow_down.png']).then(() => {
         const arrowUp = Sprite.from('arrow_down.png');
 
         arrowUp.angle = 180;
@@ -136,12 +116,10 @@ function getOpenBG(
     return openBG;
 }
 
-function getItems(itemsAmount: number, text: string): string[]
-{
+function getItems(itemsAmount: number, text: string): string[] {
     const items: string[] = [];
 
-    for (let i = 0; i < itemsAmount; i++)
-    {
+    for (let i = 0; i < itemsAmount; i++) {
         items.push(`${text} ${i + 1}`);
     }
 
