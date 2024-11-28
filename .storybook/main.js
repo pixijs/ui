@@ -11,8 +11,6 @@ module.exports = {
         '@storybook/addon-links',
         '@storybook/addon-highlight',
         '@storybook/addon-storysource',
-        '@storybook/addon-webpack5-compiler-babel',
-        '@chromatic-com/storybook',
     ],
     core: {
         channelOptions: { allowFunction: false, maxDepth: 10 },
