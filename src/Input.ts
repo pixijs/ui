@@ -105,6 +105,9 @@ export class Input extends Container {
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
+     * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
+     *                                      <br> ! be careful with this setting if you have a lot of inputs to render as each mask will add one more draw call.
+     *                                      <br> It is recommended to use maxLength setting instead.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
      */
     constructor(options: InputOptions) {
