@@ -249,33 +249,7 @@ export class Input extends Container {
         }
 
         if (this.options.addMask) {
-            if (this.inputMask) {
-                this.inputField.mask = null;
-                this._cursor.mask = null;
-                this.inputMask.destroy();
-            }
-
-            if (this.options?.nineSliceSprite && typeof bg === 'string') {
-                this.inputMask = new NineSliceSprite({
-                    texture: Texture.from(bg),
-                    leftWidth: this.options.nineSliceSprite[0],
-                    topHeight: this.options.nineSliceSprite[1],
-                    rightWidth: this.options.nineSliceSprite[2],
-                    bottomHeight: this.options.nineSliceSprite[3],
-                });
-            } else if (bg instanceof Sprite) {
-                this.inputMask = new Sprite(bg.texture);
-            } else if (bg instanceof Graphics) {
-                this.inputMask = bg.clone(true);
-            } else {
-                this.inputMask = getView(bg);
-            }
-
-            this.inputField.mask = this.inputMask;
-
-            this._cursor.mask = this.inputMask;
-
-            this.addChildAt(this.inputMask, 0);
+            this.createInputMask(bg);
         }
     }
 
@@ -560,10 +534,7 @@ export class Input extends Container {
                 this._bg.width = width;
             }
 
-            if (this.inputMask) {
-                this.inputMask.width = width - this.paddingLeft - this.paddingRight;
-                this.inputMask.x = this.paddingLeft;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         } else {
@@ -588,10 +559,7 @@ export class Input extends Container {
                 this._bg.height = height;
             }
 
-            if (this.inputMask) {
-                this.inputMask.height = height - this.paddingTop - this.paddingBottom;
-                this.inputMask.y = this.paddingTop;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         } else {
@@ -610,24 +578,53 @@ export class Input extends Container {
                 this._bg.setSize(value, height);
             }
 
-            if (this.inputMask) {
-                if (typeof value === 'object') {
-                    height = value.height ?? value.width;
-                    value = value.width;
-                } else {
-                    height = height ?? value;
-                }
-
-                this.inputMask.setSize(
-                    value - this.paddingLeft - this.paddingRight,
-                    height - this.paddingTop - this.paddingBottom,
-                );
-                this.inputMask.position.set(this.paddingLeft, this.paddingTop);
-            }
-
+            this.updateInputMaskSize();
             this.align();
         } else {
             super.setSize(value, height);
         }
+    }
+
+    protected createInputMask(bg: ViewType) {
+        if (this.inputMask) {
+            this.inputField.mask = null;
+            this._cursor.mask = null;
+            this.inputMask.destroy();
+        }
+
+        if (this.options?.nineSliceSprite && typeof bg === 'string') {
+            this.inputMask = new NineSliceSprite({
+                texture: Texture.from(bg),
+                leftWidth: this.options.nineSliceSprite[0],
+                topHeight: this.options.nineSliceSprite[1],
+                rightWidth: this.options.nineSliceSprite[2],
+                bottomHeight: this.options.nineSliceSprite[3],
+            });
+        } else if (bg instanceof Sprite) {
+            this.inputMask = new Sprite(bg.texture);
+        } else if (bg instanceof Graphics) {
+            this.inputMask = bg.clone(true);
+        } else {
+            this.inputMask = getView(bg);
+        }
+
+        this.inputField.mask = this.inputMask;
+
+        this._cursor.mask = this.inputMask;
+
+        this.updateInputMaskSize();
+
+        this.addChildAt(this.inputMask, 0);
+    }
+
+    protected updateInputMaskSize() {
+        if (!this.inputMask || !this._bg) return;
+
+        this.inputMask.setSize(
+            this._bg.width - this.paddingLeft - this.paddingRight,
+            this._bg.height - this.paddingTop - this.paddingBottom,
+        );
+
+        this.inputMask.position.set(this.paddingLeft, this.paddingTop);
     }
 }
