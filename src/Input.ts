@@ -94,6 +94,8 @@ export class Input extends Container {
      * Creates an input.
      * @param { number } options - Options object to use.
      * @param { Sprite | Graphics | Texture | string } options.bg - Background of the Input.
+     *                                                              <br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
+     *                                                              <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter.
      * @param { PixiTextStyle } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
      * @param { string } options.value - Value of the Input.
@@ -106,9 +108,8 @@ export class Input extends Container {
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
      * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
-     *                                      <br> ! be careful with this setting if you have a lot of inputs to render as each mask will add one more draw call.
-     *                                      <br> It is recommended to use maxLength setting instead.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
+     *                                      <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */
     constructor(options: InputOptions) {
         super();
@@ -231,7 +232,7 @@ export class Input extends Container {
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             } else {
-                console.warn('NineSliceSprite can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
             }
         }
 

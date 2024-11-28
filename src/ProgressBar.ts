@@ -58,7 +58,11 @@ export class ProgressBar extends Container {
      * Creates a ProgressBar.
      * @param options - Options.
      * @param { Sprite | Graphics | Texture | string } options.bg - Background of the ProgressBar.
+     *                                                              <br> If you pass a string, it will be used as a texture name.
+     *                                                              <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
      * @param { Sprite | Graphics | Texture | string } options.fill - Fill of the ProgressBar.
+     *                                                              <br> If you pass a string, it will be used as a texture name.
+     *                                                              <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
      * @param { FillPaddings } options.fillPaddings - Fill offsets.
      * @param { number } options.fillPaddings.top - Fill top offset.
      * @param { number } options.fillPaddings.right - Fill right offset.
@@ -66,7 +70,9 @@ export class ProgressBar extends Container {
      * @param { number } options.fillPaddings.left - Fill left offset.
      * @param { NineSliceSprite } options.nineSliceSprite - NineSliceSprite values for bg and fill.
      * @param { Array } options.nineSliceSprite.bg - NineSliceSprite config for bg ([number, number, number, number]).
+     *                                              <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a bg parameter as texture name or texture instance.
      * @param { Array } options.nineSliceSprite.fill - NineSliceSprite config fill ([number, number, number, number]).
+     *                                              <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a fill parameter as texture name or texture instance.
      * @param { number } options.progress - Initial progress value.
      */
     constructor(options?: ProgressBarOptions) {
@@ -125,7 +131,7 @@ export class ProgressBar extends Container {
                     bottomHeight: this.options.nineSliceSprite.bg[3],
                 });
             } else {
-                console.warn('NineSliceSprite can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
             }
         }
 
@@ -154,24 +160,17 @@ export class ProgressBar extends Container {
         }
 
         if (this.options?.nineSliceSprite) {
-            if (typeof fill === 'string') {
+            if (typeof fill === 'string' || fill instanceof Texture) {
                 this.fill = new PixiNineSliceSprite({
-                    texture: Texture.from(fill),
-                    leftWidth: this.options.nineSliceSprite.fill[0],
-                    topHeight: this.options.nineSliceSprite.fill[1],
-                    rightWidth: this.options.nineSliceSprite.fill[2],
-                    bottomHeight: this.options.nineSliceSprite.fill[3],
-                });
-            } else if (fill instanceof Texture) {
-                this.fill = new PixiNineSliceSprite({
-                    texture: fill,
+                    texture: typeof fill === 'string' ? Texture.from(fill) : fill,
                     leftWidth: this.options.nineSliceSprite.fill[0],
                     topHeight: this.options.nineSliceSprite.fill[1],
                     rightWidth: this.options.nineSliceSprite.fill[2],
                     bottomHeight: this.options.nineSliceSprite.fill[3],
                 });
             } else {
-                console.warn('NineSliceSprite can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
+                this.fill = getView(fill) as Sprite | Graphics;
             }
         } else {
             this.fill = getView(fill) as Sprite | Graphics;

@@ -14,7 +14,7 @@ import { fitToView } from './utils/helpers/fit';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 
-import type { Optional, Size, Sprite } from 'pixi.js';
+import type { Graphics, Optional, Size, Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -172,11 +172,19 @@ export class FancyButton extends ButtonContainer {
     /**
      * Creates a button with a lot of tweaks.
      * @param {object} options - Button options.
-     * @param {Container} options.defaultView - Container-based view that is shown when non of the button events are active.
-     * @param {Container} options.hoverView - Container-based view that is shown when the mouse hovers over the button.
-     * @param {Container} options.pressedView - Container-based view, shown when the mouse press on the component.
-     * @param {Container} options.disabledView - Container-based view shown when the button is disabled.
-     * @param {Container} options.icon - Container-based view for the button icon.
+     * @param { string | Texture | Container | Sprite | Graphics } options.defaultView - Container-based view that is shown when non of the button events are active.
+     *                                                                                   <br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
+     *                                                                                   <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
+     * @param { string | Texture | Container | Sprite | Graphics } options.hoverView - Container-based view that is shown when the mouse hovers over the button.
+     *                                                                                   <br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
+     *                                                                                   <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
+     * @param { string | Texture | Container | Sprite | Graphics } options.pressedView - Container-based view, shown when the mouse press on the component.
+     *                                                                                   <br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
+     *                                                                                   <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
+     * @param { string | Texture | Container | Sprite | Graphics } options.disabledView - Container-based view shown when the button is disabled.
+     *                                                                                   <br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
+     *                                                                                   <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.
+     * @param { string | Texture | Container | Sprite | Graphics } options.icon - Container-based view for the button icon.
      * @param {Text} options.text - Text-based view for the button text.
      * @param {number} options.padding - Padding of the button text and icon views.
      * If button text or icon does not fit active view + padding it will scale down to fit.
@@ -192,6 +200,8 @@ export class FancyButton extends ButtonContainer {
      * @param {number} options.anchor - Anchor point of the button.
      * @param {number} options.anchorX - Horizontal anchor point of the button.
      * @param {number} options.anchorY - Vertical anchor point of the button.
+     * @param { Array } options.nineSliceSprite - NineSliceSprite values for views ([number, number, number, number]).
+     *                                      <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a views (defaultView, hoverView, pressedView, disabledView) parameters as texture name or texture instance.
      * @param options.animations - Animations that will be played when the button state changes.
      */
     constructor(options?: ButtonOptions) {
@@ -637,7 +647,7 @@ export class FancyButton extends ButtonContainer {
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             } else {
-                console.warn('NineSliceSprite can not be used with views set as Container.');
+                console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
             }
         }
 
