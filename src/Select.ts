@@ -5,7 +5,7 @@ import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { PixiText, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 const defaultVisibleItems = 5;
 
@@ -26,8 +26,8 @@ export type SelectItemsOptions = {
 };
 
 export type SelectOptions = {
-    closedBG: string | Container;
-    openBG: string | Container;
+    closedBG: GetViewSettings;
+    openBG: GetViewSettings;
     textStyle?: PixiTextStyle;
     TextClass?: new (...args: any[]) => PixiText;
     selected?: number;
@@ -123,7 +123,7 @@ export class Select extends Container
         if (!this.openButton)
         {
             this.openButton = new FancyButton({
-                defaultView: getView(closedBG),
+                defaultView: closedBG,
                 text: new TextClass(items?.items ? items.items[0] : '', textStyle),
                 textOffset: selectedTextOffset
             });

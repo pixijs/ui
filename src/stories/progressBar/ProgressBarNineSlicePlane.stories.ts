@@ -1,9 +1,10 @@
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { ProgressBar } from '../../ProgressBar';
-import { centerElement } from '../../utils/helpers/resize';
-import { preload } from '../utils/loader';
+import { Sprite } from '@pixi/sprite';
 import type { StoryFn } from '@storybook/types';
 import { List } from '../../List';
+import { ProgressBar } from '../../ProgressBar';
+import { centerElement } from '../../utils/helpers/resize';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { preload } from '../utils/loader';
 
 const args = {
     value: 50,
@@ -25,7 +26,7 @@ export const NineSlicePlane: StoryFn = ({ value, animate, vertical, width, heigh
     {
     // Component usage !!!
         progressBar = new ProgressBar({
-            bg: 'slider_bg.png',
+            bg: Sprite.from('slider_bg.png'),
             fill: 'slider_progress.png',
             nineSlicePlane: {
                 bg: [22, 15, 22, 23],

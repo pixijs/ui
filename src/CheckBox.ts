@@ -1,14 +1,13 @@
-import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 type CheckBoxStyle = {
-    checked: Container | string;
-    unchecked: Container | string;
+    checked: GetViewSettings;
+    unchecked: GetViewSettings;
     text?: PixiTextStyle;
     textOffset?: {
         x?: number;
