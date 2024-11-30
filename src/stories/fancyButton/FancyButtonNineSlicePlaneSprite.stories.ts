@@ -24,6 +24,7 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
+    contentFittingMode: ['default', 'fill', 'none'],
     onPress: action('button was pressed! (tap or click!)')
 };
 
@@ -43,7 +44,8 @@ export const UseNineSlicePlane = ({
     defaultTextAnchorX,
     defaultTextAnchorY,
     defaultIconAnchorX,
-    defaultIconAnchorY
+    defaultIconAnchorY,
+    contentFittingMode
 }: any) =>
 {
     const view = new Container();
@@ -85,6 +87,7 @@ export const UseNineSlicePlane = ({
             defaultIconScale,
             defaultTextAnchor: { x: defaultTextAnchorX, y: defaultTextAnchorY },
             defaultIconAnchor: { x: defaultIconAnchorX, y: defaultIconAnchorY },
+            contentFittingMode,
             animations: {
                 hover: {
                     props: {
