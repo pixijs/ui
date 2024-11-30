@@ -421,7 +421,7 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            if (!this.options?.ignoreRefitting)
+            if (!this.options.ignoreRefitting)
             {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
@@ -472,7 +472,7 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (!this.options?.ignoreRefitting)
+        if (!this.options.ignoreRefitting)
         {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
