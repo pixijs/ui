@@ -9,6 +9,7 @@ import { getColor } from '../utils/color';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     backgroundColor: '#F1D583',
@@ -42,6 +43,7 @@ export const UseGraphics = ({
     maxLength,
     align,
     placeholder,
+    secure,
     paddingTop,
     paddingRight,
     paddingBottom,
@@ -72,6 +74,7 @@ export const UseGraphics = ({
             },
             maxLength,
             align,
+            secure,
             placeholder,
             value: text,
             padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],

@@ -8,6 +8,7 @@ import { centerElement } from '../../utils/helpers/resize';
 const args = {
     text: '',
     placeholder: 'Enter text',
+    secure: false,
     align: ['center', 'left', 'right'],
     textColor: '#000000',
     maxLength: 100,
@@ -34,6 +35,7 @@ export const UseNineSlicePlane = ({
     maxLength,
     align,
     placeholder,
+    secure,
     width,
     height,
     onChange
@@ -62,6 +64,7 @@ export const UseNineSlicePlane = ({
                 maxLength,
                 align,
                 placeholder,
+                secure,
                 value: text,
             });
 
