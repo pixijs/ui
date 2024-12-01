@@ -179,14 +179,22 @@ export class Input extends Container
         this.inputField = new this.options.TextClass('', textStyle);
 
         this._cursor = new Sprite(Texture.WHITE);
+
         if ('tint' in options.textStyle)
         {
             this._cursor.tint = options.textStyle.tint;
         }
+        else if ('fill' in options.textStyle)
+        {
+            const fill = options.textStyle.fill;
+
+            this._cursor.tint = typeof fill === 'string' || typeof fill === 'number' ? fill : 0x000000;
+        }
         else
         {
-            this._cursor.tint = Number((options.textStyle as TextStyle).fill) || 0x000000;
+            this._cursor.tint = 0x000000;
         }
+
         this._cursor.anchor.set(0.5);
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
