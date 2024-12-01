@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { Texture } from '@pixi/core';
 import { Sprite } from '@pixi/sprite';
-import { getSpriteView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 import { NineSlicePlane as PixiNineSlicePlane } from '@pixi/mesh-extras';
 import { Graphics } from '@pixi/graphics';
 
@@ -12,7 +12,7 @@ type FillPaddings = {
     left?: number;
 };
 
-export type ProgressBarViewType = Sprite | Graphics | string;
+export type ProgressBarViewType = GetViewSettings;
 export type NineSlicePlane = {
     bg: [number, number, number, number],
     fill: [number, number, number, number]
@@ -54,8 +54,8 @@ export class ProgressBar extends Container
     /**
      * Creates a ProgressBar.
      * @param options - Options.
-     * @param { Sprite | Graphics | string } options.bg - Background of the ProgressBar.
-     * @param { Sprite | Graphics | string } options.fill - Fill of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.bg - Background of the ProgressBar.
+     * @param { Sprite | Graphics | Texture | string } options.fill - Fill of the ProgressBar.
      * @param { FillPaddings } options.fillPaddings - Fill offsets.
      * @param { number } options.fillPaddings.top - Fill top offset.
      * @param { number } options.fillPaddings.right - Fill right offset.
@@ -115,20 +115,19 @@ export class ProgressBar extends Container
             {
                 this.bg = new PixiNineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane.bg);
             }
+            else if (bg instanceof Texture)
+            {
+                this.bg = new PixiNineSlicePlane(bg, ...this.options.nineSlicePlane.bg);
+            }
             else
             {
                 console.warn('NineSlicePlane can not be used with views set as Container.');
             }
         }
 
-        if (bg instanceof Graphics)
+        if (!this.bg)
         {
-            this.bg = bg;
-        }
-
-        if (!this.bg && (typeof bg === 'string' || bg instanceof Sprite))
-        {
-            this.bg = getSpriteView(bg);
+            this.bg = getView(bg) as Sprite | Graphics;
         }
 
         this.innerView.addChildAt(this.bg, 0);
@@ -160,6 +159,10 @@ export class ProgressBar extends Container
             {
                 this.fill = new PixiNineSlicePlane(Texture.from(fill), ...this.options.nineSlicePlane.fill);
             }
+            else if (fill instanceof Texture)
+            {
+                this.fill = new PixiNineSlicePlane(fill, ...this.options.nineSlicePlane.fill);
+            }
             else
             {
                 console.warn('NineSlicePlane can not be used with views set as Container.');
@@ -168,14 +171,7 @@ export class ProgressBar extends Container
 
         if (!this.fill)
         {
-            if (fill instanceof Graphics)
-            {
-                this.fill = fill;
-            }
-            else
-            {
-                this.fill = getSpriteView(fill);
-            }
+            this.fill = getView(fill) as Sprite | Graphics;
         }
 
         this.innerView.addChildAt(this.fill, 1);

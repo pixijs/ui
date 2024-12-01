@@ -9,7 +9,7 @@ import { Padding } from './utils/HelpTypes';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
 
-type ViewType = Sprite | Graphics | string;
+type ViewType = Sprite | Graphics | Texture | string;
 
 export type InputOptions = {
     bg: ViewType;
@@ -79,7 +79,7 @@ export class Input extends Container
     /**
      * Creates an input.
      * @param { number } options - Options object to use.
-     * @param { Sprite | Graphics | string } options.bg - Background of the Input.
+     * @param { Sprite | Graphics | Texture | string } options.bg - Background of the Input.
      * @param { Partial<TextStyle> } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
      * @param { string } options.value - Value of the Input.
@@ -214,6 +214,10 @@ export class Input extends Container
             if (typeof bg === 'string')
             {
                 this._bg = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+            }
+            else if (bg instanceof Texture)
+            {
+                this._bg = new NineSlicePlane(bg, ...this.options.nineSlicePlane);
             }
             else
             {

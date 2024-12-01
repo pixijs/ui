@@ -1,6 +1,6 @@
 import { Container } from '@pixi/display';
 import { Signal } from 'typed-signals';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';
 
 /**
@@ -100,7 +100,7 @@ export class Switcher extends Container
      * Adds view instance to a switching list.
      * @param view
      */
-    add(view: Container | string): void
+    add(view: GetViewSettings): void
     {
         const viewInstance = getView(view);
 

@@ -2,7 +2,7 @@
 import { ObservablePoint, Ticker, Rectangle, utils, Texture } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { getView } from './utils/helpers/view';
+import { getView, GetViewSettings } from './utils/helpers/view';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { fitToView } from './utils/helpers/fit';
 import { Tween, Group } from 'tweedle.js';
@@ -16,8 +16,6 @@ type PosList = { [K in State]?: Pos };
 export type Offset = Pos & PosList;
 
 type ButtonViewType = 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView';
-
-type ButtonView = string | Container;
 
 type BasicButtonViews = {
     [K in ButtonViewType]?: Container | NineSlicePlane;
@@ -46,12 +44,12 @@ type StateAnimations = {
 };
 
 type BasicViewsInput = {
-    [K in ButtonViewType]?: ButtonView;
+    [K in ButtonViewType]?: GetViewSettings;
 };
 
 type ViewsInput = BasicViewsInput & {
     text?: AnyText;
-    icon?: ButtonView;
+    icon?: GetViewSettings;
 };
 
 export type ButtonOptions = ViewsInput & {
@@ -512,7 +510,7 @@ export class FancyButton extends ButtonContainer
      * Sets the default view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set defaultView(view: ButtonView | null)
+    set defaultView(view: GetViewSettings | null)
     {
         this.updateView('defaultView', view);
     }
@@ -527,7 +525,7 @@ export class FancyButton extends ButtonContainer
      * Sets the hover view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set hoverView(view: ButtonView | null)
+    set hoverView(view: GetViewSettings | null)
     {
         this.updateView('hoverView', view);
         if (this._views.hoverView && this.state !== 'hover')
@@ -543,7 +541,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the pressed view of the button. */
-    set pressedView(view: ButtonView | null)
+    set pressedView(view: GetViewSettings | null)
     {
         this.updateView('pressedView', view);
         if (this._views.pressedView)
@@ -559,7 +557,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the disabled view of the button. */
-    set disabledView(view: ButtonView | null)
+    set disabledView(view: GetViewSettings | null)
     {
         this.updateView('disabledView', view);
         if (this._views.disabledView)
@@ -577,9 +575,9 @@ export class FancyButton extends ButtonContainer
     /**
      * Helper method to update or cleanup button views.
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
-     * @param { string | Container | null } view - new view
+     * @param { string | Texture | Container | null } view - new view
      */
-    protected updateView(viewType: ButtonViewType, view: ButtonView | null)
+    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null)
     {
         if (view === undefined) return;
 
@@ -595,6 +593,10 @@ export class FancyButton extends ButtonContainer
             if (typeof view === 'string')
             {
                 this._views[viewType] = new NineSlicePlane(Texture.from(view), ...this.options.nineSlicePlane);
+            }
+            else if (view instanceof Texture)
+            {
+                this._views[viewType] = new NineSlicePlane(view, ...this.options.nineSlicePlane);
             }
             else
             {
@@ -673,9 +675,9 @@ export class FancyButton extends ButtonContainer
 
     /**
      * Sets the iconView of the button.
-     * @param { string | Container } view - string (path to the image) or a Container-based view
+     * @param { string | Texture | Container } view - string (path to the image), texture instance or a Container-based view
      */
-    set iconView(view: ButtonView | null)
+    set iconView(view: GetViewSettings | null)
     {
         if (view === undefined) return;
 
