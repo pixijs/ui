@@ -52,6 +52,14 @@ type ViewsInput = BasicViewsInput & {
     icon?: GetViewSettings;
 };
 
+type ContentFittingMode =
+    // Fits the text/icon content inside the button.
+    | 'default'
+    // Fill the button with the text/icon content, scaling it up to fill the view space with padding accounted for.
+    | 'fill'
+    // Only apply the default scaling and anchoring, without constraining to the button view's dimensions.
+    | 'none';
+
 export type ButtonOptions = ViewsInput & {
     padding?: number;
     scale?: number;
@@ -67,6 +75,9 @@ export type ButtonOptions = ViewsInput & {
     defaultIconAnchor?: Pos | number;
     animations?: StateAnimations;
     nineSlicePlane?: [number, number, number, number];
+    contentFittingMode?: ContentFittingMode;
+
+    /** @deprecated refer to contentFittingMode instead */
     ignoreRefitting?: boolean;
 };
 
@@ -410,12 +421,29 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            if (!this.options?.ignoreRefitting)
+            if (!this.options.ignoreRefitting)
             {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
-            fitToView(activeView, this._views.textView, this.padding, false);
+            if (this.contentFittingMode === 'default')
+            {
+                fitToView(activeView, this._views.textView, this.padding, false);
+            }
+
+            if (this.contentFittingMode === 'fill')
+            {
+                // reset to base dimensions for calculations
+                this._views.textView.scale.set(1);
+
+                const availableWidth = activeView.width - (this.padding * 2);
+                const availableHeight = activeView.height - (this.padding * 2);
+                const targetScaleX = availableWidth / this._views.textView.width;
+                const targetScaleY = availableHeight / this._views.textView.height;
+                const scale = Math.min(targetScaleX, targetScaleY);
+
+                this._views.textView.scale.set(scale * this._defaultTextScale.x, scale * this._defaultTextScale.y);
+            }
 
             this._views.textView.x = activeView.x + (activeView.width / 2);
             this._views.textView.y = activeView.y + (activeView.height / 2);
@@ -444,14 +472,31 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (!this.options?.ignoreRefitting)
+        if (!this.options.ignoreRefitting)
         {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
 
-        const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
+        if (this.contentFittingMode === 'default')
+        {
+            fitToView(activeView, this._views.iconView, this.padding, false);
+        }
 
-        fitToView(activeView, this._views.iconView, this.padding, false);
+        if (this.contentFittingMode === 'fill')
+        {
+            // reset to base dimensions for calculations
+            this._views.iconView.scale.set(1);
+
+            const availableWidth = activeView.width - (this.padding * 2);
+            const availableHeight = activeView.height - (this.padding * 2);
+            const targetScaleX = availableWidth / this._views.iconView.width;
+            const targetScaleY = availableHeight / this._views.iconView.height;
+            const scale = Math.min(targetScaleX, targetScaleY);
+
+            this._views.iconView.scale.set(scale * this._defaultIconScale.x, scale * this._defaultIconScale.y);
+        }
+
+        const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
 
         if ('anchor' in this._views.iconView)
         {
@@ -504,6 +549,21 @@ export class FancyButton extends ButtonContainer
 
         this.adjustIconView(this.state);
         this.adjustTextView(this.state);
+    }
+
+    /**
+     * Sets the fitting mode for the button's content.
+     * @param {ContentFittingMode} mode - fitting mode type.
+     */
+    set contentFittingMode(mode: ContentFittingMode)
+    {
+        this.options.contentFittingMode = mode;
+    }
+
+    /** Returns the fitting mode for the button's content, defaulting to 'default'. */
+    get contentFittingMode(): ContentFittingMode
+    {
+        return this.options.contentFittingMode ?? 'default';
     }
 
     /**
