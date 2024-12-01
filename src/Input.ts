@@ -254,37 +254,7 @@ export class Input extends Container
             this.init();
         }
 
-        if (this.inputMask)
-        {
-            this.inputField.mask = null;
-            this._cursor.mask = null;
-            this.inputMask.destroy();
-        }
-
-        if (this.options?.nineSlicePlane && typeof bg === 'string')
-        {
-            this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
-        }
-        else
-            if (bg instanceof Sprite)
-            {
-                this.inputMask = new Sprite(bg.texture);
-            }
-            else
-                if (bg instanceof Graphics)
-                {
-                    this.inputMask = bg.clone();
-                }
-                else
-                {
-                    this.inputMask = getView(bg);
-                }
-
-        this.inputField.mask = this.inputMask;
-
-        this._cursor.mask = this.inputMask;
-
-        this.addChildAt(this.inputMask, 0);
+        this.createInputMask(bg);
     }
 
     get bg(): Container | string
@@ -612,11 +582,7 @@ export class Input extends Container
                 this._bg.width = width;
             }
 
-            if (this.inputMask)
-            {
-                this.inputMask.width = width - this.paddingLeft - this.paddingRight;
-                this.inputMask.x = this.paddingLeft;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         }
@@ -647,11 +613,7 @@ export class Input extends Container
                 this._bg.height = height;
             }
 
-            if (this.inputMask)
-            {
-                this.inputMask.height = height - this.paddingTop - this.paddingBottom;
-                this.inputMask.y = this.paddingTop;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         }
@@ -665,5 +627,50 @@ export class Input extends Container
     override get height(): number
     {
         return super.height;
+    }
+
+    protected createInputMask(bg: ViewType)
+    {
+        if (this.inputMask)
+        {
+            this.inputField.mask = null;
+            this._cursor.mask = null;
+            this.inputMask.destroy();
+        }
+
+        if (this.options?.nineSlicePlane && typeof bg === 'string')
+        {
+            this.inputMask = new NineSlicePlane(Texture.from(bg), ...this.options.nineSlicePlane);
+        }
+        else if (bg instanceof Sprite)
+        {
+            this.inputMask = new Sprite(bg.texture);
+        }
+        else if (bg instanceof Graphics)
+        {
+            this.inputMask = bg.clone();
+        }
+        else
+        {
+            this.inputMask = getView(bg);
+        }
+
+        this.inputField.mask = this.inputMask;
+
+        this._cursor.mask = this.inputMask;
+
+        this.updateInputMaskSize();
+
+        this.addChildAt(this.inputMask, 0);
+    }
+
+    protected updateInputMaskSize()
+    {
+        if (!this.inputMask || !this._bg) return;
+
+        this.inputMask.width = this._bg.width - this.paddingLeft - this.paddingRight;
+        this.inputMask.height = this._bg.height - this.paddingTop - this.paddingBottom;
+
+        this.inputMask.position.set(this.paddingLeft, this.paddingTop);
     }
 }
