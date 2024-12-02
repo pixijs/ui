@@ -109,7 +109,7 @@ export class Input extends Container
         this._secure = options.secure ?? false;
 
         this.cursor = 'text';
-        this.interactive = true;
+        this.eventMode = 'static';
 
         this.on('pointertap', () =>
         {
@@ -246,7 +246,7 @@ export class Input extends Container
         }
 
         this._bg.cursor = 'text';
-        this._bg.interactive = true;
+        this._bg.eventMode = 'static';
 
         this.addChildAt(this._bg, 0);
 
