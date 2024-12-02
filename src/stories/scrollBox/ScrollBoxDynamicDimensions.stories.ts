@@ -18,7 +18,8 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init(view) {
+        init(view)
+        {
             const sizes: { w: number; h: number }[] = [
                 { w: 320, h: 440 },
                 { w: 630, h: 440 },
@@ -41,10 +42,12 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
             });
 
             const items = [];
-            const resizeScrollBox = () => {
+            const resizeScrollBox = () =>
+            {
                 currentSizeID++;
 
-                if (currentSizeID >= sizes.length) {
+                if (currentSizeID >= sizes.length)
+                {
                     currentSizeID = 0;
                 }
 
@@ -54,7 +57,8 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
                 scrollBox.height = size.h;
             };
 
-            for (let i = 0; i < itemsAmount; i++) {
+            for (let i = 0; i < itemsAmount; i++)
+            {
                 const button = new FancyButton({
                     defaultView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)

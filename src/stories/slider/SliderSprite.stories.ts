@@ -24,13 +24,16 @@ export const Single: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() => {
-                for (let i = 0; i < amount; i++) {
+            preload(assets).then(() =>
+            {
+                for (let i = 0; i < amount; i++)
+                {
                     // Component usage !!!
                     const singleSlider = new Slider({
                         bg: 'slider_bg.png',

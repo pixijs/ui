@@ -12,8 +12,10 @@ export type PixiTextClass = new ({
 }) => PixiText;
 export type PixiTextStyle = AnyTextStyle | Partial<AnyTextStyleOptions>;
 
-export function getTextView(text: AnyText): PixiText {
-    if (typeof text === 'string' || typeof text === 'number') {
+export function getTextView(text: AnyText): PixiText
+{
+    if (typeof text === 'string' || typeof text === 'number')
+    {
         return new Text({ text: String(text) });
     }
 

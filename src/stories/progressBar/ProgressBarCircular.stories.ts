@@ -28,13 +28,15 @@ export const circular: StoryFn<typeof args & { cap: 'round' | 'butt' | 'square' 
         cap,
     },
     context,
-) => {
+) =>
+{
     let isFilling = true;
     let progressBar1: CircularProgressBar;
 
     return new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             progressBar1 = new CircularProgressBar({
                 backgroundColor,
                 lineWidth,
@@ -51,20 +53,26 @@ export const circular: StoryFn<typeof args & { cap: 'round' | 'butt' | 'square' 
 
             view.addChild(progressBar1);
         },
-        resize: (view) => {
+        resize: (view) =>
+        {
             centerElement(view);
             view.y += view.height;
         },
-        update: () => {
-            if (!animate) {
+        update: () =>
+        {
+            if (!animate)
+            {
                 return;
             }
 
             isFilling ? value++ : value--;
 
-            if (value >= 100) {
+            if (value >= 100)
+            {
                 isFilling = false;
-            } else if (value <= 0) {
+            }
+            else if (value <= 0)
+            {
                 isFilling = true;
             }
 

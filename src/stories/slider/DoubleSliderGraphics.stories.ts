@@ -50,19 +50,20 @@ export const Double: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const bg = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - border * 2, height - border * 2, radius)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
                 .fill(backgroundColor);
 
             const fill = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(borderColor)
-                .roundRect(border, border, width - border * 2, height - border * 2, radius)
+                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
                 .fill(fillColor);
 
             const slider1 = new Graphics()
@@ -93,7 +94,8 @@ export const Double: StoryFn<typeof args> = (
                 showValue,
             });
 
-            doubleSlider.onChange.connect((value1, value2) => {
+            doubleSlider.onChange.connect((value1, value2) =>
+            {
                 onChange(`${value1} - ${value2}`);
             });
 

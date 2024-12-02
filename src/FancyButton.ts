@@ -14,7 +14,7 @@ import { fitToView } from './utils/helpers/fit';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 
-import type { Graphics, Optional, Size, Sprite } from 'pixi.js';
+import type { Optional, Size, Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -126,7 +126,8 @@ export type ButtonOptions = ViewsInput & {
  *
  * button.onPress.connect(() => console.log('Button pressed!'));
  */
-export class FancyButton extends ButtonContainer {
+export class FancyButton extends ButtonContainer
+{
     protected animations: StateAnimations;
     protected originalInnerViewState: AnimationData;
     protected defaultDuration = 100;
@@ -204,7 +205,8 @@ export class FancyButton extends ButtonContainer {
      *                                      <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a views (defaultView, hoverView, pressedView, disabledView) parameters as texture name or texture instance.
      * @param options.animations - Animations that will be played when the button state changes.
      */
-    constructor(options?: ButtonOptions) {
+    constructor(options?: ButtonOptions)
+    {
         super();
 
         this.options = options ?? {};
@@ -248,7 +250,8 @@ export class FancyButton extends ButtonContainer {
         this.defaultIconAnchor = iconAnchor;
         this.scale.set(scale ?? 1);
 
-        if (animations) {
+        if (animations)
+        {
             this.animations = animations;
             Ticker.shared.add(() => Group.shared.update());
         }
@@ -269,14 +272,17 @@ export class FancyButton extends ButtonContainer {
      * Updates the text of the button and updates its scaling basing on the new size.
      * @param {string | number} text
      */
-    set text(text: AnyText) {
-        if (!text || text === 0) {
+    set text(text: AnyText)
+    {
+        if (!text || text === 0)
+        {
             this.removeView('textView');
 
             return;
         }
 
-        if (!this._views.textView) {
+        if (!this._views.textView)
+        {
             this.createTextView(text);
 
             return;
@@ -286,7 +292,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the text string of the button text element. */
-    get text(): string | undefined {
+    get text(): string | undefined
+    {
         return this._views.textView?.text;
     }
 
@@ -294,13 +301,15 @@ export class FancyButton extends ButtonContainer {
      * Setter, that prevents all button events from firing.
      * @param {boolean} enabled
      */
-    override set enabled(enabled: boolean) {
+    override set enabled(enabled: boolean)
+    {
         this.button.enabled = enabled;
 
         this.setState(enabled ? 'default' : 'disabled');
     }
 
-    override get enabled(): boolean {
+    override get enabled(): boolean
+    {
         return this.button.enabled;
     }
 
@@ -313,8 +322,10 @@ export class FancyButton extends ButtonContainer {
      * @param {State} newState
      * @param force
      */
-    setState(newState: State, force = false) {
-        if (!force && this.state === newState) {
+    setState(newState: State, force = false)
+    {
+        if (!force && this.state === newState)
+        {
             return;
         }
 
@@ -326,7 +337,8 @@ export class FancyButton extends ButtonContainer {
 
         const activeView = this.getStateView(newState);
 
-        if (activeView) {
+        if (activeView)
+        {
             this.setOffset(activeView, newState, this.offset);
             activeView.visible = true;
         }
@@ -341,11 +353,13 @@ export class FancyButton extends ButtonContainer {
      * Manage button text view.
      * @param {string | Text} text - can be a string, Text, BitmapText ot HTMLText (Container-based element).
      */
-    protected createTextView(text: AnyText) {
+    protected createTextView(text: AnyText)
+    {
         this._views.textView = getTextView(text);
 
         // If text scale has not manually been set, we will overwrite the base scale with the new text view scale.
-        if (this.options?.defaultTextScale === undefined) {
+        if (this.options?.defaultTextScale === undefined)
+        {
             const { x, y } = this._views.textView.scale;
 
             this._defaultTextScale = { x, y };
@@ -362,23 +376,29 @@ export class FancyButton extends ButtonContainer {
      * @param state
      * @param offset
      */
-    protected setOffset(view: Container, state: State, offset: Offset) {
+    protected setOffset(view: Container, state: State, offset: Offset)
+    {
         const stateOffset = offset
             ? offset[state]
             : {
-                  x: 0,
-                  y: 0,
-              };
+                x: 0,
+                y: 0,
+            };
 
         const defaultStateOffset = offset?.default;
 
-        if (stateOffset) {
+        if (stateOffset)
+        {
             view.x += stateOffset.x ?? 0;
             view.y += stateOffset.y ?? 0;
-        } else if (defaultStateOffset) {
+        }
+        else if (defaultStateOffset)
+        {
             view.x += defaultStateOffset.x ?? 0;
             view.y += defaultStateOffset.y ?? 0;
-        } else if (offset.x || offset.y) {
+        }
+        else if (offset.x || offset.y)
+        {
             view.x += offset.x ?? 0;
             view.y += offset.y ?? 0;
         }
@@ -388,18 +408,20 @@ export class FancyButton extends ButtonContainer {
      * Returns active view for the state.
      * @param state
      */
-    protected getStateView(state: State): Container | undefined {
+    protected getStateView(state: State): Container | undefined
+    {
         if (!this._views) return undefined;
 
-        switch (state) {
+        switch (state)
+        {
             case 'hover':
                 return this._views.hoverView ?? this._views.defaultView ?? undefined;
             case 'pressed':
                 return (
-                    this._views.pressedView ??
-                    this._views.hoverView ??
-                    this._views.defaultView ??
-                    undefined
+                    this._views.pressedView
+                    ?? this._views.hoverView
+                    ?? this._views.defaultView
+                    ?? undefined
                 );
             case 'disabled':
                 return this._views.disabledView ?? this._views.defaultView ?? undefined;
@@ -414,27 +436,32 @@ export class FancyButton extends ButtonContainer {
      * Adjusts text view position and scale.
      * @param {State} state
      */
-    protected adjustTextView(state: State) {
+    protected adjustTextView(state: State)
+    {
         if (!this.text) return;
 
         const activeView = this.getStateView(this.state);
         const { x: anchorX, y: anchorY } = this._defaultTextAnchor;
 
-        if (activeView) {
-            if (!this.options.ignoreRefitting) {
+        if (activeView)
+        {
+            if (!this.options.ignoreRefitting)
+            {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
-            if (this.contentFittingMode === 'default') {
+            if (this.contentFittingMode === 'default')
+            {
                 fitToView(activeView, this._views.textView, this.padding, false);
             }
 
-            if (this.contentFittingMode === 'fill') {
+            if (this.contentFittingMode === 'fill')
+            {
                 // reset to base dimensions for calculations
                 this._views.textView.scale.set(1);
 
-                const availableWidth = activeView.width - this.padding * 2;
-                const availableHeight = activeView.height - this.padding * 2;
+                const availableWidth = activeView.width - (this.padding * 2);
+                const availableHeight = activeView.height - (this.padding * 2);
                 const targetScaleX = availableWidth / this._views.textView.width;
                 const targetScaleY = availableHeight / this._views.textView.height;
                 const scale = Math.min(targetScaleX, targetScaleY);
@@ -445,8 +472,8 @@ export class FancyButton extends ButtonContainer {
                 );
             }
 
-            this._views.textView.x = activeView.x + activeView.width / 2;
-            this._views.textView.y = activeView.y + activeView.height / 2;
+            this._views.textView.x = activeView.x + (activeView.width / 2);
+            this._views.textView.y = activeView.y + (activeView.height / 2);
         }
 
         this._views.textView.anchor.set(anchorX, anchorY);
@@ -458,31 +485,37 @@ export class FancyButton extends ButtonContainer {
      * Adjusts icon view position and scale.
      * @param {State} state
      */
-    protected adjustIconView(state: State) {
-        if (!this._views.iconView) {
+    protected adjustIconView(state: State)
+    {
+        if (!this._views.iconView)
+        {
             return;
         }
 
         const activeView = this.getStateView(state);
 
-        if (!activeView) {
+        if (!activeView)
+        {
             return;
         }
 
-        if (!this.options.ignoreRefitting) {
+        if (!this.options.ignoreRefitting)
+        {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
 
-        if (this.contentFittingMode === 'default') {
+        if (this.contentFittingMode === 'default')
+        {
             fitToView(activeView, this._views.iconView, this.padding, false);
         }
 
-        if (this.contentFittingMode === 'fill') {
+        if (this.contentFittingMode === 'fill')
+        {
             // reset to base dimensions for calculations
             this._views.iconView.scale.set(1);
 
-            const availableWidth = activeView.width - this.padding * 2;
-            const availableHeight = activeView.height - this.padding * 2;
+            const availableWidth = activeView.width - (this.padding * 2);
+            const availableHeight = activeView.height - (this.padding * 2);
             const targetScaleX = availableWidth / this._views.iconView.width;
             const targetScaleY = availableHeight / this._views.iconView.height;
             const scale = Math.min(targetScaleX, targetScaleY);
@@ -495,17 +528,20 @@ export class FancyButton extends ButtonContainer {
 
         const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
 
-        if ('anchor' in this._views.iconView) {
+        if ('anchor' in this._views.iconView)
+        {
             (this._views.iconView.anchor as ObservablePoint).set(anchorX, anchorY);
-        } else {
+        }
+        else
+        {
             this._views.iconView.pivot.set(
                 anchorX * (this._views.iconView.width / this._views.iconView.scale.x),
                 anchorY * (this._views.iconView.height / this._views.iconView.scale.y),
             );
         }
 
-        this._views.iconView.x = activeView.x + activeView.width / 2;
-        this._views.iconView.y = activeView.y + activeView.height / 2;
+        this._views.iconView.x = activeView.x + (activeView.width / 2);
+        this._views.iconView.y = activeView.y + (activeView.height / 2);
 
         this.setOffset(this._views.iconView, state, this.iconOffset);
     }
@@ -516,7 +552,8 @@ export class FancyButton extends ButtonContainer {
      * can be a different type of view (container without anchor, sprite with anchor, etc)
      * we have to reset all anchors to 0,0 and then set the positions manually.
      */
-    protected updateAnchor() {
+    protected updateAnchor()
+    {
         if (!this._views) return;
 
         const anchorX = this.anchor.x ?? 0;
@@ -528,7 +565,8 @@ export class FancyButton extends ButtonContainer {
             this._views.disabledView,
         ];
 
-        views.forEach((view) => {
+        views.forEach((view) =>
+        {
             if (!view) return;
 
             (view as Sprite).anchor?.set(0);
@@ -537,7 +575,8 @@ export class FancyButton extends ButtonContainer {
             view.y = -view.height * anchorY;
         });
 
-        if (this._views.defaultView) {
+        if (this._views.defaultView)
+        {
             const { x, y, width, height } = this._views.defaultView;
 
             this.hitArea = new Rectangle(x, y, width, height);
@@ -551,12 +590,14 @@ export class FancyButton extends ButtonContainer {
      * Sets the fitting mode for the button's content.
      * @param {ContentFittingMode} mode - fitting mode type.
      */
-    set contentFittingMode(mode: ContentFittingMode) {
+    set contentFittingMode(mode: ContentFittingMode)
+    {
         this.options.contentFittingMode = mode;
     }
 
     /** Returns the fitting mode for the button's content, defaulting to 'default'. */
-    get contentFittingMode(): ContentFittingMode {
+    get contentFittingMode(): ContentFittingMode
+    {
         return this.options.contentFittingMode ?? 'default';
     }
 
@@ -564,12 +605,14 @@ export class FancyButton extends ButtonContainer {
      * Sets the default view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set defaultView(view: GetViewSettings | null) {
+    set defaultView(view: GetViewSettings | null)
+    {
         this.updateView('defaultView', view);
     }
 
     /** Returns the default view of the button. */
-    get defaultView(): Container | undefined {
+    get defaultView(): Container | undefined
+    {
         return this._views.defaultView;
     }
 
@@ -577,41 +620,50 @@ export class FancyButton extends ButtonContainer {
      * Sets the hover view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set hoverView(view: GetViewSettings | null) {
+    set hoverView(view: GetViewSettings | null)
+    {
         this.updateView('hoverView', view);
-        if (this._views.hoverView && this.state !== 'hover') {
+        if (this._views.hoverView && this.state !== 'hover')
+        {
             this._views.hoverView.visible = false;
         }
     }
 
     /** Returns the hover view of the button. */
-    get hoverView(): Container | undefined {
+    get hoverView(): Container | undefined
+    {
         return this._views.hoverView;
     }
 
     /** Sets the pressed view of the button. */
-    set pressedView(view: GetViewSettings | null) {
+    set pressedView(view: GetViewSettings | null)
+    {
         this.updateView('pressedView', view);
-        if (this._views.pressedView) {
+        if (this._views.pressedView)
+        {
             this._views.pressedView.visible = false;
         }
     }
 
     /** Returns the pressed view of the button. */
-    get pressedView(): Container | undefined {
+    get pressedView(): Container | undefined
+    {
         return this._views.pressedView;
     }
 
     /** Sets the disabled view of the button. */
-    set disabledView(view: GetViewSettings | null) {
+    set disabledView(view: GetViewSettings | null)
+    {
         this.updateView('disabledView', view);
-        if (this._views.disabledView) {
+        if (this._views.disabledView)
+        {
             this._views.disabledView.visible = false;
         }
     }
 
     /** Returns the disabled view of the button. */
-    get disabledView(): Container | undefined {
+    get disabledView(): Container | undefined
+    {
         return this._views.disabledView;
     }
 
@@ -620,17 +672,21 @@ export class FancyButton extends ButtonContainer {
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
      * @param { string | Texture | Container | null } view - new view
      */
-    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null) {
+    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null)
+    {
         if (view === undefined) return;
 
         this.removeView(viewType);
 
-        if (view === null) {
+        if (view === null)
+        {
             return;
         }
 
-        if (this.options?.nineSliceSprite) {
-            if (typeof view === 'string') {
+        if (this.options?.nineSliceSprite)
+        {
+            if (typeof view === 'string')
+            {
                 this._views[viewType] = new NineSliceSprite({
                     texture: Texture.from(view),
                     leftWidth: this.options.nineSliceSprite[0],
@@ -638,7 +694,9 @@ export class FancyButton extends ButtonContainer {
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
-            } else if (view instanceof Texture) {
+            }
+            else if (view instanceof Texture)
+            {
                 this._views[viewType] = new NineSliceSprite({
                     texture: view,
                     leftWidth: this.options.nineSliceSprite[0],
@@ -646,29 +704,35 @@ export class FancyButton extends ButtonContainer {
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
-            } else {
+            }
+            else
+            {
                 console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
             }
         }
 
-        if (!this._views[viewType]) {
+        if (!this._views[viewType])
+        {
             this._views[viewType] = getView(view);
         }
 
         this.setOffset(this._views[viewType], this.state, this.offset);
 
-        if (!this._views[viewType].parent) {
+        if (!this._views[viewType].parent)
+        {
             this.innerView.addChild(this._views[viewType]);
         }
 
         this.updateAnchor();
 
-        if (this._views.iconView) {
+        if (this._views.iconView)
+        {
             // place icon on top of the view
             this.innerView.addChild(this._views.iconView);
         }
 
-        if (this._views.textView) {
+        if (this._views.textView)
+        {
             // place text on top of the view
             this.innerView.addChild(this._views.textView);
         }
@@ -680,8 +744,10 @@ export class FancyButton extends ButtonContainer {
      * Removes button view by type
      * @param {'defaultView' | 'hoverView' | 'pressedView' | 'disabledView'} viewType - type of the view to remove
      */
-    removeView(viewType: ButtonViewType | 'textView' | 'iconView') {
-        if (this._views[viewType]) {
+    removeView(viewType: ButtonViewType | 'textView' | 'iconView')
+    {
+        if (this._views[viewType])
+        {
             this.innerView.removeChild(this._views[viewType]);
             this._views[viewType] = null;
         }
@@ -691,12 +757,14 @@ export class FancyButton extends ButtonContainer {
      * Sets the textView of the button.
      * @param { string | number | PixiText | Text | BitmapText | HTMLText } textView - string, text or pixi text instance.
      */
-    set textView(textView: AnyText | null) {
+    set textView(textView: AnyText | null)
+    {
         if (textView === undefined) return;
 
         this.removeView('textView');
 
-        if (textView === null) {
+        if (textView === null)
+        {
             return;
         }
 
@@ -707,7 +775,8 @@ export class FancyButton extends ButtonContainer {
      * Returns the text view of the button.
      * @returns pixi text instance or undefined.
      */
-    get textView(): PixiText | undefined {
+    get textView(): PixiText | undefined
+    {
         return this._views.textView;
     }
 
@@ -715,25 +784,29 @@ export class FancyButton extends ButtonContainer {
      * Sets the iconView of the button.
      * @param { string | Texture | Container } view - string (path to the image), texture instance or a Container-based view
      */
-    set iconView(view: GetViewSettings | null) {
+    set iconView(view: GetViewSettings | null)
+    {
         if (view === undefined) return;
 
         this.removeView('iconView');
 
-        if (view === null) {
+        if (view === null)
+        {
             return;
         }
 
         this._views.iconView = getView(view);
 
         // If icon scale has not manually been set, we will overwrite the base scale with the new icon view scale.
-        if (this.options?.defaultIconScale === undefined) {
+        if (this.options?.defaultIconScale === undefined)
+        {
             const { x, y } = this._views.iconView.scale;
 
             this._defaultIconScale = { x, y };
         }
 
-        if (!this._views.iconView.parent) {
+        if (!this._views.iconView.parent)
+        {
             this.innerView.addChild(this._views.iconView);
         }
 
@@ -741,7 +814,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the icon view of the button. */
-    get iconView(): Container | undefined {
+    get iconView(): Container | undefined
+    {
         return this._views.iconView;
     }
 
@@ -749,10 +823,12 @@ export class FancyButton extends ButtonContainer {
      * Starts animation for the current button state if configured.
      * @param {State} state
      */
-    protected playAnimations(state: State) {
+    protected playAnimations(state: State)
+    {
         if (!this.animations) return;
 
-        if (state === 'default' && !this.originalInnerViewState) {
+        if (state === 'default' && !this.originalInnerViewState)
+        {
             this.originalInnerViewState = {
                 x: this.innerView.x,
                 y: this.innerView.y,
@@ -768,17 +844,18 @@ export class FancyButton extends ButtonContainer {
             // this part will run only once, during initialization
             const defaultStateAnimation = this.animations?.default;
 
-            if (defaultStateAnimation) {
+            if (defaultStateAnimation)
+            {
                 this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
                 this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
-                this.innerView.width =
-                    defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
-                this.innerView.height =
-                    defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
-                this.innerView.scale.x =
-                    defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
-                this.innerView.scale.y =
-                    defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
+                this.innerView.width
+                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
+                this.innerView.height
+                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
+                this.innerView.scale.x
+                    = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
+                this.innerView.scale.y
+                    = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
 
                 return;
             }
@@ -786,7 +863,8 @@ export class FancyButton extends ButtonContainer {
 
         const stateAnimation = this.animations[state] ?? this.animations.default;
 
-        if (stateAnimation) {
+        if (stateAnimation)
+        {
             const data = stateAnimation;
 
             this.defaultDuration = data.duration;
@@ -800,31 +878,40 @@ export class FancyButton extends ButtonContainer {
         new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
 
-    protected initStateControl() {
-        this.onDown.connect(() => {
+    protected initStateControl()
+    {
+        this.onDown.connect(() =>
+        {
             this.setState('pressed');
         });
 
-        this.onUp.connect(() => {
+        this.onUp.connect(() =>
+        {
             isMobile.any ? this.setState('default') : this.setState('hover');
         });
 
-        this.onUpOut.connect(() => {
+        this.onUpOut.connect(() =>
+        {
             this.setState('default');
         });
 
-        this.onOut.connect(() => {
-            if (!this.button.isDown) {
+        this.onOut.connect(() =>
+        {
+            if (!this.button.isDown)
+            {
                 this.setState('default');
             }
         });
 
-        this.onPress.connect(() => {
+        this.onPress.connect(() =>
+        {
             isMobile.any ? this.setState('default') : this.setState('hover');
         });
 
-        this.onHover.connect(() => {
-            if (!this.button.isDown) {
+        this.onHover.connect(() =>
+        {
+            if (!this.button.isDown)
+            {
                 isMobile.any ? this.setState('default') : this.setState('hover');
             }
         });
@@ -834,7 +921,8 @@ export class FancyButton extends ButtonContainer {
      * Sets the button padding.
      * @param {number} padding - padding of the button text and icon views.
      */
-    set padding(padding: number) {
+    set padding(padding: number)
+    {
         this._padding = padding;
 
         this.adjustTextView(this.state);
@@ -842,7 +930,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the button padding. */
-    get padding(): number {
+    get padding(): number
+    {
         return this._padding;
     }
 
@@ -851,14 +940,16 @@ export class FancyButton extends ButtonContainer {
      * @param { { x?: number; y?: number } } offset - offset of the button.
      * Can be set for each state of the button.
      */
-    set offset(offset: Offset) {
+    set offset(offset: Offset)
+    {
         this._offset = offset;
 
         this.updateAnchor();
     }
 
     /** Returns the button offset. */
-    get offset(): Offset {
+    get offset(): Offset
+    {
         return this._offset;
     }
 
@@ -867,14 +958,16 @@ export class FancyButton extends ButtonContainer {
      * @param { { x?: number; y?: number } } textOffset - offsets of the button text view.
      * can be set for each state of the button.
      */
-    set textOffset(textOffset: Offset) {
+    set textOffset(textOffset: Offset)
+    {
         this._textOffset = textOffset;
 
         this.adjustTextView(this.state);
     }
 
     /** Returns the button text offset. */
-    get textOffset(): Offset {
+    get textOffset(): Offset
+    {
         return this._textOffset;
     }
 
@@ -882,7 +975,8 @@ export class FancyButton extends ButtonContainer {
      * Sets the base scale for the text view to take into account when fitting inside the button.
      * @param {Pos | number} scale - base scale of the text view.
      */
-    set defaultTextScale(scale: Pos | number) {
+    set defaultTextScale(scale: Pos | number)
+    {
         if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.defaultTextScale = scale;
@@ -894,7 +988,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the text view base scale. */
-    get defaultTextScale(): Pos {
+    get defaultTextScale(): Pos
+    {
         return this.defaultTextScale;
     }
 
@@ -902,7 +997,8 @@ export class FancyButton extends ButtonContainer {
      * Sets the base scale for the icon view to take into account when fitting inside the button.
      * @param {Pos | number} scale - base scale of the icon view.
      */
-    set defaultIconScale(scale: Pos | number) {
+    set defaultIconScale(scale: Pos | number)
+    {
         if (scale === undefined) return;
         // Apply to the options so that the manual scale is prioritized.
         this.options.defaultIconScale = scale;
@@ -914,7 +1010,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the icon view base scale. */
-    get defaultIconScale(): Pos {
+    get defaultIconScale(): Pos
+    {
         return this.defaultIconScale;
     }
 
@@ -922,7 +1019,8 @@ export class FancyButton extends ButtonContainer {
      * Sets the base anchor for the text view to take into account when fitting and placing inside the button.
      * @param {Pos | number} anchor - base anchor of the text view.
      */
-    set defaultTextAnchor(anchor: Pos | number) {
+    set defaultTextAnchor(anchor: Pos | number)
+    {
         if (anchor === undefined) return;
         // Apply to the options so that the manual anchor is prioritized.
         this.options.defaultTextAnchor = anchor;
@@ -934,7 +1032,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the text view base anchor. */
-    get defaultTextAnchor(): Pos {
+    get defaultTextAnchor(): Pos
+    {
         return this.defaultTextAnchor;
     }
 
@@ -942,7 +1041,8 @@ export class FancyButton extends ButtonContainer {
      * Sets the base anchor for the icon view to take into account when fitting and placing inside the button.
      * @param {Pos | number} anchor - base anchor of the icon view.
      */
-    set defaultIconAnchor(anchor: Pos | number) {
+    set defaultIconAnchor(anchor: Pos | number)
+    {
         if (anchor === undefined) return;
         // Apply to the options so that the manual anchor is prioritized.
         this.options.defaultIconAnchor = anchor;
@@ -954,7 +1054,8 @@ export class FancyButton extends ButtonContainer {
     }
 
     /** Returns the icon view base anchor. */
-    get defaultIconAnchor(): Pos {
+    get defaultIconAnchor(): Pos
+    {
         return this.defaultIconAnchor;
     }
 
@@ -964,31 +1065,40 @@ export class FancyButton extends ButtonContainer {
      * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
-    override set width(width: number) {
-        if (this.options?.nineSliceSprite) {
-            if (this._views.defaultView) {
+    override set width(width: number)
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._views.defaultView)
+            {
                 this._views.defaultView.width = width;
             }
-            if (this._views.hoverView) {
+            if (this._views.hoverView)
+            {
                 this._views.hoverView.width = width;
             }
-            if (this._views.pressedView) {
+            if (this._views.pressedView)
+            {
                 this._views.pressedView.width = width;
             }
-            if (this._views.disabledView) {
+            if (this._views.disabledView)
+            {
                 this._views.disabledView.width = width;
             }
 
             this.adjustTextView(this.state);
             this.adjustIconView(this.state);
             this.updateAnchor();
-        } else {
+        }
+        else
+        {
             super.width = width;
         }
     }
 
     /** Gets width of a FancyButton. */
-    override get width(): number {
+    override get width(): number
+    {
         return super.width;
     }
 
@@ -998,53 +1108,70 @@ export class FancyButton extends ButtonContainer {
      * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
-    override set height(height: number) {
-        if (this.options?.nineSliceSprite) {
-            if (this._views.defaultView) {
+    override set height(height: number)
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._views.defaultView)
+            {
                 this._views.defaultView.height = height;
             }
-            if (this._views.hoverView) {
+            if (this._views.hoverView)
+            {
                 this._views.hoverView.height = height;
             }
-            if (this._views.pressedView) {
+            if (this._views.pressedView)
+            {
                 this._views.pressedView.height = height;
             }
-            if (this._views.disabledView) {
+            if (this._views.disabledView)
+            {
                 this._views.disabledView.height = height;
             }
 
             this.adjustTextView(this.state);
             this.adjustIconView(this.state);
             this.updateAnchor();
-        } else {
+        }
+        else
+        {
             super.height = height;
         }
     }
 
     /** Gets height of a FancyButton. */
-    override get height(): number {
+    override get height(): number
+    {
         return super.height;
     }
 
-    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
-        if (this.options?.nineSliceSprite) {
-            if (this._views.defaultView) {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._views.defaultView)
+            {
                 this._views.defaultView.setSize(value, height);
             }
-            if (this._views.hoverView) {
+            if (this._views.hoverView)
+            {
                 this._views.hoverView.setSize(value, height);
             }
-            if (this._views.pressedView) {
+            if (this._views.pressedView)
+            {
                 this._views.pressedView.setSize(value, height);
             }
-            if (this._views.disabledView) {
+            if (this._views.disabledView)
+            {
                 this._views.disabledView.setSize(value, height);
             }
 
             this.adjustTextView(this.state);
             this.adjustIconView(this.state);
             this.updateAnchor();
-        } else {
+        }
+        else
+        {
             super.setSize(value, height);
         }
     }

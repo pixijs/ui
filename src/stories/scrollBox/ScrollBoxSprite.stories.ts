@@ -34,7 +34,8 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const assets = [
                 `window.png`,
                 `SmallButton.png`,
@@ -42,7 +43,8 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
                 `SmallButton-pressed.png`,
             ];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 const window = new Container();
                 const windowBg = Sprite.from(`window.png`);
                 const title = new Text({
@@ -74,8 +76,8 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
 
                 scrollBox.addItems(items);
 
-                scrollBox.x = window.width / 2 - scrollBox.width / 2;
-                scrollBox.y = window.height / 2 - scrollBox.height / 2 + 18;
+                scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
+                scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
 
                 window.addChild(scrollBox);
 
@@ -90,10 +92,12 @@ function createItems(
     itemsAmount: number,
     fontColor: ColorSource,
     onPress: (buttonID: number) => void,
-): FancyButton[] {
+): FancyButton[]
+{
     const items = [];
 
-    for (let i = 0; i < itemsAmount; i++) {
+    for (let i = 0; i < itemsAmount; i++)
+    {
         const button = new FancyButton({
             defaultView: `SmallButton.png`,
             hoverView: `SmallButton-hover.png`,

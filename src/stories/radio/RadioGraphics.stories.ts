@@ -41,10 +41,12 @@ export const UseGraphics: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const items = [];
 
-            for (let i = 0; i < amount; i++) {
+            for (let i = 0; i < amount; i++)
+            {
                 items.push(
                     new CheckBox({
                         text: `${text} ${i + 1}`,
@@ -91,26 +93,34 @@ export const UseGraphics: StoryFn<typeof args> = (
         resize: (view) => centerElement(view),
     });
 
-function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType) {
+function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
+{
     const graphics = new Graphics();
 
     const isCircle = width === height && radius >= width / 2;
 
-    if (isCircle) {
+    if (isCircle)
+    {
         graphics.circle(width / 2, width / 2, width / 2);
-    } else {
+    }
+    else
+    {
         graphics.roundRect(0, 0, width, height, radius);
     }
 
     graphics.fill(color);
 
-    if (fillColor !== undefined) {
+    if (fillColor !== undefined)
+    {
         const center = width / 2;
 
-        if (isCircle) {
+        if (isCircle)
+        {
             graphics.circle(center, center, center - padding);
-        } else {
-            graphics.roundRect(padding, padding, width - padding * 2, height - padding * 2, radius);
+        }
+        else
+        {
+            graphics.roundRect(padding, padding, width - (padding * 2), height - (padding * 2), radius);
         }
 
         graphics.fill(fillColor);

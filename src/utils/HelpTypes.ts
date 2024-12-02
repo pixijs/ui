@@ -1,7 +1,8 @@
 import { Container, FederatedPointerEvent, Point } from 'pixi.js';
 
 /** TODO */
-export interface DragObject extends Container {
+export interface DragObject extends Container
+{
     dragData: FederatedPointerEvent;
     dragging: number;
     dragPointerStart: Container;
@@ -18,8 +19,8 @@ export type Padding =
     | [number, number]
     | [number, number, number, number]
     | {
-          left?: number;
-          right?: number;
-          top?: number;
-          bottom?: number;
-      };
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };

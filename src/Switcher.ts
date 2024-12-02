@@ -18,7 +18,8 @@ import { ButtonEvent } from './utils/HelpTypes';
  *
  * button.events.onPress.connect(() => console.log('button pressed'));
  */
-export class Switcher extends Container {
+export class Switcher extends Container
+{
     protected _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
 
     /** Container that holds all the content of the component. */
@@ -39,7 +40,8 @@ export class Switcher extends Container {
         views?: Array<Container | string>,
         triggerEvents?: ButtonEvent | ButtonEvent[],
         activeViewID?: number,
-    ) {
+    )
+    {
         super();
 
         this.innerView = new Container();
@@ -54,7 +56,8 @@ export class Switcher extends Container {
         this.setInteractionEvents();
     }
 
-    protected setInteractionEvents() {
+    protected setInteractionEvents()
+    {
         this.innerView.eventMode = 'static';
 
         this.innerView.on('pointerdown', () => this.handleEvents('onDown'));
@@ -65,15 +68,19 @@ export class Switcher extends Container {
         this.innerView.on('pointerover', () => this.handleEvents('onHover'));
     }
 
-    protected handleEvents(event: ButtonEvent) {
-        if (this._triggerEvents.has(event)) {
+    protected handleEvents(event: ButtonEvent)
+    {
+        if (this._triggerEvents.has(event))
+        {
             this.switch();
         }
     }
 
     /** Returns the active view. */
-    get activeView(): Container | undefined {
-        if (this.views && this.views[this.active]) {
+    get activeView(): Container | undefined
+    {
+        if (this.views && this.views[this.active])
+        {
             return this.views[this.active] as Container;
         }
 
@@ -81,13 +88,15 @@ export class Switcher extends Container {
     }
 
     /** Sets the list of instances for switching. */
-    set views(views: Array<Container | string>) {
+    set views(views: Array<Container | string>)
+    {
         this.innerView.removeChildren();
         views.forEach((stateView) => this.add(stateView));
     }
 
     /** Returns all the switchable views */
-    get views(): Array<Container> {
+    get views(): Array<Container>
+    {
         return this.innerView.children as Array<Container>;
     }
 
@@ -95,14 +104,16 @@ export class Switcher extends Container {
      * Adds view instance to a switching list.
      * @param view
      */
-    add(view: GetViewSettings): void {
+    add(view: GetViewSettings): void
+    {
         const viewInstance = getView(view);
 
         this.innerView.addChild(viewInstance);
 
         viewInstance.visible = false;
 
-        if (this.views.length === 1) {
+        if (this.views.length === 1)
+        {
             this.active = 0;
         }
     }
@@ -111,8 +122,10 @@ export class Switcher extends Container {
      * Removes view instance from a switching list by id.
      * @param id - id of the view to remove.
      */
-    remove(id: number) {
-        if (this.views[id]) {
+    remove(id: number)
+    {
+        if (this.views[id])
+        {
             this.innerView.removeChild(this.views[id]);
         }
     }
@@ -122,14 +135,16 @@ export class Switcher extends Container {
      * @param {ButtonEvent | ButtonEvent[]} triggerEvents - Button events,
      * to switch views (can be one event or an array of events).
      */
-    set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[]) {
+    set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[])
+    {
         this._triggerEvents = new Set(
             Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents],
         );
     }
 
     /** Returns a list of events that will make a switcher switch to the next view. */
-    get triggerEvents(): ButtonEvent[] {
+    get triggerEvents(): ButtonEvent[]
+    {
         return Array.from(this._triggerEvents);
     }
 
@@ -137,14 +152,16 @@ export class Switcher extends Container {
      * Show a view by id, or to next one by order, if no ID provided.
      * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
      */
-    switch(id?: number) {
+    switch(id?: number)
+    {
         if (id !== undefined && id === this.active) return;
 
         const exID = this.active;
 
         this.forceSwitch(id);
 
-        if (exID !== this.active) {
+        if (exID !== this.active)
+        {
             const res = this.views.length > 2 ? this.active : this.active === 1;
 
             this.onChange.emit(res);
@@ -155,20 +172,24 @@ export class Switcher extends Container {
      * Switches a view to a given one without triggering the onChange event.
      * @param {number} id - optional id of the view to show. If not set, will switch to the next view.
      */
-    forceSwitch(id?: number) {
+    forceSwitch(id?: number)
+    {
         if (id !== undefined && id === this.active) return;
 
-        if (this.activeView) {
+        if (this.activeView)
+        {
             this.activeView.visible = false;
         }
 
-        if (id !== undefined && !this.views[id]) {
+        if (id !== undefined && !this.views[id])
+        {
             throw new Error(`View with id ${id} does not exist.`);
         }
 
         this._active = id !== undefined ? id : this.nextActive;
 
-        if (this._active === undefined) {
+        if (this._active === undefined)
+        {
             return;
         }
 
@@ -176,19 +197,22 @@ export class Switcher extends Container {
     }
 
     /** Returns the id of the next view in order. Or undefined, if order is empty. */
-    protected get nextActive(): number | undefined {
+    protected get nextActive(): number | undefined
+    {
         if (this.views.length === 0) return undefined;
 
         return this.active < this.views.length - 1 ? this.active + 1 : 0;
     }
 
     /** Sets the id of the visible(active) view and shows to it. */
-    set active(id: number) {
+    set active(id: number)
+    {
         this.switch(id);
     }
 
     /** Gets the id of the visible(active) view. */
-    get active(): number {
+    get active(): number
+    {
         return this._active;
     }
 }

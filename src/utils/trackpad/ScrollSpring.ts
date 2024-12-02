@@ -1,6 +1,7 @@
 import { Spring } from './Spring';
 
-export default class ScrollSpring {
+export default class ScrollSpring
+{
     done: boolean;
     to: number;
 
@@ -9,13 +10,15 @@ export default class ScrollSpring {
     protected _speed: number;
     protected _correctSpeed: boolean;
 
-    constructor() {
+    constructor()
+    {
         this._spring = new Spring();
         this._pos = 0;
         this.to = 0;
     }
 
-    start(speed: number, pos: number, to: number): void {
+    start(speed: number, pos: number, to: number): void
+    {
         this._speed = speed;
         this._pos = pos;
         this.to = to;
@@ -28,31 +31,42 @@ export default class ScrollSpring {
         const toDirection = Math.abs(diff) / diff;
         const currentDirection = Math.abs(this._speed) / this._speed;
 
-        if (toDirection !== currentDirection) {
+        if (toDirection !== currentDirection)
+        {
             this._correctSpeed = true;
-        } else {
+        }
+        else
+        {
             this._correctSpeed = false;
         }
     }
 
-    update(): number {
-        if (this._correctSpeed) {
+    update(): number
+    {
+        if (this._correctSpeed)
+        {
             this._speed *= 0.6;
 
-            if (Math.abs(this._speed) < 2) {
+            if (Math.abs(this._speed) < 2)
+            {
                 this._correctSpeed = false;
             }
 
             this._pos += this._speed;
 
             this._spring.x = this._pos;
-        } else {
+        }
+        else
+        {
             const diff = this.to - this._pos;
 
-            if (Math.abs(diff) < 0.05) {
+            if (Math.abs(diff) < 0.05)
+            {
                 this._pos = this.to;
                 this.done = true;
-            } else {
+            }
+            else
+            {
                 this._spring.tx = this.to;
                 this._spring.update();
                 this._pos = this._spring.x;
@@ -62,7 +76,8 @@ export default class ScrollSpring {
         return this._pos;
     }
 
-    cancel(): void {
+    cancel(): void
+    {
         // matches jux interface
     }
 }

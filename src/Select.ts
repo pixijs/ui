@@ -69,7 +69,8 @@ export type SelectOptions = {
  * });
  */
 
-export class Select extends Container {
+export class Select extends Container
+{
     protected view: Container = new Container();
     protected openButton!: FancyButton;
     protected closeButton!: FancyButton;
@@ -82,13 +83,15 @@ export class Select extends Container {
     /** Fires when selected value is changed. */
     onSelect: Signal<(value: number, text: string) => void>;
 
-    constructor(options?: SelectOptions) {
+    constructor(options?: SelectOptions)
+    {
         super();
 
         this.addChild(this.view);
         this.onSelect = new Signal();
 
-        if (options) {
+        if (options)
+        {
             this.init(options);
         }
     }
@@ -116,14 +119,17 @@ export class Select extends Container {
         selectedTextOffset,
         scrollBox,
         visibleItems,
-    }: SelectOptions) {
+    }: SelectOptions)
+    {
         TextClass = TextClass ?? Text;
-        if (this.openView && this.openView !== openBG) {
+        if (this.openView && this.openView !== openBG)
+        {
             this.view.removeChild(this.openView);
         }
 
         // openButton
-        if (!this.openButton) {
+        if (!this.openButton)
+        {
             this.openButton = new FancyButton({
                 defaultView: closedBG,
                 text: new TextClass({
@@ -134,7 +140,9 @@ export class Select extends Container {
             });
             this.openButton.onPress.connect(() => this.toggle());
             this.addChild(this.openButton);
-        } else {
+        }
+        else
+        {
             this.openButton.defaultView = getView(closedBG);
             this.openButton.textView = new TextClass({
                 text: items?.items ? items.items[0] : '',
@@ -145,14 +153,16 @@ export class Select extends Container {
         }
 
         // openView
-        if (this.openView !== openBG) {
+        if (this.openView !== openBG)
+        {
             this.openView = getView(openBG);
             this.view.visible = false;
             this.view.addChild(this.openView);
         }
 
         // closeButton
-        if (!this.closeButton) {
+        if (!this.closeButton)
+        {
             this.closeButton = new FancyButton({
                 defaultView: new Graphics()
                     .rect(0, 0, this.openButton.width, this.openButton.height)
@@ -165,7 +175,9 @@ export class Select extends Container {
             });
             this.closeButton.onPress.connect(() => this.toggle());
             this.view.addChild(this.closeButton);
-        } else {
+        }
+        else
+        {
             this.closeButton.defaultView = new Graphics()
                 .rect(0, 0, this.openButton.width, this.openButton.height)
                 .fill({ color: 0x000000, alpha: 0.00001 });
@@ -179,11 +191,14 @@ export class Select extends Container {
         }
 
         // ScrollBox
-        if (!this.scrollBox) {
+        if (!this.scrollBox)
+        {
             this.scrollBox = new ScrollBox();
 
             this.view.addChild(this.scrollBox);
-        } else {
+        }
+        else
+        {
             this.scrollBox.removeItems();
         }
 
@@ -199,7 +214,8 @@ export class Select extends Container {
 
         this.scrollBox.y = this.openButton.height;
 
-        if (scrollBox?.offset) {
+        if (scrollBox?.offset)
+        {
             this.scrollBox.x = scrollBox.offset.x ?? 0;
             this.scrollBox.y += scrollBox.offset.y ?? 0;
         }
@@ -212,16 +228,20 @@ export class Select extends Container {
      * @param items
      * @param selected
      */
-    addItems(items: SelectItemsOptions, selected = 0) {
-        this.convertItemsToButtons(items).forEach((button, id) => {
+    addItems(items: SelectItemsOptions, selected = 0)
+    {
+        this.convertItemsToButtons(items).forEach((button, id) =>
+        {
             const text = button.text;
 
-            if (id === selected) {
+            if (id === selected)
+            {
                 this.openButton.text = text;
                 this.closeButton.text = text;
             }
 
-            button.onPress.connect(() => {
+            button.onPress.connect(() =>
+            {
                 this.value = id;
                 this.onSelect.emit(id, text);
                 this.openButton.text = text;
@@ -237,24 +257,28 @@ export class Select extends Container {
      * Remove items from the dropdown.
      * @param itemID - Item to remove (starting from 0).
      */
-    removeItem(itemID: number) {
+    removeItem(itemID: number)
+    {
         this.scrollBox.removeItem(itemID);
     }
 
     /** Toggle the select state (open if closed, closes - id open). */
-    toggle() {
+    toggle()
+    {
         this.view.visible = !this.view.visible;
         this.openButton.visible = !this.openButton.visible;
     }
 
     /** Show dropdown. */
-    open() {
+    open()
+    {
         this.view.visible = true;
         this.openButton.visible = false;
     }
 
     /** Hide dropdown. */
-    close() {
+    close()
+    {
         this.view.visible = false;
         this.openButton.visible = true;
     }
@@ -268,11 +292,13 @@ export class Select extends Container {
         textStyle,
         TextClass,
         radius,
-    }: SelectItemsOptions): FancyButton[] {
+    }: SelectItemsOptions): FancyButton[]
+    {
         TextClass = TextClass ?? Text;
         const buttons: FancyButton[] = [];
 
-        items.forEach((item) => {
+        items.forEach((item) =>
+        {
             const defaultView = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(backgroundColor);

@@ -32,7 +32,8 @@ export type CheckBoxOptions = {
  *     }
  *  });
  */
-export class CheckBox extends Switcher {
+export class CheckBox extends Switcher
+{
     //* Text label */
     labelText!: PixiText;
 
@@ -42,7 +43,8 @@ export class CheckBox extends Switcher {
     protected _style: CheckBoxStyle;
     protected _textClass: PixiTextClass;
 
-    constructor(options: CheckBoxOptions) {
+    constructor(options: CheckBoxOptions)
+    {
         super();
 
         this._textClass = options.TextClass ?? Text;
@@ -61,7 +63,8 @@ export class CheckBox extends Switcher {
         this.onChange.connect(() => this.onCheck.emit(this.checked));
     }
 
-    protected addLabel(text?: string, style?: PixiTextStyle) {
+    protected addLabel(text?: string, style?: PixiTextStyle)
+    {
         if (!text) return;
 
         this.labelText = new this._textClass({
@@ -76,8 +79,10 @@ export class CheckBox extends Switcher {
     }
 
     /** Setter, which sets a checkbox text. */
-    set text(text: string) {
-        if (!text) {
+    set text(text: string)
+    {
+        if (!text)
+        {
             cleanup(this.labelText);
 
             return;
@@ -87,12 +92,14 @@ export class CheckBox extends Switcher {
     }
 
     /** Getter, which returns a checkbox text. */
-    get text(): string | '' {
+    get text(): string | ''
+    {
         return this.labelText?.text ?? '';
     }
 
     /** Setter, which sets a checkbox style settings. */
-    set style(style: CheckBoxStyle) {
+    set style(style: CheckBoxStyle)
+    {
         // Preserve checked state for the end of the method
         const wasChecked = this.checked;
 
@@ -105,40 +112,50 @@ export class CheckBox extends Switcher {
 
         this.views = [uncheckedView, checkedView];
 
-        if (wasChecked) {
+        if (wasChecked)
+        {
             checkedView.visible = true;
             this.active = 1;
-        } else {
+        }
+        else
+        {
             uncheckedView.visible = true;
         }
 
-        if (this.labelText) {
+        if (this.labelText)
+        {
             checkedView.visible = true;
             this.active = 1;
-            if (style.text) {
+            if (style.text)
+            {
                 this.labelText.style = style.text;
             }
 
             this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.labelText.y =
-                (uncheckedView.height - this.labelText.height) / 2 + (style.textOffset?.y ?? 0);
-        } else {
+            this.labelText.y
+                = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
+        }
+        else
+        {
             uncheckedView.visible = true;
         }
     }
 
     /** Getter, which returns a checkbox style settings. */
-    get style(): CheckBoxStyle {
+    get style(): CheckBoxStyle
+    {
         return this._style;
     }
 
     /** Getter, which returns a checkbox state. */
-    get checked(): boolean {
+    get checked(): boolean
+    {
         return this.active === 1;
     }
 
     /** Setter, which sets a checkbox state. */
-    set checked(checked: boolean) {
+    set checked(checked: boolean)
+    {
         this.switch(checked ? 1 : 0);
     }
 
@@ -146,7 +163,8 @@ export class CheckBox extends Switcher {
      * Setter, that sets a checkbox state without emitting a signal.
      * @param checked
      */
-    forceCheck(checked: boolean) {
+    forceCheck(checked: boolean)
+    {
         this.forceSwitch(checked ? 1 : 0);
     }
 }

@@ -19,7 +19,8 @@ export const ButtonContainerSprite: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init(view) {
+        init(view)
+        {
             // Component usage !!!
             const button = new ButtonContainer();
 

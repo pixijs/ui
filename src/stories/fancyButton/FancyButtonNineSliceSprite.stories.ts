@@ -54,7 +54,8 @@ export const UseNineSliceSprite: StoryFn<
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
@@ -64,7 +65,8 @@ export const UseNineSliceSprite: StoryFn<
                 `avatar_mask.png`,
             ];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 // Component usage !!!
                 const button = new FancyButton({
                     defaultView: `button.png`,
@@ -120,7 +122,8 @@ export const UseNineSliceSprite: StoryFn<
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled) {
+                if (disabled)
+                {
                     button.enabled = false;
                 }
 
@@ -136,10 +139,12 @@ export const UseNineSliceSprite: StoryFn<
 
                 let currentSizeID = 0;
 
-                button.onPress.connect(() => {
+                button.onPress.connect(() =>
+                {
                     currentSizeID++;
 
-                    if (currentSizeID >= sizes.length) {
+                    if (currentSizeID >= sizes.length)
+                    {
                         currentSizeID = 0;
                     }
 

@@ -61,10 +61,12 @@ export const UseIcon: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const assets = [`avatar-01.png`];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 const target = Sprite.from(`avatar-01.png`);
 
                 const icon = new MaskedFrame({
@@ -123,7 +125,8 @@ export const UseIcon: StoryFn<typeof args> = (
 
                 button.anchor.set(anchorX, anchorY);
 
-                if (disabled) {
+                if (disabled)
+                {
                     button.enabled = false;
                 }
 

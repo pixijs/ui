@@ -51,7 +51,8 @@ const SECURE_CHARACTER = '*';
  *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
  * });
  */
-export class Input extends Container {
+export class Input extends Container
+{
     protected _bg?: Container | NineSliceSprite | Graphics;
     protected inputMask: Container | NineSliceSprite | Graphics;
     protected _cursor: Sprite;
@@ -94,8 +95,9 @@ export class Input extends Container {
      * Creates an input.
      * @param { number } options - Options object to use.
      * @param { Sprite | Graphics | Texture | string } options.bg - Background of the Input.
-     *                                                              <br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
-     *                                                              <br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter.
+     * <br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
+     * <br> If you want to use NineSliceSprite, you have to pass a text (name of texture)
+     * or an instance of Texture as a parameter.
      * @param { PixiTextStyle } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
      * @param { string } options.value - Value of the Input.
@@ -109,9 +111,10 @@ export class Input extends Container {
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
      * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
-     *                                      <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
+     * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */
-    constructor(options: InputOptions) {
+    constructor(options: InputOptions)
+    {
         super();
 
         this.options = options;
@@ -123,14 +126,18 @@ export class Input extends Container {
         this.cursor = 'text';
         this.interactive = true;
 
-        this.on('pointertap', () => {
+        this.on('pointertap', () =>
+        {
             this.activation = true;
             isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
         });
 
-        if (isMobile.any) {
+        if (isMobile.any)
+        {
             window.addEventListener('touchstart', this.handleActivationBinding);
-        } else if (!isMobile.any) {
+        }
+        else if (!isMobile.any)
+        {
             window.addEventListener('click', this.handleActivationBinding);
 
             window.addEventListener('keyup', this.onKeyUpBinding);
@@ -143,32 +150,45 @@ export class Input extends Container {
 
         Ticker.shared.add((ticker) => this.update(ticker.deltaTime));
 
-        if (options.bg) {
+        if (options.bg)
+        {
             this.bg = options.bg;
-        } else {
+        }
+        else
+        {
             console.error('Input: bg is not defined, please define it.');
         }
     }
 
-    protected onInput(e: InputEvent) {
+    protected onInput(e: InputEvent)
+    {
         this.lastInputData = e.data;
     }
 
-    protected onKeyUp(e: KeyboardEvent) {
+    protected onKeyUp(e: KeyboardEvent)
+    {
         const key = e.key;
 
-        if (key === 'Backspace') {
+        if (key === 'Backspace')
+        {
             this._delete();
-        } else if (key === 'Escape' || key === 'Enter') {
+        }
+        else if (key === 'Escape' || key === 'Enter')
+        {
             this.stopEditing();
-        } else if (key.length === 1) {
+        }
+        else if (key.length === 1)
+        {
             this._add(key);
-        } else if (this.lastInputData && this.lastInputData.length === 1) {
+        }
+        else if (this.lastInputData && this.lastInputData.length === 1)
+        {
             this._add(this.lastInputData);
         }
     }
 
-    protected init() {
+    protected init()
+    {
         const options = this.options;
 
         const defaultTextStyle = {
@@ -209,13 +229,17 @@ export class Input extends Container {
         this.align();
     }
 
-    set bg(bg: ViewType) {
-        if (this._bg) {
+    set bg(bg: ViewType)
+    {
+        if (this._bg)
+        {
             this._bg.destroy();
         }
 
-        if (this.options?.nineSliceSprite) {
-            if (typeof bg === 'string') {
+        if (this.options?.nineSliceSprite)
+        {
+            if (typeof bg === 'string')
+            {
                 this._bg = new NineSliceSprite({
                     texture: Texture.from(bg),
                     leftWidth: this.options.nineSliceSprite[0],
@@ -223,7 +247,9 @@ export class Input extends Container {
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
-            } else if (bg instanceof Texture) {
+            }
+            else if (bg instanceof Texture)
+            {
                 this._bg = new NineSliceSprite({
                     texture: bg,
                     leftWidth: this.options.nineSliceSprite[0],
@@ -231,12 +257,16 @@ export class Input extends Container {
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
-            } else {
-                console.warn('NineSliceSprite can not be used with views set as Container. Pass the texture or texture name as instead of the Container extended instance.');
+            }
+            else
+            {
+                console.warn(`NineSliceSprite can not be used with views set as Container.
+                    Pass the texture or texture name as instead of the Container extended instance.`);
             }
         }
 
-        if (!this._bg) {
+        if (!this._bg)
+        {
             this._bg = getView(bg);
         }
 
@@ -245,25 +275,31 @@ export class Input extends Container {
 
         this.addChildAt(this._bg, 0);
 
-        if (!this.inputField) {
+        if (!this.inputField)
+        {
             this.init();
         }
 
-        if (this.options.addMask) {
+        if (this.options.addMask)
+        {
             this.createInputMask(bg);
         }
     }
 
-    get bg(): Container | string {
+    get bg(): Container | string
+    {
         return this._bg;
     }
 
-    protected _add(key: string): void {
-        if (!this.editing) {
+    protected _add(key: string): void
+    {
+        if (!this.editing)
+        {
             return;
         }
 
-        if (this.options.maxLength && this.value.length >= this.options.maxLength) {
+        if (this.options.maxLength && this.value.length >= this.options.maxLength)
+        {
             return;
         }
 
@@ -272,7 +308,8 @@ export class Input extends Container {
         this.onChange.emit(this.value);
     }
 
-    protected _delete(): void {
+    protected _delete(): void
+    {
         const length = this.value.length;
 
         if (!this.editing || length === 0) return;
@@ -282,8 +319,10 @@ export class Input extends Container {
         this.onChange.emit(this.value);
     }
 
-    protected _startEditing(): void {
-        if (this.options.cleanOnFocus) {
+    protected _startEditing(): void
+    {
+        if (this.options.cleanOnFocus)
+        {
             this.value = '';
         }
 
@@ -292,15 +331,18 @@ export class Input extends Container {
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (isMobile.any) {
+        if (isMobile.any)
+        {
             this.createInputField();
         }
 
         this.align();
     }
 
-    protected createInputField() {
-        if (this.input) {
+    protected createInputField()
+    {
+        if (this.input)
+        {
             this.input.removeEventListener('blur', this.stopEditingBinding);
             this.input.removeEventListener('keyup', this.onKeyUpBinding);
             this.input.removeEventListener('input', this.onInputBinding as EventListener);
@@ -325,12 +367,16 @@ export class Input extends Container {
         input.style.background = 'white';
 
         // This hack fixes instant hiding keyboard on mobile after showing it
-        if (isMobile.android.device) {
-            setTimeout(() => {
+        if (isMobile.android.device)
+        {
+            setTimeout(() =>
+            {
                 input.focus();
                 input.click();
             }, 100);
-        } else {
+        }
+        else
+        {
             input.focus();
             input.click();
         }
@@ -344,29 +390,34 @@ export class Input extends Container {
         this.align();
     }
 
-    protected handleActivation() {
+    protected handleActivation()
+    {
         this.stopEditing();
 
-        if (this.activation) {
+        if (this.activation)
+        {
             this._startEditing();
 
             this.activation = false;
         }
     }
 
-    protected stopEditing(): void {
+    protected stopEditing(): void
+    {
         if (!this.editing) return;
 
         this._cursor.alpha = 0;
         this.editing = false;
 
-        if (this.inputField.text === '') {
+        if (this.inputField.text === '')
+        {
             this.placeholder.visible = true;
         }
 
         if (this.value.length === 0) this.placeholder.visible = true;
 
-        if (isMobile.any) {
+        if (isMobile.any)
+        {
             this.input?.blur();
             this.input?.remove();
             this.input = null;
@@ -377,40 +428,45 @@ export class Input extends Container {
         this.onEnter.emit(this.value);
     }
 
-    protected update(dt: number): void {
+    protected update(dt: number): void
+    {
         if (!this.editing) return;
         this.tick += dt * 0.1;
-        this._cursor.alpha = Math.round(Math.sin(this.tick) * 0.5 + 0.5);
+        this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
     }
 
-    protected align() {
+    protected align()
+    {
         if (!this._bg) return;
 
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x =
-            this._bg.width * align + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y = this._bg.height / 2 + this.paddingTop - this.paddingBottom;
+        this.inputField.x
+            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x =
-            this._bg.width * align + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.placeholder.x
+            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this._bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
         this._cursor.y = this.inputField.y;
     }
 
-    protected getAlign(): 0 | 1 | 0.5 {
+    protected getAlign(): 0 | 1 | 0.5
+    {
         const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
         const isOverflowed = this.inputField.width + paddings > maxWidth;
 
-        if (isOverflowed) {
+        if (isOverflowed)
+        {
             return this.editing ? 1 : 0;
         }
-        switch (this.options.align) {
+        switch (this.options.align)
+        {
             case 'left':
                 return 0;
             case 'center':
@@ -422,14 +478,16 @@ export class Input extends Container {
         }
     }
 
-    protected getCursorPosX() {
+    protected getCursorPosX()
+    {
         const align = this.getAlign();
 
-        switch (align) {
+        switch (align)
+        {
             case 0:
                 return this.inputField.x + this.inputField.width;
             case 0.5:
-                return this.inputField.x + this.inputField.width * 0.5;
+                return this.inputField.x + (this.inputField.width * 0.5);
             case 1:
                 return this.inputField.x;
             default:
@@ -438,15 +496,19 @@ export class Input extends Container {
     }
 
     /** Sets the input text. */
-    set value(text: string) {
+    set value(text: string)
+    {
         const textLength = text.length;
 
         this._value = text;
         this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
 
-        if (textLength !== 0) {
+        if (textLength !== 0)
+        {
             this.placeholder.visible = false;
-        } else {
+        }
+        else
+        {
             this.placeholder.visible = !this.editing;
         }
 
@@ -454,18 +516,21 @@ export class Input extends Container {
     }
 
     /** Return text of the input. */
-    get value(): string {
+    get value(): string
+    {
         return this._value;
     }
 
-    set secure(val: boolean) {
+    set secure(val: boolean)
+    {
         this._secure = val;
 
         // Update text based on secure state (useful for show/hide password implementations)
         this.value = this._value;
     }
 
-    get secure(): boolean {
+    get secure(): boolean
+    {
         return this._secure;
     }
 
@@ -481,20 +546,25 @@ export class Input extends Container {
      *  bottom: 10,
      * }
      */
-    set padding(value: Padding) {
-        if (typeof value === 'number') {
+    set padding(value: Padding)
+    {
+        if (typeof value === 'number')
+        {
             this.paddingTop = value;
             this.paddingRight = value;
             this.paddingBottom = value;
             this.paddingLeft = value;
         }
 
-        if (Array.isArray(value)) {
+        if (Array.isArray(value))
+        {
             this.paddingTop = value[0] ?? 0;
             this.paddingRight = value[1] ?? value[0] ?? 0;
             this.paddingBottom = value[2] ?? value[0] ?? 0;
             this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
-        } else if (typeof value === 'object') {
+        }
+        else if (typeof value === 'object')
+        {
             this.paddingTop = value.top ?? 0;
             this.paddingRight = value.right ?? 0;
             this.paddingBottom = value.bottom ?? 0;
@@ -503,16 +573,21 @@ export class Input extends Container {
     }
 
     // Return array of paddings [top, right, bottom, left]
-    get padding(): [number, number, number, number] {
+    get padding(): [number, number, number, number]
+    {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
     }
 
-    override destroy(options?: DestroyOptions | boolean) {
+    override destroy(options?: DestroyOptions | boolean)
+    {
         this.off('pointertap');
 
-        if (isMobile.any) {
+        if (isMobile.any)
+        {
             window.removeEventListener('touchstart', this.handleActivationBinding);
-        } else if (!isMobile.any) {
+        }
+        else if (!isMobile.any)
+        {
             window.removeEventListener('click', this.handleActivationBinding);
 
             window.removeEventListener('keyup', this.onKeyUpBinding);
@@ -529,22 +604,28 @@ export class Input extends Container {
      * If nineSliceSprite is not set, then width will control components width as Container.
      * @param width - Width value.
      */
-    override set width(width: number) {
-        if (this.options?.nineSliceSprite) {
-            if (this._bg) {
+    override set width(width: number)
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._bg)
+            {
                 this._bg.width = width;
             }
 
             this.updateInputMaskSize();
 
             this.align();
-        } else {
+        }
+        else
+        {
             super.width = width;
         }
     }
 
     /** Gets width of Input. */
-    override get width(): number {
+    override get width(): number
+    {
         return super.width;
     }
 
@@ -554,46 +635,60 @@ export class Input extends Container {
      * If nineSliceSprite is not set, then height will control components height as Container.
      * @param height - Height value.
      */
-    override set height(height: number) {
-        if (this.options?.nineSliceSprite) {
-            if (this._bg) {
+    override set height(height: number)
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._bg)
+            {
                 this._bg.height = height;
             }
 
             this.updateInputMaskSize();
 
             this.align();
-        } else {
+        }
+        else
+        {
             super.height = height;
         }
     }
 
     /** Gets height of Input. */
-    override get height(): number {
+    override get height(): number
+    {
         return super.height;
     }
 
-    override setSize(value: number | Optional<Size, 'height'>, height?: number): void {
-        if (this.options?.nineSliceSprite) {
-            if (this._bg) {
+    override setSize(value: number | Optional<Size, 'height'>, height?: number): void
+    {
+        if (this.options?.nineSliceSprite)
+        {
+            if (this._bg)
+            {
                 this._bg.setSize(value, height);
             }
 
             this.updateInputMaskSize();
             this.align();
-        } else {
+        }
+        else
+        {
             super.setSize(value, height);
         }
     }
 
-    protected createInputMask(bg: ViewType) {
-        if (this.inputMask) {
+    protected createInputMask(bg: ViewType)
+    {
+        if (this.inputMask)
+        {
             this.inputField.mask = null;
             this._cursor.mask = null;
             this.inputMask.destroy();
         }
 
-        if (this.options?.nineSliceSprite && typeof bg === 'string') {
+        if (this.options?.nineSliceSprite && typeof bg === 'string')
+        {
             this.inputMask = new NineSliceSprite({
                 texture: Texture.from(bg),
                 leftWidth: this.options.nineSliceSprite[0],
@@ -601,11 +696,17 @@ export class Input extends Container {
                 rightWidth: this.options.nineSliceSprite[2],
                 bottomHeight: this.options.nineSliceSprite[3],
             });
-        } else if (bg instanceof Sprite) {
+        }
+        else if (bg instanceof Sprite)
+        {
             this.inputMask = new Sprite(bg.texture);
-        } else if (bg instanceof Graphics) {
+        }
+        else if (bg instanceof Graphics)
+        {
             this.inputMask = bg.clone(true);
-        } else {
+        }
+        else
+        {
             this.inputMask = getView(bg);
         }
 
@@ -618,7 +719,8 @@ export class Input extends Container {
         this.addChildAt(this.inputMask, 0);
     }
 
-    protected updateInputMaskSize() {
+    protected updateInputMaskSize()
+    {
         if (!this.inputMask || !this._bg) return;
 
         this.inputMask.setSize(

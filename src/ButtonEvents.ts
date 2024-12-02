@@ -2,7 +2,8 @@ import { Container, FederatedPointerEvent, isMobile } from 'pixi.js';
 import { Signal } from 'typed-signals';
 
 /** Events controller used for {@link Button}. */
-export class ButtonEvents {
+export class ButtonEvents
+{
     protected _isMouseIn: boolean;
     protected _isDown: boolean;
 
@@ -25,7 +26,8 @@ export class ButtonEvents {
     /** Event that is fired when the mouse hovers the button. Fired only if device is not mobile.*/
     onHover: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;
 
-    constructor() {
+    constructor()
+    {
         this.onPress = new Signal();
         this.onDown = new Signal();
         this.onUp = new Signal();
@@ -34,15 +36,19 @@ export class ButtonEvents {
         this.onUpOut = new Signal();
     }
 
-    protected connectEvents(view: Container) {
-        if (isMobile.any) {
+    protected connectEvents(view: Container)
+    {
+        if (isMobile.any)
+        {
             view.on('pointerdown', this.processDown, this);
             view.on('pointerup', this.processUp, this);
             view.on('pointerupoutside', this.processUpOut, this);
             view.on('pointerout', this.processOut, this);
             view.on('pointertap', this.processPress, this);
             view.on('pointerover', this.processOver, this);
-        } else {
+        }
+        else
+        {
             view.on('mousedown', this.processDown, this);
             view.on('mouseup', this.processUp, this);
             view.on('mouseupoutside', this.processUpOut, this);
@@ -52,15 +58,19 @@ export class ButtonEvents {
         }
     }
 
-    protected disconnectEvents(view: Container) {
-        if (isMobile.any) {
+    protected disconnectEvents(view: Container)
+    {
+        if (isMobile.any)
+        {
             view.off('pointerdown', this.processDown, this);
             view.off('pointerup', this.processUp, this);
             view.off('pointerupoutside', this.processUpOut, this);
             view.off('pointerout', this.processOut, this);
             view.off('pointertap', this.processPress, this);
             view.off('pointerover', this.processOver, this);
-        } else {
+        }
+        else
+        {
             view.off('mousedown', this.processDown, this);
             view.off('mouseup', this.processUp, this);
             view.off('mouseupoutside', this.processUpOut, this);
@@ -70,14 +80,17 @@ export class ButtonEvents {
         }
     }
 
-    protected processDown(e: FederatedPointerEvent): void {
+    protected processDown(e: FederatedPointerEvent): void
+    {
         this._isDown = true;
         this.onDown.emit(this, e);
         this.down(e);
     }
 
-    protected processUp(e?: FederatedPointerEvent) {
-        if (this._isDown) {
+    protected processUp(e?: FederatedPointerEvent)
+    {
+        if (this._isDown)
+        {
             this.onUp.emit(this, e);
             this.up(e);
         }
@@ -85,8 +98,10 @@ export class ButtonEvents {
         this._isDown = false;
     }
 
-    protected processUpOut(e?: FederatedPointerEvent) {
-        if (this._isDown) {
+    protected processUpOut(e?: FederatedPointerEvent)
+    {
+        if (this._isDown)
+        {
             this.onUp.emit(this, e);
             this.onUpOut.emit(this, e);
             this.up(e);
@@ -96,21 +111,25 @@ export class ButtonEvents {
         this._isDown = false;
     }
 
-    protected processOut(e?: FederatedPointerEvent) {
-        if (this._isMouseIn) {
+    protected processOut(e?: FederatedPointerEvent)
+    {
+        if (this._isMouseIn)
+        {
             this._isMouseIn = false;
             this.onOut.emit(this, e);
             this.out(e);
         }
     }
 
-    protected processPress(e: FederatedPointerEvent) {
+    protected processPress(e: FederatedPointerEvent)
+    {
         this._isDown = false;
         this.onPress.emit(this, e);
         this.press(e);
     }
 
-    protected processOver(e: FederatedPointerEvent) {
+    protected processOver(e: FederatedPointerEvent)
+    {
         if (isMobile.any) return;
 
         this._isMouseIn = true;
@@ -123,7 +142,8 @@ export class ButtonEvents {
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    down(_e?: FederatedPointerEvent) {
+    down(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
@@ -132,7 +152,8 @@ export class ButtonEvents {
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    up(_e?: FederatedPointerEvent) {
+    up(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
@@ -142,7 +163,8 @@ export class ButtonEvents {
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    upOut(_e?: FederatedPointerEvent) {
+    upOut(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
@@ -151,7 +173,8 @@ export class ButtonEvents {
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    out(_e?: FederatedPointerEvent) {
+    out(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
@@ -160,7 +183,8 @@ export class ButtonEvents {
      * To be overridden.
      * @param {FederatedPointerEvent} _e - event data
      */
-    press(_e?: FederatedPointerEvent) {
+    press(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
@@ -170,12 +194,14 @@ export class ButtonEvents {
      * Fired only if device is not mobile.
      * @param {FederatedPointerEvent} _e - event data
      */
-    hover(_e?: FederatedPointerEvent) {
+    hover(_e?: FederatedPointerEvent)
+    {
         // override me!
     }
 
     /** Getter that returns if the button is down. */
-    get isDown(): boolean {
+    get isDown(): boolean
+    {
         return this._isDown;
     }
 }

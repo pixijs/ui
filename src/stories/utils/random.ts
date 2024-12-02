@@ -1,14 +1,17 @@
 // From a very good answer about pseudo random numbers on stack overflow
 // https://stackoverflow.com/a/47593316
-function xmur3(str: string): () => number {
+function xmur3(str: string): () => number
+{
     let h = 1779033703 ^ str.length;
 
-    for (let i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i++)
+    {
         h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
         h = (h << 13) | (h >>> 19);
     }
 
-    return (): number => {
+    return (): number =>
+    {
         h = Math.imul(h ^ (h >>> 16), 2246822507);
         h = Math.imul(h ^ (h >>> 13), 3266489909);
 
@@ -16,8 +19,10 @@ function xmur3(str: string): () => number {
     };
 }
 
-function mulberry32(a: number): () => number {
-    return (): number => {
+function mulberry32(a: number): () => number
+{
+    return (): number =>
+    {
         let t = (a += 0x6d2b79f5);
 
         t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -34,7 +39,8 @@ const HASH_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345
  * @param seed - The hash string, can be anything
  * @returns Function that can be used instead Math.random
  */
-export function randomSeeded(seed: string): () => number {
+export function randomSeeded(seed: string): () => number
+{
     return mulberry32(xmur3(seed)());
 }
 
@@ -42,7 +48,8 @@ export function randomSeeded(seed: string): () => number {
  * Returns a random color
  * @param random - The random function to be used (defaults to Math.random)
  */
-export function randomColor(random = Math.random): number {
+export function randomColor(random = Math.random): number
+{
     const r = Math.floor(0xff * random());
     const g = Math.floor(0xff * random());
     const b = Math.floor(0xff * random());
@@ -56,11 +63,12 @@ export function randomColor(random = Math.random): number {
  * @param max - highest number (exclusive)
  * @param random - The random function to be used (defaults to Math.random)
  */
-export function randomRange(min: number, max: number, random = Math.random): number {
+export function randomRange(min: number, max: number, random = Math.random): number
+{
     const a = Math.min(min, max);
     const b = Math.max(min, max);
 
-    const v = a + (b - a) * random();
+    const v = a + ((b - a) * random());
 
     return v;
 }
@@ -70,8 +78,10 @@ export function randomRange(min: number, max: number, random = Math.random): num
  * @param obj - The object or array
  * @param random - The random function to be used (defaults to Math.random)
  */
-export function randomItem<T>(obj: T, random = Math.random): T[keyof T] {
-    if (Array.isArray(obj)) {
+export function randomItem<T>(obj: T, random = Math.random): T[keyof T]
+{
+    if (Array.isArray(obj))
+    {
         return obj[Math.floor(random() * obj.length)];
     }
 
@@ -87,7 +97,8 @@ export function randomItem<T>(obj: T, random = Math.random): T[keyof T] {
  * @param random - The random function to be used (defaults to Math.random)
  * @returns A random boolean
  */
-export function randomBool(weight = 0.5, random = Math.random): boolean {
+export function randomBool(weight = 0.5, random = Math.random): boolean
+{
     return random() < weight;
 }
 
@@ -97,12 +108,14 @@ export function randomBool(weight = 0.5, random = Math.random): boolean {
  * @param random - The random function to be used (defaults to Math.random)
  * @returns The same array, shuffled
  */
-export function randomShuffle<T>(array: T[], random = Math.random): T[] {
+export function randomShuffle<T>(array: T[], random = Math.random): T[]
+{
     let currentIndex = array.length;
     let temporaryValue;
     let randomIndex;
 
-    while (currentIndex !== 0) {
+    while (currentIndex !== 0)
+    {
         randomIndex = Math.floor(random() * currentIndex);
         currentIndex -= 1;
         temporaryValue = array[currentIndex];
@@ -120,11 +133,13 @@ export function randomShuffle<T>(array: T[], random = Math.random): T[] {
  * @param charset
  * @returns A random string hash
  */
-export function randomHash(length: number, random = Math.random, charset = HASH_CHARSET): string {
+export function randomHash(length: number, random = Math.random, charset = HASH_CHARSET): string
+{
     const charsetLength = charset.length;
     let result = '';
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++)
+    {
         result += charset.charAt(Math.floor(random() * charsetLength));
     }
 

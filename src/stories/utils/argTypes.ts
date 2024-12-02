@@ -38,20 +38,26 @@ const controls = {
     },
 };
 
-export const argTypes = (args: Types) => {
+export const argTypes = (args: Types) =>
+{
     const exportArgTypes: any = {};
 
-    for (const key in args) {
-        if (typeof args[key] === 'number') {
+    for (const key in args)
+    {
+        if (typeof args[key] === 'number')
+        {
             let min = 0;
             const arg: number = args[key] as number;
 
-            if (key.includes('font')) {
+            if (key.includes('font'))
+            {
                 min = 1;
             }
 
-            if (arg >= 0) {
-                if (arg >= 100) {
+            if (arg >= 0)
+            {
+                if (arg >= 100)
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
@@ -60,7 +66,9 @@ export const argTypes = (args: Types) => {
                             step: 10,
                         },
                     };
-                } else if (arg > 10) {
+                }
+                else if (arg > 10)
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
@@ -69,7 +77,9 @@ export const argTypes = (args: Types) => {
                             step: 1,
                         },
                     };
-                } else if (arg !== 0 && arg < 1) {
+                }
+                else if (arg !== 0 && arg < 1)
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
@@ -78,7 +88,9 @@ export const argTypes = (args: Types) => {
                             step: 0.1,
                         },
                     };
-                } else {
+                }
+                else
+                {
                     exportArgTypes[key] = {
                         control: {
                             type: 'range',
@@ -88,7 +100,9 @@ export const argTypes = (args: Types) => {
                         },
                     };
                 }
-            } else if (arg <= -100) {
+            }
+            else if (arg <= -100)
+            {
                 exportArgTypes[key] = {
                     control: {
                         type: 'range',
@@ -97,7 +111,9 @@ export const argTypes = (args: Types) => {
                         step: 10,
                     },
                 };
-            } else if (arg < -10) {
+            }
+            else if (arg < -10)
+            {
                 exportArgTypes[key] = {
                     control: {
                         type: 'range',
@@ -106,7 +122,9 @@ export const argTypes = (args: Types) => {
                         step: 10,
                     },
                 };
-            } else if (arg !== 0 && arg > -1) {
+            }
+            else if (arg !== 0 && arg > -1)
+            {
                 exportArgTypes[key] = {
                     control: {
                         type: 'range',
@@ -115,7 +133,9 @@ export const argTypes = (args: Types) => {
                         step: 0.1,
                     },
                 };
-            } else {
+            }
+            else
+            {
                 exportArgTypes[key] = {
                     control: {
                         type: 'range',
@@ -125,18 +145,25 @@ export const argTypes = (args: Types) => {
                     },
                 };
             }
-        } else {
-            if (getArgType(key)) {
+        }
+        else
+        {
+            if (getArgType(key))
+            {
                 exportArgTypes[key] = getArgType(key);
             }
 
-            switch (typeof args[key]) {
+            switch (typeof args[key])
+            {
                 case 'object':
                     exportArgTypes[key] = controls.select;
 
-                    if (Array.isArray(args[key])) {
+                    if (Array.isArray(args[key]))
+                    {
                         exportArgTypes[key].options = args[key];
-                    } else {
+                    }
+                    else
+                    {
                         exportArgTypes[key].options = Object.keys(args).map((key) => args[key]);
                     }
                     break;
@@ -150,9 +177,12 @@ export const argTypes = (args: Types) => {
     return exportArgTypes;
 };
 
-function getArgType(type: string) {
-    for (const control in controls) {
-        if (type.toLowerCase().indexOf(control) > -1) {
+function getArgType(type: string)
+{
+    for (const control in controls)
+    {
+        if (type.toLowerCase().indexOf(control) > -1)
+        {
             // @ts-expect-error - we are lazy
             return controls[control];
         }
@@ -161,14 +191,17 @@ function getArgType(type: string) {
     return undefined;
 }
 
-export const getDefaultArgs = (args: Types) => {
+export const getDefaultArgs = (args: Types) =>
+{
     const exportArgs: any = {};
 
-    for (const key in args) {
-        switch (typeof args[key]) {
+    for (const key in args)
+    {
+        switch (typeof args[key])
+        {
             case 'object':
-                if (Array.isArray(args[key])) {
-                    // @ts-expect-error - we are lazy
+                if (Array.isArray(args[key]))
+                {
                     exportArgs[key] = args[key][0] as any;
                 }
                 break;

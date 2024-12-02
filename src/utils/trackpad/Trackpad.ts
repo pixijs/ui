@@ -1,7 +1,8 @@
 import { Point, Rectangle } from 'pixi.js';
 import { ConstrainEase, SlidingNumber } from './SlidingNumber';
 
-interface TrackpadOptions {
+interface TrackpadOptions
+{
     /** override the easing function when constraining */
     xEase?: ConstrainEase;
     yEase?: ConstrainEase;
@@ -13,7 +14,8 @@ interface TrackpadOptions {
 }
 
 /** Easing controller for the {@link ScrollBox}. */
-export class Trackpad {
+export class Trackpad
+{
     xAxis: SlidingNumber;
     yAxis: SlidingNumber;
 
@@ -24,7 +26,8 @@ export class Trackpad {
     protected _dirty: boolean;
     protected disableEasing = false;
 
-    constructor(options: TrackpadOptions) {
+    constructor(options: TrackpadOptions)
+    {
         this.xAxis = new SlidingNumber({
             ease: options.xEase,
             maxSpeed: options.maxSpeed,
@@ -45,23 +48,28 @@ export class Trackpad {
         this._globalPosition = new Point();
     }
 
-    pointerDown(pos: Point): void {
+    pointerDown(pos: Point): void
+    {
         this._globalPosition = pos;
         this.xAxis.grab(pos.x);
         this.yAxis.grab(pos.y);
         this._isDown = true;
     }
 
-    pointerUp(): void {
+    pointerUp(): void
+    {
         this._isDown = false;
     }
 
-    pointerMove(pos: Point): void {
+    pointerMove(pos: Point): void
+    {
         this._globalPosition = pos;
     }
 
-    update(): void {
-        if (this._dirty) {
+    update(): void
+    {
+        if (this._dirty)
+        {
             this._dirty = false;
 
             this.xAxis.min = this._bounds.left;
@@ -71,16 +79,20 @@ export class Trackpad {
             this.xAxis.min = this._bounds.bottom - this._frame.height;
         }
 
-        if (this._isDown) {
+        if (this._isDown)
+        {
             this.xAxis.hold(this._globalPosition.x);
             this.yAxis.hold(this._globalPosition.y);
-        } else {
+        }
+        else
+        {
             this.xAxis.slide(this.disableEasing);
             this.yAxis.slide(this.disableEasing);
         }
     }
 
-    resize(w: number, h: number): void {
+    resize(w: number, h: number): void
+    {
         this._frame.x = 0;
         this._frame.width = w;
 
@@ -90,7 +102,8 @@ export class Trackpad {
         this._dirty = true;
     }
 
-    setBounds(minX: number, maxX: number, minY: number, maxY: number): void {
+    setBounds(minX: number, maxX: number, minY: number, maxY: number): void
+    {
         this._bounds.x = minX;
         this._bounds.width = maxX - minX;
         this._bounds.y = minY;
@@ -99,11 +112,13 @@ export class Trackpad {
         this._dirty = true;
     }
 
-    get x(): number {
+    get x(): number
+    {
         return this.xAxis.value;
     }
 
-    get y(): number {
+    get y(): number
+    {
         return this.yAxis.value;
     }
 }

@@ -34,7 +34,8 @@ export type ListOptions<C extends ContainerChild = ContainerChild> = {
  *
  * list.addChild(new Graphics().rect(0, 0, 50, 50)).fill(0x000000);
  */
-export class List<C extends ContainerChild = ContainerChild> extends Container<C> {
+export class List<C extends ContainerChild = ContainerChild> extends Container<C>
+{
     protected options?: { type?: ListType } & ListOptions<C>;
 
     /** Container, that holds all inner elements. */
@@ -46,10 +47,12 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
 
-    constructor(options?: { type?: ListType } & ListOptions<C>) {
+    constructor(options?: { type?: ListType } & ListOptions<C>)
+    {
         super();
 
-        if (options) {
+        if (options)
+        {
             this.init(options);
         }
 
@@ -63,14 +66,17 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Initiates list component.
      * @param options
      */
-    init(options?: { type?: ListType } & ListOptions<C>) {
+    init(options?: { type?: ListType } & ListOptions<C>)
+    {
         this.options = options;
 
-        if (options?.type) {
+        if (options?.type)
+        {
             this.type = options.type;
         }
 
-        if (options?.children) {
+        if (options?.children)
+        {
             options.children.forEach((child) => this.addChild(child));
         }
     }
@@ -79,7 +85,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set items arrange direction.
      * @param type - Arrange direction.
      */
-    set type(type: ListType) {
+    set type(type: ListType)
+    {
         this._type = type;
         this.arrangeChildren();
     }
@@ -88,7 +95,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get items arrange direction.
      * @returns Arrange direction.
      */
-    get type(): ListType {
+    get type(): ListType
+    {
         return this._type;
     }
 
@@ -96,7 +104,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set element margin.
      * @param margin - Margin between elements.
      */
-    set elementsMargin(margin: number) {
+    set elementsMargin(margin: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.elementsMargin = margin;
         this.arrangeChildren();
@@ -106,7 +115,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get element margin.
      * @returns Margin between elements.
      */
-    get elementsMargin(): number {
+    get elementsMargin(): number
+    {
         return this.options?.elementsMargin ?? 0;
     }
 
@@ -114,7 +124,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set padding, overriding all padding options.
      * @param padding - Padding surrounding list elements and its border.
      */
-    set padding(padding: number) {
+    set padding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.padding = padding;
         this.options.vertPadding = padding;
@@ -130,7 +141,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get padding.
      * @returns Padding surrounding list elements and its border.
      */
-    get padding(): number {
+    get padding(): number
+    {
         return this.options?.padding ?? 0;
     }
 
@@ -138,7 +150,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set vertical padding, overriding all top and bottom padding options.
      * @param padding - Vertical padding between list border and its elements.
      */
-    set vertPadding(padding: number) {
+    set vertPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.vertPadding = padding;
         this.options.topPadding = padding;
@@ -150,7 +163,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get vertical padding.
      * @returns Vertical padding between list border and its elements.
      */
-    get vertPadding(): number {
+    get vertPadding(): number
+    {
         return this.options?.vertPadding ?? this.padding ?? 0;
     }
 
@@ -158,7 +172,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set horizontal padding, overriding all left and right padding options.
      * @param padding - Horizontal padding between list border and its elements.
      */
-    set horPadding(padding: number) {
+    set horPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.horPadding = padding;
         this.options.leftPadding = padding;
@@ -170,7 +185,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get horizontal padding.
      * @returns Horizontal padding between list border and its elements.
      */
-    get horPadding(): number {
+    get horPadding(): number
+    {
         return this.options?.horPadding ?? this.padding ?? 0;
     }
 
@@ -178,7 +194,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set left padding.
      * @param padding - Left padding between list border and its elements.
      */
-    set leftPadding(padding: number) {
+    set leftPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.leftPadding = padding;
         this.arrangeChildren();
@@ -188,7 +205,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get left padding.
      * @returns Left padding between list border and its elements.
      */
-    get leftPadding(): number {
+    get leftPadding(): number
+    {
         return this.options?.leftPadding ?? this.horPadding;
     }
 
@@ -196,7 +214,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set right padding.
      * @param padding - Right padding between list border and its elements.
      */
-    set rightPadding(padding: number) {
+    set rightPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.rightPadding = padding;
         this.arrangeChildren();
@@ -206,7 +225,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get right padding.
      * @returns Right padding between list border and its elements.
      */
-    get rightPadding(): number {
+    get rightPadding(): number
+    {
         return this.options?.rightPadding ?? this.horPadding;
     }
 
@@ -214,7 +234,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set top padding.
      * @param padding - Top padding between list border and its elements.
      */
-    set topPadding(padding: number) {
+    set topPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.topPadding = padding;
         this.arrangeChildren();
@@ -224,7 +245,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get top padding.
      * @returns Top padding between list border and its elements.
      */
-    get topPadding(): number {
+    get topPadding(): number
+    {
         return this.options?.topPadding ?? this.vertPadding;
     }
 
@@ -232,7 +254,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Set bottom padding.
      * @param padding - Bottom padding between list border and its elements.
      */
-    set bottomPadding(padding: number) {
+    set bottomPadding(padding: number)
+    {
         if (!this.options) throw new Error('List has not been initiated!');
         this.options.bottomPadding = padding;
         this.arrangeChildren();
@@ -242,7 +265,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Get bottom padding.
      * @returns Bottom padding between list border and its elements.
      */
-    get bottomPadding(): number {
+    get bottomPadding(): number
+    {
         return this.options?.bottomPadding ?? this.vertPadding;
     }
 
@@ -250,7 +274,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Arrange all elements basing in their sizes and component options.
      * Can be arranged vertically, horizontally or bidirectional.
      */
-    public arrangeChildren() {
+    public arrangeChildren()
+    {
         let maxHeight = 0;
         let x = this.leftPadding;
         let y = this.topPadding;
@@ -258,12 +283,15 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         const elementsMargin = this.options?.elementsMargin ?? 0;
         let maxWidth = this.parent?.width;
 
-        if (this.rightPadding) {
+        if (this.rightPadding)
+        {
             maxWidth -= this.rightPadding;
         }
 
-        this.children.forEach((child, id) => {
-            switch (this.type) {
+        this.children.forEach((child, id) =>
+        {
+            switch (this.type)
+            {
                 case 'vertical':
                     child.y = y;
                     child.x = x;
@@ -282,7 +310,8 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
                     child.x = x;
                     child.y = y;
 
-                    if (child.x + child.width > maxWidth && id > 0) {
+                    if (child.x + child.width > maxWidth && id > 0)
+                    {
                         y += elementsMargin + maxHeight;
                         x = this.leftPadding;
 
@@ -302,10 +331,12 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
      * Removes items from the list. (Does not destroy them)
      * @param itemID - Item to remove (starting from 0).
      */
-    removeItem(itemID: number) {
+    removeItem(itemID: number)
+    {
         const child = this.children[itemID];
 
-        if (!child) {
+        if (!child)
+        {
             return;
         }
 

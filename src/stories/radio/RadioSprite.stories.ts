@@ -18,7 +18,8 @@ const args = {
 export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onChange }, context) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const list = new List({
                 type: 'vertical',
                 elementsMargin: 20,
@@ -26,10 +27,12 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
 
             const assets = [`radio.png`, `radio_checked.png`];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 const items = [];
 
-                for (let i = 0; i < amount; i++) {
+                for (let i = 0; i < amount; i++)
+                {
                     items.push(
                         new CheckBox({
                             text: `${text} ${i + 1}`,

@@ -24,10 +24,12 @@ export const Double: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 // Component usage !!!
                 const singleSlider = new DoubleSlider({
                     bg: 'slider_bg.png',

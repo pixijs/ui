@@ -48,13 +48,16 @@ export const UseNineSliceSprite: StoryFn<typeof args & { align: 'center' | 'left
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() => {
-                for (let i = 0; i < amount; i++) {
+            preload(assets).then(() =>
+            {
+                for (let i = 0; i < amount; i++)
+                {
                     // Component usage
                     const input = new Input({
                         bg: 'input.png',

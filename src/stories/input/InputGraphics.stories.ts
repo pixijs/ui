@@ -58,16 +58,18 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-            for (let i = 0; i < amount; i++) {
+            for (let i = 0; i < amount; i++)
+            {
                 // Component usage
                 const input = new Input({
                     bg: new Graphics()
                         .roundRect(0, 0, width, height, radius + border)
                         .fill(borderColor)
-                        .roundRect(border, border, width - border * 2, height - border * 2, radius)
+                        .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
                         .fill(backgroundColor),
                     textStyle: {
                         fill: textColor,
@@ -84,7 +86,8 @@ export const UseGraphics: StoryFn<typeof args & { align: 'center' | 'left' | 'ri
                     addMask,
                 });
 
-                input.onEnter.connect((val) => {
+                input.onEnter.connect((val) =>
+                {
                     onChange(`Input ${i + 1} (${val})`);
                 });
 

@@ -18,7 +18,8 @@ import { ButtonEvents } from './ButtonEvents';
  *
  * container.addChild(button.view);
  */
-export class Button extends ButtonEvents {
+export class Button extends ButtonEvents
+{
     /** Container, given as a constructor parameter that is a button view. */
     protected _view: Container;
 
@@ -26,17 +27,20 @@ export class Button extends ButtonEvents {
      * Turns a given container-based view into a button by adding all button events.
      * @param {Container} view - instance of container, to be turned into button.
      */
-    constructor(view?: Container) {
+    constructor(view?: Container)
+    {
         super();
 
-        if (view) {
+        if (view)
+        {
             this.view = view;
             this.enabled = true;
         }
     }
 
     /** Set button view, that all the interaction events are applied to. */
-    set view(view: Container) {
+    set view(view: Container)
+    {
         const wasItInitiated = !!this._view;
 
         if (wasItInitiated) this.disconnectEvents(this._view);
@@ -46,7 +50,8 @@ export class Button extends ButtonEvents {
     }
 
     /** Get button view, thar all the interaction events are applied to. */
-    get view(): Container {
+    get view(): Container
+    {
         return this._view;
     }
 
@@ -54,8 +59,10 @@ export class Button extends ButtonEvents {
      * Switcher, which prevents all button events from firing if off.
      * @param {boolean} enabled
      */
-    set enabled(enabled: boolean) {
-        if (!this.view) {
+    set enabled(enabled: boolean)
+    {
+        if (!this.view)
+        {
             console.error('Button view is not set. Please set it before enabling the button.');
 
             return;
@@ -64,13 +71,15 @@ export class Button extends ButtonEvents {
         this.view.eventMode = enabled ? 'static' : 'auto';
         this.view.cursor = enabled ? 'pointer' : 'default';
 
-        if (!enabled && this.isDown) {
+        if (!enabled && this.isDown)
+        {
             this.processUp();
         }
     }
 
     /** Getter that returns button state. */
-    get enabled(): boolean {
+    get enabled(): boolean
+    {
         return this.view.eventMode === 'static';
     }
 }
@@ -89,7 +98,8 @@ export class Button extends ButtonEvents {
  *
  * container.addChild(button);
  */
-export class ButtonContainer extends Container {
+export class ButtonContainer extends Container
+{
     button: Button;
 
     onDown: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
@@ -99,14 +109,16 @@ export class ButtonContainer extends Container {
     onPress: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
     onHover: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
 
-    constructor(view?: Container) {
+    constructor(view?: Container)
+    {
         super();
 
         this.button = new Button(this);
 
         this.button.enabled = true;
 
-        if (view) {
+        if (view)
+        {
             this.addChild(view);
         }
 
@@ -118,11 +130,13 @@ export class ButtonContainer extends Container {
         this.onUpOut = this.button.onUpOut;
     }
 
-    set enabled(enabled: boolean) {
+    set enabled(enabled: boolean)
+    {
         this.button.enabled = enabled;
     }
 
-    get enabled(): boolean {
+    get enabled(): boolean
+    {
         return this.button.enabled;
     }
 }

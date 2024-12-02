@@ -20,7 +20,8 @@ export const TextLink: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const button = new FancyButton({
                 text: new Text({
                     text,
@@ -47,7 +48,8 @@ export const TextLink: StoryFn<typeof args> = (
                 },
             });
 
-            if (disabled) {
+            if (disabled)
+            {
                 button.enabled = false;
             }
 

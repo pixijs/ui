@@ -77,10 +77,12 @@ export const UseGraphics: StoryFn<typeof args> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const assets = [`avatar-01.png`];
 
-            preload(assets).then(() => {
+            preload(assets).then(() =>
+            {
                 const fill = getColor(textColor);
                 const target = Sprite.from(`avatar-01.png`);
 
@@ -164,7 +166,8 @@ export const UseGraphics: StoryFn<typeof args> = (
                     },
                 });
 
-                if (disabled) {
+                if (disabled)
+                {
                     button.enabled = false;
                 }
 

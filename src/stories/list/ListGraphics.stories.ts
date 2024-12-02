@@ -45,14 +45,16 @@ export const UseGraphics: StoryFn<typeof args & { type: 'horizontal' | 'vertical
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) => {
+        init: (view) =>
+        {
             const viewGraphics = new Graphics()
                 .roundRect(0, 0, width, height, radius)
                 .fill(bgColor);
 
             const items = [];
 
-            for (let i = 0; i < itemsAmount; i++) {
+            for (let i = 0; i < itemsAmount; i++)
+            {
                 const button = new FancyButton({
                     defaultView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
