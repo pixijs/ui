@@ -1442,7 +1442,7 @@
 
             <td class="type">
             
-                string | Texture | Container | Sprite | Graphics
+                Container
             
             </td>
 
@@ -1459,9 +1459,7 @@
             
 
             <td class="description last">
-                <p>Container-based view that is shown when non of the button events are active.
-<br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
-<br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.</p>
+                <p>Container-based view that is shown when non of the button events are active.</p>
                 
             </td>
         </tr>
@@ -1474,7 +1472,7 @@
 
             <td class="type">
             
-                string | Texture | Container | Sprite | Graphics
+                Container
             
             </td>
 
@@ -1491,9 +1489,7 @@
             
 
             <td class="description last">
-                <p>Container-based view that is shown when the mouse hovers over the button.
-<br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
-<br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.</p>
+                <p>Container-based view that is shown when the mouse hovers over the button.</p>
                 
             </td>
         </tr>
@@ -1506,7 +1502,7 @@
 
             <td class="type">
             
-                string | Texture | Container | Sprite | Graphics
+                Container
             
             </td>
 
@@ -1523,9 +1519,7 @@
             
 
             <td class="description last">
-                <p>Container-based view, shown when the mouse press on the component.
-<br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
-<br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.</p>
+                <p>Container-based view, shown when the mouse press on the component.</p>
                 
             </td>
         </tr>
@@ -1538,7 +1532,7 @@
 
             <td class="type">
             
-                string | Texture | Container | Sprite | Graphics
+                Container
             
             </td>
 
@@ -1555,9 +1549,7 @@
             
 
             <td class="description last">
-                <p>Container-based view shown when the button is disabled.
-<br> Can be a string (name of texture) or an instance of Texture, Container, Sprite or Graphics.
-<br> If you want to use NineSliceSprite, you have to pass a text (name of texture) or an instance of Texture as a parameter here.</p>
+                <p>Container-based view shown when the button is disabled.</p>
                 
             </td>
         </tr>
@@ -1570,7 +1562,7 @@
 
             <td class="type">
             
-                string | Texture | Container | Sprite | Graphics
+                Container
             
             </td>
 
@@ -1980,37 +1972,6 @@ when all animations scales will be applied to the inner view.</p>
 
             <td class="description last">
                 <p>Vertical anchor point of the button.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.nineSliceSprite</code></td>
-            
-
-            <td class="type">
-            
-                Array
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>NineSliceSprite values for views ([number, number, number, number]).
-<br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a views (defaultView, hoverView, pressedView, disabledView) parameters as texture name or texture instance.</p>
                 
             </td>
         </tr>
@@ -3163,8 +3124,8 @@ when all animations scales will be applied to the inner view.</p>
     
     <div class="description">
         <p>Sets height of a FancyButtons state views.
-If nineSliceSprite is set, then height will be set to nineSliceSprites of a views.
-If nineSliceSprite is not set, then height will control components height as Container.</p>
+If nineSlicePlane is set, then height will be set to nineSlicePlanes of a views.
+If nineSlicePlane is not set, then height will control components height as Container.</p>
     </div>
     
 
@@ -4183,8 +4144,8 @@ If nineSliceSprite is not set, then height will control components height as Con
     
     <div class="description">
         <p>Sets width of a FancyButtons state views.
-If nineSliceSprite is set, then width will be set to nineSliceSprites of a views.
-If nineSliceSprite is not set, then width will control components width as Container.</p>
+If nineSlicePlane is set, then width will be set to nineSlicePlanes of a views.
+If nineSlicePlane is not set, then width will control components width as Container.</p>
     </div>
     
 
@@ -5847,7 +5808,7 @@ we have to reset all anchors to 0,0 and then set the positions manually.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Thu Nov 28 2024 14:09:17 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Mon Dec 02 2024 08:53:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
