@@ -132,18 +132,7 @@ export class Input extends Container
             isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
         });
 
-        if (isMobile.any)
-        {
-            window.addEventListener('touchstart', this.handleActivationBinding);
-        }
-        else if (!isMobile.any)
-        {
-            window.addEventListener('click', this.handleActivationBinding);
-
-            window.addEventListener('keyup', this.onKeyUpBinding);
-
-            window.addEventListener('input', this.onInputBinding as EventListener);
-        }
+        window.addEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
@@ -169,7 +158,9 @@ export class Input extends Container
     {
         const key = e.key;
 
-        if (key === 'Backspace')
+        const keysToSkip = ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+
+        if (keysToSkip.includes(key)) return;
         {
             this._delete();
         }
@@ -179,11 +170,16 @@ export class Input extends Container
         }
         else if (key.length === 1)
         {
+
             this._add(key);
         }
         else if (this.lastInputData && this.lastInputData.length === 1)
         {
             this._add(this.lastInputData);
+        }
+
+        if (this.input) {
+            this.input.value = '';
         }
     }
 
@@ -331,10 +327,7 @@ export class Input extends Container
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (isMobile.any)
-        {
-            this.createInputField();
-        }
+        this.createInputField();
 
         this.align();
     }
@@ -344,7 +337,7 @@ export class Input extends Container
         if (this.input)
         {
             this.input.removeEventListener('blur', this.stopEditingBinding);
-            this.input.removeEventListener('keyup', this.onKeyUpBinding);
+            this.input.removeEventListener('keydown', this.onKeyUpBinding);
             this.input.removeEventListener('input', this.onInputBinding as EventListener);
 
             this.input?.blur();
@@ -382,7 +375,7 @@ export class Input extends Container
         }
 
         input.addEventListener('blur', this.stopEditingBinding);
-        input.addEventListener('keyup', this.onKeyUpBinding);
+        input.addEventListener('keydown', this.onKeyUpBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
 
         this.input = input;
@@ -392,6 +385,8 @@ export class Input extends Container
 
     protected handleActivation()
     {
+        if (this.editing) return;
+
         this.stopEditing();
 
         if (this.activation)
@@ -416,12 +411,9 @@ export class Input extends Container
 
         if (this.value.length === 0) this.placeholder.visible = true;
 
-        if (isMobile.any)
-        {
-            this.input?.blur();
-            this.input?.remove();
-            this.input = null;
-        }
+        this.input?.blur();
+        this.input?.remove();
+        this.input = null;
 
         this.align();
 
@@ -582,18 +574,7 @@ export class Input extends Container
     {
         this.off('pointertap');
 
-        if (isMobile.any)
-        {
-            window.removeEventListener('touchstart', this.handleActivationBinding);
-        }
-        else if (!isMobile.any)
-        {
-            window.removeEventListener('click', this.handleActivationBinding);
-
-            window.removeEventListener('keyup', this.onKeyUpBinding);
-
-            window.removeEventListener('input', this.onInputBinding as EventListener);
-        }
+        window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
         super.destroy(options);
     }
