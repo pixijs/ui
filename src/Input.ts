@@ -161,6 +161,8 @@ export class Input extends Container
         const keysToSkip = ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
 
         if (keysToSkip.includes(key)) return;
+
+        if (key === 'Backspace')
         {
             this._delete();
         }
