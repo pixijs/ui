@@ -72,6 +72,7 @@ export class Input extends Container
     protected onKeyUpBinding = this.onKeyUp.bind(this);
     protected stopEditingBinding = this.stopEditing.bind(this);
     protected onInputBinding = this.onInput.bind(this);
+    protected onPasteBinding = this.onPaste.bind(this);
 
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
@@ -161,6 +162,9 @@ export class Input extends Container
         const keysToSkip = ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
 
         if (keysToSkip.includes(key)) return;
+
+        if (e.metaKey) return;
+        if (e.ctrlKey) return;
 
         if (key === 'Backspace')
         {
@@ -341,6 +345,7 @@ export class Input extends Container
             this.input.removeEventListener('blur', this.stopEditingBinding);
             this.input.removeEventListener('keydown', this.onKeyUpBinding);
             this.input.removeEventListener('input', this.onInputBinding as EventListener);
+            this.input.removeEventListener('paste', this.onPasteBinding);
 
             this.input?.blur();
             this.input?.remove();
@@ -379,6 +384,7 @@ export class Input extends Container
         input.addEventListener('blur', this.stopEditingBinding);
         input.addEventListener('keydown', this.onKeyUpBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
+        input.addEventListener('paste', this.onPasteBinding);
 
         this.input = input;
 
@@ -712,5 +718,15 @@ export class Input extends Container
         );
 
         this.inputMask.position.set(this.paddingLeft, this.paddingTop);
+    }
+
+    protected onPaste(e: any) {
+        e.preventDefault();
+
+        const text = (e.clipboardData || (window as any).clipboardData).getData("text");
+
+        if (!text) return;
+
+        this._add(text);
     }
 }
