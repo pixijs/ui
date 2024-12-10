@@ -176,7 +176,6 @@ export class Input extends Container
         }
         else if (key.length === 1)
         {
-
             this._add(key);
         }
         else if (this.lastInputData && this.lastInputData.length === 1)
@@ -200,9 +199,10 @@ export class Input extends Container
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
         this.options.TextClass = options.TextClass ?? Text;
+
         const textStyle = { ...defaultTextStyle, ...options.textStyle };
-        const colorSource = Color.isColorLike(this.options.textStyle.fill)
-            ? this.options.textStyle.fill
+        const colorSource = Color.isColorLike(textStyle.fill)
+            ? textStyle.fill
             : 0x000000;
 
         this.inputField = new this.options.TextClass({
