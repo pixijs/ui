@@ -201,7 +201,7 @@ export class Input extends Container
         this.options.TextClass = options.TextClass ?? Text;
 
         const textStyle = { ...defaultTextStyle, ...options.textStyle };
-        const colorSource = Color.isColorLike(textStyle.fill)
+        const colorSource = textStyle.fill && Color.isColorLike(textStyle.fill)
             ? textStyle.fill
             : 0x000000;
 
