@@ -22,6 +22,7 @@ const args = {
     globalScroll: true,
     shiftScroll: false,
     type: [undefined, 'vertical', 'horizontal'],
+    bidirectionalScroll: false,
     onPress: action('Button pressed'),
 };
 
@@ -42,6 +43,7 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
         onPress,
         globalScroll,
         shiftScroll,
+        bidirectionalScroll,
     },
     context,
 ) =>
@@ -90,6 +92,7 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
                 type,
                 globalScroll,
                 shiftScroll,
+                bidirectionalScroll,
             });
 
             scrollBox.addItems(items);
