@@ -56,7 +56,7 @@ export class MaskedFrame extends Container
         this.target = getView(target);
         this.addChild(this.border, this.target);
 
-        if (mask) this.setMask(mask);
+        if (mask) this.applyMask(mask);
         if (borderWidth) this.setBorder(borderWidth, borderColor);
     }
 
@@ -64,7 +64,7 @@ export class MaskedFrame extends Container
      * Applies a mask to a target container.
      * @param mask
      */
-    setMask(mask: string | Graphics)
+    applyMask(mask: string | Graphics)
     {
         this.maskData = mask;
 
@@ -87,7 +87,10 @@ export class MaskedFrame extends Container
 
         if (this.maskData)
         {
-            const borderMask = typeof this.maskData === 'string' ? Sprite.from(this.maskData) : this.maskData.clone(true);
+            const borderMask
+                = typeof this.maskData === 'string'
+                    ? Sprite.from(this.maskData)
+                    : this.maskData.clone(true);
 
             borderMask.width += borderWidth * 2;
             borderMask.height += borderWidth * 2;
@@ -103,7 +106,8 @@ export class MaskedFrame extends Container
     {
         const width = this.borderWidth * 2;
 
-        this.border.clear()
+        this.border
+            .clear()
             .rect(0, 0, this.target.width + width, this.target.height + width)
             .fill(this.borderColor);
 

@@ -351,10 +351,12 @@ export class ScrollBox extends Container
 
             this.visibleItems.forEach((item) =>
             {
-                if (item.x < listTouchPoint.x
+                if (
+                    item.x < listTouchPoint.x
                     && item.x + item.width > listTouchPoint.x
                     && item.y < listTouchPoint.y
-                    && item.y + item.height > listTouchPoint.y)
+                    && item.y + item.height > listTouchPoint.y
+                )
                 {
                     this.pressedChild = item;
                 }
@@ -485,13 +487,7 @@ export class ScrollBox extends Container
 
             this.borderMask
                 .clear()
-                .roundRect(
-                    0,
-                    0,
-                    this.__width,
-                    this.__height,
-                    this.options.radius | 0,
-                )
+                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
             this.borderMask.eventMode = 'none';
@@ -500,13 +496,7 @@ export class ScrollBox extends Container
 
             this.background
                 .clear()
-                .roundRect(
-                    0,
-                    0,
-                    this.__width,
-                    this.__height,
-                    this.options.radius | 0,
-                )
+                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
                 .fill({
                     color: color ?? 0x000000,
                     alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
@@ -577,7 +567,7 @@ export class ScrollBox extends Container
         this.renderAllItems();
 
         const scrollOnX = this.options.shiftScroll
-            ? (typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined')
+            ? typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined'
             : typeof event.deltaX !== 'undefined';
 
         if (this.options.type === 'horizontal' && scrollOnX)
@@ -710,18 +700,12 @@ export class ScrollBox extends Container
 
         this._trackpad.xAxis.value
             = this.options.type === 'horizontal'
-                ? this.__width
-                  - target.x
-                  - target.width
-                  - this.list.rightPadding
+                ? this.__width - target.x - target.width - this.list.rightPadding
                 : 0;
 
         this._trackpad.yAxis.value
             = !this.options.type || this.options.type === 'vertical'
-                ? this.__height
-                  - target.y
-                  - target.height
-                  - this.list.bottomPadding
+                ? this.__height - target.y - target.height - this.list.bottomPadding
                 : 0;
 
         this.stopRenderHiddenItems();
@@ -835,9 +819,10 @@ export class ScrollBox extends Container
             this.list[type] = this._trackpad[type];
         }
 
-        if (!this.options.disableProximityCheck && (
-            this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY
-        ))
+        if (
+            !this.options.disableProximityCheck
+            && (this._trackpad.x !== this.lastScrollX || this._trackpad.y !== this.lastScrollY)
+        )
         {
             this.proximityCheckFrameCounter++;
             if (this.proximityCheckFrameCounter >= (this.options.proximityDebounce ?? 10))
@@ -891,9 +876,7 @@ export class ScrollBox extends Container
     {
         if (item.eventMode !== 'auto')
         {
-            isMobile.any
-                ? item.emit('pointerupoutside', null)
-                : item.emit('mouseupoutside', null);
+            isMobile.any ? item.emit('pointerupoutside', null) : item.emit('mouseupoutside', null);
 
             this.interactiveStorage.push({
                 item,

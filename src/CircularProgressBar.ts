@@ -69,12 +69,7 @@ export class CircularProgressBar extends Container
 
     private addBackground()
     {
-        const {
-            backgroundColor,
-            lineWidth,
-            radius,
-            backgroundAlpha,
-        } = this.options;
+        const { backgroundColor, lineWidth, radius, backgroundAlpha } = this.options;
 
         let alpha = 1;
 
@@ -88,13 +83,11 @@ export class CircularProgressBar extends Container
             alpha = 0.000001;
         }
 
-        this.bgCircle
-            .circle(0, 0, radius)
-            .stroke({
-                width: lineWidth,
-                color: backgroundColor,
-                alpha
-            });
+        this.bgCircle.circle(0, 0, radius).stroke({
+            width: lineWidth,
+            color: backgroundColor,
+            alpha,
+        });
     }
 
     /**
@@ -115,13 +108,7 @@ export class CircularProgressBar extends Container
 
         this._progress = value;
 
-        const {
-            lineWidth,
-            radius,
-            fillColor,
-            fillAlpha,
-            cap
-        } = this.options;
+        const { lineWidth, radius, fillColor, fillAlpha, cap } = this.options;
 
         if (value === 0 && fillAlpha === 0)
         {
@@ -131,16 +118,22 @@ export class CircularProgressBar extends Container
         }
 
         const startAngle = 0;
-        const endAngle = 360 / 100 * value;
+        const endAngle = (360 / 100) * value;
 
         this.fillCircle
             .clear()
-            .arc(0, 0, radius, (0 - 90 + startAngle) * DEG_TO_RAD, (0 - 90 + startAngle + endAngle) * DEG_TO_RAD)
+            .arc(
+                0,
+                0,
+                radius,
+                (0 - 90 + startAngle) * DEG_TO_RAD,
+                (0 - 90 + startAngle + endAngle) * DEG_TO_RAD,
+            )
             .stroke({
                 width: lineWidth,
                 color: fillColor,
                 cap,
-                alpha: fillAlpha
+                alpha: fillAlpha,
             });
     }
 

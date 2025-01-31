@@ -1,13 +1,13 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 type CheckBoxStyle = {
-    checked: Container | string;
-    unchecked: Container | string;
+    checked: GetViewSettings;
+    unchecked: GetViewSettings;
     text?: PixiTextStyle;
     textOffset?: {
         x?: number;
@@ -132,7 +132,8 @@ export class CheckBox extends Switcher
             }
 
             this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.labelText.y = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
+            this.labelText.y
+                = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
         }
         else
         {

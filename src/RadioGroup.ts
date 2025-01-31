@@ -93,7 +93,7 @@ export class RadioGroup extends Container
         {
             this.innerView = new List({
                 type: options.type,
-                elementsMargin: options.elementsMargin
+                elementsMargin: options.elementsMargin,
             });
         }
 

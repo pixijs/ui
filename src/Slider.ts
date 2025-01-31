@@ -41,7 +41,7 @@ export class Slider extends SliderBase
         super({
             slider1: options.slider,
             value1: options.value,
-            ...options
+            ...options,
         });
 
         this.sliderOptions = options;
@@ -137,7 +137,7 @@ export class Slider extends SliderBase
 
     protected updateSlider()
     {
-        this.progress = ((this.value ?? this.min) - this.min) / (this.max - this.min) * 100;
+        this.progress = (((this.value ?? this.min) - this.min) / (this.max - this.min)) * 100;
 
         this._slider1.x = ((this.bg?.width / 100) * this.progress) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;

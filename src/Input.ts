@@ -1,5 +1,5 @@
 import {
-    AnyTextStyle,
+    Color,
     Container,
     DestroyOptions,
     Graphics,
@@ -18,7 +18,7 @@ import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
 import { Padding } from './utils/HelpTypes';
 
-type ViewType = Sprite | Graphics | string;
+type ViewType = Sprite | Graphics | Texture | string;
 
 export type InputOptions = {
     bg: ViewType;
@@ -27,12 +27,15 @@ export type InputOptions = {
     placeholder?: string;
     value?: string;
     maxLength?: number;
+    secure?: boolean;
     align?: 'left' | 'center' | 'right';
     padding?: Padding;
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
 };
+
+const SECURE_CHARACTER = '*';
 
 /**
  * Container-based component that creates an input to read the user's text.
@@ -53,6 +56,8 @@ export class Input extends Container
     protected _bg?: Container | NineSliceSprite | Graphics;
     protected inputMask: Container | NineSliceSprite | Graphics;
     protected _cursor: Sprite;
+    protected _value: string = '';
+    protected _secure: boolean;
     protected inputField: PixiText;
     protected placeholder: PixiText;
     protected editing = false;
@@ -67,6 +72,7 @@ export class Input extends Container
     protected onKeyUpBinding = this.onKeyUp.bind(this);
     protected stopEditingBinding = this.stopEditing.bind(this);
     protected onInputBinding = this.onInput.bind(this);
+    protected onPasteBinding = this.onPaste.bind(this);
 
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
@@ -89,7 +95,10 @@ export class Input extends Container
     /**
      * Creates an input.
      * @param { number } options - Options object to use.
-     * @param { Sprite | Graphics | string } options.bg - Background of the Input.
+     * @param { Sprite | Graphics | Texture | string } options.bg - Background of the Input.
+     * <br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
+     * <br> If you want to use NineSliceSprite, you have to pass a text (name of texture)
+     * or an instance of Texture as a parameter.
      * @param { PixiTextStyle } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
      * @param { string } options.value - Value of the Input.
@@ -101,7 +110,9 @@ export class Input extends Container
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
+     * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
+     * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */
     constructor(options: InputOptions)
     {
@@ -111,6 +122,7 @@ export class Input extends Container
 
         this.options = options;
         this.padding = options.padding;
+        this._secure = options.secure ?? false;
 
         this.cursor = 'text';
         this.interactive = true;
@@ -121,18 +133,7 @@ export class Input extends Container
             isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
         });
 
-        if (isMobile.any)
-        {
-            window.addEventListener('touchstart', this.handleActivationBinding);
-        }
-        else if (!isMobile.any)
-        {
-            window.addEventListener('click', this.handleActivationBinding);
-
-            window.addEventListener('keyup', this.onKeyUpBinding);
-
-            window.addEventListener('input', this.onInputBinding as EventListener);
-        }
+        window.addEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
@@ -158,6 +159,13 @@ export class Input extends Container
     {
         const key = e.key;
 
+        const keysToSkip = ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+
+        if (keysToSkip.includes(key)) return;
+
+        if (e.metaKey) return;
+        if (e.ctrlKey) return;
+
         if (key === 'Backspace')
         {
             this._delete();
@@ -174,6 +182,10 @@ export class Input extends Container
         {
             this._add(this.lastInputData);
         }
+
+        if (this.input) {
+            this.input.value = '';
+        }
     }
 
     protected init()
@@ -182,24 +194,34 @@ export class Input extends Container
 
         const defaultTextStyle = {
             fill: 0x000000,
-            align: 'center'
+            align: 'center',
         } as TextStyleOptions;
 
         this.options.textStyle = options.textStyle ?? defaultTextStyle;
         this.options.TextClass = options.TextClass ?? Text;
-        const textStyle = { ...defaultTextStyle, ...options.textStyle };
 
-        this.inputField = new this.options.TextClass({ text: '', style: textStyle });
+        const textStyle = { ...defaultTextStyle, ...options.textStyle };
+        const colorSource = textStyle.fill && Color.isColorLike(textStyle.fill)
+            ? textStyle.fill
+            : 0x000000;
+
+        this.inputField = new this.options.TextClass({
+            text: '',
+            style: textStyle,
+        });
 
         this._cursor = new Sprite(Texture.WHITE);
 
-        this._cursor.tint = Number((options.textStyle as AnyTextStyle).fill) || 0x000000;
+        this._cursor.tint = colorSource;
         this._cursor.anchor.set(0.5);
         this._cursor.width = 2;
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new this.options.TextClass({ text: options.placeholder, style: textStyle ?? defaultTextStyle });
+        this.placeholder = new this.options.TextClass({
+            text: options.placeholder,
+            style: textStyle ?? defaultTextStyle,
+        });
         this.placeholder.visible = !!options.placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
@@ -228,9 +250,20 @@ export class Input extends Container
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             }
+            else if (bg instanceof Texture)
+            {
+                this._bg = new NineSliceSprite({
+                    texture: bg,
+                    leftWidth: this.options.nineSliceSprite[0],
+                    topHeight: this.options.nineSliceSprite[1],
+                    rightWidth: this.options.nineSliceSprite[2],
+                    bottomHeight: this.options.nineSliceSprite[3],
+                });
+            }
             else
             {
-                console.warn('NineSliceSprite can not be used with views set as Container.');
+                console.warn(`NineSliceSprite can not be used with views set as Container.
+                    Pass the texture or texture name as instead of the Container extended instance.`);
             }
         }
 
@@ -251,43 +284,7 @@ export class Input extends Container
 
         if (this.options.addMask)
         {
-            if (this.inputMask)
-            {
-                this.inputField.mask = null;
-                this._cursor.mask = null;
-                this.inputMask.destroy();
-            }
-
-            if (this.options?.nineSliceSprite && typeof bg === 'string')
-            {
-                this.inputMask = new NineSliceSprite({
-                    texture: Texture.from(bg),
-                    leftWidth: this.options.nineSliceSprite[0],
-                    topHeight: this.options.nineSliceSprite[1],
-                    rightWidth: this.options.nineSliceSprite[2],
-                    bottomHeight: this.options.nineSliceSprite[3],
-                });
-            }
-            else
-                if (bg instanceof Sprite)
-                {
-                    this.inputMask = new Sprite(bg.texture);
-                }
-                else
-                    if (bg instanceof Graphics)
-                    {
-                        this.inputMask = bg.clone(true);
-                    }
-                    else
-                    {
-                        this.inputMask = getView(bg);
-                    }
-
-            this.inputField.mask = this.inputMask;
-
-            this._cursor.mask = this.inputMask;
-
-            this.addChildAt(this.inputMask, 0);
+            this.createInputMask(bg);
         }
     }
 
@@ -315,11 +312,11 @@ export class Input extends Container
 
     protected _delete(): void
     {
-        if (!this.editing || this.value.length === 0) return;
-        const array = this.value.split('');
+        const length = this.value.length;
 
-        array.pop();
-        this.value = array.join('');
+        if (!this.editing || length === 0) return;
+
+        this.value = this.value.substring(0, length - 1);
 
         this.onChange.emit(this.value);
     }
@@ -336,10 +333,7 @@ export class Input extends Container
         this.placeholder.visible = false;
         this._cursor.alpha = 1;
 
-        if (isMobile.any)
-        {
-            this.createInputField();
-        }
+        this.createInputField();
 
         this.align();
     }
@@ -349,8 +343,9 @@ export class Input extends Container
         if (this.input)
         {
             this.input.removeEventListener('blur', this.stopEditingBinding);
-            this.input.removeEventListener('keyup', this.onKeyUpBinding);
+            this.input.removeEventListener('keydown', this.onKeyUpBinding);
             this.input.removeEventListener('input', this.onInputBinding as EventListener);
+            this.input.removeEventListener('paste', this.onPasteBinding);
 
             this.input?.blur();
             this.input?.remove();
@@ -387,8 +382,9 @@ export class Input extends Container
         }
 
         input.addEventListener('blur', this.stopEditingBinding);
-        input.addEventListener('keyup', this.onKeyUpBinding);
+        input.addEventListener('keydown', this.onKeyUpBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
+        input.addEventListener('paste', this.onPasteBinding);
 
         this.input = input;
 
@@ -397,6 +393,8 @@ export class Input extends Container
 
     protected handleActivation()
     {
+        if (this.editing) return;
+
         this.stopEditing();
 
         if (this.activation)
@@ -421,12 +419,9 @@ export class Input extends Container
 
         if (this.value.length === 0) this.placeholder.visible = true;
 
-        if (isMobile.any)
-        {
-            this.input?.blur();
-            this.input?.remove();
-            this.input = null;
-        }
+        this.input?.blur();
+        this.input?.remove();
+        this.input = null;
 
         this.align();
 
@@ -447,11 +442,13 @@ export class Input extends Container
         const align = this.getAlign();
 
         this.inputField.anchor.set(align, 0.5);
-        this.inputField.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.inputField.x
+            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
 
         this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+        this.placeholder.x
+            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
         this.placeholder.y = this._bg.height / 2;
 
         this._cursor.x = this.getCursorPosX();
@@ -501,9 +498,12 @@ export class Input extends Container
     /** Sets the input text. */
     set value(text: string)
     {
-        this.inputField.text = text;
+        const textLength = text.length;
 
-        if (text.length !== 0)
+        this._value = text;
+        this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
+
+        if (textLength !== 0)
         {
             this.placeholder.visible = false;
         }
@@ -518,7 +518,20 @@ export class Input extends Container
     /** Return text of the input. */
     get value(): string
     {
-        return this.inputField.text;
+        return this._value;
+    }
+
+    set secure(val: boolean)
+    {
+        this._secure = val;
+
+        // Update text based on secure state (useful for show/hide password implementations)
+        this.value = this._value;
+    }
+
+    get secure(): boolean
+    {
+        return this._secure;
     }
 
     /**
@@ -569,18 +582,7 @@ export class Input extends Container
     {
         this.off('pointertap');
 
-        if (isMobile.any)
-        {
-            window.removeEventListener('touchstart', this.handleActivationBinding);
-        }
-        else if (!isMobile.any)
-        {
-            window.removeEventListener('click', this.handleActivationBinding);
-
-            window.removeEventListener('keyup', this.onKeyUpBinding);
-
-            window.removeEventListener('input', this.onInputBinding as EventListener);
-        }
+        window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
         super.destroy(options);
     }
@@ -600,11 +602,7 @@ export class Input extends Container
                 this._bg.width = width;
             }
 
-            if (this.inputMask)
-            {
-                this.inputMask.width = width - this.paddingLeft - this.paddingRight;
-                this.inputMask.x = this.paddingLeft;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         }
@@ -635,11 +633,7 @@ export class Input extends Container
                 this._bg.height = height;
             }
 
-            if (this.inputMask)
-            {
-                this.inputMask.height = height - this.paddingTop - this.paddingBottom;
-                this.inputMask.y = this.paddingTop;
-            }
+            this.updateInputMaskSize();
 
             this.align();
         }
@@ -664,30 +658,75 @@ export class Input extends Container
                 this._bg.setSize(value, height);
             }
 
-            if (this.inputMask)
-            {
-                if (typeof value === 'object')
-                {
-                    height = value.height ?? value.width;
-                    value = value.width;
-                }
-                else
-                {
-                    height = height ?? value;
-                }
-
-                this.inputMask.setSize(
-                    value - this.paddingLeft - this.paddingRight,
-                    height - this.paddingTop - this.paddingBottom
-                );
-                this.inputMask.position.set(this.paddingLeft, this.paddingTop);
-            }
-
+            this.updateInputMaskSize();
             this.align();
         }
         else
         {
             super.setSize(value, height);
         }
+    }
+
+    protected createInputMask(bg: ViewType)
+    {
+        if (this.inputMask)
+        {
+            this.inputField.mask = null;
+            this._cursor.mask = null;
+            this.inputMask.destroy();
+        }
+
+        if (this.options?.nineSliceSprite && typeof bg === 'string')
+        {
+            this.inputMask = new NineSliceSprite({
+                texture: Texture.from(bg),
+                leftWidth: this.options.nineSliceSprite[0],
+                topHeight: this.options.nineSliceSprite[1],
+                rightWidth: this.options.nineSliceSprite[2],
+                bottomHeight: this.options.nineSliceSprite[3],
+            });
+        }
+        else if (bg instanceof Sprite)
+        {
+            this.inputMask = new Sprite(bg.texture);
+        }
+        else if (bg instanceof Graphics)
+        {
+            this.inputMask = bg.clone(true);
+        }
+        else
+        {
+            this.inputMask = getView(bg);
+        }
+
+        this.inputField.mask = this.inputMask;
+
+        this._cursor.mask = this.inputMask;
+
+        this.updateInputMaskSize();
+
+        this.addChildAt(this.inputMask, 0);
+    }
+
+    protected updateInputMaskSize()
+    {
+        if (!this.inputMask || !this._bg) return;
+
+        this.inputMask.setSize(
+            this._bg.width - this.paddingLeft - this.paddingRight,
+            this._bg.height - this.paddingTop - this.paddingBottom,
+        );
+
+        this.inputMask.position.set(this.paddingLeft, this.paddingTop);
+    }
+
+    protected onPaste(e: any) {
+        e.preventDefault();
+
+        const text = (e.clipboardData || (window as any).clipboardData).getData("text");
+
+        if (!text) return;
+
+        this._add(text);
     }
 }

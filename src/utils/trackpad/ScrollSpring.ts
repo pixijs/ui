@@ -78,6 +78,6 @@ export default class ScrollSpring
 
     cancel(): void
     {
-    // matches jux interface
+        // matches jux interface
     }
 }

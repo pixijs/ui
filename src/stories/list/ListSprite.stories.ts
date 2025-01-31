@@ -1,13 +1,13 @@
-import { Container, Sprite, Text } from "pixi.js";
-import { PixiStory, StoryFn } from "@pixi/storybook-renderer";
-import { FancyButton } from "../../FancyButton";
-import { List } from "../../List";
-import { centerElement } from "../../utils/helpers/resize";
-import { defaultTextStyle } from "../../utils/helpers/styles";
-import { argTypes, getDefaultArgs } from "../utils/argTypes";
-import { getColor } from "../utils/color";
-import { preload } from "../utils/loader";
-import { action } from "@storybook/addon-actions";
+import { Container, Sprite, Text } from 'pixi.js';
+import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { FancyButton } from '../../FancyButton';
+import { List } from '../../List';
+import { centerElement } from '../../utils/helpers/resize';
+import { defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { getColor } from '../utils/color';
+import { preload } from '../utils/loader';
+import { action } from '@storybook/addon-actions';
 
 const args = {
   type: [null, "horizontal", "vertical"],
@@ -15,85 +15,103 @@ const args = {
   elementsMargin: 29,
   itemsAmount: 10000,
   onPress: action("Button pressed"),
+    type: [null, 'horizontal', 'vertical'],
+    fontColor: '#000000',
+    elementsMargin: 29,
+    itemsAmount: 10,
+    onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<
-  typeof args & { type: "horizontal" | "vertical" }
-> = ({ fontColor, elementsMargin, itemsAmount, onPress, type }, context) =>
-  new PixiStory<typeof args>({
+export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
+    { fontColor, elementsMargin, itemsAmount, onPress, type },
     context,
-    init: (view) => {
-      const assets = [
-        `SmallButton.png`,
-        `SmallButton-hover.png`,
-        `SmallButton-pressed.png`,
-      ];
+) =>
+    new PixiStory<typeof args>({
+        context,
+        init: (view) =>
+        {
+            const assets = [
+                `window.png`,
+                `SmallButton.png`,
+                `SmallButton-hover.png`,
+                `SmallButton-pressed.png`,
+            ];
 
-      preload(assets).then(() => {
-        const items: Container[] = createItems(
-          itemsAmount,
-          getColor(fontColor),
-          onPress,
-        );
+            preload(assets).then(() =>
+            {
+                const window = Sprite.from(`window.png`);
+                const title = new Text({
+                    text: `Levels`,
+                    style: { fill: 0x000000, fontSize: 40 },
+                });
 
-        // Component usage !!!
-        const list = new List({
-          type,
-          vertPadding: 70,
-          horPadding: 50,
-          elementsMargin,
-        });
+                title.anchor.set(0.5);
+                window.addChild(title);
+                title.x = window.width / 2;
+                title.y = 25;
 
-        console.time(`Add ${itemsAmount} items`);
-        list.addItems(items);
-        console.timeEnd(`Add ${itemsAmount} items`);
+                view.addChild(window);
 
-        view.addChild(list);
+                const items: Container[] = createItems(itemsAmount, getColor(fontColor), onPress);
 
-        centerElement(view);
-      });
-    },
-    // resize: centerElement,
-  });
+                // Component usage !!!
+                const list = new List({
+                    type,
+                    vertPadding: 70,
+                    horPadding: 50,
+                    elementsMargin,
+                });
 
-function createItems(
-  itemsAmount: number,
-  fontColor: number,
-  onPress: (buttonID: number) => void,
-): FancyButton[] {
-  const items = [];
+                items.forEach((item) => list.addChild(item));
 
-  for (let i = 0; i < itemsAmount; i++) {
-    const button = new FancyButton({
-      defaultView: `SmallButton.png`,
-      hoverView: `SmallButton-hover.png`,
-      pressedView: `SmallButton-pressed.png`,
-      text: new Text({
-        text: i + 1,
-        style: {
-          ...defaultTextStyle,
-          fontSize: 68,
-          fill: fontColor,
+                window.addChild(list);
+
+                centerElement(view);
+            });
         },
-      }),
-      textOffset: {
-        x: 0,
-        y: -7,
-      },
+        resize: centerElement,
     });
 
-    button.scale.set(0.5);
+function createItems(
+    itemsAmount: number,
+    fontColor: number,
+    onPress: (buttonID: number) => void,
+): FancyButton[]
+{
+    const items = [];
 
-    button.onPress.connect(() => onPress(i + 1));
+    for (let i = 0; i < itemsAmount; i++)
+    {
+        const button = new FancyButton({
+            defaultView: `SmallButton.png`,
+            hoverView: `SmallButton-hover.png`,
+            pressedView: `SmallButton-pressed.png`,
+            text: new Text({
+                text: i + 1,
+                style: {
+                    ...defaultTextStyle,
+                    fontSize: 68,
+                    fill: fontColor,
+                },
+            }),
+            textOffset: {
+                x: 0,
+                y: -7,
+            },
+        });
 
-    items.push(button);
-  }
+        button.scale.set(0.5);
 
-  return items;
+        button.onPress.connect(() => onPress(i + 1));
+
+        items.push(button);
+    }
+
+    return items;
 }
 
 export default {
-  title: "Components/List/Use Sprite",
-  argTypes: argTypes(args),
-  args: getDefaultArgs(args),
+    title: 'Components/List/Use Sprite',
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args),
 };

@@ -3,7 +3,7 @@ import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { PixiTextClass, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 const defaultVisibleItems = 5;
 
@@ -14,7 +14,7 @@ type Offset = {
 
 export type SelectItemsOptions = {
     items: string[];
-    backgroundColor: FillStyleInputs
+    backgroundColor: FillStyleInputs;
     width: number;
     height: number;
     hoverColor?: FillStyleInputs;
@@ -24,8 +24,8 @@ export type SelectItemsOptions = {
 };
 
 export type SelectOptions = {
-    closedBG: string | Container;
-    openBG: string | Container;
+    closedBG: GetViewSettings;
+    openBG: GetViewSettings;
     textStyle?: PixiTextStyle;
     TextClass?: PixiTextClass;
     selected?: number;
@@ -110,7 +110,15 @@ export class Select extends Container
      * @param root0.TextClass
      */
     init({
-        closedBG, textStyle, TextClass, items, openBG, selected, selectedTextOffset, scrollBox, visibleItems
+        closedBG,
+        textStyle,
+        TextClass,
+        items,
+        openBG,
+        selected,
+        selectedTextOffset,
+        scrollBox,
+        visibleItems,
     }: SelectOptions)
     {
         TextClass = TextClass ?? Text;
@@ -123,9 +131,12 @@ export class Select extends Container
         if (!this.openButton)
         {
             this.openButton = new FancyButton({
-                defaultView: getView(closedBG),
-                text: new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle }),
-                textOffset: selectedTextOffset
+                defaultView: closedBG,
+                text: new TextClass({
+                    text: items?.items ? items.items[0] : '',
+                    style: textStyle,
+                }),
+                textOffset: selectedTextOffset,
             });
             this.openButton.onPress.connect(() => this.toggle());
             this.addChild(this.openButton);
@@ -133,7 +144,10 @@ export class Select extends Container
         else
         {
             this.openButton.defaultView = getView(closedBG);
-            this.openButton.textView = new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle });
+            this.openButton.textView = new TextClass({
+                text: items?.items ? items.items[0] : '',
+                style: textStyle,
+            });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -153,8 +167,11 @@ export class Select extends Container
                 defaultView: new Graphics()
                     .rect(0, 0, this.openButton.width, this.openButton.height)
                     .fill({ color: 0x000000, alpha: 0.00001 }),
-                text: new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle }),
-                textOffset: selectedTextOffset
+                text: new TextClass({
+                    text: items?.items ? items.items[0] : '',
+                    style: textStyle,
+                }),
+                textOffset: selectedTextOffset,
             });
             this.closeButton.onPress.connect(() => this.toggle());
             this.view.addChild(this.closeButton);
@@ -165,7 +182,10 @@ export class Select extends Container
                 .rect(0, 0, this.openButton.width, this.openButton.height)
                 .fill({ color: 0x000000, alpha: 0.00001 });
 
-            this.closeButton.textView = new TextClass({ text: items?.items ? items.items[0] : '', style: textStyle });
+            this.closeButton.textView = new TextClass({
+                text: items?.items ? items.items[0] : '',
+                style: textStyle,
+            });
 
             this.openButton.textOffset = selectedTextOffset;
         }
@@ -189,7 +209,7 @@ export class Select extends Container
             height: this.openButton.height * (visibleItems ?? defaultVisibleItems),
             radius: 0,
             padding: 0,
-            ...scrollBox
+            ...scrollBox,
         });
 
         this.scrollBox.y = this.openButton.height;
@@ -271,7 +291,7 @@ export class Select extends Container
         height,
         textStyle,
         TextClass,
-        radius
+        radius,
     }: SelectItemsOptions): FancyButton[]
     {
         TextClass = TextClass ?? Text;
@@ -279,7 +299,9 @@ export class Select extends Container
 
         items.forEach((item) =>
         {
-            const defaultView = new Graphics().roundRect(0, 0, width, height, radius).fill(backgroundColor);
+            const defaultView = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(backgroundColor);
 
             const color = hoverColor ?? backgroundColor;
             const hoverView = new Graphics().roundRect(0, 0, width, height, radius).fill(color);

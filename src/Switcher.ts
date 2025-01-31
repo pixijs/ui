@@ -1,6 +1,6 @@
 import { Container } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';
 
 /**
@@ -36,7 +36,11 @@ export class Switcher extends Container
      * @param triggerEvents - Button events, to switch views (can be one event or an array of events).
      * @param activeViewID - The id of the view, visible by default.
      */
-    constructor(views?: Array<Container | string>, triggerEvents?: ButtonEvent | ButtonEvent[], activeViewID?: number)
+    constructor(
+        views?: Array<Container | string>,
+        triggerEvents?: ButtonEvent | ButtonEvent[],
+        activeViewID?: number,
+    )
     {
         super();
 
@@ -100,7 +104,7 @@ export class Switcher extends Container
      * Adds view instance to a switching list.
      * @param view
      */
-    add(view: Container | string): void
+    add(view: GetViewSettings): void
     {
         const viewInstance = getView(view);
 
@@ -133,7 +137,9 @@ export class Switcher extends Container
      */
     set triggerEvents(triggerEvents: ButtonEvent | ButtonEvent[])
     {
-        this._triggerEvents = new Set(Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents]);
+        this._triggerEvents = new Set(
+            Array.isArray(triggerEvents) ? triggerEvents : [triggerEvents],
+        );
     }
 
     /** Returns a list of events that will make a switcher switch to the next view. */

@@ -31,13 +31,13 @@ export class Trackpad
         this.xAxis = new SlidingNumber({
             ease: options.xEase,
             maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+            constrain: options.constrain,
         });
 
         this.yAxis = new SlidingNumber({
             ease: options.yEase,
             maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+            constrain: options.constrain,
         });
 
         this.disableEasing = options.disableEasing ?? false;

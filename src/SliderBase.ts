@@ -1,7 +1,7 @@
-import { Container, FederatedPointerEvent, Sprite, Text } from 'pixi.js';
+import { Container, FederatedPointerEvent, Sprite, Text, Texture } from 'pixi.js';
 import { ProgressBar, ProgressBarOptions, ProgressBarViewType } from './ProgressBar';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
-import { getView } from './utils/helpers/view';
+import { getView, type GetViewSettings } from './utils/helpers/view';
 
 import type { DragObject } from './utils/HelpTypes';
 
@@ -81,7 +81,7 @@ export class SliderBase extends ProgressBar
      * Sets Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    set slider1(value: Container | string)
+    set slider1(value: Container | Texture | string)
     {
         if (!value) return;
 
@@ -97,7 +97,10 @@ export class SliderBase extends ProgressBar
         {
             const TextClass = this.settings.valueTextClass ?? Text;
 
-            this.value1Text = new TextClass({ text: '', style: this.settings.valueTextStyle || { fill: 0xffffff } });
+            this.value1Text = new TextClass({
+                text: '',
+                style: this.settings.valueTextStyle || { fill: 0xffffff },
+            });
             this.value1Text.anchor.set(0.5);
             this.addChild(this.value1Text);
         }
@@ -129,7 +132,10 @@ export class SliderBase extends ProgressBar
         {
             const TextClass = this.settings.valueTextClass ?? Text;
 
-            this.value2Text = new TextClass({ text: '', style: this.settings.valueTextStyle || { fill: 0xffffff } });
+            this.value2Text = new TextClass({
+                text: '',
+                style: this.settings.valueTextStyle || { fill: 0xffffff },
+            });
             this.value2Text.anchor.set(0.5);
             this.addChild(this.value2Text);
         }
@@ -167,7 +173,7 @@ export class SliderBase extends ProgressBar
             .on('pointerupoutside', this.endUpdate, this);
     }
 
-    protected createSlider(sliderData: Container | string): Container
+    protected createSlider(sliderData: GetViewSettings): Container
     {
         const slider = getView(sliderData);
         const onPointerDown = (event: FederatedPointerEvent) =>
@@ -181,7 +187,8 @@ export class SliderBase extends ProgressBar
         };
 
         slider.eventMode = 'static';
-        slider.on('pointerdown', onPointerDown)
+        slider
+            .on('pointerdown', onPointerDown)
             .on('pointerup', this.endUpdate, this)
             .on('pointerupoutside', this.endUpdate, this);
         slider.x = slider.width / 2;
@@ -195,7 +202,7 @@ export class SliderBase extends ProgressBar
             slider.anchor.set(0.5);
         }
 
-        container.y = this.bg?.height / 2 ?? 0;
+        container.y = this.bg?.height ? this.bg?.height / 2 : 0;
 
         this.addChild(container);
 
@@ -220,7 +227,11 @@ export class SliderBase extends ProgressBar
         if (!this.dragging) return;
         this.dragging = 0;
 
-        if (!!this.startX || (this.startUpdateValue1 !== this._value1 || this.startUpdateValue2 !== this._value2))
+        if (
+            !!this.startX
+            || this.startUpdateValue1 !== this._value1
+            || this.startUpdateValue2 !== this._value2
+        )
         {
             this.change();
         }
@@ -250,7 +261,7 @@ export class SliderBase extends ProgressBar
     /** Called when dragging stopped. */
     protected change()
     {
-    // override me
+        // override me
     }
 
     /**

@@ -3,39 +3,39 @@ type Types = { [name: string]: object | number | string | boolean };
 const controls = {
     select: {
         control: {
-            type: 'select'
-        }
+            type: 'select',
+        },
     },
     check: {
         control: {
-            type: 'check'
-        }
+            type: 'check',
+        },
     },
     color: {
         control: {
-            type: 'color'
-        }
+            type: 'color',
+        },
     },
     amount: {
         control: {
-            type: 'range'
-        }
+            type: 'range',
+        },
     },
     type: {
         control: {
-            type: 'radio'
-        }
+            type: 'radio',
+        },
     },
     date: {
         control: {
-            type: 'date'
-        }
+            type: 'date',
+        },
     },
     switch: {
         control: {
-            type: 'boolean'
-        }
-    }
+            type: 'boolean',
+        },
+    },
 };
 
 export const argTypes = (args: Types) =>
@@ -73,8 +73,8 @@ export const argTypes = (args: Types) =>
                             type: 'range',
                             min,
                             max: 1000,
-                            step: 10
-                        }
+                            step: 10,
+                        },
                     };
                 }
                 else if (arg > 10)
@@ -84,8 +84,8 @@ export const argTypes = (args: Types) =>
                             type: 'range',
                             min,
                             max: 100,
-                            step: 1
-                        }
+                            step: 1,
+                        },
                     };
                 }
                 else if (arg !== 0 && arg < 1)
@@ -95,8 +95,8 @@ export const argTypes = (args: Types) =>
                             type: 'range',
                             min: 0,
                             max: 1,
-                            step: 0.1
-                        }
+                            step: 0.1,
+                        },
                     };
                 }
                 else
@@ -106,8 +106,8 @@ export const argTypes = (args: Types) =>
                             type: 'range',
                             min,
                             max: 10,
-                            step: 1
-                        }
+                            step: 1,
+                        },
                     };
                 }
             }
@@ -118,8 +118,8 @@ export const argTypes = (args: Types) =>
                         type: 'range',
                         min: -1000,
                         max: 1000,
-                        step: 10
-                    }
+                        step: 10,
+                    },
                 };
             }
             else if (arg < -10)
@@ -129,8 +129,8 @@ export const argTypes = (args: Types) =>
                         type: 'range',
                         min: -100,
                         max: 100,
-                        step: 10
-                    }
+                        step: 10,
+                    },
                 };
             }
             else if (arg !== 0 && arg > -1)
@@ -140,8 +140,8 @@ export const argTypes = (args: Types) =>
                         type: 'range',
                         min: -1,
                         max: 0,
-                        step: 0.1
-                    }
+                        step: 0.1,
+                    },
                 };
             }
             else
@@ -151,8 +151,8 @@ export const argTypes = (args: Types) =>
                         type: 'range',
                         min: -10,
                         max: 10,
-                        step: 1
-                    }
+                        step: 1,
+                    },
                 };
             }
         }

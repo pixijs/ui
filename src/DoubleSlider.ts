@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent, Optional, Size } from 'pixi.js';
+import { Container, FederatedPointerEvent, Optional, Size, Texture } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { DoubleSliderOptions, SliderBase } from './SliderBase';
 
@@ -192,7 +192,7 @@ export class DoubleSlider extends SliderBase
      * Set Slider1 instance.
      * @param value - Container or string with texture name.
      */
-    override set slider1(value: Container | string)
+    override set slider1(value: Container | Texture | string)
     {
         super.slider1 = value;
         this.updateSlider1();
@@ -224,7 +224,7 @@ export class DoubleSlider extends SliderBase
     {
         this.updateProgress(this.value1, this.value2);
 
-        this._slider1.x = (this.bg?.width / 100 * this.progressStart) - (this._slider1.width / 2);
+        this._slider1.x = ((this.bg?.width / 100) * this.progressStart) - (this._slider1.width / 2);
         this._slider1.y = this.bg?.height / 2;
 
         if (this._slider2 && this._slider1.x > this._slider2.x)
