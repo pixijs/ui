@@ -13,14 +13,13 @@ const args = {
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
-    type: [undefined, 'vertical', 'horizontal'],
-    bidirectionalScroll: false,
+    type: [undefined, 'vertical', 'horizontal', 'bidirectional'],
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
+export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | 'bidirectional' | undefined }> = (
     {
         fontColor,
         elementsMargin,
@@ -30,7 +29,6 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
         onPress,
         globalScroll,
         shiftScroll,
-        bidirectionalScroll,
     },
     context,
 ) =>
@@ -74,7 +72,6 @@ export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' 
                     type,
                     globalScroll,
                     shiftScroll,
-                    bidirectionalScroll,
                 });
 
                 scrollBox.addItems(items);

@@ -8,7 +8,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    type: [null, 'horizontal', 'vertical'],
+    type: [null, 'horizontal', 'vertical', 'bidirectional'],
     fontColor: '#000000',
     bgColor: '#f5e3a9',
     width: 271,
@@ -24,7 +24,7 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
+export const UseGraphics: StoryFn<typeof args & { type: 'horizontal' | 'vertical' | 'bidirectional' }> = (
     {
         type,
         fontColor,

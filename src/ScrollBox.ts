@@ -29,7 +29,6 @@ export type ScrollBoxOptions = {
     dragTrashHold?: number;
     globalScroll?: boolean;
     shiftScroll?: boolean;
-    bidirectionalScroll?: boolean;
     proximityRange?: number;
     proximityDebounce?: number;
     disableProximityCheck?: boolean;
@@ -100,19 +99,19 @@ export class ScrollBox extends Container
 
     protected get isVertical(): boolean
     {
-        const type = this.options.type ?? 'vertical';
-
-        return type === 'vertical';
+        return this.options.type === 'vertical';
     }
 
     protected get isHorizontal(): boolean
     {
-        return !this.isVertical;
+        return this.options.type === 'horizontal';
     }
 
     protected get isBidirectional(): boolean
     {
-        return !!this.options.bidirectionalScroll;
+        const type = this.options.type ?? 'bidirectional';
+
+        return type === 'bidirectional';
     }
 
     /**
@@ -130,8 +129,6 @@ export class ScrollBox extends Container
      * @param {boolean} [options.globalScroll=true] - if true, the ScrollBox will scroll even if the mouse is not over it.
      * @param {boolean} [options.shiftScroll=false] - if true, the ScrollBox will only scroll horizontally if the shift key
      * is pressed, and the type is set to 'horizontal'.
-     * @param {boolean} [options.bidirectionalScroll=false] - if true, the ScrollBox will scroll both vertically and
-     * horizontally, accommodating overflows in both directions.
      */
     constructor(options?: ScrollBoxOptions)
     {

@@ -18,7 +18,7 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: [undefined, 'vertical', 'horizontal'],
+    type: [undefined, 'vertical', 'horizontal', 'bidirectional'],
     fadeSpeed: 0.5,
 };
 
@@ -26,7 +26,7 @@ const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
 export const ProximityEvent: StoryFn<
-    typeof args & { type: 'vertical' | 'horizontal' | undefined }
+    typeof args & { type: 'vertical' | 'horizontal' | 'bidirectional' | undefined }
 > = (
     {
         width,

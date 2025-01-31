@@ -10,14 +10,14 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    type: [null, 'horizontal', 'vertical'],
+    type: [null, 'horizontal', 'vertical', 'bidirectional'],
     fontColor: '#000000',
     elementsMargin: 29,
     itemsAmount: 10,
     onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
+export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' | 'bidirectional' }> = (
     { fontColor, elementsMargin, itemsAmount, onPress, type },
     context,
 ) =>
