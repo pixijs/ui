@@ -16,7 +16,7 @@ const args = {
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
-  itemsAmount: 10000,
+    itemsAmount: 1000,
 };
 
 export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (

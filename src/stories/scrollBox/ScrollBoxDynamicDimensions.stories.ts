@@ -9,7 +9,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 const args = {
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
-  itemsAmount: 1000,
+    itemsAmount: 100,
 };
 
 export const UseDynamicDimensions: StoryFn<typeof args> = (
