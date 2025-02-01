@@ -10,16 +10,11 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-  type: [null, "horizontal", "vertical"],
-  fontColor: "#000000",
-  elementsMargin: 29,
-  itemsAmount: 10000,
-  onPress: action("Button pressed"),
-    type: [null, 'horizontal', 'vertical'],
-    fontColor: '#000000',
+    type: [null, "horizontal", "vertical"],
+    fontColor: "#000000",
     elementsMargin: 29,
-    itemsAmount: 10,
-    onPress: action('Button pressed'),
+    itemsAmount: 10000,
+    onPress: action("Button pressed"),
 };
 
 export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
@@ -50,7 +45,9 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
                 title.x = window.width / 2;
                 title.y = 25;
 
+                console.time(`Add ${itemsAmount} items`);
                 view.addChild(window);
+                console.timeEnd(`Add ${itemsAmount} items`);
 
                 const items: Container[] = createItems(itemsAmount, getColor(fontColor), onPress);
 
