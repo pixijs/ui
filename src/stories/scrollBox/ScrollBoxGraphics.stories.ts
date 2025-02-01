@@ -1,13 +1,13 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
+import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
-import { LIST_TYPE } from '../../utils/HelpTypes';
-import { ListType } from '../../List';
 
 const args = {
     fontColor: '#000000',
@@ -28,7 +28,7 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
+export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
     {
         fontColor,
         elementsMargin,

@@ -1,12 +1,12 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
+import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { LIST_TYPE } from '../../utils/HelpTypes';
-import { ListType } from '../../List';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
     fontColor: '#000000',
@@ -15,7 +15,7 @@ const args = {
     type: [...LIST_TYPE],
 };
 
-export const UseDynamicDimensions: StoryFn<typeof args & { type:ListType }> = (
+export const UseDynamicDimensions: StoryFn<typeof args & { type: ListType }> = (
     { fontColor, itemsAmount, backgroundColor, type },
     context,
 ) =>

@@ -1,14 +1,14 @@
 import { ColorSource, Container, Sprite, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
+import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
-import { ListType } from '../../List';
-import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
     fontColor: '#000000',
@@ -21,7 +21,7 @@ const args = {
     shiftScroll: false,
 };
 
-export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
+export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
     {
         fontColor,
         elementsMargin,

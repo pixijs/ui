@@ -954,5 +954,4 @@ export class ScrollBox extends Container
 
         return type === 'bidirectional';
     }
-
 }

@@ -62,13 +62,13 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         if (options)
         {
-            if (options.maxWidth) {
+            if (options.maxWidth)
+            {
                 this._maxWidth = options.maxWidth;
             }
 
             this.init(options);
         }
-
 
         options?.items?.forEach((item) => this.addChild(item));
 
@@ -359,18 +359,16 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         this.arrangeChildren();
     }
 
-    /**
-     * Set width of area to fit elements when arrange. (If not set parent width will be used).
-     */
-    set maxWidth(width: number) {
+    /** Set width of area to fit elements when arrange. (If not set parent width will be used). */
+    set maxWidth(width: number)
+    {
         this._maxWidth = width;
         this.arrangeChildren();
     }
 
-    /**
-     * Get width of area to fit elements when arrange. (If not set parent width will be used).
-     */
-    get maxWidth(): number {
+    /** Get width of area to fit elements when arrange. (If not set parent width will be used). */
+    get maxWidth(): number
+    {
         return this._maxWidth;
     }
 }

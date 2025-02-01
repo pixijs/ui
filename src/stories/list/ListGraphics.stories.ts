@@ -4,9 +4,9 @@ import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
-import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
     type: [null, ...LIST_TYPE],
@@ -25,7 +25,7 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
+export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
     {
         type,
         fontColor,

@@ -4,11 +4,11 @@ import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
-import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
     type: LIST_TYPE.reverse(),
@@ -19,7 +19,7 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
+export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
     {
         fontColor,
         elementsMargin,
