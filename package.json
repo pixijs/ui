@@ -55,8 +55,8 @@
         "lint": [
             "src"
         ],
-        "docsName": "PixiJS UI",
-        "docsTitle": "PixiJS UI",
+        "docsName": "PixiUI",
+        "docsTitle": "PixiUI",
         "docsDescription": "API Documentation for UI components made with PixiJS",
         "docsKeyword": "PixiJS, UI, components"
     },
