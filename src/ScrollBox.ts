@@ -68,11 +68,15 @@ export class ScrollBox extends Container
     protected borderMask: Graphics;
     protected lastWidth: number;
     protected lastHeight: number;
-    protected __width = 0;
-    protected __height = 0;
+    protected _width = 0;
+    protected _height = 0;
     protected _dimensionChanged = false;
 
-    protected list: List;
+    /**
+     * Arrange container, that holds all inner elements.
+     * Use this control inner arrange container size in case of bidirectional scroll type.
+     */
+    list: List;
 
     protected _trackpad: Trackpad;
     protected isDragging = 0;
@@ -95,7 +99,7 @@ export class ScrollBox extends Container
     protected lastScrollY!: number | null;
     protected proximityCheckFrameCounter = 0;
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
-    public onScroll: Signal<(value: number) => void> = new Signal();
+    public onScroll: Signal<(value: number | PointData) => void> = new Signal();
 
     /**
      * @param options
@@ -146,8 +150,8 @@ export class ScrollBox extends Container
         this.options = options;
         this.setBackground(options.background);
 
-        this.__width = options.width | this.background.width;
-        this.__height = options.height | this.background.height;
+        this._width = options.width | this.background.width;
+        this._height = options.height | this.background.height;
 
         this.proximityRange = options.proximityRange ?? 0;
 
@@ -188,7 +192,7 @@ export class ScrollBox extends Container
 
     protected get hasBounds(): boolean
     {
-        return !!this.__width || !!this.__height;
+        return !!this._width || !!this._height;
     }
 
     /**
@@ -262,11 +266,10 @@ export class ScrollBox extends Container
      */
     isItemVisible(item: Container, padding = 0): boolean
     {
-        const isVertical = this.options.type === 'vertical' || !this.options.type;
         let isVisible = false;
         const list = this.list;
 
-        if (isVertical)
+        if (this.isVertical || this.isBidirectional)
         {
             const posY = item.y + list.y;
 
@@ -275,7 +278,8 @@ export class ScrollBox extends Container
                 isVisible = true;
             }
         }
-        else
+
+        if (this.isHorizontal || this.isBidirectional)
         {
             const posX = item.x + list.x;
 
@@ -399,14 +403,13 @@ export class ScrollBox extends Container
         {
             if (!this.isDragging) return;
 
-            const isVertical: boolean = this.options.type !== 'horizontal';
             const touchPoint = this.worldTransform.applyInverse(e.global);
 
             if (this.dragStarTouchPoint)
             {
                 const dragTrashHold = this.options.dragTrashHold ?? 10;
 
-                if (this.options.type === 'horizontal')
+                if (this.isHorizontal || this.isBidirectional)
                 {
                     const xDist = touchPoint.x - this.dragStarTouchPoint.x;
 
@@ -415,7 +418,8 @@ export class ScrollBox extends Container
                         this.isDragging = 2;
                     }
                 }
-                else
+
+                if (this.isVertical || this.isBidirectional)
                 {
                     const yDist = touchPoint.y - this.dragStarTouchPoint.y;
 
@@ -436,7 +440,14 @@ export class ScrollBox extends Container
                 this.pressedChild = null;
             }
 
-            this.onScroll?.emit(isVertical ? this.scrollY : this.scrollX);
+            if (this.isBidirectional)
+            {
+                this.onScroll?.emit({ x: this.scrollX, y: this.scrollY });
+            }
+            else
+            {
+                this.onScroll?.emit(this.isVertical ? this.scrollY : this.scrollX);
+            }
         });
 
         document.addEventListener('wheel', this.onMouseScrollBinding, true);
@@ -477,17 +488,17 @@ export class ScrollBox extends Container
         {
             if (!this.options.width)
             {
-                this.__width += this.listWidth;
+                this._width += this.listWidth;
             }
 
             if (!this.options.height)
             {
-                this.__height += this.listHeight;
+                this._height += this.listHeight;
             }
 
             this.borderMask
                 .clear()
-                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
+                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
             this.borderMask.eventMode = 'none';
@@ -496,19 +507,23 @@ export class ScrollBox extends Container
 
             this.background
                 .clear()
-                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
+                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
                 .fill({
                     color: color ?? 0x000000,
                     alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
                 });
 
-            if (this.options.type === 'horizontal')
+            if (this.isBidirectional)
             {
-                this.setInteractive(this.listWidth > this.__width);
+                this.setInteractive(this.listWidth > this._width || this.listHeight > this._height);
+            }
+            else if (this.isHorizontal)
+            {
+                this.setInteractive(this.listWidth > this._width);
             }
             else
             {
-                this.setInteractive(this.listHeight > this.__height);
+                this.setInteractive(this.listHeight > this._height);
             }
 
             this.lastWidth = this.listWidth;
@@ -529,17 +544,17 @@ export class ScrollBox extends Container
                 - this.list.topPadding
                 - this.list.bottomPadding;
 
-            if (this.options.type === 'vertical')
+            if (this.isBidirectional)
             {
                 this._trackpad.yAxis.max = -Math.abs(maxHeight);
-            }
-            else if (this.options.type === 'horizontal')
-            {
                 this._trackpad.xAxis.max = -Math.abs(maxWidth);
             }
-            else
+            else if (this.isVertical)
             {
                 this._trackpad.yAxis.max = -Math.abs(maxHeight);
+            }
+            else if (this.isHorizontal)
+            {
                 this._trackpad.xAxis.max = -Math.abs(maxWidth);
             }
         }
@@ -566,48 +581,59 @@ export class ScrollBox extends Container
 
         this.renderAllItems();
 
-        const scrollOnX = this.options.shiftScroll
+        const shiftScroll = !!this.options.shiftScroll;
+        const scrollOnX = shiftScroll
             ? typeof event.deltaX !== 'undefined' || typeof event.deltaY !== 'undefined'
             : typeof event.deltaX !== 'undefined';
+        const scrollOnY = typeof event.deltaY !== 'undefined';
 
-        if (this.options.type === 'horizontal' && scrollOnX)
+        if ((this.isHorizontal || this.isBidirectional) && scrollOnX)
         {
-            const delta = this.options.shiftScroll ? event.deltaX : event.deltaY;
+            const delta = shiftScroll || this.isBidirectional ? event.deltaX : event.deltaY;
             const targetPos = this.list.x - delta;
 
-            if (this.listWidth < this.__width)
+            if (this.listWidth < this._width)
             {
                 this._trackpad.xAxis.value = 0;
             }
             else
             {
-                const min = this.__width - this.listWidth;
+                const min = this._width - this.listWidth;
                 const max = 0;
 
                 this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
             }
-
-            this.onScroll?.emit(this._trackpad.xAxis.value);
         }
-        else if (typeof event.deltaY !== 'undefined')
+
+        if ((this.isVertical || this.isBidirectional) && scrollOnY)
         {
             const targetPos = this.list.y - event.deltaY;
 
-            if (this.listHeight < this.__height)
+            if (this.listHeight < this._height)
             {
                 this._trackpad.yAxis.value = 0;
             }
             else
             {
-                const min = this.__height - this.listHeight;
+                const min = this._height - this.listHeight;
                 const max = 0;
 
                 this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
             }
-
-            this.onScroll?.emit(this._trackpad.yAxis.value);
         }
 
+        if (this.isBidirectional && (scrollOnX || scrollOnY))
+        {
+            this.onScroll?.emit({ x: this._trackpad.xAxis.value, y: this._trackpad.yAxis.value });
+        }
+        else if (this.isHorizontal && scrollOnX)
+        {
+            this.onScroll?.emit(this._trackpad.xAxis.value);
+        }
+        else if (this.isVertical && scrollOnY)
+        {
+            this.onScroll?.emit(this._trackpad.yAxis.value);
+        }
         this.stopRenderHiddenItems();
     }
 
@@ -699,13 +725,13 @@ export class ScrollBox extends Container
         this.renderAllItems();
 
         this._trackpad.xAxis.value
-            = this.options.type === 'horizontal'
-                ? this.__width - target.x - target.width - this.list.rightPadding
+            = this.isHorizontal || this.isBidirectional
+                ? this._width - target.x - target.width - this.list.rightPadding
                 : 0;
 
         this._trackpad.yAxis.value
-            = !this.options.type || this.options.type === 'vertical'
-                ? this.__height - target.y - target.height - this.list.bottomPadding
+            = this.isVertical || this.isBidirectional
+                ? this._height - target.y - target.height - this.list.bottomPadding
                 : 0;
 
         this.stopRenderHiddenItems();
@@ -729,12 +755,12 @@ export class ScrollBox extends Container
     /** Gets component height. */
     override get height(): number
     {
-        return this.__height;
+        return this._height;
     }
 
     override set height(value: number)
     {
-        this.__height = value;
+        this._height = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -743,12 +769,12 @@ export class ScrollBox extends Container
     /** Gets component width. */
     override get width(): number
     {
-        return this.__width;
+        return this._width;
     }
 
     override set width(value: number)
     {
-        this.__width = value;
+        this._width = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -766,8 +792,8 @@ export class ScrollBox extends Container
             height = height ?? value;
         }
 
-        this.__width = value;
-        this.__height = height;
+        this._width = value;
+        this._height = height;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -776,8 +802,8 @@ export class ScrollBox extends Container
     override getSize(out?: Size): Size
     {
         out = out || { width: 0, height: 0 };
-        out.width = this.__width;
-        out.height = this.__height;
+        out.width = this._width;
+        out.height = this._height;
 
         return out;
     }
@@ -812,11 +838,20 @@ export class ScrollBox extends Container
 
         this._trackpad.update();
 
-        const type = this.options.type === 'horizontal' ? 'x' : 'y';
-
-        if (this.list[type] !== this._trackpad[type])
+        if (this.isHorizontal || this.isBidirectional)
         {
-            this.list[type] = this._trackpad[type];
+            if (this.list.x !== this._trackpad.x)
+            {
+                this.list.x = this._trackpad.x;
+            }
+        }
+
+        if (this.isVertical || this.isBidirectional)
+        {
+            if (this.list.y !== this._trackpad.y)
+            {
+                this.list.y = this._trackpad.y;
+            }
         }
 
         if (
@@ -902,4 +937,22 @@ export class ScrollBox extends Container
     {
         return this.list.width;
     }
+
+    protected get isVertical(): boolean
+    {
+        return this.options.type === 'vertical';
+    }
+
+    protected get isHorizontal(): boolean
+    {
+        return this.options.type === 'horizontal';
+    }
+
+    protected get isBidirectional(): boolean
+    {
+        const type = this.options.type ?? 'bidirectional';
+
+        return type === 'bidirectional';
+    }
+
 }

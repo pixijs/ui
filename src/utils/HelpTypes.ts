@@ -24,3 +24,6 @@ export type Padding =
         top?: number;
         bottom?: number;
     };
+
+export const LIST_TYPE = ['vertical', 'horizontal', 'bidirectional'];
+

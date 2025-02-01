@@ -6,26 +6,29 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+import { LIST_TYPE } from '../../utils/HelpTypes';
+import { ListType } from '../../List';
 
 const args = {
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
-    width: 320,
+    width: 490,
     height: 420,
     radius: 20,
     elementsMargin: 10,
     elementsPadding: 10,
-    elementsWidth: 300,
+    elementsWidth: 150,
     elementsHeight: 80,
     itemsAmount: 100,
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: [undefined, 'vertical', 'horizontal'],
+    type: LIST_TYPE.reverse(),
+    innerListWidth: 1000,
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | undefined }> = (
+export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
     {
         fontColor,
         elementsMargin,
@@ -42,6 +45,7 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
         onPress,
         globalScroll,
         shiftScroll,
+        innerListWidth,
     },
     context,
 ) =>
@@ -91,6 +95,11 @@ export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal
                 globalScroll,
                 shiftScroll,
             });
+
+            if (type === 'bidirectional')
+            {
+                scrollBox.list.maxWidth = innerListWidth;
+            }
 
             scrollBox.addItems(items);
 

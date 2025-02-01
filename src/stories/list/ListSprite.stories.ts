@@ -1,24 +1,33 @@
 import { Container, Sprite, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { List } from '../../List';
+import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
-    type: [null, 'horizontal', 'vertical'],
+    type: LIST_TYPE.reverse(),
     fontColor: '#000000',
     elementsMargin: 29,
-    itemsAmount: 10,
+    itemsAmount: 12,
+    maxWidth: 500,
     onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
-    { fontColor, elementsMargin, itemsAmount, onPress, type },
+export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
+    {
+        fontColor,
+        elementsMargin,
+        itemsAmount,
+        type,
+        maxWidth,
+        onPress,
+    },
     context,
 ) =>
     new PixiStory<typeof args>({
@@ -55,6 +64,7 @@ export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' 
                     vertPadding: 70,
                     horPadding: 50,
                     elementsMargin,
+                    maxWidth,
                 });
 
                 items.forEach((item) => list.addChild(item));

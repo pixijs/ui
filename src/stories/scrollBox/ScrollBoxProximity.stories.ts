@@ -6,6 +6,8 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+import { ListType } from '../../List';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
     proximityRange: 100,
@@ -18,7 +20,7 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: [undefined, 'vertical', 'horizontal'],
+    type: [...LIST_TYPE],
     fadeSpeed: 0.5,
 };
 
@@ -26,7 +28,7 @@ const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
 export const ProximityEvent: StoryFn<
-    typeof args & { type: 'vertical' | 'horizontal' | undefined }
+    typeof args & { type:ListType }
 > = (
     {
         width,

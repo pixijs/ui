@@ -1,14 +1,15 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { List } from '../../List';
+import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
-    type: [null, 'horizontal', 'vertical'],
+    type: [null, ...LIST_TYPE],
     fontColor: '#000000',
     bgColor: '#f5e3a9',
     width: 271,
@@ -24,7 +25,7 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type: 'horizontal' | 'vertical' }> = (
+export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
     {
         type,
         fontColor,

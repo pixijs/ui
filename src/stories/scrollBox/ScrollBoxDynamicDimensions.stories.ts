@@ -5,15 +5,18 @@ import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { LIST_TYPE } from '../../utils/HelpTypes';
+import { ListType } from '../../List';
 
 const args = {
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
     itemsAmount: 100,
+    type: [...LIST_TYPE],
 };
 
-export const UseDynamicDimensions: StoryFn<typeof args> = (
-    { fontColor, itemsAmount, backgroundColor },
+export const UseDynamicDimensions: StoryFn<typeof args & { type:ListType }> = (
+    { fontColor, itemsAmount, backgroundColor, type },
     context,
 ) =>
     new PixiStory({
@@ -38,6 +41,7 @@ export const UseDynamicDimensions: StoryFn<typeof args> = (
                 width: sizes[currentSizeID].w,
                 height: sizes[currentSizeID].h,
                 radius,
+                type,
                 padding: 10,
             });
 
