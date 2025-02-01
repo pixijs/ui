@@ -97,23 +97,6 @@ export class ScrollBox extends Container
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
     public onScroll: Signal<(value: number | PointData) => void> = new Signal();
 
-    protected get isVertical(): boolean
-    {
-        return this.options.type === 'vertical';
-    }
-
-    protected get isHorizontal(): boolean
-    {
-        return this.options.type === 'horizontal';
-    }
-
-    protected get isBidirectional(): boolean
-    {
-        const type = this.options.type ?? 'bidirectional';
-
-        return type === 'bidirectional';
-    }
-
     /**
      * @param options
      * @param {number} options.background - background color of the ScrollBox.
@@ -950,4 +933,22 @@ export class ScrollBox extends Container
     {
         return this.list.width;
     }
+
+    protected get isVertical(): boolean
+    {
+        return this.options.type === 'vertical';
+    }
+
+    protected get isHorizontal(): boolean
+    {
+        return this.options.type === 'horizontal';
+    }
+
+    protected get isBidirectional(): boolean
+    {
+        const type = this.options.type ?? 'bidirectional';
+
+        return type === 'bidirectional';
+    }
+
 }

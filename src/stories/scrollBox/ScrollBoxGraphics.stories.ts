@@ -6,6 +6,8 @@ import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+import { LIST_TYPE } from '../../utils/HelpTypes';
+import { ListType } from '../../List';
 
 const args = {
     fontColor: '#000000',
@@ -17,15 +19,15 @@ const args = {
     elementsPadding: 10,
     elementsWidth: 300,
     elementsHeight: 80,
-    itemsAmount: 1,
+    itemsAmount: 100,
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: [undefined, 'vertical', 'horizontal', 'bidirectional'],
+    type: [...LIST_TYPE],
     onPress: action('Button pressed'),
 };
 
-export const UseGraphics: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | 'bidirectional' | undefined }> = (
+export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
     {
         fontColor,
         elementsMargin,

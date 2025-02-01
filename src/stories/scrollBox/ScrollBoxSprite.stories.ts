@@ -7,19 +7,21 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+import { ListType } from '../../List';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
     fontColor: '#000000',
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
-    type: [undefined, 'vertical', 'horizontal', 'bidirectional'],
+    type: [...LIST_TYPE],
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'vertical' | 'horizontal' | 'bidirectional' | undefined }> = (
+export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
     {
         fontColor,
         elementsMargin,

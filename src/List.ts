@@ -1,6 +1,7 @@
 import { Container, ContainerChild } from 'pixi.js';
+import { LIST_TYPE } from './utils/HelpTypes';
 
-export type ListType = 'horizontal' | 'vertical' | 'bidirectional';
+export type ListType = (typeof LIST_TYPE)[number];
 
 export type ListOptions<C extends ContainerChild = ContainerChild> = {
     elementsMargin?: number;
@@ -307,7 +308,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
                     break;
 
                 case 'bidirectional':
-                default: // bidirectional
+                default:
                     child.x = x;
                     child.y = y;
 

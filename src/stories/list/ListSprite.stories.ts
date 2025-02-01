@@ -1,23 +1,24 @@
 import { Container, Sprite, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { List } from '../../List';
+import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
-    type: [null, 'horizontal', 'vertical', 'bidirectional'],
+    type: [null, ...LIST_TYPE],
     fontColor: '#000000',
     elementsMargin: 29,
-    itemsAmount: 10,
+    itemsAmount: 12,
     onPress: action('Button pressed'),
 };
 
-export const UseSprite: StoryFn<typeof args & { type: 'horizontal' | 'vertical' | 'bidirectional' }> = (
+export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
     { fontColor, elementsMargin, itemsAmount, onPress, type },
     context,
 ) =>
