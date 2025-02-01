@@ -14,6 +14,8 @@ export type ListOptions<C extends ContainerChild = ContainerChild> = {
     leftPadding?: number;
     rightPadding?: number;
     items?: C[];
+    maxWidth?: number;
+    maxHeight?: number;
 };
 
 /**
@@ -23,6 +25,9 @@ export type ListOptions<C extends ContainerChild = ContainerChild> = {
  *
  * If type is not specified, it will be acting like a bidirectional, items will be arranged to fit horizontally,
  * after there is no space left, new line will be started, so items will be arranged like `inline-block` in css.
+ * Max width to fit horizontally can be set by `maxWidth` option, of not set, parent width will be used.
+ * Check this example to see how it works:
+ * https://pixijs.io/ui/storybook/?path=/story/components-scrollbox-use-graphics--use-graphics
  *
  * It is used inside elements with repeatable content, like {@link Select} or {@link ScrollBox}.
  * @example
@@ -45,6 +50,9 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     /** Arrange direction. */
     protected _type: ListType;
 
+    /** Width of area to fit elements when arrange. (If not set parent width will be used). */
+    protected _maxWidth: number;
+
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
 
@@ -54,8 +62,13 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         if (options)
         {
+            if (options.maxWidth) {
+                this._maxWidth = options.maxWidth;
+            }
+
             this.init(options);
         }
+
 
         options?.items?.forEach((item) => this.addChild(item));
 
@@ -282,7 +295,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        let maxWidth = this.parent?.width;
+        let maxWidth = this.maxWidth ?? this.parent?.width;
 
         if (this.rightPadding)
         {
@@ -344,5 +357,20 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         this.removeChild(child);
         this.arrangeChildren();
+    }
+
+    /**
+     * Set width of area to fit elements when arrange. (If not set parent width will be used).
+     */
+    set maxWidth(width: number) {
+        this._maxWidth = width;
+        this.arrangeChildren();
+    }
+
+    /**
+     * Get width of area to fit elements when arrange. (If not set parent width will be used).
+     */
+    get maxWidth(): number {
+        return this._maxWidth;
     }
 }

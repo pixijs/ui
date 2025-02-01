@@ -68,11 +68,15 @@ export class ScrollBox extends Container
     protected borderMask: Graphics;
     protected lastWidth: number;
     protected lastHeight: number;
-    protected __width = 0;
-    protected __height = 0;
+    protected _width = 0;
+    protected _height = 0;
     protected _dimensionChanged = false;
 
-    protected list: List;
+    /**
+     * Arrange container, that holds all inner elements.
+     * Use this control inner arrange container size in case of bidirectional scroll type.
+     */
+    list: List;
 
     protected _trackpad: Trackpad;
     protected isDragging = 0;
@@ -146,8 +150,8 @@ export class ScrollBox extends Container
         this.options = options;
         this.setBackground(options.background);
 
-        this.__width = options.width | this.background.width;
-        this.__height = options.height | this.background.height;
+        this._width = options.width | this.background.width;
+        this._height = options.height | this.background.height;
 
         this.proximityRange = options.proximityRange ?? 0;
 
@@ -188,7 +192,7 @@ export class ScrollBox extends Container
 
     protected get hasBounds(): boolean
     {
-        return !!this.__width || !!this.__height;
+        return !!this._width || !!this._height;
     }
 
     /**
@@ -484,17 +488,17 @@ export class ScrollBox extends Container
         {
             if (!this.options.width)
             {
-                this.__width += this.listWidth;
+                this._width += this.listWidth;
             }
 
             if (!this.options.height)
             {
-                this.__height += this.listHeight;
+                this._height += this.listHeight;
             }
 
             this.borderMask
                 .clear()
-                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
+                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
             this.borderMask.eventMode = 'none';
@@ -503,7 +507,7 @@ export class ScrollBox extends Container
 
             this.background
                 .clear()
-                .roundRect(0, 0, this.__width, this.__height, this.options.radius | 0)
+                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
                 .fill({
                     color: color ?? 0x000000,
                     alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
@@ -511,15 +515,15 @@ export class ScrollBox extends Container
 
             if (this.isBidirectional)
             {
-                this.setInteractive(this.listWidth > this.__width || this.listHeight > this.__height);
+                this.setInteractive(this.listWidth > this._width || this.listHeight > this._height);
             }
             else if (this.isHorizontal)
             {
-                this.setInteractive(this.listWidth > this.__width);
+                this.setInteractive(this.listWidth > this._width);
             }
             else
             {
-                this.setInteractive(this.listHeight > this.__height);
+                this.setInteractive(this.listHeight > this._height);
             }
 
             this.lastWidth = this.listWidth;
@@ -588,13 +592,13 @@ export class ScrollBox extends Container
             const delta = shiftScroll || this.isBidirectional ? event.deltaX : event.deltaY;
             const targetPos = this.list.x - delta;
 
-            if (this.listWidth < this.__width)
+            if (this.listWidth < this._width)
             {
                 this._trackpad.xAxis.value = 0;
             }
             else
             {
-                const min = this.__width - this.listWidth;
+                const min = this._width - this.listWidth;
                 const max = 0;
 
                 this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
@@ -605,13 +609,13 @@ export class ScrollBox extends Container
         {
             const targetPos = this.list.y - event.deltaY;
 
-            if (this.listHeight < this.__height)
+            if (this.listHeight < this._height)
             {
                 this._trackpad.yAxis.value = 0;
             }
             else
             {
-                const min = this.__height - this.listHeight;
+                const min = this._height - this.listHeight;
                 const max = 0;
 
                 this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
@@ -722,12 +726,12 @@ export class ScrollBox extends Container
 
         this._trackpad.xAxis.value
             = this.isHorizontal || this.isBidirectional
-                ? this.__width - target.x - target.width - this.list.rightPadding
+                ? this._width - target.x - target.width - this.list.rightPadding
                 : 0;
 
         this._trackpad.yAxis.value
             = this.isVertical || this.isBidirectional
-                ? this.__height - target.y - target.height - this.list.bottomPadding
+                ? this._height - target.y - target.height - this.list.bottomPadding
                 : 0;
 
         this.stopRenderHiddenItems();
@@ -751,12 +755,12 @@ export class ScrollBox extends Container
     /** Gets component height. */
     override get height(): number
     {
-        return this.__height;
+        return this._height;
     }
 
     override set height(value: number)
     {
-        this.__height = value;
+        this._height = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -765,12 +769,12 @@ export class ScrollBox extends Container
     /** Gets component width. */
     override get width(): number
     {
-        return this.__width;
+        return this._width;
     }
 
     override set width(value: number)
     {
-        this.__width = value;
+        this._width = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -788,8 +792,8 @@ export class ScrollBox extends Container
             height = height ?? value;
         }
 
-        this.__width = value;
-        this.__height = height;
+        this._width = value;
+        this._height = height;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -798,8 +802,8 @@ export class ScrollBox extends Container
     override getSize(out?: Size): Size
     {
         out = out || { width: 0, height: 0 };
-        out.width = this.__width;
-        out.height = this.__height;
+        out.width = this._width;
+        out.height = this._height;
 
         return out;
     }

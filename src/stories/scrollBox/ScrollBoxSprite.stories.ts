@@ -15,7 +15,7 @@ const args = {
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
-    type: [...LIST_TYPE],
+    type: [null, ...LIST_TYPE],
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
@@ -75,6 +75,12 @@ export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
                     globalScroll,
                     shiftScroll,
                 });
+
+                if (type === 'bidirectional')
+                {
+                    scrollBox.list.width = window.width - 40;
+                    scrollBox.list.height = window.height - 60;
+                }
 
                 scrollBox.addItems(items);
 

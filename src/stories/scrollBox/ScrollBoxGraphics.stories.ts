@@ -12,18 +12,19 @@ import { ListType } from '../../List';
 const args = {
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
-    width: 320,
+    width: 490,
     height: 420,
     radius: 20,
     elementsMargin: 10,
     elementsPadding: 10,
-    elementsWidth: 300,
+    elementsWidth: 150,
     elementsHeight: 80,
     itemsAmount: 100,
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: [...LIST_TYPE],
+    type: LIST_TYPE.reverse(),
+    innerListWidth: 1000,
     onPress: action('Button pressed'),
 };
 
@@ -44,6 +45,7 @@ export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
         onPress,
         globalScroll,
         shiftScroll,
+        innerListWidth,
     },
     context,
 ) =>
@@ -93,6 +95,11 @@ export const UseGraphics: StoryFn<typeof args & { type:ListType }> = (
                 globalScroll,
                 shiftScroll,
             });
+
+            if (type === 'bidirectional')
+            {
+                scrollBox.list.maxWidth = innerListWidth;
+            }
 
             scrollBox.addItems(items);
 

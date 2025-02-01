@@ -11,15 +11,23 @@ import { action } from '@storybook/addon-actions';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 
 const args = {
-    type: [null, ...LIST_TYPE],
+    type: LIST_TYPE.reverse(),
     fontColor: '#000000',
     elementsMargin: 29,
     itemsAmount: 12,
+    maxWidth: 500,
     onPress: action('Button pressed'),
 };
 
 export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
-    { fontColor, elementsMargin, itemsAmount, onPress, type },
+    {
+        fontColor,
+        elementsMargin,
+        itemsAmount,
+        type,
+        maxWidth,
+        onPress,
+    },
     context,
 ) =>
     new PixiStory<typeof args>({
@@ -56,6 +64,7 @@ export const UseSprite: StoryFn<typeof args & { type:ListType }> = (
                     vertPadding: 70,
                     horPadding: 50,
                     elementsMargin,
+                    maxWidth,
                 });
 
                 items.forEach((item) => list.addChild(item));
