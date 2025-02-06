@@ -20,7 +20,7 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: [null, ...LIST_TYPE.reverse()],
+    type: [null, ...LIST_TYPE],
     fadeSpeed: 0.5,
 };
 

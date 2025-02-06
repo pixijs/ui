@@ -15,7 +15,7 @@ const args = {
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
-    type: [null, ...LIST_TYPE.reverse()],
+    type: [null, ...LIST_TYPE],
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
