@@ -10,7 +10,7 @@ export interface DragObject extends Container
     dragGlobalStart: Point;
 }
 
-export const BUTTON_EVENTS = ['onPress', 'onDown', 'onUp', 'onHover', 'onOut', 'onUpOut'];
+export const BUTTON_EVENTS = ['onPress', 'onDown', 'onUp', 'onHover', 'onOut', 'onUpOut'] as const;
 
 export type ButtonEvent = (typeof BUTTON_EVENTS)[number];
 
@@ -25,5 +25,5 @@ export type Padding =
         bottom?: number;
     };
 
-export const LIST_TYPE = ['vertical', 'horizontal', 'bidirectional'];
+export const LIST_TYPE = ['vertical', 'horizontal', 'bidirectional'] as const;
 
