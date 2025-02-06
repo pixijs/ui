@@ -23,7 +23,7 @@ const args = {
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: LIST_TYPE.reverse(),
+    type: [null, ...LIST_TYPE.reverse()],
     innerListWidth: 1000,
     onPress: action('Button pressed'),
 };

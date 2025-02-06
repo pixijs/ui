@@ -940,7 +940,9 @@ export class ScrollBox extends Container
 
     protected get isVertical(): boolean
     {
-        return this.options.type === 'vertical';
+        const type = this.options.type ?? 'vertical';
+
+        return type === 'vertical';
     }
 
     protected get isHorizontal(): boolean
@@ -950,8 +952,6 @@ export class ScrollBox extends Container
 
     protected get isBidirectional(): boolean
     {
-        const type = this.options.type ?? 'bidirectional';
-
-        return type === 'bidirectional';
+        return this.options.type === 'bidirectional';
     }
 }
