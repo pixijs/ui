@@ -12,7 +12,7 @@ const args = {
     fontColor: '#000000',
     backgroundColor: '#F5E3A9',
     itemsAmount: 100,
-    type: [...LIST_TYPE],
+    type: [null, ...LIST_TYPE],
 };
 
 export const UseDynamicDimensions: StoryFn<typeof args & { type: ListType }> = (

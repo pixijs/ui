@@ -11,7 +11,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    type: LIST_TYPE.reverse(),
+    type: LIST_TYPE,
     fontColor: '#000000',
     elementsMargin: 29,
     itemsAmount: 12,

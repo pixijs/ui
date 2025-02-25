@@ -1,7 +1,7 @@
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Switcher } from '../../Switcher';
 import { centerElement } from '../../utils/helpers/resize';
-import { BUTTON_EVENTS } from '../../utils/HelpTypes';
+import { BUTTON_EVENTS, ButtonEvent } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
@@ -15,9 +15,9 @@ const args = {
 
 export const Sprites: StoryFn<
     typeof args & {
-    triggerEvent1: string;
-    triggerEvent2: string;
-    triggerEvent3: string;
+    triggerEvent1: ButtonEvent;
+    triggerEvent2: ButtonEvent;
+    triggerEvent3: ButtonEvent;
 }
 > = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }, context) =>
     new PixiStory<typeof args>({

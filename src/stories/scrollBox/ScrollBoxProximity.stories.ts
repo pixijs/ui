@@ -20,7 +20,7 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: [...LIST_TYPE],
+    type: [null, ...LIST_TYPE],
     fadeSpeed: 0.5,
 };
 
