@@ -91,7 +91,7 @@ export type ButtonOptions = ViewsInput & {
 /**
  * Button component with a lot of tweaks.
  *
- * All views, text, icon and animations are optional. You can set them via constructor pr update later.
+ * All views, text, icon and animations are optional. You can set them via constructor or update later.
  *
  * By default text view and icon view are centered in the active view.
  *
