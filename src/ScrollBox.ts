@@ -562,14 +562,17 @@ export class ScrollBox extends Container
         if (this._dimensionChanged)
         {
             this.list.arrangeChildren();
-
             // Since the scrolling adjustment can happen due to the resize,
             // we shouldn't update the visible items immediately.
             this.stopRenderHiddenItems();
 
             this._dimensionChanged = false;
         }
-        else this.updateVisibleItems();
+        else
+        {
+            if (force) this.list.arrangeChildren();
+            this.updateVisibleItems();
+        }
 
         this.lastScrollX = null;
         this.lastScrollY = null;
