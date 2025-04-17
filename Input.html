@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>PixiUI</title>
+    <title>PixiJS UI</title>
     
     <meta name="description" content="API Documentation for UI components made with PixiJS" />
     
@@ -28,7 +28,7 @@
     <link type="text/css" rel="stylesheet" href="styles/collapsible-group.css">
     
     <script>
-    var config = {"cleverLinks":false,"monospaceLinks":false,"default":{"outputSourceFiles":false},"applicationName":"PixiUI","copyright":"&copy; Copyright 2025 PixiJS Team","googleAnalytics":"","linenums":false,"meta":{"title":"PixiUI","description":"API Documentation for UI components made with PixiJS","keyword":""}};
+    var config = {"cleverLinks":false,"monospaceLinks":false,"default":{"outputSourceFiles":false},"applicationName":"PixiJS UI","copyright":"&copy; Copyright 2025 PixiJS Team","googleAnalytics":"","linenums":false,"meta":{"title":"PixiJS UI","description":"API Documentation for UI components made with PixiJS","keyword":""}};
     </script>
     
 
@@ -38,7 +38,7 @@
 <div id="wrap" class="clearfix">
     
 <div class="navigation">
-    <h3 class="applicationName"><a href="index.html">PixiUI</a></h3>
+    <h3 class="applicationName"><a href="index.html">PixiJS UI</a></h3>
     <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
         <span class="glyphicon glyphicon-menu-hamburger"></span>
     </button>
@@ -682,10 +682,6 @@
             
                 <li class="parent " data-name="List.leftPadding"><a href=List.html#leftPadding>leftPadding</a></li>
             
-                <li class="parent " data-name="List.maxWidth"><a href=List.html#maxWidth>maxWidth</a></li>
-            
-                <li class="parent " data-name="List.maxWidth"><a href=List.html#maxWidth>maxWidth</a></li>
-            
                 <li class="parent " data-name="List.padding"><a href=List.html#padding>padding</a></li>
             
                 <li class="parent " data-name="List.padding"><a href=List.html#padding>padding</a></li>
@@ -707,8 +703,6 @@
                 <li class="parent " data-name="List.vertPadding"><a href=List.html#vertPadding>vertPadding</a></li>
             
                 <li class="parent " data-name="List.view"><a href=List.html#view>view</a></li>
-            
-                <li class="parent " data-name="List._maxWidth"><a href=List.html#_maxWidth>_maxWidth</a></li>
             
                 <li class="parent " data-name="List._type"><a href=List.html#_type>_type</a></li>
             
@@ -778,13 +772,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="MaskedFrame.applyMask"><a href=MaskedFrame.html#applyMask>applyMask</a></li>
-            
                 <li class="parent  " data-name="MaskedFrame.hideBorder"><a href=MaskedFrame.html#hideBorder>hideBorder</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.init"><a href=MaskedFrame.html#init>init</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.setBorder"><a href=MaskedFrame.html#setBorder>setBorder</a></li>
+            
+                <li class="parent  " data-name="MaskedFrame.setMask"><a href=MaskedFrame.html#setMask>setMask</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.showBorder"><a href=MaskedFrame.html#showBorder>showBorder</a></li>
             
@@ -927,8 +921,6 @@
                 <li class="parent " data-name="ScrollBox.height"><a href=ScrollBox.html#height>height</a></li>
             
                 <li class="parent " data-name="ScrollBox.items"><a href=ScrollBox.html#items>items</a></li>
-            
-                <li class="parent " data-name="ScrollBox.list"><a href=ScrollBox.html#list>list</a></li>
             
                 <li class="parent " data-name="ScrollBox.scrollX"><a href=ScrollBox.html#scrollX>scrollX</a></li>
             
@@ -1443,10 +1435,7 @@
             
 
             <td class="description last">
-                <p>Background of the Input.
-<br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
-<br> If you want to use NineSliceSprite, you have to pass a text (name of texture)
-or an instance of Texture as a parameter.</p>
+                <p>Background of the Input.</p>
                 
             </td>
         </tr>
@@ -1459,7 +1448,7 @@ or an instance of Texture as a parameter.</p>
 
             <td class="type">
             
-                PixiTextStyle
+                Partial&lt;TextStyle&gt;
             
             </td>
 
@@ -1696,29 +1685,7 @@ or an instance of Texture as a parameter.</p>
 
         <tr>
             
-                <td class="name"><code>options.addMask</code></td>
-            
-
-            <td class="type">
-            
-                boolean
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Add mask to the Input text, so it is cut off when it does not fit.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.nineSliceSprite</code></td>
+                <td class="name"><code>options.nineSlicePlane</code></td>
             
 
             <td class="type">
@@ -1732,8 +1699,7 @@ or an instance of Texture as a parameter.</p>
             
 
             <td class="description last">
-                <p>NineSliceSprite values for bg and fill ([number, number, number, number]).
-<br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.</p>
+                <p>NineSlicePlane values for bg and fill ([number, number, number, number]).</p>
                 
             </td>
         </tr>
@@ -1876,8 +1842,8 @@ or an instance of Texture as a parameter.</p>
     
     <div class="description">
         <p>Sets height of a Input.
-If nineSliceSprite is set, then height will be set to nineSliceSprite.
-If nineSliceSprite is not set, then height will control components height as Container.</p>
+If nineSlicePlane is set, then height will be set to nineSlicePlane.
+If nineSlicePlane is not set, then height will control components height as Container.</p>
     </div>
     
 
@@ -2444,8 +2410,8 @@ If nineSliceSprite is not set, then height will control components height as Con
     
     <div class="description">
         <p>Sets width of a Input.
-If nineSliceSprite is set, then width will be set to nineSliceSprite.
-If nineSliceSprite is not set, then width will control components width as Container.</p>
+If nineSlicePlane is set, then width will be set to nineSlicePlane.
+If nineSlicePlane is not set, then width will control components width as Container.</p>
     </div>
     
 
@@ -2556,7 +2522,7 @@ If nineSliceSprite is not set, then width will control components width as Conta
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Thu Apr 17 2025 08:14:08 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Thu Apr 17 2025 08:15:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
