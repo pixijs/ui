@@ -168,7 +168,6 @@ export class Input extends Container
         }
         else if (key.length === 1)
         {
-
             this._add(key);
         }
         else if (this.lastInputData && this.lastInputData.length === 1)
@@ -176,7 +175,8 @@ export class Input extends Container
             this._add(this.lastInputData);
         }
 
-        if (this.input) {
+        if (this.input)
+        {
             this.input.value = '';
         }
     }
@@ -673,10 +673,11 @@ export class Input extends Container
         this.inputMask.position.set(this.paddingLeft, this.paddingTop);
     }
 
-    protected onPaste(e: any) {
+    protected onPaste(e: any)
+    {
         e.preventDefault();
 
-        const text = (e.clipboardData || (window as any).clipboardData).getData("text");
+        const text = (e.clipboardData || (window as any).clipboardData).getData('text');
 
         if (!text) return;
 
