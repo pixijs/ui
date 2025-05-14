@@ -573,6 +573,10 @@ export class FancyButton extends ButtonContainer
     set defaultView(view: GetViewSettings | null)
     {
         this.updateView('defaultView', view);
+        if (this._views.disabledView && this.state !== 'default')
+        {
+            this._views.disabledView.visible = false;
+        }
     }
 
     /** Returns the default view of the button. */
@@ -604,7 +608,7 @@ export class FancyButton extends ButtonContainer
     set pressedView(view: GetViewSettings | null)
     {
         this.updateView('pressedView', view);
-        if (this._views.pressedView)
+        if (this._views.pressedView && this.state !== 'pressed')
         {
             this._views.pressedView.visible = false;
         }
@@ -620,7 +624,7 @@ export class FancyButton extends ButtonContainer
     set disabledView(view: GetViewSettings | null)
     {
         this.updateView('disabledView', view);
-        if (this._views.disabledView)
+        if (this._views.disabledView && this.state !== 'disabled')
         {
             this._views.disabledView.visible = false;
         }
