@@ -82,6 +82,8 @@ export class CheckBox extends Switcher
         {
             cleanup(this.label);
 
+            this.label = undefined;
+
             return;
         }
 
@@ -155,12 +157,18 @@ export class CheckBox extends Switcher
      */
     alignLabel()
     {
-        const { unchecked } = this.style;
+        if (!this.style) return;
+        if (!this.label) return;
+        if (!this.views) return;
 
+        const { unchecked } = this.style;
         const uncheckedView = getView(unchecked);
 
-        this.label.x = uncheckedView.width + 10 + (this.style.textOffset?.x ?? 0);
-        this.label.y = ((uncheckedView.height - this.label.height) / 2) + (this.style.textOffset?.y ?? 0);
+        if (uncheckedView)
+        {
+            this.label.x = uncheckedView.width + 10 + (this.style.textOffset?.x ?? 0);
+            this.label.y = ((uncheckedView.height - this.label.height) / 2) + (this.style.textOffset?.y ?? 0);
+        }
     }
 
     /** Getter, which returns a checkbox state. */
