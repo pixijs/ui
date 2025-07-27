@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>PixiJS UI</title>
+    <title>PixiUI</title>
     
     <meta name="description" content="API Documentation for UI components made with PixiJS" />
     
@@ -28,7 +28,7 @@
     <link type="text/css" rel="stylesheet" href="styles/collapsible-group.css">
     
     <script>
-    var config = {"cleverLinks":false,"monospaceLinks":false,"default":{"outputSourceFiles":false},"applicationName":"PixiJS UI","copyright":"&copy; Copyright 2025 PixiJS Team","googleAnalytics":"","linenums":false,"meta":{"title":"PixiJS UI","description":"API Documentation for UI components made with PixiJS","keyword":""}};
+    var config = {"cleverLinks":false,"monospaceLinks":false,"default":{"outputSourceFiles":false},"applicationName":"PixiUI","copyright":"&copy; Copyright 2025 PixiJS Team","googleAnalytics":"","linenums":false,"meta":{"title":"PixiUI","description":"API Documentation for UI components made with PixiJS","keyword":""}};
     </script>
     
 
@@ -38,7 +38,7 @@
 <div id="wrap" class="clearfix">
     
 <div class="navigation">
-    <h3 class="applicationName"><a href="index.html">PixiJS UI</a></h3>
+    <h3 class="applicationName"><a href="index.html">PixiUI</a></h3>
     <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
         <span class="glyphicon glyphicon-menu-hamburger"></span>
     </button>
@@ -286,7 +286,7 @@
             
                 <li class="  " data-name="CheckBox.add"><a href=CheckBox.html#add>add</a></li>
             
-                <li class="parent  " data-name="CheckBox.alignLabel"><a href=CheckBox.html#alignLabel>alignLabel</a></li>
+                <li class="parent  " data-name="CheckBox.alignText"><a href=CheckBox.html#alignText>alignText</a></li>
             
                 <li class="parent  " data-name="CheckBox.forceCheck"><a href=CheckBox.html#forceCheck>forceCheck</a></li>
             
@@ -684,6 +684,10 @@
             
                 <li class="parent " data-name="List.leftPadding"><a href=List.html#leftPadding>leftPadding</a></li>
             
+                <li class="parent " data-name="List.maxWidth"><a href=List.html#maxWidth>maxWidth</a></li>
+            
+                <li class="parent " data-name="List.maxWidth"><a href=List.html#maxWidth>maxWidth</a></li>
+            
                 <li class="parent " data-name="List.padding"><a href=List.html#padding>padding</a></li>
             
                 <li class="parent " data-name="List.padding"><a href=List.html#padding>padding</a></li>
@@ -705,6 +709,8 @@
                 <li class="parent " data-name="List.vertPadding"><a href=List.html#vertPadding>vertPadding</a></li>
             
                 <li class="parent " data-name="List.view"><a href=List.html#view>view</a></li>
+            
+                <li class="parent " data-name="List._maxWidth"><a href=List.html#_maxWidth>_maxWidth</a></li>
             
                 <li class="parent " data-name="List._type"><a href=List.html#_type>_type</a></li>
             
@@ -774,13 +780,13 @@
             
             <span class="subtitle">Methods</span>
             
+                <li class="parent  " data-name="MaskedFrame.applyMask"><a href=MaskedFrame.html#applyMask>applyMask</a></li>
+            
                 <li class="parent  " data-name="MaskedFrame.hideBorder"><a href=MaskedFrame.html#hideBorder>hideBorder</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.init"><a href=MaskedFrame.html#init>init</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.setBorder"><a href=MaskedFrame.html#setBorder>setBorder</a></li>
-            
-                <li class="parent  " data-name="MaskedFrame.setMask"><a href=MaskedFrame.html#setMask>setMask</a></li>
             
                 <li class="parent  " data-name="MaskedFrame.showBorder"><a href=MaskedFrame.html#showBorder>showBorder</a></li>
             
@@ -923,6 +929,8 @@
                 <li class="parent " data-name="ScrollBox.height"><a href=ScrollBox.html#height>height</a></li>
             
                 <li class="parent " data-name="ScrollBox.items"><a href=ScrollBox.html#items>items</a></li>
+            
+                <li class="parent " data-name="ScrollBox.list"><a href=ScrollBox.html#list>list</a></li>
             
                 <li class="parent " data-name="ScrollBox.scrollX"><a href=ScrollBox.html#scrollX>scrollX</a></li>
             
@@ -1777,11 +1785,11 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="alignLabel">
-            <a class="share-icon" href="#alignLabel"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="alignText">
+            <a class="share-icon" href="#alignText"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  alignLabel
+                  alignText
               
             </span>
             <span class="signature">()</span><span class="type-signature"></span>
@@ -1798,11 +1806,13 @@
     
     
     <div class="description">
-        <p>Aligns the label to the checkbox view.
-This method calculates the position of the label based on the checkbox view dimensions and applies the
-specified text offset.
-This method is called after the checkbox style is set or when the label text changes.
-It ensures that the label is positioned correctly relative to the checkbox view.</p>
+        <p>Aligns the text label based on the checkbox style.
+This method calculates the position of the text label based on the checkbox's unchecked view dimensions
+and applies any specified text offsets.
+It ensures that the text label is centered vertically and positioned to the right of the checkbox
+with an optional offset.
+This method is called after the checkbox style is set or when the text label is updated
+to ensure that the text label is always correctly positioned relative to the checkbox.</p>
     </div>
     
 
@@ -1836,7 +1846,9 @@ It ensures that the label is positioned correctly relative to the checkbox view.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>CheckBoxStyle.textOffset for customizing the label position.</li>
+            <li>CheckBoxStyle.textOffset for offset options.</li>
+        
+            <li>getView for how views are created.</li>
         </ul>
     </dd>
     
@@ -2989,7 +3001,7 @@ It ensures that the label is positioned correctly relative to the checkbox view.
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Sun Jul 27 2025 18:33:26 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Sun Jul 27 2025 18:34:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
