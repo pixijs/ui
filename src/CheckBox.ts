@@ -87,6 +87,8 @@ export class CheckBox extends Switcher
         {
             cleanup(this.labelText);
 
+            this.labelText = undefined;
+
             return;
         }
 
