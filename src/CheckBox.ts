@@ -76,6 +76,23 @@ export class CheckBox extends Switcher
         this.labelText.cursor = 'pointer';
         this.labelText.eventMode = 'static';
         this.labelText.on('pointertap', () => (this.checked = !this.checked));
+
+        this.adjustText();
+    }
+
+    protected adjustText()
+    {
+        if (!this.labelText) return;
+        if (!this.views) return;
+
+        const uncheckedView = this.views[0];
+
+        if (uncheckedView)
+        {
+            this.labelText.x = uncheckedView.width + 10 + (this._style?.textOffset?.x ?? 0);
+            this.labelText.y
+                = ((uncheckedView.height - this.labelText.height) / 2) + (this._style?.textOffset?.y ?? 0);
+        }
     }
 
     /** Setter, which sets a checkbox text. */
@@ -131,9 +148,7 @@ export class CheckBox extends Switcher
                 this.labelText.style = style.text;
             }
 
-            this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.labelText.y
-                = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
+            this.adjustText();
         }
         else
         {
