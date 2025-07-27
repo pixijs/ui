@@ -148,14 +148,13 @@ export class CheckBox extends Switcher
      * and applies any specified text offsets.
      * It ensures that the text label is centered vertically and positioned to the right of the checkbox
      * with an optional offset.
-     * @remarks
      * This method is called after the checkbox style is set or when the text label is updated
      * to ensure that the text label is always correctly positioned relative to the checkbox.
      * @see {@link CheckBoxStyle.textOffset} for offset options.
      * @see {@link getView} for how views are created.
      */
-    alignText() {
-
+    alignText()
+    {
         if (this.style.text)
         {
             this.labelText.style = this.style.text;
