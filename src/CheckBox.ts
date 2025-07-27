@@ -150,7 +150,6 @@ export class CheckBox extends Switcher
      * This method calculates the position of the label based on the checkbox view dimensions and applies the
      * specified text offset.
      * @private
-     * @remarks
      * This method is called after the checkbox style is set or when the label text changes.
      * It ensures that the label is positioned correctly relative to the checkbox view.
      * @see {@link CheckBoxStyle.textOffset} for customizing the label position.
