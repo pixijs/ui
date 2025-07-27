@@ -86,6 +86,8 @@ export class CheckBox extends Switcher
         }
 
         this.label ? (this.label.text = text) : this.addLabel(text);
+
+        this.alignLabel();
     }
 
     /** Getter, which returns a checkbox text. */
@@ -133,8 +135,7 @@ export class CheckBox extends Switcher
                 }
             }
 
-            this.label.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.label.y = ((uncheckedView.height - this.label.height) / 2) + (style.textOffset?.y ?? 0);
+            this.alignLabel();
         }
     }
 
@@ -142,6 +143,15 @@ export class CheckBox extends Switcher
     get style(): CheckBoxStyle
     {
         return this._style;
+    }
+
+    alignLabel() {
+        const { unchecked } = this.style;
+
+        const uncheckedView = getView(unchecked);
+
+        this.label.x = uncheckedView.width + 10 + (this.style.textOffset?.x ?? 0);
+        this.label.y = ((uncheckedView.height - this.label.height) / 2) + (this.style.textOffset?.y ?? 0);
     }
 
     /** Getter, which returns a checkbox state. */
