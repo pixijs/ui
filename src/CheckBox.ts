@@ -89,6 +89,8 @@ export class CheckBox extends Switcher
         }
 
         this.labelText ? (this.labelText.text = text) : this.addLabel(text);
+
+        this.alignText();
     }
 
     /** Getter, which returns a checkbox text. */
@@ -126,14 +128,7 @@ export class CheckBox extends Switcher
         {
             checkedView.visible = true;
             this.active = 1;
-            if (style.text)
-            {
-                this.labelText.style = style.text;
-            }
-
-            this.labelText.x = uncheckedView.width + 10 + (style.textOffset?.x ?? 0);
-            this.labelText.y
-                = ((uncheckedView.height - this.labelText.height) / 2) + (style.textOffset?.y ?? 0);
+            this.alignText();
         }
         else
         {
@@ -145,6 +140,34 @@ export class CheckBox extends Switcher
     get style(): CheckBoxStyle
     {
         return this._style;
+    }
+
+    /**
+     * Aligns the text label based on the checkbox style.
+     * This method calculates the position of the text label based on the checkbox's unchecked view dimensions
+     * and applies any specified text offsets.
+     * It ensures that the text label is centered vertically and positioned to the right of the checkbox
+     * with an optional offset.
+     * @remarks
+     * This method is called after the checkbox style is set or when the text label is updated
+     * to ensure that the text label is always correctly positioned relative to the checkbox.
+     * @see {@link CheckBoxStyle.textOffset} for offset options.
+     * @see {@link getView} for how views are created.
+     */
+    alignText() {
+
+        if (this.style.text)
+        {
+            this.labelText.style = this.style.text;
+        }
+
+        const { unchecked } = this.style;
+
+        const uncheckedView = getView(unchecked);
+
+        this.labelText.x = uncheckedView.width + 10 + (this.style.textOffset?.x ?? 0);
+        this.labelText.y
+            = ((uncheckedView.height - this.labelText.height) / 2) + (this.style.textOffset?.y ?? 0);
     }
 
     /** Getter, which returns a checkbox state. */
