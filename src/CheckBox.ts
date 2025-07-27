@@ -155,7 +155,9 @@ export class CheckBox extends Switcher
      */
     alignText()
     {
-        if (this.style.text)
+        if (!this.style) return;
+
+        if (this.style?.text)
         {
             this.labelText.style = this.style.text;
         }
