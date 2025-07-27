@@ -77,22 +77,7 @@ export class CheckBox extends Switcher
         this.labelText.eventMode = 'static';
         this.labelText.on('pointertap', () => (this.checked = !this.checked));
 
-        this.adjustText();
-    }
-
-    protected adjustText()
-    {
-        if (!this.labelText) return;
-        if (!this.views) return;
-
-        const uncheckedView = this.views[0];
-
-        if (uncheckedView)
-        {
-            this.labelText.x = uncheckedView.width + 10 + (this._style?.textOffset?.x ?? 0);
-            this.labelText.y
-                = ((uncheckedView.height - this.labelText.height) / 2) + (this._style?.textOffset?.y ?? 0);
-        }
+        this.alignText();
     }
 
     /** Setter, which sets a checkbox text. */
@@ -176,22 +161,20 @@ export class CheckBox extends Switcher
      * @see {@link CheckBoxStyle.textOffset} for offset options.
      * @see {@link getView} for how views are created.
      */
-    alignText()
+    protected alignText()
     {
         if (!this.style) return;
+        if (!this.labelText) return;
+        if (!this.views) return;
 
-        if (this.style?.text)
+        const uncheckedView = this.views[0];
+
+        if (uncheckedView)
         {
-            this.labelText.style = this.style.text;
+            this.labelText.x = uncheckedView.width + 10 + (this._style?.textOffset?.x ?? 0);
+            this.labelText.y
+                = ((uncheckedView.height - this.labelText.height) / 2) + (this._style?.textOffset?.y ?? 0);
         }
-
-        const { unchecked } = this.style;
-
-        const uncheckedView = getView(unchecked);
-
-        this.labelText.x = uncheckedView.width + 10 + (this.style.textOffset?.x ?? 0);
-        this.labelText.y
-            = ((uncheckedView.height - this.labelText.height) / 2) + (this.style.textOffset?.y ?? 0);
     }
 
     /** Getter, which returns a checkbox state. */
