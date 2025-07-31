@@ -21,7 +21,7 @@ import { ButtonEvents } from './ButtonEvents';
 export class Button extends ButtonEvents
 {
     /** Container, given as a constructor parameter that is a button view. */
-    protected _view: Container;
+    protected _view: Container | undefined;
 
     /**
      * Turns a given container-based view into a button by adding all button events.
@@ -43,14 +43,14 @@ export class Button extends ButtonEvents
     {
         const wasItInitiated = !!this._view;
 
-        if (wasItInitiated) this.disconnectEvents(this._view);
+        if (wasItInitiated && this._view) this.disconnectEvents(this._view);
 
         this._view = view;
         this.connectEvents(this._view);
     }
 
-    /** Get button view, thar all the interaction events are applied to. */
-    get view(): Container
+    /** Get button view, that all the interaction events are applied to. */
+    get view(): Container | undefined
     {
         return this._view;
     }
@@ -80,7 +80,7 @@ export class Button extends ButtonEvents
     /** Getter that returns button state. */
     get enabled(): boolean
     {
-        return this.view.eventMode === 'static';
+        return this.view?.eventMode === 'static';
     }
 }
 

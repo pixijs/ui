@@ -4,8 +4,8 @@ import { Signal } from 'typed-signals';
 /** Events controller used for {@link Button}. */
 export class ButtonEvents
 {
-    protected _isMouseIn: boolean;
-    protected _isDown: boolean;
+    protected _isMouseIn = false;
+    protected _isDown = false;
 
     /** Event that is fired when the button is down. */
     onDown: Signal<(btn?: this, e?: FederatedPointerEvent) => void>;

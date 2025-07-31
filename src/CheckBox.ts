@@ -35,12 +35,12 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    labelText!: PixiText;
+    labelText: PixiText | undefined;
 
     /** Signal emitted when checkbox state changes. */
     onCheck: Signal<(state: boolean) => void>;
 
-    protected _style: CheckBoxStyle;
+    protected _style: CheckBoxStyle | undefined;
     protected _textClass: PixiTextClass;
 
     constructor(options: CheckBoxOptions)
@@ -48,11 +48,11 @@ export class CheckBox extends Switcher
         super();
 
         this._textClass = options.TextClass ?? Text;
-        this.text = options.text;
+        this.text = options.text ?? '';
 
         this.style = options.style;
 
-        this.checked = options.checked;
+        this.checked = options.checked ?? false;
 
         this.triggerEvents = ['onPress'];
 
@@ -85,7 +85,9 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            cleanup(this.labelText);
+            if (this.labelText) {
+                cleanup(this.labelText);
+            }
 
             this.labelText = undefined;
 
@@ -147,7 +149,7 @@ export class CheckBox extends Switcher
     }
 
     /** Getter, which returns a checkbox style settings. */
-    get style(): CheckBoxStyle
+    get style(): CheckBoxStyle | undefined
     {
         return this._style;
     }
