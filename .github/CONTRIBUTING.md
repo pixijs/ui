@@ -48,8 +48,7 @@ make your change to (and send a PR to) depends on the type of change you are mak
 Here is our branch breakdown:
 
 -   `main` - Make your change to the `main` branch if it is an _urgent_ hotfix.
--   `dev` - Make your change to `dev` if it is a _non-urgent_ bugfix or a backwards-compatible feature.
--   `v4.x`, `v5.3.x`, `v5.2.x`, etc - Make your change to legacy branches to patch old releases if your fix _only_ applies to older versions.
+-   `v1.x`, etc - Make your change to legacy branches to patch old releases if your fix _only_ applies to older versions.
 
 Your change should be made directly to the branch in your fork, or to a branch in your fork made off of
 one of the above branches.
@@ -71,4 +70,4 @@ from your fork to the main **ui** repository on the branch you used in the `Maki
 
 ## Contributor Code of Conduct
 
-[Code of Conduct](CODE_OF_CONDUCT.md) is adapted from [Contributor Covenant, version 1.4](http://contributor-covenant.org/version/1/4)
+[Code of Conduct](https://github.com/pixijs/pixijs/blob/dev/.github/CODE_OF_CONDUCT.md) is adapted from [Contributor Covenant, version 1.4](https://contributor-covenant.org/version/1/4)
