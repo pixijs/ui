@@ -88,7 +88,10 @@ export const UseGraphics: StoryFn<typeof args> = (
                 onChange({ id: selectedItemID, val: selectedVal }),
             );
 
-            view.addChild(radioGroup.innerView);
+            if (radioGroup.innerView)
+            {
+                view.addChild(radioGroup.innerView);
+            }
         },
         resize: (view) => centerElement(view),
     });
@@ -97,7 +100,7 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
 {
     const graphics = new Graphics();
 
-    const isCircle = width === height && radius >= width / 2;
+    const isCircle = width === height && (radius ?? 0) >= (width ?? 0) / 2;
 
     if (isCircle)
     {

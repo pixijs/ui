@@ -109,7 +109,10 @@ export const UseSprite: StoryFn<typeof args> = (params, context) =>
         {
             const buttonView = new SpriteButton(params);
 
-            view.addChild(buttonView.view);
+            if (buttonView.view)
+            {
+                view.addChild(buttonView.view);
+            }
 
             centerView(view);
         },

@@ -92,7 +92,7 @@ export class MaskedFrame extends Container
 
         this.showBorder();
 
-        if (this.maskData)
+        if (this.maskData && this._targetMask)
         {
             const borderMask
                 = typeof this.maskData === 'string'
@@ -111,6 +111,8 @@ export class MaskedFrame extends Container
     /** Hides a border. */
     showBorder()
     {
+        if (!this.target) return;
+        
         const width = this.borderWidth * 2;
 
         this.border
