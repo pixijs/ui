@@ -104,26 +104,28 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
 
     if (isCircle)
     {
-        graphics.circle(width / 2, width / 2, width / 2);
+        const w = width ?? 0;
+        graphics.circle(w / 2, w / 2, w / 2);
     }
     else
     {
-        graphics.roundRect(0, 0, width, height, radius);
+        graphics.roundRect(0, 0, width ?? 0, height ?? 0, radius ?? 0);
     }
 
     graphics.fill(color);
 
     if (fillColor !== undefined)
     {
-        const center = width / 2;
+        const center = (width ?? 0) / 2;
 
         if (isCircle)
         {
-            graphics.circle(center, center, center - padding);
+            graphics.circle(center, center, center - (padding ?? 0));
         }
         else
         {
-            graphics.roundRect(padding, padding, width - (padding * 2), height - (padding * 2), radius);
+            const p = padding ?? 0;
+            graphics.roundRect(p, p, (width ?? 0) - (p * 2), (height ?? 0) - (p * 2), radius ?? 0);
         }
 
         graphics.fill(fillColor);

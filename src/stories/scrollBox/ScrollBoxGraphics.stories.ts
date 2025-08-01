@@ -96,7 +96,7 @@ export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
                 shiftScroll,
             });
 
-            if (type === 'bidirectional')
+            if (type === 'bidirectional' && scrollBox.list)
             {
                 scrollBox.list.maxWidth = innerListWidth;
             }
