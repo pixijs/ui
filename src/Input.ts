@@ -66,7 +66,7 @@ export class Input extends Container
 
     protected activation = false;
     protected readonly options: InputOptions;
-    protected input: HTMLInputElement = document.createElement('input');
+    protected input: HTMLInputElement | undefined;
 
     protected handleActivationBinding = this.handleActivation.bind(this);
     protected onKeyUpBinding = this.onKeyUp.bind(this);
