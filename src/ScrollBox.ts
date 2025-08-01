@@ -64,8 +64,8 @@ type ProximityEventData = {
 
 export class ScrollBox extends Container
 {
-    protected background: Graphics = new Graphics();
-    protected borderMask: Graphics = new Graphics();
+    protected background: Graphics | undefined;
+    protected borderMask: Graphics | undefined;
     protected lastWidth: number = 0;
     protected lastHeight: number = 0;
     protected _width = 0;
@@ -76,21 +76,21 @@ export class ScrollBox extends Container
      * Arrange container, that holds all inner elements.
      * Use this control inner arrange container size in case of bidirectional scroll type.
      */
-    list: List = new List();
+    list: List | undefined;
 
-    protected _trackpad: Trackpad = new Trackpad();
+    protected _trackpad: Trackpad | undefined;
     protected isDragging = 0;
     protected interactiveStorage: {
         item: Container;
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
-    protected pressedChild: Container = new Container();
+    protected pressedChild: Container | undefined;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions = {};
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
-    protected dragStarTouchPoint: Point = new Point();
+    protected dragStarTouchPoint: Point | undefined;
     protected isOver = false;
 
     protected proximityRange: number = 0;

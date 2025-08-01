@@ -54,12 +54,12 @@ const SECURE_CHARACTER = '*';
 export class Input extends Container
 {
     protected _bg?: Container | NineSliceSprite | Graphics;
-    protected inputMask: Container | NineSliceSprite | Graphics = new Container();
-    protected _cursor: Sprite = new Sprite();
+    protected inputMask: Container | NineSliceSprite | Graphics | undefined;
+    protected _cursor: Sprite | undefined;
     protected _value: string = '';
     protected _secure: boolean = false;
-    protected inputField: PixiText = new Text();
-    protected placeholder: PixiText = new Text();
+    protected inputField: PixiText | undefined;
+    protected placeholder: PixiText | undefined;
     protected editing = false;
     protected tick = 0;
     protected lastInputData: string = '';
