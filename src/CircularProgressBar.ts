@@ -53,7 +53,7 @@ export class CircularProgressBar extends Container
     {
         super();
 
-        this.options = options;
+        this.options = options ?? {};
 
         this.addChild(this.innerView);
 

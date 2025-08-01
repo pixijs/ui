@@ -19,8 +19,8 @@ import { Trackpad } from './utils/trackpad/Trackpad';
 import type { ListOptions, ListType } from './List';
 
 export type ScrollBoxOptions = {
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     background?: ColorSource;
     type?: ListType;
     radius?: number;
@@ -64,10 +64,10 @@ type ProximityEventData = {
 
 export class ScrollBox extends Container
 {
-    protected background: Graphics;
-    protected borderMask: Graphics;
-    protected lastWidth: number;
-    protected lastHeight: number;
+    protected background: Graphics = new Graphics();
+    protected borderMask: Graphics = new Graphics();
+    protected lastWidth: number = 0;
+    protected lastHeight: number = 0;
     protected _width = 0;
     protected _height = 0;
     protected _dimensionChanged = false;
@@ -76,24 +76,24 @@ export class ScrollBox extends Container
      * Arrange container, that holds all inner elements.
      * Use this control inner arrange container size in case of bidirectional scroll type.
      */
-    list: List;
+    list: List = new List();
 
-    protected _trackpad: Trackpad;
+    protected _trackpad: Trackpad = new Trackpad();
     protected isDragging = 0;
     protected interactiveStorage: {
         item: Container;
         eventMode: EventMode;
     }[] = [];
     protected visibleItems: Container[] = [];
-    protected pressedChild: Container;
+    protected pressedChild: Container = new Container();
     protected ticker = Ticker.shared;
-    protected options: ScrollBoxOptions;
+    protected options: ScrollBoxOptions = {};
     protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
-    protected dragStarTouchPoint: Point;
+    protected dragStarTouchPoint: Point = new Point();
     protected isOver = false;
 
-    protected proximityRange: number;
+    protected proximityRange: number = 0;
     protected proximityStatusCache: boolean[] = [];
     protected lastScrollX!: number | null;
     protected lastScrollY!: number | null;
@@ -150,8 +150,8 @@ export class ScrollBox extends Container
         this.options = options;
         this.setBackground(options.background);
 
-        this._width = options.width | this.background.width;
-        this._height = options.height | this.background.height;
+        this._width = options.width ?? this.background.width ?? 100;
+        this._height = options.height ?? this.background.height ?? 100;
 
         this.proximityRange = options.proximityRange ?? 0;
 

@@ -54,19 +54,19 @@ const SECURE_CHARACTER = '*';
 export class Input extends Container
 {
     protected _bg?: Container | NineSliceSprite | Graphics;
-    protected inputMask: Container | NineSliceSprite | Graphics;
-    protected _cursor: Sprite;
+    protected inputMask: Container | NineSliceSprite | Graphics = new Container();
+    protected _cursor: Sprite = new Sprite();
     protected _value: string = '';
-    protected _secure: boolean;
-    protected inputField: PixiText;
-    protected placeholder: PixiText;
+    protected _secure: boolean = false;
+    protected inputField: PixiText = new Text();
+    protected placeholder: PixiText = new Text();
     protected editing = false;
     protected tick = 0;
-    protected lastInputData: string;
+    protected lastInputData: string = '';
 
     protected activation = false;
     protected readonly options: InputOptions;
-    protected input: HTMLInputElement;
+    protected input: HTMLInputElement = document.createElement('input');
 
     protected handleActivationBinding = this.handleActivation.bind(this);
     protected onKeyUpBinding = this.onKeyUp.bind(this);
