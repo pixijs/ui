@@ -29,7 +29,7 @@ export type MaskedProgressBarOptions = {
 export class CircularProgressBar extends Container
 {
     private _progress = 0;
-    private options: MaskedProgressBarOptions;
+    private options: MaskedProgressBarOptions | undefined;
 
     private bgCircle = new Graphics();
     private fillCircle = new Graphics();
@@ -61,7 +61,7 @@ export class CircularProgressBar extends Container
 
         this.addBackground();
 
-        if (options.value)
+        if (options?.value)
         {
             this.progress = options.value;
         }
@@ -69,11 +69,13 @@ export class CircularProgressBar extends Container
 
     private addBackground()
     {
+        if (!this.options) return;
+        
         const { backgroundColor, lineWidth, radius, backgroundAlpha } = this.options;
 
         let alpha = 1;
 
-        if (backgroundAlpha > 0)
+        if (backgroundAlpha && backgroundAlpha > 0)
         {
             alpha = backgroundAlpha;
         }

@@ -23,7 +23,7 @@ export class DoubleSlider extends SliderBase
 {
     protected sliderOptions: DoubleSliderOptions;
 
-    protected activeValue: 'value1' | 'value2';
+    protected activeValue: 'value1' | 'value2' | undefined;
 
     /** Signal that fires when value have changed. */
     onChange: Signal<(value1: number, value2: number) => void> = new Signal();
@@ -47,8 +47,8 @@ export class DoubleSlider extends SliderBase
 
         this.updateProgress(value1, value2);
 
-        this.value2 = value2;
-        this.value1 = value1;
+        this.value2 = value2 ?? 0;
+        this.value1 = value1 ?? 0;
     }
 
     protected updateProgress(value1 = this.value1, value2 = this.value2)
@@ -69,22 +69,25 @@ export class DoubleSlider extends SliderBase
             this.sliderOptions.value2 = this.sliderOptions.max;
         }
 
-        if (this.sliderOptions.value2 < this.sliderOptions.value1)
+        const value1 = this.sliderOptions.value1 ?? this.min;
+        const value2 = this.sliderOptions.value2 ?? this.sliderOptions.max;
+
+        if (value2 < value1)
         {
-            this.sliderOptions.value2 = this.sliderOptions.value1;
+            this.sliderOptions.value2 = value1;
         }
 
-        if (this.sliderOptions.value1 < this.sliderOptions.min)
+        if (value1 < this.sliderOptions.min)
         {
             this.sliderOptions.value1 = this.sliderOptions.min;
         }
 
-        if (this.sliderOptions.value1 > this.sliderOptions.max)
+        if (value1 > this.sliderOptions.max)
         {
             this.sliderOptions.value1 = this.sliderOptions.max;
         }
 
-        if (this.sliderOptions.value2 > this.sliderOptions.max)
+        if (value2 > this.sliderOptions.max)
         {
             this.sliderOptions.value2 = this.sliderOptions.max;
         }
@@ -180,7 +183,7 @@ export class DoubleSlider extends SliderBase
     {
         super.endUpdate();
 
-        this.activeValue = null;
+        this.activeValue = undefined;
     }
 
     protected override change()
