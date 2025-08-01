@@ -110,6 +110,8 @@ export class CircularProgressBar extends Container
 
         this._progress = value;
 
+        if (!this.options) return;
+        
         const { lineWidth, radius, fillColor, fillAlpha, cap } = this.options;
 
         if (value === 0 && fillAlpha === 0)

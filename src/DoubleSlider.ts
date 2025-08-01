@@ -59,38 +59,44 @@ export class DoubleSlider extends SliderBase
 
     protected validateValues()
     {
+        const min = this.sliderOptions.min ?? this.min;
+        const max = this.sliderOptions.max ?? this.max;
+
         if (!this.sliderOptions.value1)
         {
-            this.sliderOptions.value1 = this.min;
+            this.sliderOptions.value1 = min;
         }
 
         if (!this.sliderOptions.value2)
         {
-            this.sliderOptions.value2 = this.sliderOptions.max;
+            this.sliderOptions.value2 = max;
         }
 
-        const value1 = this.sliderOptions.value1 ?? this.min;
-        const value2 = this.sliderOptions.value2 ?? this.sliderOptions.max;
+        let value1 = this.sliderOptions.value1 ?? min;
+        let value2 = this.sliderOptions.value2 ?? max;
 
         if (value2 < value1)
         {
-            this.sliderOptions.value2 = value1;
+            value2 = value1;
         }
 
-        if (value1 < this.sliderOptions.min)
+        if (value1 < min)
         {
-            this.sliderOptions.value1 = this.sliderOptions.min;
+            value1 = min;
         }
 
-        if (value1 > this.sliderOptions.max)
+        if (value1 > max)
         {
-            this.sliderOptions.value1 = this.sliderOptions.max;
+            value1 = max;
         }
 
-        if (value2 > this.sliderOptions.max)
+        if (value2 > max)
         {
-            this.sliderOptions.value2 = this.sliderOptions.max;
+            value2 = max;
         }
+
+        this.sliderOptions.value1 = value1;
+        this.sliderOptions.value2 = value2;
     }
 
     /** Returns left value. */
@@ -235,7 +241,7 @@ export class DoubleSlider extends SliderBase
             this._slider1.x = this._slider2.x;
         }
 
-        if (this.sliderOptions?.showValue)
+        if (this.sliderOptions?.showValue && this.value1Text && this._slider1)
         {
             this.value1Text.text = `${Math.round(this.value1)}`;
 
@@ -259,7 +265,7 @@ export class DoubleSlider extends SliderBase
             this._slider2.x = this._slider1.x;
         }
 
-        if (this.sliderOptions?.showValue)
+        if (this.sliderOptions?.showValue && this.value2Text && this._slider2)
         {
             this.value2Text.text = `${Math.round(this.value2)}`;
 
