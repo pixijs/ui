@@ -19,11 +19,11 @@ export class Trackpad
     xAxis: SlidingNumber;
     yAxis: SlidingNumber;
 
-    protected _isDown: boolean;
-    protected _globalPosition: Point;
-    protected _frame: Rectangle;
-    protected _bounds: Rectangle;
-    protected _dirty: boolean;
+    protected _isDown: boolean = false;
+    protected _globalPosition: Point | undefined;
+    protected _frame: Rectangle | undefined;
+    protected _bounds: Rectangle | undefined;
+    protected _dirty: boolean = false;
     protected disableEasing = false;
 
     constructor(options: TrackpadOptions)

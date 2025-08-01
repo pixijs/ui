@@ -28,14 +28,14 @@ export type DoubleSliderOptions = BaseSliderOptions & {
 /** Hepper class, used as a base for single or double slider creation. */
 export class SliderBase extends ProgressBar
 {
-    protected _slider1: Container;
-    protected _slider2: Container;
+    protected _slider1: Container | undefined;
+    protected _slider2: Container | undefined;
 
     protected value1Text?: PixiText;
     protected value2Text?: PixiText;
 
-    protected _value1: number;
-    protected _value2: number;
+    protected _value1: number = 0;
+    protected _value2: number = 0;
 
     protected dragging = 0;
 
