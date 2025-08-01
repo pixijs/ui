@@ -2,9 +2,9 @@ import { ColorSource, Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
 
 export type MaskedProgressBarOptions = {
     backgroundColor?: ColorSource;
-    fillColor: ColorSource;
-    lineWidth: number;
-    radius: number;
+    fillColor?: ColorSource;
+    lineWidth?: number;
+    radius?: number;
     value?: number;
     backgroundAlpha?: number;
     fillAlpha?: number;
@@ -29,7 +29,7 @@ export type MaskedProgressBarOptions = {
 export class CircularProgressBar extends Container
 {
     private _progress = 0;
-    private options: MaskedProgressBarOptions | undefined;
+    private options: MaskedProgressBarOptions = {};
 
     private bgCircle = new Graphics();
     private fillCircle = new Graphics();
@@ -69,9 +69,7 @@ export class CircularProgressBar extends Container
 
     private addBackground()
     {
-        if (!this.options) return;
-        
-        const { backgroundColor, lineWidth, radius, backgroundAlpha } = this.options;
+        const { backgroundColor, lineWidth = 5, radius = 50, backgroundAlpha } = this.options;
 
         let alpha = 1;
 
@@ -110,9 +108,7 @@ export class CircularProgressBar extends Container
 
         this._progress = value;
 
-        if (!this.options) return;
-        
-        const { lineWidth, radius, fillColor, fillAlpha, cap } = this.options;
+        const { lineWidth = 5, radius = 50, fillColor = 0xffffff, fillAlpha, cap } = this.options;
 
         if (value === 0 && fillAlpha === 0)
         {
