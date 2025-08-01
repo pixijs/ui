@@ -241,7 +241,7 @@ export class Input extends Container
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
 
-        this.value = this.options.value as string;
+        this.value = this.options.value ?? '';
 
         this.align();
     }

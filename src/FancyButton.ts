@@ -258,10 +258,10 @@ export class FancyButton extends ButtonContainer
 
         this.setState('default');
 
-        this.defaultView = defaultView ?? null;
-        this.hoverView = hoverView ?? null;
-        this.pressedView = pressedView ?? null;
-        this.disabledView = disabledView ?? null;
+        this.defaultView = defaultView;
+        this.hoverView = hoverView;
+        this.pressedView = pressedView;
+        this.disabledView = disabledView;
         this.text = text ?? '';
         if (icon !== undefined) 
         {

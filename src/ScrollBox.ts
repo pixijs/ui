@@ -150,8 +150,8 @@ export class ScrollBox extends Container
         this.options = options;
         this.setBackground(options.background);
 
-        this._width = options.width ?? this.background.width ?? 100;
-        this._height = options.height ?? this.background.height ?? 100;
+        this._width = options.width ?? this.background?.width ?? 100;
+        this._height = options.height ?? this.background?.height ?? 100;
 
         this.proximityRange = options.proximityRange ?? 0;
 
