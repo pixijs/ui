@@ -273,6 +273,8 @@ export class ScrollBox extends Container
         let isVisible = false;
         const list = this.list;
 
+        if (!list) return false;
+
         if (this.isVertical || this.isBidirectional)
         {
             const posY = item.y + list.y;
@@ -353,7 +355,9 @@ export class ScrollBox extends Container
             this.isDragging = 1;
             this.dragStarTouchPoint = this.worldTransform.applyInverse(e.global);
 
-            this._trackpad.pointerDown(this.dragStarTouchPoint);
+            if (this._trackpad) {
+                this._trackpad.pointerDown(this.dragStarTouchPoint);
+            }
 
             const listTouchPoint = this.list?.worldTransform.applyInverse(e.global);
 
