@@ -68,7 +68,7 @@ export class Trackpad
 
     update(): void
     {
-        if (this._dirty)
+        if (this._dirty && this._bounds && this._frame)
         {
             this._dirty = false;
 
@@ -79,7 +79,7 @@ export class Trackpad
             this.xAxis.min = this._bounds.bottom - this._frame.height;
         }
 
-        if (this._isDown)
+        if (this._isDown && this._globalPosition)
         {
             this.xAxis.hold(this._globalPosition.x);
             this.yAxis.hold(this._globalPosition.y);
@@ -93,6 +93,8 @@ export class Trackpad
 
     resize(w: number, h: number): void
     {
+        if (!this._frame) return;
+
         this._frame.x = 0;
         this._frame.width = w;
 
@@ -104,6 +106,8 @@ export class Trackpad
 
     setBounds(minX: number, maxX: number, minY: number, maxY: number): void
     {
+        if (!this._bounds) return;
+
         this._bounds.x = minX;
         this._bounds.width = maxX - minX;
         this._bounds.y = minY;

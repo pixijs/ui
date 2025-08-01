@@ -26,7 +26,7 @@ export class Switcher extends Container
     innerView: Container;
 
     /** The id of the visible(active) view. */
-    protected _active: number = 0;
+    protected _active: number | undefined = 0;
 
     /** Fired when active view changes. */
     onChange: Signal<(state: number | boolean) => void>;
@@ -79,7 +79,7 @@ export class Switcher extends Container
     /** Returns the active view. */
     get activeView(): Container | undefined
     {
-        if (this.views && this.views[this.active])
+        if (this.views && this.active !== undefined && this.views[this.active])
         {
             return this.views[this.active] as Container;
         }
@@ -162,7 +162,7 @@ export class Switcher extends Container
 
         if (exID !== this.active)
         {
-            const res = this.views.length > 2 ? this.active : this.active === 1;
+            const res = this.views.length > 2 ? (this.active ?? 0) : (this.active === 1);
 
             this.onChange.emit(res);
         }
@@ -193,13 +193,15 @@ export class Switcher extends Container
             return;
         }
 
-        this.views[this.active].visible = true;
+        this.views[this._active].visible = true;
     }
 
     /** Returns the id of the next view in order. Or undefined, if order is empty. */
     protected get nextActive(): number | undefined
     {
         if (this.views.length === 0) return undefined;
+
+        if (this.active === undefined) return 0;
 
         return this.active < this.views.length - 1 ? this.active + 1 : 0;
     }
@@ -211,7 +213,7 @@ export class Switcher extends Container
     }
 
     /** Gets the id of the visible(active) view. */
-    get active(): number
+    get active(): number | undefined
     {
         return this._active;
     }

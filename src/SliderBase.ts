@@ -60,8 +60,12 @@ export class SliderBase extends ProgressBar
 
         this.settings = options;
 
-        this.slider1 = options.slider1;
-        this.slider2 = options.slider2;
+        if (options.slider1) {
+            this.slider1 = options.slider1;
+        }
+        if (options.slider2) {
+            this.slider2 = options.slider2;
+        }
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
@@ -87,8 +91,8 @@ export class SliderBase extends ProgressBar
 
         if (this._slider1)
         {
-            this.slider1.removeAllListeners();
-            this.slider1.destroy();
+            this._slider1.removeAllListeners();
+            this._slider1.destroy();
         }
 
         this._slider1 = this.createSlider(value);
@@ -122,8 +126,8 @@ export class SliderBase extends ProgressBar
 
         if (this._slider2)
         {
-            this.slider2.removeAllListeners();
-            this.slider2.destroy();
+            this._slider2.removeAllListeners();
+            this._slider2.destroy();
         }
 
         this._slider2 = this.createSlider(value);
@@ -236,8 +240,8 @@ export class SliderBase extends ProgressBar
             this.change();
         }
 
-        this.startUpdateValue1 = null;
-        this.startUpdateValue2 = null;
+        this.startUpdateValue1 = 0;
+        this.startUpdateValue2 = 0;
     }
 
     protected onClick()
@@ -254,7 +258,7 @@ export class SliderBase extends ProgressBar
 
         if (x !== this.startX)
         {
-            this.startX = null;
+            this.startX = 0;
         }
     }
 

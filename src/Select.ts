@@ -249,7 +249,7 @@ export class Select extends Container
                 this.close();
             });
 
-            this.scrollBox.addItem(button);
+            this.scrollBox?.addItem(button);
         });
     }
 
@@ -259,6 +259,8 @@ export class Select extends Container
      */
     removeItem(itemID: number)
     {
+        if (!this.scrollBox) return;
+
         this.scrollBox.removeItem(itemID);
     }
 
