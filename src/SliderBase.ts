@@ -107,7 +107,7 @@ export class SliderBase extends ProgressBar
     }
 
     /** Get Slider1 instance. */
-    get slider1(): Container
+    get slider1(): Container | undefined
     {
         return this._slider1;
     }
@@ -142,7 +142,7 @@ export class SliderBase extends ProgressBar
     }
 
     /** Get Slider2 instance. */
-    get slider2(): Container
+    get slider2(): Container | undefined
     {
         return this._slider2;
     }

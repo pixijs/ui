@@ -95,8 +95,8 @@ export class ScrollBox extends Container
 
     protected proximityRange: number = 0;
     protected proximityStatusCache: boolean[] = [];
-    protected lastScrollX!: number | null;
-    protected lastScrollY!: number | null;
+    protected lastScrollX: number | undefined;
+    protected lastScrollY: number | undefined;
     protected proximityCheckFrameCounter = 0;
     public onProximityChange = new Signal<(data: ProximityEventData) => void>();
     public onScroll: Signal<(value: number | PointData) => void> = new Signal();

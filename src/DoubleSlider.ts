@@ -150,8 +150,8 @@ export class DoubleSlider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        const slider1Dist = Math.abs(x - this._slider1.x - this._slider1.width);
-        const slider2Dist = Math.abs(x - this._slider2.x);
+        const slider1Dist = this._slider1 ? Math.abs(x - this._slider1.x - this._slider1.width) : Infinity;
+        const slider2Dist = this._slider2 ? Math.abs(x - this._slider2.x) : Infinity;
 
         if (!this.activeValue)
         {
@@ -208,7 +208,7 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Get Slider1 instance. */
-    override get slider1(): Container
+    override get slider1(): Container | undefined
     {
         return this._slider1;
     }
@@ -224,7 +224,7 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Get Slider2 instance. */
-    override get slider2(): Container
+    override get slider2(): Container | undefined
     {
         return this._slider2;
     }

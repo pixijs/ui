@@ -149,7 +149,7 @@ export class Select extends Container
                 style: textStyle,
             });
 
-            this.openButton.textOffset = selectedTextOffset;
+            this.openButton.textOffset = selectedTextOffset ?? {};
         }
 
         // openView
@@ -187,7 +187,7 @@ export class Select extends Container
                 style: textStyle,
             });
 
-            this.openButton.textOffset = selectedTextOffset;
+            this.openButton.textOffset = selectedTextOffset ?? {};
         }
 
         // ScrollBox
@@ -236,16 +236,16 @@ export class Select extends Container
 
             if (id === selected)
             {
-                this.openButton.text = text;
-                this.closeButton.text = text;
+                this.openButton.text = text ?? '';
+                this.closeButton.text = text ?? '';
             }
 
             button.onPress.connect(() =>
             {
                 this.value = id;
-                this.onSelect.emit(id, text);
-                this.openButton.text = text;
-                this.closeButton.text = text;
+                this.onSelect.emit(id, text ?? '');
+                this.openButton.text = text ?? '';
+                this.closeButton.text = text ?? '';
                 this.close();
             });
 

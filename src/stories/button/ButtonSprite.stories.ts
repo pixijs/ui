@@ -17,7 +17,7 @@ const args = {
 export class SpriteButton extends Button
 {
     private buttonView = new Container();
-    private textView: Text;
+    private textView: Text | undefined;
     private buttonBg = new Sprite();
     private action: (event: string) => void;
 
