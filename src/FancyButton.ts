@@ -133,7 +133,7 @@ export class FancyButton extends ButtonContainer
     protected defaultDuration = 100;
 
     /** FancyButton options. */
-    protected readonly options?: ButtonOptions;
+    protected readonly options: ButtonOptions;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
     _padding: number = 0;
@@ -263,7 +263,10 @@ export class FancyButton extends ButtonContainer
         this.pressedView = pressedView ?? null;
         this.disabledView = disabledView ?? null;
         this.text = text ?? '';
-        this.iconView = icon;
+        if (icon !== undefined) 
+        {
+            this.iconView = icon;
+        }
 
         this.initStateControl();
     }
@@ -441,44 +444,56 @@ export class FancyButton extends ButtonContainer
         if (!this.text) return;
 
         const activeView = this.getStateView(this.state);
-        const { x: anchorX, y: anchorY } = this._defaultTextAnchor;
+        const anchorX = this._defaultTextAnchor.x ?? 0.5;
+        const anchorY = this._defaultTextAnchor.y ?? 0.5;
 
         if (activeView)
         {
-            if (!this.options.ignoreRefitting)
+            if (!this.options?.ignoreRefitting && this._views.textView)
             {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
             if (this.contentFittingMode === 'default')
             {
-                fitToView(activeView, this._views.textView, this.padding, false);
+                if (this._views.textView) 
+                {
+                    fitToView(activeView, this._views.textView, this.padding, false);
+                }
             }
 
             if (this.contentFittingMode === 'fill')
             {
-                // reset to base dimensions for calculations
-                this._views.textView.scale.set(1);
+                if (this._views.textView) 
+                {
+                    // reset to base dimensions for calculations
+                    this._views.textView.scale.set(1);
 
-                const availableWidth = activeView.width - (this.padding * 2);
-                const availableHeight = activeView.height - (this.padding * 2);
-                const targetScaleX = availableWidth / this._views.textView.width;
-                const targetScaleY = availableHeight / this._views.textView.height;
-                const scale = Math.min(targetScaleX, targetScaleY);
+                    const availableWidth = activeView.width - (this.padding * 2);
+                    const availableHeight = activeView.height - (this.padding * 2);
+                    const targetScaleX = availableWidth / this._views.textView.width;
+                    const targetScaleY = availableHeight / this._views.textView.height;
+                    const scale = Math.min(targetScaleX, targetScaleY);
 
-                this._views.textView.scale.set(
-                    scale * this._defaultTextScale.x,
-                    scale * this._defaultTextScale.y,
-                );
+                    this._views.textView.scale.set(
+                        scale * (this._defaultTextScale.x ?? 1),
+                        scale * (this._defaultTextScale.y ?? 1),
+                    );
+                }
             }
 
-            this._views.textView.x = activeView.x + (activeView.width / 2);
-            this._views.textView.y = activeView.y + (activeView.height / 2);
+            if (this._views.textView) 
+            {
+                this._views.textView.x = activeView.x + (activeView.width / 2);
+                this._views.textView.y = activeView.y + (activeView.height / 2);
+            }
         }
 
-        this._views.textView.anchor.set(anchorX, anchorY);
-
-        this.setOffset(this._views.textView, state, this.textOffset);
+        if (this._views.textView) 
+        {
+            this._views.textView.anchor.set(anchorX, anchorY);
+            this.setOffset(this._views.textView, state, this.textOffset);
+        }
     }
 
     /**
@@ -499,7 +514,7 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (!this.options.ignoreRefitting)
+        if (!this.options?.ignoreRefitting)
         {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
@@ -521,12 +536,13 @@ export class FancyButton extends ButtonContainer
             const scale = Math.min(targetScaleX, targetScaleY);
 
             this._views.iconView.scale.set(
-                scale * this._defaultIconScale.x,
-                scale * this._defaultIconScale.y,
+                scale * (this._defaultIconScale.x ?? 1),
+                scale * (this._defaultIconScale.y ?? 1),
             );
         }
 
-        const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
+        const anchorX = this._defaultIconAnchor.x ?? 0.5;
+        const anchorY = this._defaultIconAnchor.y ?? 0.5;
 
         if ('anchor' in this._views.iconView)
         {
@@ -753,7 +769,7 @@ export class FancyButton extends ButtonContainer
         if (this._views[viewType])
         {
             this.innerView.removeChild(this._views[viewType]);
-            this._views[viewType] = null;
+            this._views[viewType] = undefined;
         }
     }
 
@@ -850,16 +866,16 @@ export class FancyButton extends ButtonContainer
 
             if (defaultStateAnimation)
             {
-                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
-                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
+                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x ?? 0;
+                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y ?? 0;
                 this.innerView.width
-                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
+                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width ?? 0;
                 this.innerView.height
-                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
+                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height ?? 0;
                 this.innerView.scale.x
-                    = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
+                    = defaultStateAnimation.props.scale?.x ?? this.originalInnerViewState.scale?.x ?? 1;
                 this.innerView.scale.y
-                    = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
+                    = defaultStateAnimation.props.scale?.y ?? this.originalInnerViewState.scale?.y ?? 1;
 
                 return;
             }
@@ -871,7 +887,7 @@ export class FancyButton extends ButtonContainer
         {
             const data = stateAnimation;
 
-            this.defaultDuration = data.duration;
+            this.defaultDuration = data.duration ?? this.defaultDuration;
 
             new Tween(this.innerView).to(data.props, data.duration).start();
 
