@@ -118,14 +118,30 @@ export class Input extends Container
     {
         super();
 
-        this.options = options;
+        const defaultOptions: Partial<InputOptions> = {
+            textStyle: {
+                fill: 0x000000,
+                align: 'center',
+            } as TextStyleOptions,
+            TextClass: Text,
+            placeholder: '',
+            value: '',
+            maxLength: undefined,
+            secure: false,
+            align: 'left',
+            padding: 0,
+            cleanOnFocus: false,
+            addMask: false,
+        };
 
-        this.options = options;
-        this.padding = options.padding;
-        this._secure = options.secure ?? false;
+        this.options = { ...defaultOptions, ...options } as InputOptions;
+        this.padding = this.options.padding as Padding;
+        this._secure = this.options.secure as boolean;
 
         this.cursor = 'text';
         this.interactive = true;
+        
+        this.bg = this.options.bg;
 
         this.on('pointertap', () =>
         {
@@ -152,7 +168,7 @@ export class Input extends Container
 
     protected onInput(e: InputEvent)
     {
-        this.lastInputData = e.data;
+        this.lastInputData = e.data ?? '';
     }
 
     protected onKeyUp(e: KeyboardEvent)
@@ -199,21 +215,12 @@ export class Input extends Container
     protected init()
     {
         const options = this.options;
-
-        const defaultTextStyle = {
-            fill: 0x000000,
-            align: 'center',
-        } as TextStyleOptions;
-
-        this.options.textStyle = options.textStyle ?? defaultTextStyle;
-        this.options.TextClass = options.TextClass ?? Text;
-
-        const textStyle = { ...defaultTextStyle, ...options.textStyle };
+        const textStyle = options.textStyle as TextStyleOptions;
         const colorSource = textStyle.fill && Color.isColorLike(textStyle.fill)
             ? textStyle.fill
             : 0x000000;
 
-        this.inputField = new this.options.TextClass({
+        this.inputField = new (this.options.TextClass as PixiTextClass)({
             text: '',
             style: textStyle,
         });
@@ -226,15 +233,15 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new this.options.TextClass({
-            text: options.placeholder,
-            style: textStyle ?? defaultTextStyle,
+        this.placeholder = new (this.options.TextClass as PixiTextClass)({
+            text: this.options.placeholder as string,
+            style: textStyle,
         });
-        this.placeholder.visible = !!options.placeholder;
+        this.placeholder.visible = !!(this.options.placeholder as string);
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
 
-        this.value = options.value ?? '';
+        this.value = this.options.value as string;
 
         this.align();
     }
@@ -296,7 +303,7 @@ export class Input extends Container
         }
     }
 
-    get bg(): Container | string
+    get bg(): Container | NineSliceSprite | Graphics | undefined
     {
         return this._bg;
     }
@@ -338,8 +345,14 @@ export class Input extends Container
 
         this.tick = 0;
         this.editing = true;
-        this.placeholder.visible = false;
-        this._cursor.alpha = 1;
+        if (this.placeholder) 
+        {
+            this.placeholder.visible = false;
+        }
+        if (this._cursor) 
+        {
+            this._cursor.alpha = 1;
+        }
 
         this.createInputField();
 
@@ -357,7 +370,7 @@ export class Input extends Container
 
             this.input?.blur();
             this.input?.remove();
-            this.input = null;
+            this.input = undefined;
         }
 
         const input: HTMLInputElement = document.createElement('input');
@@ -368,8 +381,8 @@ export class Input extends Container
         input.style.left = `${this.getGlobalPosition().x}px`;
         input.style.top = `${this.getGlobalPosition().y}px`;
         input.style.opacity = '0.0000001';
-        input.style.width = `${this._bg.width}px`;
-        input.style.height = `${this._bg.height}px`;
+        input.style.width = `${this._bg?.width ?? 100}px`;
+        input.style.height = `${this._bg?.height ?? 30}px`;
         input.style.border = 'none';
         input.style.outline = 'none';
         input.style.background = 'white';
@@ -417,19 +430,20 @@ export class Input extends Container
     {
         if (!this.editing) return;
 
-        this._cursor.alpha = 0;
+        if (this._cursor) 
+        {
+            this._cursor.alpha = 0;
+        }
         this.editing = false;
 
-        if (this.inputField.text === '')
+        if (this.placeholder && this.value.length === 0) 
         {
             this.placeholder.visible = true;
         }
 
-        if (this.value.length === 0) this.placeholder.visible = true;
-
         this.input?.blur();
         this.input?.remove();
-        this.input = null;
+        this.input = undefined;
 
         this.align();
 
@@ -440,7 +454,10 @@ export class Input extends Container
     {
         if (!this.editing) return;
         this.tick += dt * 0.1;
-        this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
+        if (this._cursor) 
+        {
+            this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
+        }
     }
 
     protected align()
@@ -449,22 +466,33 @@ export class Input extends Container
 
         const align = this.getAlign();
 
-        this.inputField.anchor.set(align, 0.5);
-        this.inputField.x
-            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        if (this.inputField) 
+        {
+            this.inputField.anchor.set(align, 0.5);
+            this.inputField.x
+                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+            this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        }
 
-        this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x
-            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.placeholder.y = this._bg.height / 2;
+        if (this.placeholder)
+        {
+            this.placeholder.anchor.set(align, 0.5);
+            this.placeholder.x
+                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+            this.placeholder.y = this._bg.height / 2;
+        }
 
-        this._cursor.x = this.getCursorPosX();
-        this._cursor.y = this.inputField.y;
+        if (this._cursor && this.inputField)
+        {
+            this._cursor.x = this.getCursorPosX();
+            this._cursor.y = this.inputField.y;
+        }
     }
 
     protected getAlign(): 0 | 1 | 0.5
     {
+        if (!(this._bg && this.inputField)) return 0;
+        
         const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
         const isOverflowed = this.inputField.width + paddings > maxWidth;
@@ -488,6 +516,8 @@ export class Input extends Container
 
     protected getCursorPosX()
     {
+        if (!this.inputField) return 0;
+        
         const align = this.getAlign();
 
         switch (align)
@@ -509,15 +539,15 @@ export class Input extends Container
         const textLength = text.length;
 
         this._value = text;
-        this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
-
-        if (textLength !== 0)
+        
+        if (this.inputField) 
         {
-            this.placeholder.visible = false;
+            this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
         }
-        else
+
+        if (this.placeholder)
         {
-            this.placeholder.visible = !this.editing;
+            this.placeholder.visible = textLength === 0 && !this.editing;
         }
 
         this.align();
@@ -679,8 +709,14 @@ export class Input extends Container
     {
         if (this.inputMask)
         {
-            this.inputField.mask = null;
-            this._cursor.mask = null;
+            if (this.inputField)
+            {
+                this.inputField.mask = null; // PixiJS API expects null
+            }
+            if (this._cursor)
+            {
+                this._cursor.mask = null; // PixiJS API expects null
+            }
             this.inputMask.destroy();
         }
 
@@ -707,9 +743,15 @@ export class Input extends Container
             this.inputMask = getView(bg);
         }
 
-        this.inputField.mask = this.inputMask;
+        if (this.inputField)
+        {
+            this.inputField.mask = this.inputMask;
+        }
 
-        this._cursor.mask = this.inputMask;
+        if (this._cursor)
+        {
+            this._cursor.mask = this.inputMask;
+        }
 
         this.updateInputMaskSize();
 
