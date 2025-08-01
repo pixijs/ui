@@ -52,8 +52,6 @@ export class ProgressBar extends Container
     /** Container, that holds all inner views. */
     innerView: Container;
 
-    /** Container, given as a constructor parameter that is a button view. */
-    protected _view: Container;
 
     /**
      * Creates a ProgressBar.
@@ -82,15 +80,24 @@ export class ProgressBar extends Container
     {
         super();
 
-        this.options = options;
+        const defaultOptions: ProgressBarOptions = {
+            bg: Texture.WHITE,
+            fill: Texture.WHITE,
+            fillPaddings: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+            progress: 0,
+        };
+
+        this.options = { ...defaultOptions, ...options };
 
         this.innerView = new Container();
         this.addChild(this.innerView);
 
-        if (options?.bg && options?.fill)
-        {
-            this.init(options);
-        }
+        this.init(this.options);
     }
 
     /**
@@ -107,7 +114,7 @@ export class ProgressBar extends Container
 
         this.setFill(fill, fillPaddings);
 
-        this.progress = progress;
+        this.progress = progress ?? 0;
     }
 
     /**
