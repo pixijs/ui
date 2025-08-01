@@ -47,13 +47,13 @@ export class RadioGroup extends Container
     protected items: CheckBox[] = [];
 
     /** {@link List}, that holds and control all inned checkboxes.  */
-    innerView: List;
+    innerView: List | undefined;
 
     /** Text value of the selected item. */
-    value: string;
+    value: string = '';
 
     /** ID of the selected item. */
-    selected: number;
+    selected: number = 0;
 
     /** Fires, when new item is selected. */
     onChange: Signal<(selectedItemID: number, selectedVal: string) => void>;
@@ -64,12 +64,17 @@ export class RadioGroup extends Container
     {
         super();
 
-        if (options)
-        {
-            this.init(options);
-        }
+        const defaultOptions: RadioBoxOptions = {
+            items: [],
+            type: 'vertical',
+            elementsMargin: 0,
+            selectedItem: 0,
+        };
 
+        this.options = { ...defaultOptions, ...options };
         this.onChange = new Signal();
+
+        this.init(this.options);
     }
 
     /**
@@ -80,9 +85,8 @@ export class RadioGroup extends Container
     {
         this.options = options;
 
-        this.value = options.items[options.selectedItem || 0].labelText?.text;
-
         this.selected = options.selectedItem ?? 0; // first item by default
+        this.value = options.items[this.selected]?.labelText?.text ?? '';
 
         if (this.innerView)
         {
@@ -116,7 +120,7 @@ export class RadioGroup extends Container
 
             this.items.push(checkBox);
 
-            this.innerView.addChild(checkBox);
+            this.innerView?.addChild(checkBox);
         });
     }
 
@@ -134,7 +138,7 @@ export class RadioGroup extends Container
 
             item.onChange.disconnectAll();
 
-            this.innerView.removeChild(item);
+            this.innerView?.removeChild(item);
 
             this.items.splice(id, 1);
         });
@@ -153,10 +157,10 @@ export class RadioGroup extends Container
 
         if (this.selected !== id)
         {
-            this.onChange.emit(id, this.items[id].labelText?.text);
+            this.onChange.emit(id, this.items[id].labelText?.text ?? '');
         }
 
-        this.value = this.options.items[id].labelText?.text;
+        this.value = this.options.items[id].labelText?.text ?? '';
         this.selected = id;
     }
 }
