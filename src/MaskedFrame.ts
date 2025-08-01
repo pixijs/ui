@@ -21,12 +21,12 @@ export type MaskedFrameOptions = {
 export class MaskedFrame extends Container
 {
     /** Target container. */
-    target: Container;
+    target: Container | undefined;
     border = new Graphics();
-    protected _targetMask: Container;
-    protected maskData: string | Graphics;
-    protected borderWidth: number;
-    protected borderColor: FillStyleInputs;
+    protected _targetMask: Container | undefined;
+    protected maskData: string | Graphics | undefined;
+    protected borderWidth: number = 0;
+    protected borderColor: FillStyleInputs = 0x000000;
 
     constructor(options?: MaskedFrameOptions)
     {
@@ -53,11 +53,16 @@ export class MaskedFrame extends Container
             this.removeChild(this.target);
         }
 
-        this.target = getView(target);
-        this.addChild(this.border, this.target);
+        if (target) {
+            this.target = getView(target);
+        }
+        this.addChild(this.border);
+        if (this.target) {
+            this.addChild(this.target);
+        }
 
         if (mask) this.applyMask(mask);
-        if (borderWidth) this.setBorder(borderWidth, borderColor);
+        if (borderWidth) this.setBorder(borderWidth, borderColor ?? 0x000000);
     }
 
     /**
@@ -70,7 +75,9 @@ export class MaskedFrame extends Container
 
         this._targetMask = getView(mask);
         this.addChild(this._targetMask);
-        this.target.mask = this._targetMask;
+        if (this.target) {
+            this.target.mask = this._targetMask;
+        }
     }
 
     /**

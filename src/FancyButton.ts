@@ -621,7 +621,7 @@ export class FancyButton extends ButtonContainer
      * Sets the default view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set defaultView(view: GetViewSettings | null)
+    set defaultView(view: GetViewSettings | undefined)
     {
         this.updateView('defaultView', view);
         if (this._views.disabledView && this.state !== 'default')
@@ -640,7 +640,7 @@ export class FancyButton extends ButtonContainer
      * Sets the hover view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set hoverView(view: GetViewSettings | null)
+    set hoverView(view: GetViewSettings | undefined)
     {
         this.updateView('hoverView', view);
         if (this._views.hoverView && this.state !== 'hover')
@@ -656,7 +656,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the pressed view of the button. */
-    set pressedView(view: GetViewSettings | null)
+    set pressedView(view: GetViewSettings | undefined)
     {
         this.updateView('pressedView', view);
         if (this._views.pressedView && this.state !== 'pressed')
@@ -672,7 +672,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the disabled view of the button. */
-    set disabledView(view: GetViewSettings | null)
+    set disabledView(view: GetViewSettings | undefined)
     {
         this.updateView('disabledView', view);
         if (this._views.disabledView && this.state !== 'disabled')
@@ -692,16 +692,11 @@ export class FancyButton extends ButtonContainer
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
      * @param { string | Texture | Container | null } view - new view
      */
-    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null)
+    protected updateView(viewType: ButtonViewType, view: GetViewSettings | undefined)
     {
         if (view === undefined) return;
 
         this.removeView(viewType);
-
-        if (view === null)
-        {
-            return;
-        }
 
         if (this.options?.nineSliceSprite)
         {
@@ -804,7 +799,7 @@ export class FancyButton extends ButtonContainer
      * Sets the iconView of the button.
      * @param { string | Texture | Container } view - string (path to the image), texture instance or a Container-based view
      */
-    set iconView(view: GetViewSettings | null)
+    set iconView(view: GetViewSettings | undefined)
     {
         if (view === undefined) return;
 

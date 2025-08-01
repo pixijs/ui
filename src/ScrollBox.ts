@@ -162,7 +162,7 @@ export class ScrollBox extends Container
             super.addChild(this.list);
         }
 
-        this.list.init({
+        this.list?.init({
             type: options.type,
             elementsMargin: options.elementsMargin,
             padding: options.padding,
@@ -174,7 +174,9 @@ export class ScrollBox extends Container
             rightPadding: options.rightPadding,
         });
 
-        this.addItems(options.items);
+        if (options.items) {
+            this.addItems(options.items);
+        }
 
         if (this.hasBounds)
         {
@@ -182,8 +184,10 @@ export class ScrollBox extends Container
             this.makeScrollable();
         }
 
-        this._trackpad.xAxis.value = 0;
-        this._trackpad.yAxis.value = 0;
+        if (this._trackpad) {
+            this._trackpad.xAxis.value = 0;
+            this._trackpad.yAxis.value = 0;
+        }
 
         this.options.globalScroll = options.globalScroll ?? true;
         this.options.shiftScroll = options.shiftScroll ?? false;
@@ -210,7 +214,7 @@ export class ScrollBox extends Container
     removeItems()
     {
         this.proximityStatusCache.length = 0;
-        this.list.removeChildren();
+        this.list?.removeChildren();
     }
 
     /**
@@ -234,7 +238,7 @@ export class ScrollBox extends Container
 
             child.eventMode = 'static';
 
-            this.list.addChild(child);
+            this.list?.addChild(child);
             this.proximityStatusCache.push(false);
 
             if (!this.options.disableDynamicRendering)
@@ -254,7 +258,7 @@ export class ScrollBox extends Container
      */
     removeItem(itemID: number)
     {
-        this.list.removeItem(itemID);
+        this.list?.removeItem(itemID);
         this.proximityStatusCache.splice(itemID, 1);
         this.resize();
     }
@@ -351,7 +355,7 @@ export class ScrollBox extends Container
 
             this._trackpad.pointerDown(this.dragStarTouchPoint);
 
-            const listTouchPoint = this.list.worldTransform.applyInverse(e.global);
+            const listTouchPoint = this.list?.worldTransform.applyInverse(e.global);
 
             this.visibleItems.forEach((item) =>
             {
@@ -373,7 +377,7 @@ export class ScrollBox extends Container
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
 
-            this.pressedChild = null;
+            this.pressedChild = undefined;
 
             this.stopRenderHiddenItems();
         });
@@ -394,7 +398,7 @@ export class ScrollBox extends Container
             this._trackpad.pointerUp();
             this.restoreItemsInteractivity();
 
-            this.pressedChild = null;
+            this.pressedChild = undefined;
 
             this.stopRenderHiddenItems();
         });
@@ -437,7 +441,7 @@ export class ScrollBox extends Container
             if (this.pressedChild)
             {
                 this.revertClick(this.pressedChild);
-                this.pressedChild = null;
+                this.pressedChild = undefined;
             }
 
             if (this.isBidirectional)
@@ -460,12 +464,12 @@ export class ScrollBox extends Container
 
     protected get listHeight(): number
     {
-        return this.list.height + this.list.topPadding + this.list.bottomPadding;
+        return (this.list?.height ?? 0) + (this.list?.topPadding ?? 0) + (this.list?.bottomPadding ?? 0);
     }
 
     protected get listWidth(): number
     {
-        return this.list.width + this.list.leftPadding + this.list.rightPadding;
+        return (this.list?.width ?? 0) + (this.list?.leftPadding ?? 0) + (this.list?.rightPadding ?? 0);
     }
 
     /**
@@ -534,15 +538,15 @@ export class ScrollBox extends Container
         {
             const maxWidth
                 = this.borderMask.width
-                - this.list.width
-                - this.list.leftPadding
-                - this.list.rightPadding;
+                - (this.list?.width ?? 0)
+                - (this.list?.leftPadding ?? 0)
+                - (this.list?.rightPadding ?? 0);
 
             const maxHeight
                 = this.borderMask.height
-                - this.list.height
-                - this.list.topPadding
-                - this.list.bottomPadding;
+                - (this.list?.height ?? 0)
+                - (this.list?.topPadding ?? 0)
+                - (this.list?.bottomPadding ?? 0);
 
             if (this.isBidirectional)
             {
@@ -561,7 +565,7 @@ export class ScrollBox extends Container
 
         if (this._dimensionChanged)
         {
-            this.list.arrangeChildren();
+            this.list?.arrangeChildren();
             // Since the scrolling adjustment can happen due to the resize,
             // we shouldn't update the visible items immediately.
             this.stopRenderHiddenItems();
@@ -570,12 +574,12 @@ export class ScrollBox extends Container
         }
         else
         {
-            if (force) this.list.arrangeChildren();
+            if (force) this.list?.arrangeChildren();
             this.updateVisibleItems();
         }
 
-        this.lastScrollX = null;
-        this.lastScrollY = null;
+        this.lastScrollX = undefined;
+        this.lastScrollY = undefined;
     }
 
     protected onMouseScroll(event: WheelEvent): void
@@ -593,7 +597,7 @@ export class ScrollBox extends Container
         if ((this.isHorizontal || this.isBidirectional) && scrollOnX)
         {
             const delta = shiftScroll || this.isBidirectional ? event.deltaX : event.deltaY;
-            const targetPos = this.list.x - delta;
+            const targetPos = (this.list?.x ?? 0) - delta;
 
             if (this.listWidth < this._width)
             {
@@ -610,7 +614,7 @@ export class ScrollBox extends Container
 
         if ((this.isVertical || this.isBidirectional) && scrollOnY)
         {
-            const targetPos = this.list.y - event.deltaY;
+            const targetPos = (this.list?.y ?? 0) - event.deltaY;
 
             if (this.listHeight < this._height)
             {
@@ -649,7 +653,7 @@ export class ScrollBox extends Container
         }
         else
         {
-            this.scrollTo(this.list.children.length - 1);
+            this.scrollTo((this.list?.children.length ?? 1) - 1);
         }
     }
 
@@ -658,8 +662,10 @@ export class ScrollBox extends Container
     {
         this.renderAllItems();
 
-        this._trackpad.xAxis.value = 0;
-        this._trackpad.yAxis.value = 0;
+        if (this._trackpad) {
+            this._trackpad.xAxis.value = 0;
+            this._trackpad.yAxis.value = 0;
+        }
 
         this.stopRenderHiddenItems();
     }
@@ -667,7 +673,7 @@ export class ScrollBox extends Container
     protected renderAllItems()
     {
         clearTimeout(this.stopRenderHiddenItemsTimeout);
-        this.stopRenderHiddenItemsTimeout = null;
+        this.stopRenderHiddenItemsTimeout = undefined;
 
         if (this.options.disableDynamicRendering)
         {
@@ -690,7 +696,7 @@ export class ScrollBox extends Container
         if (this.stopRenderHiddenItemsTimeout)
         {
             clearTimeout(this.stopRenderHiddenItemsTimeout);
-            this.stopRenderHiddenItemsTimeout = null;
+            this.stopRenderHiddenItemsTimeout = undefined;
         }
 
         this.stopRenderHiddenItemsTimeout = setTimeout(() => this.updateVisibleItems(), 2000);
@@ -718,7 +724,7 @@ export class ScrollBox extends Container
             return;
         }
 
-        const target = this.list.children[elementID];
+        const target = this.list?.children[elementID];
 
         if (!target)
         {

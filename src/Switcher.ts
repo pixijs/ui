@@ -26,7 +26,7 @@ export class Switcher extends Container
     innerView: Container;
 
     /** The id of the visible(active) view. */
-    protected _active: number;
+    protected _active: number = 0;
 
     /** Fired when active view changes. */
     onChange: Signal<(state: number | boolean) => void>;

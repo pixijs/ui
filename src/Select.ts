@@ -75,10 +75,10 @@ export class Select extends Container
     protected openButton!: FancyButton;
     protected closeButton!: FancyButton;
     protected openView!: Container;
-    protected scrollBox: ScrollBox;
+    protected scrollBox: ScrollBox | undefined;
 
     /** Selected value ID. */
-    value: number;
+    value: number = -1;
 
     /** Fires when selected value is changed. */
     onSelect: Signal<(value: number, text: string) => void>;

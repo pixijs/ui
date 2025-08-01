@@ -44,14 +44,12 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 {
     protected options?: { type?: ListType } & ListOptions<C>;
 
-    /** Container, that holds all inner elements. */
-    view: Container;
 
     /** Arrange direction. */
-    protected _type: ListType;
+    protected _type: ListType = 'vertical';
 
     /** Width of area to fit elements when arrange. (If not set parent width will be used). */
-    protected _maxWidth: number;
+    protected _maxWidth: number = 0;
 
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
