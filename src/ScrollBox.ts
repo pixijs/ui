@@ -511,17 +511,18 @@ export class ScrollBox extends Container
             }
 
             this.borderMask
-                .clear()
-                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
+                ?.clear()
+                .roundRect(0, 0, this._width, this._height, (this.options.radius ?? 0) | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
-            this.borderMask.eventMode = 'none';
+            
+            if (this.borderMask) this.borderMask.eventMode = 'none';
 
             const color = this.options.background;
 
             this.background
                 ?.clear()
-                .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
+                .roundRect(0, 0, this._width, this._height, (this.options.radius ?? 0) | 0)
                 .fill({
                     color: color ?? 0x000000,
                     alpha: color ? 1 : 0.0000001, // if color is not set, set alpha to 0 to be able to drag by click on bg
@@ -931,11 +932,18 @@ export class ScrollBox extends Container
     {
         if (item.eventMode !== 'auto')
         {
-            isMobile.any ? item.emit('pointerupoutside', null) : item.emit('mouseupoutside', null);
+            if (isMobile.any)
+            {
+                item.emit('pointerupoutside', { target: item } as FederatedPointerEvent);
+            }
+            else
+            {
+                item.emit('mouseupoutside', { target: item } as FederatedPointerEvent);
+            }
 
             this.interactiveStorage.push({
                 item,
-                eventMode: item.eventMode,
+                eventMode: item.eventMode ?? 'auto',
             });
 
             item.eventMode = 'auto';
@@ -950,12 +958,12 @@ export class ScrollBox extends Container
 
     get scrollHeight(): number
     {
-        return this.list.height;
+        return this.list?.height ?? 0;
     }
 
     get scrollWidth(): number
     {
-        return this.list.width;
+        return this.list?.width ?? 0;
     }
 
     protected get isVertical(): boolean
