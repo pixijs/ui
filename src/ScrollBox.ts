@@ -284,7 +284,7 @@ export class ScrollBox extends Container
         {
             const posY = item.y + list.y;
 
-            if (posY + item.height >= -padding && posY <= this.options.height + padding)
+            if (posY + item.height >= -padding && posY <= (this.options.height ?? this._height) + padding)
             {
                 isVisible = true;
             }
@@ -294,7 +294,7 @@ export class ScrollBox extends Container
         {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= -padding && posX <= this.options.width + padding)
+            if (posX + item.width >= -padding && posX <= (this.options.width ?? this._width) + padding)
             {
                 isVisible = true;
             }
@@ -520,7 +520,7 @@ export class ScrollBox extends Container
             const color = this.options.background;
 
             this.background
-                .clear()
+                ?.clear()
                 .roundRect(0, 0, this._width, this._height, this.options.radius | 0)
                 .fill({
                     color: color ?? 0x000000,
@@ -730,12 +730,12 @@ export class ScrollBox extends Container
      */
     scrollTo(elementID: number)
     {
-        if (!this.interactive)
+        if (!this.interactive || !this._trackpad || !this.list)
         {
             return;
         }
 
-        const target = this.list?.children[elementID];
+        const target = this.list.children[elementID];
 
         if (!target)
         {
@@ -831,30 +831,30 @@ export class ScrollBox extends Container
     /** Gets the current raw scroll position on the x-axis (Negated Value). */
     get scrollX(): number
     {
-        return this._trackpad.xAxis.value;
+        return this._trackpad?.xAxis.value ?? 0;
     }
 
     /** Sets the current raw scroll position on the x-axis (Negated Value). */
     set scrollX(value: number)
     {
-        this._trackpad.xAxis.value = value;
+        if (this._trackpad) this._trackpad.xAxis.value = value;
     }
 
     /** Gets the current raw scroll position on the y-axis (Negated Value). */
     get scrollY(): number
     {
-        return this._trackpad.yAxis.value;
+        return this._trackpad?.yAxis.value ?? 0;
     }
 
     /** Sets the current raw scroll position on the y-axis (Negated Value). */
     set scrollY(value: number)
     {
-        this._trackpad.yAxis.value = value;
+        if (this._trackpad) this._trackpad.yAxis.value = value;
     }
 
     protected update()
     {
-        if (!this.list) return;
+        if (!this.list || !this._trackpad) return;
 
         this._trackpad.update();
 
@@ -911,8 +911,8 @@ export class ScrollBox extends Container
 
         document.removeEventListener('wheel', this.onMouseScrollBinding, true);
 
-        this.background.destroy();
-        this.list.destroy();
+        this.background?.destroy();
+        this.list?.destroy();
 
         super.destroy(options);
     }
