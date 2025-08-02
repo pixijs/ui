@@ -61,13 +61,25 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
 
                 view.addChild(window);
 
+                console.log('=== ScrollBoxSprite Debug Info ===');
+                console.log('windowBg dimensions:', { width: windowBg.width, height: windowBg.height });
+                console.log('window dimensions:', { width: window.width, height: window.height });
+
                 const items: Container[] = createItems(itemsAmount, fontColor, onPress);
+                console.log('Created items count:', items.length);
+                console.log('First item dimensions:', items[0] ? { width: items[0].width, height: items[0].height } : 'No items');
 
                 // Component usage !!!
+                const scrollBoxWidth = window.width - 80;
+                const scrollBoxHeight = window.height - 90;
+                console.log('Calculated scrollBox dimensions:', { width: scrollBoxWidth, height: scrollBoxHeight });
+                console.log('elementsMargin:', elementsMargin);
+                console.log('type:', type);
+
                 const scrollBox = new ScrollBox({
                     elementsMargin,
-                    width: window.width - 80,
-                    height: window.height - 90,
+                    width: scrollBoxWidth,
+                    height: scrollBoxHeight,
                     vertPadding: 18,
                     radius: 5,
                     disableEasing,
@@ -76,16 +88,33 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
                     shiftScroll,
                 });
 
+                console.log('ScrollBox created with dimensions:', { width: scrollBox.width, height: scrollBox.height });
+                console.log('ScrollBox list exists:', !!scrollBox.list);
+                if (scrollBox.list)
+                {
+                    console.log('ScrollBox list dimensions before adding items:', { width: scrollBox.list.width, height: scrollBox.list.height });
+                }
+
                 if (type === 'bidirectional' && scrollBox.list)
                 {
                     scrollBox.list.width = window.width - 40;
                     scrollBox.list.height = window.height - 60;
+                    console.log('Updated bidirectional list dimensions:', { width: scrollBox.list.width, height: scrollBox.list.height });
                 }
 
                 scrollBox.addItems(items);
 
+                if (scrollBox.list)
+                {
+                    console.log('ScrollBox list dimensions after adding items:', { width: scrollBox.list.width, height: scrollBox.list.height });
+                    console.log('ScrollBox list children count:', scrollBox.list.children.length);
+                }
+
                 scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
                 scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
+
+                console.log('ScrollBox final position:', { x: scrollBox.x, y: scrollBox.y });
+                console.log('=== End Debug Info ===');
 
                 window.addChild(scrollBox);
 

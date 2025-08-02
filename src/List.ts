@@ -46,7 +46,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
 
     /** Arrange direction. */
-    protected _type: ListType = 'vertical';
+    protected _type: ListType = 'bidirectional';
 
     /** Width of area to fit elements when arrange. (If not set parent width will be used). */
     protected _maxWidth: number = 0;
@@ -293,7 +293,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        let maxWidth = this.maxWidth ?? this.parent?.width;
+        let maxWidth = this.maxWidth || this.parent?.width;
 
         if (this.rightPadding)
         {
