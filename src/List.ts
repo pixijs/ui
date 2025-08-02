@@ -293,6 +293,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
+        // Use logical OR to fallback from 0 (default) to parent width for bidirectional layout
         let maxWidth = this.maxWidth || this.parent?.width;
 
         if (this.rightPadding)

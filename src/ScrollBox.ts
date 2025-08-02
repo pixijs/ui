@@ -162,15 +162,6 @@ export class ScrollBox extends Container
             super.addChild(this.list);
         }
 
-        console.log('=== ScrollBox List Init Debug ===');
-        console.log('options.type:', options.type);
-        console.log('options.maxWidth:', options.maxWidth);
-        console.log('this._width:', this._width);
-        console.log('is bidirectional:', options.type === 'bidirectional');
-        const calculatedMaxWidth = options.maxWidth ?? (options.type === 'bidirectional' ? this._width : undefined);
-        console.log('calculated maxWidth for list:', calculatedMaxWidth);
-        console.log('=== End ScrollBox List Init Debug ===');
-
         this.list?.init({
             type: options.type,
             elementsMargin: options.elementsMargin,
@@ -181,7 +172,9 @@ export class ScrollBox extends Container
             bottomPadding: options.bottomPadding,
             leftPadding: options.leftPadding,
             rightPadding: options.rightPadding,
-            maxWidth: calculatedMaxWidth,
+            // For bidirectional and default (null/undefined) types, use ScrollBox width as maxWidth
+            // to enable multi-column layout. Other types get 0 to disable width constraints.
+            maxWidth: options.maxWidth || (options.type === 'bidirectional' || !options.type ? this._width : 0),
         });
 
         if (options.items)
