@@ -88,7 +88,7 @@ export class ScrollBox extends Container
     protected pressedChild: Container | undefined;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions = {};
-    protected stopRenderHiddenItemsTimeout!: NodeJS.Timeout;
+    protected stopRenderHiddenItemsTimeout: NodeJS.Timeout | undefined;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: Point | undefined;
     protected isOver = false;
@@ -384,7 +384,7 @@ export class ScrollBox extends Container
         this.on('pointerup', () =>
         {
             this.isDragging = 0;
-            this._trackpad.pointerUp();
+            this._trackpad?.pointerUp();
             this.restoreItemsInteractivity();
 
             this.pressedChild = undefined;
@@ -405,7 +405,7 @@ export class ScrollBox extends Container
         this.on('pointerupoutside', () =>
         {
             this.isDragging = 0;
-            this._trackpad.pointerUp();
+            this._trackpad?.pointerUp();
             this.restoreItemsInteractivity();
 
             this.pressedChild = undefined;
@@ -446,7 +446,7 @@ export class ScrollBox extends Container
 
             if (this.dragStarTouchPoint && this.isDragging !== 2) return;
 
-            this._trackpad.pointerMove(touchPoint);
+            this._trackpad?.pointerMove(touchPoint);
 
             if (this.pressedChild)
             {
@@ -544,7 +544,7 @@ export class ScrollBox extends Container
             this.lastHeight = this.listHeight;
         }
 
-        if (this._trackpad)
+        if (this._trackpad && this.borderMask)
         {
             const maxWidth
                 = this.borderMask.width
