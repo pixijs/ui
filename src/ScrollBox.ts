@@ -90,7 +90,7 @@ export class ScrollBox extends Container
     protected options: ScrollBoxOptions = {};
     protected stopRenderHiddenItemsTimeout: NodeJS.Timeout | undefined;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
-    protected dragStarTouchPoint: Point | undefined;
+    protected dragStarTouchPoint: PointData | undefined;
     protected isOver = false;
 
     protected proximityRange: number = 0;
@@ -360,25 +360,28 @@ export class ScrollBox extends Container
             this.isDragging = 1;
             this.dragStarTouchPoint = this.worldTransform.applyInverse(e.global);
 
-            if (this._trackpad)
+            if (this._trackpad && this.dragStarTouchPoint)
             {
-                this._trackpad.pointerDown(this.dragStarTouchPoint);
+                this._trackpad.pointerDown(new Point(this.dragStarTouchPoint.x, this.dragStarTouchPoint.y));
             }
 
             const listTouchPoint = this.list?.worldTransform.applyInverse(e.global);
 
-            this.visibleItems.forEach((item) =>
+            if (listTouchPoint)
             {
-                if (
-                    item.x < listTouchPoint.x
-                    && item.x + item.width > listTouchPoint.x
-                    && item.y < listTouchPoint.y
-                    && item.y + item.height > listTouchPoint.y
-                )
+                this.visibleItems.forEach((item) =>
                 {
-                    this.pressedChild = item;
-                }
-            });
+                    if (
+                        item.x < listTouchPoint.x
+                        && item.x + item.width > listTouchPoint.x
+                        && item.y < listTouchPoint.y
+                        && item.y + item.height > listTouchPoint.y
+                    )
+                    {
+                        this.pressedChild = item;
+                    }
+                });
+            }
         });
 
         this.on('pointerup', () =>
@@ -446,7 +449,7 @@ export class ScrollBox extends Container
 
             if (this.dragStarTouchPoint && this.isDragging !== 2) return;
 
-            this._trackpad?.pointerMove(touchPoint);
+            this._trackpad?.pointerMove(new Point(touchPoint.x, touchPoint.y));
 
             if (this.pressedChild)
             {
