@@ -172,9 +172,9 @@ export class ScrollBox extends Container
             bottomPadding: options.bottomPadding,
             leftPadding: options.leftPadding,
             rightPadding: options.rightPadding,
-            // For bidirectional and default (null/undefined) types, use ScrollBox width as maxWidth
-            // to enable multi-column layout. Other types get 0 to disable width constraints.
-            maxWidth: options.maxWidth || (options.type === 'bidirectional' || !options.type ? this._width : 0),
+            // For bidirectional type (including when options.type is null/undefined since List defaults to bidirectional),
+            // use ScrollBox width as maxWidth to enable multi-column layout. Other types get 0 to disable width constraints.
+            maxWidth: options.maxWidth || (options.type !== 'horizontal' && options.type !== 'vertical' ? this._width : 0),
         });
 
         if (options.items)
