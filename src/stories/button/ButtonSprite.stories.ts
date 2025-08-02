@@ -17,7 +17,7 @@ const args = {
 export class SpriteButton extends Button
 {
     private buttonView = new Container();
-    private textView: Text;
+    private textView: Text | undefined;
     private buttonBg = new Sprite();
     private action: (event: string) => void;
 
@@ -109,7 +109,10 @@ export const UseSprite: StoryFn<typeof args> = (params, context) =>
         {
             const buttonView = new SpriteButton(params);
 
-            view.addChild(buttonView.view);
+            if (buttonView.view)
+            {
+                view.addChild(buttonView.view);
+            }
 
             centerView(view);
         },

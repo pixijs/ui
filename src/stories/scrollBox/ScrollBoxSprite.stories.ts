@@ -76,7 +76,7 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
                     shiftScroll,
                 });
 
-                if (type === 'bidirectional')
+                if (type === 'bidirectional' && scrollBox.list)
                 {
                     scrollBox.list.width = window.width - 40;
                     scrollBox.list.height = window.height - 60;

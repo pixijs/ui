@@ -128,24 +128,24 @@ export type ButtonOptions = ViewsInput & {
  */
 export class FancyButton extends ButtonContainer
 {
-    protected animations: StateAnimations;
-    protected originalInnerViewState: AnimationData;
+    protected animations: StateAnimations = {};
+    protected originalInnerViewState: AnimationData = {};
     protected defaultDuration = 100;
 
     /** FancyButton options. */
-    protected readonly options?: ButtonOptions;
+    protected readonly options: ButtonOptions;
 
     /** Padding of the button text view. If button text does not fit active view + padding it will scale down to fit. */
-    _padding: number;
+    _padding: number = 0;
 
     /** Offset of the button state views. If state views have different sizes, this option can help adjust them. */
-    _offset: Offset & Pos;
+    _offset: Offset & Pos = {};
 
     /** Offset of the text view. Can be set to any state of the button. */
-    _textOffset: Offset;
+    _textOffset: Offset = {};
 
     /** Offset of the icon view. Can be set to any state of the button. */
-    iconOffset: Offset;
+    iconOffset: Offset = {};
 
     //* View that holds all button inner views */
     innerView = new Container();
@@ -153,7 +153,7 @@ export class FancyButton extends ButtonContainer
     protected _views: ButtonViews = {};
 
     /** State of the button. Possible valuers are: 'default', 'hover', 'pressed', 'disabled' */
-    state: State;
+    state: State = 'default';
 
     /** Anchor point of the button. */
     anchor: ObservablePoint;
@@ -241,13 +241,13 @@ export class FancyButton extends ButtonContainer
         this.anchor.set(anchorX ?? anchor ?? 0, anchorY ?? anchor ?? 0);
 
         this.padding = padding ?? 0;
-        this.offset = offset;
-        this.textOffset = textOffset;
-        this.iconOffset = iconOffset;
-        this.defaultTextScale = textScale;
-        this.defaultIconScale = iconScale;
-        this.defaultTextAnchor = textAnchor;
-        this.defaultIconAnchor = iconAnchor;
+        this.offset = offset ?? {};
+        this.textOffset = textOffset ?? {};
+        this.iconOffset = iconOffset ?? {};
+        this.defaultTextScale = textScale ?? { x: 1, y: 1 };
+        this.defaultIconScale = iconScale ?? { x: 1, y: 1 };
+        this.defaultTextAnchor = textAnchor ?? { x: 0.5, y: 0.5 };
+        this.defaultIconAnchor = iconAnchor ?? { x: 0.5, y: 0.5 };
         this.scale.set(scale ?? 1);
 
         if (animations)
@@ -262,8 +262,11 @@ export class FancyButton extends ButtonContainer
         this.hoverView = hoverView;
         this.pressedView = pressedView;
         this.disabledView = disabledView;
-        this.text = text;
-        this.iconView = icon;
+        this.text = text ?? '';
+        if (icon !== undefined)
+        {
+            this.iconView = icon;
+        }
 
         this.initStateControl();
     }
@@ -439,13 +442,15 @@ export class FancyButton extends ButtonContainer
     protected adjustTextView(state: State)
     {
         if (!this.text) return;
+        if (!this._views.textView) return;
 
         const activeView = this.getStateView(this.state);
-        const { x: anchorX, y: anchorY } = this._defaultTextAnchor;
+        const anchorX = this._defaultTextAnchor.x ?? 0.5;
+        const anchorY = this._defaultTextAnchor.y ?? 0.5;
 
         if (activeView)
         {
-            if (!this.options.ignoreRefitting)
+            if (!this.options?.ignoreRefitting)
             {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
@@ -467,8 +472,8 @@ export class FancyButton extends ButtonContainer
                 const scale = Math.min(targetScaleX, targetScaleY);
 
                 this._views.textView.scale.set(
-                    scale * this._defaultTextScale.x,
-                    scale * this._defaultTextScale.y,
+                    scale * (this._defaultTextScale.x ?? 1),
+                    scale * (this._defaultTextScale.y ?? 1),
                 );
             }
 
@@ -477,7 +482,6 @@ export class FancyButton extends ButtonContainer
         }
 
         this._views.textView.anchor.set(anchorX, anchorY);
-
         this.setOffset(this._views.textView, state, this.textOffset);
     }
 
@@ -499,7 +503,7 @@ export class FancyButton extends ButtonContainer
             return;
         }
 
-        if (!this.options.ignoreRefitting)
+        if (!this.options?.ignoreRefitting)
         {
             this._views.iconView.scale.set(this._defaultIconScale.x, this._defaultIconScale.y);
         }
@@ -521,12 +525,13 @@ export class FancyButton extends ButtonContainer
             const scale = Math.min(targetScaleX, targetScaleY);
 
             this._views.iconView.scale.set(
-                scale * this._defaultIconScale.x,
-                scale * this._defaultIconScale.y,
+                scale * (this._defaultIconScale.x ?? 1),
+                scale * (this._defaultIconScale.y ?? 1),
             );
         }
 
-        const { x: anchorX, y: anchorY } = this._defaultIconAnchor;
+        const anchorX = this._defaultIconAnchor.x ?? 0.5;
+        const anchorY = this._defaultIconAnchor.y ?? 0.5;
 
         if ('anchor' in this._views.iconView)
         {
@@ -605,7 +610,7 @@ export class FancyButton extends ButtonContainer
      * Sets the default view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set defaultView(view: GetViewSettings | null)
+    set defaultView(view: GetViewSettings | undefined)
     {
         this.updateView('defaultView', view);
         if (this._views.disabledView && this.state !== 'default')
@@ -624,7 +629,7 @@ export class FancyButton extends ButtonContainer
      * Sets the hover view of the button.
      * @param { string | Container } view - string (path to the image) or a Container-based view
      */
-    set hoverView(view: GetViewSettings | null)
+    set hoverView(view: GetViewSettings | undefined)
     {
         this.updateView('hoverView', view);
         if (this._views.hoverView && this.state !== 'hover')
@@ -640,7 +645,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the pressed view of the button. */
-    set pressedView(view: GetViewSettings | null)
+    set pressedView(view: GetViewSettings | undefined)
     {
         this.updateView('pressedView', view);
         if (this._views.pressedView && this.state !== 'pressed')
@@ -656,7 +661,7 @@ export class FancyButton extends ButtonContainer
     }
 
     /** Sets the disabled view of the button. */
-    set disabledView(view: GetViewSettings | null)
+    set disabledView(view: GetViewSettings | undefined)
     {
         this.updateView('disabledView', view);
         if (this._views.disabledView && this.state !== 'disabled')
@@ -676,16 +681,11 @@ export class FancyButton extends ButtonContainer
      * @param { 'defaultView' | 'hoverView' | 'pressedView' | 'disabledView' } viewType - type of the view to update
      * @param { string | Texture | Container | null } view - new view
      */
-    protected updateView(viewType: ButtonViewType, view: GetViewSettings | null)
+    protected updateView(viewType: ButtonViewType, view: GetViewSettings | undefined)
     {
         if (view === undefined) return;
 
         this.removeView(viewType);
-
-        if (view === null)
-        {
-            return;
-        }
 
         if (this.options?.nineSliceSprite)
         {
@@ -753,7 +753,7 @@ export class FancyButton extends ButtonContainer
         if (this._views[viewType])
         {
             this.innerView.removeChild(this._views[viewType]);
-            this._views[viewType] = null;
+            this._views[viewType] = undefined;
         }
     }
 
@@ -788,7 +788,7 @@ export class FancyButton extends ButtonContainer
      * Sets the iconView of the button.
      * @param { string | Texture | Container } view - string (path to the image), texture instance or a Container-based view
      */
-    set iconView(view: GetViewSettings | null)
+    set iconView(view: GetViewSettings | undefined)
     {
         if (view === undefined) return;
 
@@ -850,16 +850,16 @@ export class FancyButton extends ButtonContainer
 
             if (defaultStateAnimation)
             {
-                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x;
-                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y;
+                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x ?? 0;
+                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y ?? 0;
                 this.innerView.width
-                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width;
+                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width ?? 0;
                 this.innerView.height
-                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height;
+                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height ?? 0;
                 this.innerView.scale.x
-                    = defaultStateAnimation.props.scale.x ?? this.originalInnerViewState.scale.x;
+                    = defaultStateAnimation.props.scale?.x ?? this.originalInnerViewState.scale?.x ?? 1;
                 this.innerView.scale.y
-                    = defaultStateAnimation.props.scale.y ?? this.originalInnerViewState.scale.y;
+                    = defaultStateAnimation.props.scale?.y ?? this.originalInnerViewState.scale?.y ?? 1;
 
                 return;
             }
@@ -871,7 +871,7 @@ export class FancyButton extends ButtonContainer
         {
             const data = stateAnimation;
 
-            this.defaultDuration = data.duration;
+            this.defaultDuration = data.duration ?? this.defaultDuration;
 
             new Tween(this.innerView).to(data.props, data.duration).start();
 

@@ -12,7 +12,7 @@ export class Spring
     dx: number;
     tx: number;
 
-    protected _options: SpringOptions;
+    protected _options: Required<SpringOptions>;
 
     constructor(options: SpringOptions = {})
     {
@@ -22,10 +22,11 @@ export class Spring
         this.tx = 0;
 
         // add opts to object for shared opts.
-        this._options = options;
-        this._options.max = options.max || 160;
-        this._options.damp = options.damp || 0.8;
-        this._options.springiness = options.springiness || 0.1;
+        this._options = {
+            max: options.max ?? 160,
+            damp: options.damp ?? 0.8,
+            springiness: options.springiness ?? 0.1,
+        };
     }
 
     update(): void

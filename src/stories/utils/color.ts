@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Color } from 'pixi.js';
 
-export function getColor(color: number | string): number
+export function getColor(color: number | string): number | undefined
 {
     if (color === 'transparent')
     {
