@@ -611,14 +611,14 @@ export class ScrollBox extends Container
 
             if (this.listWidth < this._width)
             {
-                this._trackpad.xAxis.value = 0;
+                this._trackpad && (this._trackpad.xAxis.value = 0);
             }
             else
             {
                 const min = this._width - this.listWidth;
                 const max = 0;
 
-                this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos));
+                this._trackpad && (this._trackpad.xAxis.value = Math.min(max, Math.max(min, targetPos)));
             }
         }
 
@@ -628,28 +628,28 @@ export class ScrollBox extends Container
 
             if (this.listHeight < this._height)
             {
-                this._trackpad.yAxis.value = 0;
+                this._trackpad && (this._trackpad.yAxis.value = 0);
             }
             else
             {
                 const min = this._height - this.listHeight;
                 const max = 0;
 
-                this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos));
+                this._trackpad && (this._trackpad.yAxis.value = Math.min(max, Math.max(min, targetPos)));
             }
         }
 
         if (this.isBidirectional && (scrollOnX || scrollOnY))
         {
-            this.onScroll?.emit({ x: this._trackpad.xAxis.value, y: this._trackpad.yAxis.value });
+            this.onScroll?.emit({ x: this._trackpad?.xAxis.value ?? 0, y: this._trackpad?.yAxis.value ?? 0 });
         }
         else if (this.isHorizontal && scrollOnX)
         {
-            this.onScroll?.emit(this._trackpad.xAxis.value);
+            this.onScroll?.emit(this._trackpad?.xAxis.value ?? 0);
         }
         else if (this.isVertical && scrollOnY)
         {
-            this.onScroll?.emit(this._trackpad.yAxis.value);
+            this.onScroll?.emit(this._trackpad?.yAxis.value ?? 0);
         }
         this.stopRenderHiddenItems();
     }
