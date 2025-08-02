@@ -442,6 +442,7 @@ export class FancyButton extends ButtonContainer
     protected adjustTextView(state: State)
     {
         if (!this.text) return;
+        if (!this._views.textView) return;
 
         const activeView = this.getStateView(this.state);
         const anchorX = this._defaultTextAnchor.x ?? 0.5;
@@ -449,51 +450,39 @@ export class FancyButton extends ButtonContainer
 
         if (activeView)
         {
-            if (!this.options?.ignoreRefitting && this._views.textView)
+            if (!this.options?.ignoreRefitting)
             {
                 this._views.textView.scale.set(this._defaultTextScale.x, this._defaultTextScale.y);
             }
 
             if (this.contentFittingMode === 'default')
             {
-                if (this._views.textView)
-                {
-                    fitToView(activeView, this._views.textView, this.padding, false);
-                }
+                fitToView(activeView, this._views.textView, this.padding, false);
             }
 
             if (this.contentFittingMode === 'fill')
             {
-                if (this._views.textView)
-                {
-                    // reset to base dimensions for calculations
-                    this._views.textView.scale.set(1);
+                // reset to base dimensions for calculations
+                this._views.textView.scale.set(1);
 
-                    const availableWidth = activeView.width - (this.padding * 2);
-                    const availableHeight = activeView.height - (this.padding * 2);
-                    const targetScaleX = availableWidth / this._views.textView.width;
-                    const targetScaleY = availableHeight / this._views.textView.height;
-                    const scale = Math.min(targetScaleX, targetScaleY);
+                const availableWidth = activeView.width - (this.padding * 2);
+                const availableHeight = activeView.height - (this.padding * 2);
+                const targetScaleX = availableWidth / this._views.textView.width;
+                const targetScaleY = availableHeight / this._views.textView.height;
+                const scale = Math.min(targetScaleX, targetScaleY);
 
-                    this._views.textView.scale.set(
-                        scale * (this._defaultTextScale.x ?? 1),
-                        scale * (this._defaultTextScale.y ?? 1),
-                    );
-                }
+                this._views.textView.scale.set(
+                    scale * (this._defaultTextScale.x ?? 1),
+                    scale * (this._defaultTextScale.y ?? 1),
+                );
             }
 
-            if (this._views.textView)
-            {
-                this._views.textView.x = activeView.x + (activeView.width / 2);
-                this._views.textView.y = activeView.y + (activeView.height / 2);
-            }
+            this._views.textView.x = activeView.x + (activeView.width / 2);
+            this._views.textView.y = activeView.y + (activeView.height / 2);
         }
 
-        if (this._views.textView)
-        {
-            this._views.textView.anchor.set(anchorX, anchorY);
-            this.setOffset(this._views.textView, state, this.textOffset);
-        }
+        this._views.textView.anchor.set(anchorX, anchorY);
+        this.setOffset(this._views.textView, state, this.textOffset);
     }
 
     /**
