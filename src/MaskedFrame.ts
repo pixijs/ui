@@ -53,11 +53,13 @@ export class MaskedFrame extends Container
             this.removeChild(this.target);
         }
 
-        if (target) {
+        if (target)
+        {
             this.target = getView(target);
         }
         this.addChild(this.border);
-        if (this.target) {
+        if (this.target)
+        {
             this.addChild(this.target);
         }
 
@@ -75,7 +77,8 @@ export class MaskedFrame extends Container
 
         this._targetMask = getView(mask);
         this.addChild(this._targetMask);
-        if (this.target) {
+        if (this.target)
+        {
             this.target.mask = this._targetMask;
         }
     }
@@ -112,7 +115,7 @@ export class MaskedFrame extends Container
     showBorder()
     {
         if (!this.target) return;
-        
+
         const width = this.borderWidth * 2;
 
         this.border

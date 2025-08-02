@@ -3,7 +3,7 @@ import { Container } from 'pixi.js';
 export function centerElement(view: Container, horPos?: number, verPos?: number)
 {
     const canvas = document.getElementById('storybook-root');
-    
+
     if (!canvas) return;
 
     if (view.width > 0)

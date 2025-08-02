@@ -140,7 +140,7 @@ export class Input extends Container
 
         this.cursor = 'text';
         this.interactive = true;
-        
+
         this.bg = this.options.bg;
 
         this.on('pointertap', () =>
@@ -345,11 +345,11 @@ export class Input extends Container
 
         this.tick = 0;
         this.editing = true;
-        if (this.placeholder) 
+        if (this.placeholder)
         {
             this.placeholder.visible = false;
         }
-        if (this._cursor) 
+        if (this._cursor)
         {
             this._cursor.alpha = 1;
         }
@@ -430,13 +430,13 @@ export class Input extends Container
     {
         if (!this.editing) return;
 
-        if (this._cursor) 
+        if (this._cursor)
         {
             this._cursor.alpha = 0;
         }
         this.editing = false;
 
-        if (this.placeholder && this.value.length === 0) 
+        if (this.placeholder && this.value.length === 0)
         {
             this.placeholder.visible = true;
         }
@@ -454,7 +454,7 @@ export class Input extends Container
     {
         if (!this.editing) return;
         this.tick += dt * 0.1;
-        if (this._cursor) 
+        if (this._cursor)
         {
             this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
         }
@@ -466,7 +466,7 @@ export class Input extends Container
 
         const align = this.getAlign();
 
-        if (this.inputField) 
+        if (this.inputField)
         {
             this.inputField.anchor.set(align, 0.5);
             this.inputField.x
@@ -492,7 +492,7 @@ export class Input extends Container
     protected getAlign(): 0 | 1 | 0.5
     {
         if (!(this._bg && this.inputField)) return 0;
-        
+
         const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
         const isOverflowed = this.inputField.width + paddings > maxWidth;
@@ -517,7 +517,7 @@ export class Input extends Container
     protected getCursorPosX()
     {
         if (!this.inputField) return 0;
-        
+
         const align = this.getAlign();
 
         switch (align)
@@ -539,8 +539,8 @@ export class Input extends Container
         const textLength = text.length;
 
         this._value = text;
-        
-        if (this.inputField) 
+
+        if (this.inputField)
         {
             this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
         }

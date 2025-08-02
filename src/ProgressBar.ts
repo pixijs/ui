@@ -52,7 +52,6 @@ export class ProgressBar extends Container
     /** Container, that holds all inner views. */
     innerView: Container;
 
-
     /**
      * Creates a ProgressBar.
      * @param options - Options.

@@ -105,6 +105,7 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
     if (isCircle)
     {
         const w = width ?? 0;
+
         graphics.circle(w / 2, w / 2, w / 2);
     }
     else
@@ -125,6 +126,7 @@ function drawRadio({ color, fillColor, width, height, radius, padding }: Graphic
         else
         {
             const p = padding ?? 0;
+
             graphics.roundRect(p, p, (width ?? 0) - (p * 2), (height ?? 0) - (p * 2), radius ?? 0);
         }
 

@@ -263,7 +263,7 @@ export class FancyButton extends ButtonContainer
         this.pressedView = pressedView;
         this.disabledView = disabledView;
         this.text = text ?? '';
-        if (icon !== undefined) 
+        if (icon !== undefined)
         {
             this.iconView = icon;
         }
@@ -456,7 +456,7 @@ export class FancyButton extends ButtonContainer
 
             if (this.contentFittingMode === 'default')
             {
-                if (this._views.textView) 
+                if (this._views.textView)
                 {
                     fitToView(activeView, this._views.textView, this.padding, false);
                 }
@@ -464,7 +464,7 @@ export class FancyButton extends ButtonContainer
 
             if (this.contentFittingMode === 'fill')
             {
-                if (this._views.textView) 
+                if (this._views.textView)
                 {
                     // reset to base dimensions for calculations
                     this._views.textView.scale.set(1);
@@ -482,14 +482,14 @@ export class FancyButton extends ButtonContainer
                 }
             }
 
-            if (this._views.textView) 
+            if (this._views.textView)
             {
                 this._views.textView.x = activeView.x + (activeView.width / 2);
                 this._views.textView.y = activeView.y + (activeView.height / 2);
             }
         }
 
-        if (this._views.textView) 
+        if (this._views.textView)
         {
             this._views.textView.anchor.set(anchorX, anchorY);
             this.setOffset(this._views.textView, state, this.textOffset);

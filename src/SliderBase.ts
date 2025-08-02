@@ -60,10 +60,12 @@ export class SliderBase extends ProgressBar
 
         this.settings = options;
 
-        if (options.slider1) {
+        if (options.slider1)
+        {
             this.slider1 = options.slider1;
         }
-        if (options.slider2) {
+        if (options.slider2)
+        {
             this.slider2 = options.slider2;
         }
 

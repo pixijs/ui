@@ -172,9 +172,11 @@ export class ScrollBox extends Container
             bottomPadding: options.bottomPadding,
             leftPadding: options.leftPadding,
             rightPadding: options.rightPadding,
+            maxWidth: options.maxWidth ?? (options.type === 'bidirectional' ? this._width : undefined),
         });
 
-        if (options.items) {
+        if (options.items)
+        {
             this.addItems(options.items);
         }
 
@@ -184,7 +186,8 @@ export class ScrollBox extends Container
             this.makeScrollable();
         }
 
-        if (this._trackpad) {
+        if (this._trackpad)
+        {
             this._trackpad.xAxis.value = 0;
             this._trackpad.yAxis.value = 0;
         }
@@ -355,7 +358,8 @@ export class ScrollBox extends Container
             this.isDragging = 1;
             this.dragStarTouchPoint = this.worldTransform.applyInverse(e.global);
 
-            if (this._trackpad) {
+            if (this._trackpad)
+            {
                 this._trackpad.pointerDown(this.dragStarTouchPoint);
             }
 
@@ -666,7 +670,8 @@ export class ScrollBox extends Container
     {
         this.renderAllItems();
 
-        if (this._trackpad) {
+        if (this._trackpad)
+        {
             this._trackpad.xAxis.value = 0;
             this._trackpad.yAxis.value = 0;
         }

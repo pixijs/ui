@@ -85,7 +85,8 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            if (this.labelText) {
+            if (this.labelText)
+            {
                 cleanup(this.labelText);
             }
 
