@@ -518,7 +518,7 @@ export class ScrollBox extends Container
                 .roundRect(0, 0, this._width, this._height, (this.options.radius ?? 0) | 0)
                 .fill(0xff00ff)
                 .stroke(0x0);
-            
+
             if (this.borderMask) this.borderMask.eventMode = 'none';
 
             const color = this.options.background;
