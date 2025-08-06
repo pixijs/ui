@@ -88,14 +88,20 @@ export class CheckBox extends Switcher
             if (this.labelText)
             {
                 cleanup(this.labelText);
+                this.labelText = undefined;
             }
-
-            this.labelText = undefined;
 
             return;
         }
 
-        this.labelText ? (this.labelText.text = text) : this.addLabel(text);
+        if (this.labelText)
+        {
+            this.labelText.text = text;
+        }
+        else
+        {
+            this.addLabel(text);
+        }
 
         this.alignText();
     }
@@ -121,31 +127,25 @@ export class CheckBox extends Switcher
 
         this.views = [uncheckedView, checkedView];
 
+        // Set initial view visibility based on checked state
         if (wasChecked)
         {
             checkedView.visible = true;
+            uncheckedView.visible = false;
             this.active = 1;
         }
         else
         {
             uncheckedView.visible = true;
+            checkedView.visible = false;
+            this.active = 0;
         }
 
-        if (this.labelText)
+        // Update text style if text exists and style has text configuration
+        if (this.labelText && style.text)
         {
-            checkedView.visible = true;
-            this.active = 1;
-
-            if (style.text)
-            {
-                this.labelText.style = style.text;
-            }
-
+            this.labelText.style = style.text;
             this.alignText();
-        }
-        else
-        {
-            uncheckedView.visible = true;
         }
     }
 
