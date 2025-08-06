@@ -26,7 +26,7 @@ export class Switcher extends Container
     innerView: Container;
 
     /** The id of the visible(active) view. */
-    protected _active: number | undefined = 0;
+    protected _active: number | undefined;
 
     /** Fired when active view changes. */
     onChange: Signal<(state: number | boolean) => void>;
@@ -51,7 +51,7 @@ export class Switcher extends Container
 
         if (views) this.views = views;
         if (triggerEvents) this.triggerEvents = triggerEvents;
-        if (activeViewID && this.views.length > 0) this.active = activeViewID;
+        if (activeViewID !== undefined && this.views.length > 0) this.active = activeViewID;
 
         this.setInteractionEvents();
     }
