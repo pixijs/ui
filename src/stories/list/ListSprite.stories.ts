@@ -56,7 +56,7 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
 
                 view.addChild(window);
 
-                const items: Container[] = createItems(itemsAmount, getColor(fontColor), onPress);
+                const items: Container[] = createItems(itemsAmount, getColor(fontColor) ?? 0x000000, onPress);
 
                 // Component usage !!!
                 const list = new List({

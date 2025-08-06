@@ -35,12 +35,12 @@ export type CheckBoxOptions = {
 export class CheckBox extends Switcher
 {
     //* Text label */
-    labelText!: PixiText;
+    labelText: PixiText | undefined;
 
     /** Signal emitted when checkbox state changes. */
     onCheck: Signal<(state: boolean) => void>;
 
-    protected _style: CheckBoxStyle;
+    protected _style: CheckBoxStyle | undefined;
     protected _textClass: PixiTextClass;
 
     constructor(options: CheckBoxOptions)
@@ -48,11 +48,11 @@ export class CheckBox extends Switcher
         super();
 
         this._textClass = options.TextClass ?? Text;
-        this.text = options.text;
+        this.text = options.text ?? '';
 
         this.style = options.style;
 
-        this.checked = options.checked;
+        this.checked = options.checked ?? false;
 
         this.triggerEvents = ['onPress'];
 
@@ -85,14 +85,23 @@ export class CheckBox extends Switcher
     {
         if (!text)
         {
-            cleanup(this.labelText);
-
-            this.labelText = undefined;
+            if (this.labelText)
+            {
+                cleanup(this.labelText);
+                this.labelText = undefined;
+            }
 
             return;
         }
 
-        this.labelText ? (this.labelText.text = text) : this.addLabel(text);
+        if (this.labelText)
+        {
+            this.labelText.text = text;
+        }
+        else
+        {
+            this.addLabel(text);
+        }
 
         this.alignText();
     }
@@ -118,36 +127,30 @@ export class CheckBox extends Switcher
 
         this.views = [uncheckedView, checkedView];
 
+        // Set initial view visibility based on checked state
         if (wasChecked)
         {
             checkedView.visible = true;
+            uncheckedView.visible = false;
             this.active = 1;
         }
         else
         {
             uncheckedView.visible = true;
+            checkedView.visible = false;
+            this.active = 0;
         }
 
-        if (this.labelText)
+        // Update text style if text exists and style has text configuration
+        if (this.labelText && style.text)
         {
-            checkedView.visible = true;
-            this.active = 1;
-
-            if (style.text)
-            {
-                this.labelText.style = style.text;
-            }
-
+            this.labelText.style = style.text;
             this.alignText();
-        }
-        else
-        {
-            uncheckedView.visible = true;
         }
     }
 
     /** Getter, which returns a checkbox style settings. */
-    get style(): CheckBoxStyle
+    get style(): CheckBoxStyle | undefined
     {
         return this._style;
     }

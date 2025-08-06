@@ -75,10 +75,10 @@ export class Select extends Container
     protected openButton!: FancyButton;
     protected closeButton!: FancyButton;
     protected openView!: Container;
-    protected scrollBox: ScrollBox;
+    protected scrollBox: ScrollBox | undefined;
 
     /** Selected value ID. */
-    value: number;
+    value: number = -1;
 
     /** Fires when selected value is changed. */
     onSelect: Signal<(value: number, text: string) => void>;
@@ -149,7 +149,7 @@ export class Select extends Container
                 style: textStyle,
             });
 
-            this.openButton.textOffset = selectedTextOffset;
+            this.openButton.textOffset = selectedTextOffset ?? {};
         }
 
         // openView
@@ -187,7 +187,7 @@ export class Select extends Container
                 style: textStyle,
             });
 
-            this.openButton.textOffset = selectedTextOffset;
+            this.openButton.textOffset = selectedTextOffset ?? {};
         }
 
         // ScrollBox
@@ -236,20 +236,20 @@ export class Select extends Container
 
             if (id === selected)
             {
-                this.openButton.text = text;
-                this.closeButton.text = text;
+                this.openButton.text = text ?? '';
+                this.closeButton.text = text ?? '';
             }
 
             button.onPress.connect(() =>
             {
                 this.value = id;
-                this.onSelect.emit(id, text);
-                this.openButton.text = text;
-                this.closeButton.text = text;
+                this.onSelect.emit(id, text ?? '');
+                this.openButton.text = text ?? '';
+                this.closeButton.text = text ?? '';
                 this.close();
             });
 
-            this.scrollBox.addItem(button);
+            this.scrollBox?.addItem(button);
         });
     }
 
@@ -259,6 +259,8 @@ export class Select extends Container
      */
     removeItem(itemID: number)
     {
+        if (!this.scrollBox) return;
+
         this.scrollBox.removeItem(itemID);
     }
 

@@ -10,5 +10,4 @@ export function cleanup(element: Container)
     }
 
     element.destroy();
-    element = null;
 }

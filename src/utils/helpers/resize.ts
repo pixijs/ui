@@ -4,6 +4,8 @@ export function centerElement(view: Container, horPos?: number, verPos?: number)
 {
     const canvas = document.getElementById('storybook-root');
 
+    if (!canvas || !view) return;
+
     if (view.width > 0)
     {
         if (horPos === 0)
@@ -48,6 +50,8 @@ export function centerElement(view: Container, horPos?: number, verPos?: number)
 export function centerView(view: Container)
 {
     const canvas = document.getElementById('storybook-root');
+
+    if (!canvas) return;
 
     view.x = canvas.offsetWidth / 2;
     view.y = canvas.offsetHeight / 2;

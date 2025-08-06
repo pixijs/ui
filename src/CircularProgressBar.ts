@@ -2,9 +2,9 @@ import { ColorSource, Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
 
 export type MaskedProgressBarOptions = {
     backgroundColor?: ColorSource;
-    fillColor: ColorSource;
-    lineWidth: number;
-    radius: number;
+    fillColor?: ColorSource;
+    lineWidth?: number;
+    radius?: number;
     value?: number;
     backgroundAlpha?: number;
     fillAlpha?: number;
@@ -29,7 +29,7 @@ export type MaskedProgressBarOptions = {
 export class CircularProgressBar extends Container
 {
     private _progress = 0;
-    private options: MaskedProgressBarOptions;
+    private options: MaskedProgressBarOptions = {};
 
     private bgCircle = new Graphics();
     private fillCircle = new Graphics();
@@ -39,7 +39,7 @@ export class CircularProgressBar extends Container
 
     /**
      * Creates a Circular ProgressBar.
-     * @param { number } options - Options object to use.
+     * @param { MaskedProgressBarOptions } options - Options object to use.
      * @param { ColorSource } options.backgroundColor - Background color.
      * @param { ColorSource } options.fillColor - Fill color.
      * @param { number } options.lineWidth - Line width.
@@ -53,7 +53,7 @@ export class CircularProgressBar extends Container
     {
         super();
 
-        this.options = options;
+        this.options = options ?? {};
 
         this.addChild(this.innerView);
 
@@ -61,7 +61,7 @@ export class CircularProgressBar extends Container
 
         this.addBackground();
 
-        if (options.value)
+        if (options?.value)
         {
             this.progress = options.value;
         }
@@ -69,18 +69,18 @@ export class CircularProgressBar extends Container
 
     private addBackground()
     {
-        const { backgroundColor, lineWidth, radius, backgroundAlpha } = this.options;
+        const { backgroundColor, lineWidth = 5, radius = 50, backgroundAlpha } = this.options;
 
+        // Set alpha based on background configuration
         let alpha = 1;
-
-        if (backgroundAlpha > 0)
-        {
-            alpha = backgroundAlpha;
-        }
 
         if (backgroundColor === undefined)
         {
             alpha = 0.000001;
+        }
+        else if (backgroundAlpha !== undefined && backgroundAlpha > 0)
+        {
+            alpha = backgroundAlpha;
         }
 
         this.bgCircle.circle(0, 0, radius).stroke({
@@ -108,7 +108,7 @@ export class CircularProgressBar extends Container
 
         this._progress = value;
 
-        const { lineWidth, radius, fillColor, fillAlpha, cap } = this.options;
+        const { lineWidth = 5, radius = 50, fillColor = 0xffffff, fillAlpha, cap } = this.options;
 
         if (value === 0 && fillAlpha === 0)
         {

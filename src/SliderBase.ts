@@ -28,14 +28,14 @@ export type DoubleSliderOptions = BaseSliderOptions & {
 /** Hepper class, used as a base for single or double slider creation. */
 export class SliderBase extends ProgressBar
 {
-    protected _slider1: Container;
-    protected _slider2: Container;
+    protected _slider1: Container | undefined;
+    protected _slider2: Container | undefined;
 
     protected value1Text?: PixiText;
     protected value2Text?: PixiText;
 
-    protected _value1: number;
-    protected _value2: number;
+    protected _value1: number = 0;
+    protected _value2: number = 0;
 
     protected dragging = 0;
 
@@ -60,8 +60,14 @@ export class SliderBase extends ProgressBar
 
         this.settings = options;
 
-        this.slider1 = options.slider1;
-        this.slider2 = options.slider2;
+        if (options.slider1)
+        {
+            this.slider1 = options.slider1;
+        }
+        if (options.slider2)
+        {
+            this.slider2 = options.slider2;
+        }
 
         this.min = options.min ?? 0;
         this.max = options.max ?? 100;
@@ -87,8 +93,8 @@ export class SliderBase extends ProgressBar
 
         if (this._slider1)
         {
-            this.slider1.removeAllListeners();
-            this.slider1.destroy();
+            this._slider1.removeAllListeners();
+            this._slider1.destroy();
         }
 
         this._slider1 = this.createSlider(value);
@@ -107,7 +113,7 @@ export class SliderBase extends ProgressBar
     }
 
     /** Get Slider1 instance. */
-    get slider1(): Container
+    get slider1(): Container | undefined
     {
         return this._slider1;
     }
@@ -122,8 +128,8 @@ export class SliderBase extends ProgressBar
 
         if (this._slider2)
         {
-            this.slider2.removeAllListeners();
-            this.slider2.destroy();
+            this._slider2.removeAllListeners();
+            this._slider2.destroy();
         }
 
         this._slider2 = this.createSlider(value);
@@ -142,7 +148,7 @@ export class SliderBase extends ProgressBar
     }
 
     /** Get Slider2 instance. */
-    get slider2(): Container
+    get slider2(): Container | undefined
     {
         return this._slider2;
     }
@@ -236,8 +242,8 @@ export class SliderBase extends ProgressBar
             this.change();
         }
 
-        this.startUpdateValue1 = null;
-        this.startUpdateValue2 = null;
+        this.startUpdateValue1 = 0;
+        this.startUpdateValue2 = 0;
     }
 
     protected onClick()
@@ -254,7 +260,7 @@ export class SliderBase extends ProgressBar
 
         if (x !== this.startX)
         {
-            this.startX = null;
+            this.startX = 0;
         }
     }
 
