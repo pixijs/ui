@@ -118,6 +118,8 @@ export class Input extends Container
     {
         super();
 
+        // Establish sensible defaults for all input options
+        // to avoid null checks throughout the component
         const defaultOptions: Partial<InputOptions> = {
             bg: Texture.WHITE,
             textStyle: {

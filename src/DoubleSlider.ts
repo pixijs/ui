@@ -62,6 +62,7 @@ export class DoubleSlider extends SliderBase
         const min = this.sliderOptions.min ?? this.min;
         const max = this.sliderOptions.max ?? this.max;
 
+        // Initialize missing values with safe defaults
         if (!this.sliderOptions.value1)
         {
             this.sliderOptions.value1 = min;
@@ -75,11 +76,13 @@ export class DoubleSlider extends SliderBase
         let value1 = this.sliderOptions.value1 ?? min;
         let value2 = this.sliderOptions.value2 ?? max;
 
+        // Ensure value2 is not less than value1
         if (value2 < value1)
         {
             value2 = value1;
         }
 
+        // Clamp values to min/max bounds
         if (value1 < min)
         {
             value1 = min;
