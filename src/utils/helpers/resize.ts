@@ -4,7 +4,7 @@ export function centerElement(view: Container, horPos?: number, verPos?: number)
 {
     const canvas = document.getElementById('storybook-root');
 
-    if (!canvas) return;
+    if (!canvas || !view) return;
 
     if (view.width > 0)
     {

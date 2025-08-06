@@ -119,6 +119,7 @@ export class Input extends Container
         super();
 
         const defaultOptions: Partial<InputOptions> = {
+            bg: Texture.WHITE,
             textStyle: {
                 fill: 0x000000,
                 align: 'center',
@@ -140,8 +141,6 @@ export class Input extends Container
 
         this.cursor = 'text';
         this.interactive = true;
-
-        this.bg = this.options.bg;
 
         this.on('pointertap', () =>
         {
@@ -253,22 +252,25 @@ export class Input extends Container
             this._bg.destroy();
         }
 
+        // Use Texture.WHITE as fallback if bg is undefined
+        const bgValue = bg ?? Texture.WHITE;
+
         if (this.options?.nineSliceSprite)
         {
-            if (typeof bg === 'string')
+            if (typeof bgValue === 'string')
             {
                 this._bg = new NineSliceSprite({
-                    texture: Texture.from(bg),
+                    texture: Texture.from(bgValue),
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             }
-            else if (bg instanceof Texture)
+            else if (bgValue instanceof Texture)
             {
                 this._bg = new NineSliceSprite({
-                    texture: bg,
+                    texture: bgValue,
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
                     rightWidth: this.options.nineSliceSprite[2],
@@ -284,7 +286,7 @@ export class Input extends Container
 
         if (!this._bg)
         {
-            this._bg = getView(bg);
+            this._bg = getView(bgValue);
         }
 
         this._bg.cursor = 'text';
