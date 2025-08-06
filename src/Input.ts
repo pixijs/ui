@@ -9,7 +9,6 @@ import {
     Size,
     Sprite,
     Text,
-    TextStyleOptions,
     Texture,
     Ticker,
 } from 'pixi.js';
@@ -120,12 +119,12 @@ export class Input extends Container
 
         // Establish sensible defaults for all input options
         // to avoid null checks throughout the component
-        const defaultOptions: Partial<InputOptions> = {
+        const defaultOptions: InputOptions = {
             bg: Texture.WHITE,
             textStyle: {
                 fill: 0x000000,
                 align: 'center',
-            } as TextStyleOptions,
+            },
             TextClass: Text,
             placeholder: '',
             value: '',
@@ -137,9 +136,12 @@ export class Input extends Container
             addMask: false,
         };
 
-        this.options = { ...defaultOptions, ...options } as InputOptions;
-        this.padding = this.options.padding as Padding;
-        this._secure = this.options.secure as boolean;
+        this.options = { ...defaultOptions, ...options };
+
+        const { padding = 0, secure = false } = this.options;
+
+        this.padding = padding;
+        this._secure = secure;
 
         this.cursor = 'text';
         this.interactive = true;
@@ -215,13 +217,17 @@ export class Input extends Container
 
     protected init()
     {
-        const options = this.options;
-        const textStyle = options.textStyle as TextStyleOptions;
+        const {
+            textStyle = { fill: 0x000000, align: 'center' },
+            TextClass = Text,
+            placeholder = ''
+        } = this.options;
+
         const colorSource = textStyle.fill && Color.isColorLike(textStyle.fill)
             ? textStyle.fill
             : 0x000000;
 
-        this.inputField = new (this.options.TextClass as PixiTextClass)({
+        this.inputField = new TextClass({
             text: '',
             style: textStyle,
         });
@@ -234,11 +240,11 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new (this.options.TextClass as PixiTextClass)({
-            text: this.options.placeholder as string,
+        this.placeholder = new TextClass({
+            text: placeholder,
             style: textStyle,
         });
-        this.placeholder.visible = !!(this.options.placeholder as string);
+        this.placeholder.visible = !!placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
 
