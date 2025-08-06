@@ -39,7 +39,7 @@ export class CircularProgressBar extends Container
 
     /**
      * Creates a Circular ProgressBar.
-     * @param { number } options - Options object to use.
+     * @param { MaskedProgressBarOptions } options - Options object to use.
      * @param { ColorSource } options.backgroundColor - Background color.
      * @param { ColorSource } options.fillColor - Fill color.
      * @param { number } options.lineWidth - Line width.
@@ -71,16 +71,16 @@ export class CircularProgressBar extends Container
     {
         const { backgroundColor, lineWidth = 5, radius = 50, backgroundAlpha } = this.options;
 
+        // Set alpha based on background configuration
         let alpha = 1;
-
-        if (backgroundAlpha && backgroundAlpha > 0)
-        {
-            alpha = backgroundAlpha;
-        }
 
         if (backgroundColor === undefined)
         {
             alpha = 0.000001;
+        }
+        else if (backgroundAlpha !== undefined && backgroundAlpha > 0)
+        {
+            alpha = backgroundAlpha;
         }
 
         this.bgCircle.circle(0, 0, radius).stroke({
