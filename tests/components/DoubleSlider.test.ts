@@ -18,7 +18,7 @@ describe('DoubleSlider Component', () =>
     {
         expect(() =>
         {
-            new DoubleSlider(defaultOptions);
+            new DoubleSlider(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -28,7 +28,7 @@ describe('DoubleSlider Component', () =>
 
         expect(() =>
         {
-            new DoubleSlider(options);
+            new DoubleSlider(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -38,7 +38,7 @@ describe('DoubleSlider Component', () =>
 
         expect(() =>
         {
-            new DoubleSlider(options);
+            new DoubleSlider(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -48,7 +48,7 @@ describe('DoubleSlider Component', () =>
 
         expect(() =>
         {
-            new DoubleSlider(options);
+            new DoubleSlider(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -85,7 +85,7 @@ describe('DoubleSlider Component', () =>
 
         expect(() =>
         {
-            new DoubleSlider(options);
+            new DoubleSlider(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

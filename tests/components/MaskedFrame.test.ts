@@ -14,7 +14,7 @@ describe('MaskedFrame Component', () =>
     {
         expect(() =>
         {
-            new MaskedFrame(defaultOptions);
+            new MaskedFrame(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -28,7 +28,7 @@ describe('MaskedFrame Component', () =>
 
         expect(() =>
         {
-            new MaskedFrame(options);
+            new MaskedFrame(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -38,7 +38,7 @@ describe('MaskedFrame Component', () =>
 
         expect(() =>
         {
-            new MaskedFrame(options);
+            new MaskedFrame(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -49,7 +49,7 @@ describe('MaskedFrame Component', () =>
 
         expect(() =>
         {
-            new MaskedFrame(options);
+            new MaskedFrame(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

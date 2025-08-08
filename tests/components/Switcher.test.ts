@@ -9,7 +9,7 @@ describe('Switcher Component', () =>
     {
         expect(() =>
         {
-            new Switcher(mockAssets, mockTriggerEvents);
+            new Switcher(mockAssets, mockTriggerEvents); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -19,7 +19,7 @@ describe('Switcher Component', () =>
 
         expect(() =>
         {
-            new Switcher(differentAssets, mockTriggerEvents);
+            new Switcher(differentAssets, mockTriggerEvents); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -29,7 +29,7 @@ describe('Switcher Component', () =>
 
         expect(() =>
         {
-            new Switcher(mockAssets, differentEvents);
+            new Switcher(mockAssets, differentEvents); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -50,7 +50,7 @@ describe('Switcher Component', () =>
 
         expect(() =>
         {
-            new Switcher(singleAsset, ['onPress']);
+            new Switcher(singleAsset, ['onPress']); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });
