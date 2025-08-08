@@ -1,8 +1,10 @@
 import { Graphics } from 'pixi.js';
 import { Input } from '../../src/Input';
 
-describe('Input Component', () => {
-    describe('Input with Graphics', () => {
+describe('Input Component', () =>
+{
+    describe('Input with Graphics', () =>
+    {
         const defaultOptions = {
             bg: new Graphics()
                 .roundRect(0, 0, 320, 70, 16)
@@ -15,7 +17,7 @@ describe('Input Component', () => {
                 fontWeight: 'bold',
             },
             maxLength: 20,
-            align: 'center' as 'center',
+            align: 'center' as const,
             placeholder: 'Enter text',
             secure: false,
             value: '',
@@ -24,55 +26,73 @@ describe('Input Component', () => {
             addMask: false,
         };
 
-        it('should create Input without errors', () => {
-            expect(() => {
+        it('should create Input without errors', () =>
+        {
+            expect(() =>
+            {
                 new Input(defaultOptions);
             }).not.toThrow();
         });
 
-        it('should handle different placeholder values', () => {
+        it('should handle different placeholder values', () =>
+        {
             const options = { ...defaultOptions, placeholder: 'Different placeholder' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new Input(options);
             }).not.toThrow();
         });
 
-        it('should handle secure mode', () => {
+        it('should handle secure mode', () =>
+        {
             const options = { ...defaultOptions, secure: true };
-            expect(() => {
+
+            expect(() =>
+            {
                 new Input(options);
             }).not.toThrow();
         });
 
-        it('should handle different text values', () => {
+        it('should handle different text values', () =>
+        {
             const options = { ...defaultOptions, value: 'Initial text' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new Input(options);
             }).not.toThrow();
         });
 
-        it('should connect onEnter handler without errors', () => {
+        it('should connect onEnter handler without errors', () =>
+        {
             const input = new Input(defaultOptions);
             const mockAction = jest.fn();
 
-            expect(() => {
+            expect(() =>
+            {
                 input.onEnter.connect((val) => mockAction(`Input value: ${val}`));
             }).not.toThrow();
         });
 
-        it('should handle different alignment values', () => {
+        it('should handle different alignment values', () =>
+        {
             const alignments: Array<'center' | 'left' | 'right'> = ['center', 'left', 'right'];
-            
-            alignments.forEach(alignment => {
+
+            alignments.forEach((alignment) =>
+            {
                 const options = { ...defaultOptions, align: alignment };
-                expect(() => {
+
+                expect(() =>
+                {
                     new Input(options);
                 }).not.toThrow();
             });
         });
     });
 
-    describe('Input with Texture Background', () => {
+    describe('Input with Texture Background', () =>
+    {
         const defaultOptions = {
             bg: new Graphics()
                 .roundRect(0, 0, 320, 70, 16)
@@ -89,22 +109,30 @@ describe('Input Component', () => {
             value: '',
         };
 
-        it('should create Input without errors', () => {
-            expect(() => {
+        it('should create Input without errors', () =>
+        {
+            expect(() =>
+            {
                 new Input(defaultOptions);
             }).not.toThrow();
         });
 
-        it('should handle different placeholder values', () => {
+        it('should handle different placeholder values', () =>
+        {
             const options = { ...defaultOptions, placeholder: 'Different placeholder' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new Input(options);
             }).not.toThrow();
         });
 
-        it('should handle different text values', () => {
+        it('should handle different text values', () =>
+        {
             const options = { ...defaultOptions, value: 'Different text' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new Input(options);
             }).not.toThrow();
         });

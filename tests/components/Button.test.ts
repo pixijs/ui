@@ -1,10 +1,13 @@
-import { Container, Graphics, Text, Sprite, Texture } from 'pixi.js';
+import { Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { Button, ButtonContainer } from '../../src/Button';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
 
-describe('Button Component', () => {
-    describe('Button with Graphics', () => {
-        it('should create Button with view without errors', () => {
+describe('Button Component', () =>
+{
+    describe('Button with Graphics', () =>
+    {
+        it('should create Button with view without errors', () =>
+        {
             const buttonView = new Container();
             const buttonBg = new Graphics().roundRect(0, 0, 150, 150, 150).fill('#A5E24D');
             const text = new Text({ text: '🤙', style: { fontSize: 70 } });
@@ -15,25 +18,29 @@ describe('Button Component', () => {
 
             buttonView.addChild(buttonBg, text);
 
-            expect(() => {
+            expect(() =>
+            {
                 new Button(buttonView);
             }).not.toThrow();
         });
 
-        it('should handle disabled state', () => {
+        it('should handle disabled state', () =>
+        {
             const buttonView = new Container();
             const button = new Button(buttonView);
-            
+
             button.enabled = false;
             expect(button.enabled).toBe(false);
         });
 
-        it('should connect event handlers without errors', () => {
+        it('should connect event handlers without errors', () =>
+        {
             const buttonView = new Container();
             const button = new Button(buttonView);
             const mockAction = jest.fn();
 
-            expect(() => {
+            expect(() =>
+            {
                 button.onPress.connect(() => mockAction('onPress'));
                 button.onDown.connect(() => mockAction('onDown'));
                 button.onUp.connect(() => mockAction('onUp'));
@@ -44,30 +51,39 @@ describe('Button Component', () => {
         });
     });
 
-    describe('ButtonContainer', () => {
-        it('should create ButtonContainer without errors', () => {
-            expect(() => {
+    describe('ButtonContainer', () =>
+    {
+        it('should create ButtonContainer without errors', () =>
+        {
+            expect(() =>
+            {
                 new ButtonContainer();
             }).not.toThrow();
         });
 
-        it('should handle disabled state', () => {
+        it('should handle disabled state', () =>
+        {
             const button = new ButtonContainer();
+
             button.enabled = false;
             expect(button.enabled).toBe(false);
         });
 
-        it('should handle enabled state', () => {
+        it('should handle enabled state', () =>
+        {
             const button = new ButtonContainer();
+
             button.enabled = true;
             expect(button.enabled).toBe(true);
         });
 
-        it('should connect event handlers without errors', () => {
+        it('should connect event handlers without errors', () =>
+        {
             const button = new ButtonContainer();
             const mockAction = jest.fn();
 
-            expect(() => {
+            expect(() =>
+            {
                 button.onPress.connect(() => mockAction('onPress'));
                 button.onDown.connect(() => mockAction('onDown'));
                 button.onUp.connect(() => mockAction('onUp'));
@@ -78,7 +94,8 @@ describe('Button Component', () => {
         });
     });
 
-    describe('SpriteButton (Button with Sprite)', () => {
+    describe('SpriteButton (Button with Sprite)', () =>
+    {
         class SpriteButton extends Button
         {
             private buttonView = new Container();
@@ -133,36 +150,46 @@ describe('Button Component', () => {
             action: jest.fn(),
         };
 
-        it('should create SpriteButton without errors', () => {
-            expect(() => {
+        it('should create SpriteButton without errors', () =>
+        {
+            expect(() =>
+            {
                 new SpriteButton(defaultProps);
             }).not.toThrow();
         });
 
-        it('should handle different text values', () => {
+        it('should handle different text values', () =>
+        {
             const props = { ...defaultProps, text: 'Different Text' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new SpriteButton(props);
             }).not.toThrow();
         });
 
-        it('should handle disabled state', () => {
+        it('should handle disabled state', () =>
+        {
             const props = { ...defaultProps, disabled: true };
-            expect(() => {
+
+            expect(() =>
+            {
                 const button = new SpriteButton(props);
+
                 expect(button.enabled).toBe(false);
             }).not.toThrow();
         });
 
-        it('should call action when methods are invoked', () => {
+        it('should call action when methods are invoked', () =>
+        {
             const mockAction = jest.fn();
             const props = { ...defaultProps, action: mockAction };
-            
+
             const button = new SpriteButton(props);
-            
+
             button.press();
             expect(mockAction).toHaveBeenCalledWith('onPress');
-            
+
             button.hover();
             expect(mockAction).toHaveBeenCalledWith('hover');
         });

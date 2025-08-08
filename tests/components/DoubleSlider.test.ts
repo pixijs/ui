@@ -1,7 +1,8 @@
 import { Graphics } from 'pixi.js';
 import { DoubleSlider } from '../../src/DoubleSlider';
 
-describe('DoubleSlider Component', () => {
+describe('DoubleSlider Component', () =>
+{
     const defaultOptions = {
         bg: new Graphics().roundRect(0, 0, 250, 15, 25).fill('#CCCCCC'),
         fill: new Graphics().roundRect(0, 0, 250, 15, 25).fill('#00AA00'),
@@ -13,47 +14,64 @@ describe('DoubleSlider Component', () => {
         value2: 75,
     };
 
-    it('should create DoubleSlider without errors', () => {
-        expect(() => {
+    it('should create DoubleSlider without errors', () =>
+    {
+        expect(() =>
+        {
             new DoubleSlider(defaultOptions);
         }).not.toThrow();
     });
 
-    it('should handle different value ranges', () => {
+    it('should handle different value ranges', () =>
+    {
         const options = { ...defaultOptions, min: 10, max: 90, value1: 20, value2: 80 };
-        expect(() => {
+
+        expect(() =>
+        {
             new DoubleSlider(options);
         }).not.toThrow();
     });
 
-    it('should handle minimum values', () => {
+    it('should handle minimum values', () =>
+    {
         const options = { ...defaultOptions, value1: 0, value2: 50 };
-        expect(() => {
+
+        expect(() =>
+        {
             new DoubleSlider(options);
         }).not.toThrow();
     });
 
-    it('should handle maximum values', () => {
+    it('should handle maximum values', () =>
+    {
         const options = { ...defaultOptions, value1: 50, value2: 100 };
-        expect(() => {
+
+        expect(() =>
+        {
             new DoubleSlider(options);
         }).not.toThrow();
     });
 
-    it('should connect onChange handler without errors', () => {
+    it('should connect onChange handler without errors', () =>
+    {
         const slider = new DoubleSlider(defaultOptions);
         const mockAction = jest.fn();
 
-        expect(() => {
-            slider.onUpdate.connect((value1, value2) => {
+        expect(() =>
+        {
+            slider.onUpdate.connect((value1, value2) =>
+            {
                 mockAction(`Slider values: ${value1}, ${value2}`);
             });
         }).not.toThrow();
     });
 
-    it('should handle value updates', () => {
+    it('should handle value updates', () =>
+    {
         const slider = new DoubleSlider(defaultOptions);
-        expect(() => {
+
+        expect(() =>
+        {
             slider.value1 = 30;
             slider.value2 = 70;
         }).not.toThrow();
@@ -61,9 +79,12 @@ describe('DoubleSlider Component', () => {
         expect(slider.value2).toBe(70);
     });
 
-    it('should handle crossing values', () => {
+    it('should handle crossing values', () =>
+    {
         const options = { ...defaultOptions, value1: 60, value2: 40 };
-        expect(() => {
+
+        expect(() =>
+        {
             new DoubleSlider(options);
         }).not.toThrow();
     });

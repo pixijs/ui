@@ -1,15 +1,18 @@
 import { Container, Graphics } from 'pixi.js';
 import { ScrollBox } from '../../src/ScrollBox';
 
-describe('ScrollBox Component', () => {
-    const createItems = (count: number): Container[] => {
-        return Array.from({ length: count }, (_, i) => {
+describe('ScrollBox Component', () =>
+{
+    const createItems = (count: number): Container[] =>
+        Array.from({ length: count }, (_, i) =>
+        {
             const container = new Container();
             const bg = new Graphics().roundRect(0, 0, 200, 40, 5).fill('#F0F0F0');
+
             container.addChild(bg);
+
             return container;
         });
-    };
 
     const defaultOptions = {
         width: 300,
@@ -18,66 +21,86 @@ describe('ScrollBox Component', () => {
         items: createItems(10),
     };
 
-    it('should create ScrollBox without errors', () => {
-        expect(() => {
+    it('should create ScrollBox without errors', () =>
+    {
+        expect(() =>
+        {
             new ScrollBox(defaultOptions);
         }).not.toThrow();
     });
 
-    it('should handle different dimensions', () => {
+    it('should handle different dimensions', () =>
+    {
         const options = {
             ...defaultOptions,
             width: 400,
             height: 300,
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new ScrollBox(options);
         }).not.toThrow();
     });
 
-    it('should handle different margins', () => {
+    it('should handle different margins', () =>
+    {
         const options = {
             ...defaultOptions,
             elementsMargin: 10,
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new ScrollBox(options);
         }).not.toThrow();
     });
 
-    it('should handle empty items list', () => {
+    it('should handle empty items list', () =>
+    {
         const options = {
             ...defaultOptions,
             items: [],
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new ScrollBox(options);
         }).not.toThrow();
     });
 
-    it('should handle single item', () => {
+    it('should handle single item', () =>
+    {
         const options = {
             ...defaultOptions,
             items: createItems(1),
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new ScrollBox(options);
         }).not.toThrow();
     });
 
-    it('should handle many items', () => {
+    it('should handle many items', () =>
+    {
         const options = {
             ...defaultOptions,
             items: createItems(50),
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new ScrollBox(options);
         }).not.toThrow();
     });
 
-    it('should handle scroll positioning after creation', () => {
+    it('should handle scroll positioning after creation', () =>
+    {
         const scrollBox = new ScrollBox(defaultOptions);
-        expect(() => {
+
+        expect(() =>
+        {
             // Test basic scroll properties exist and can be accessed
             scrollBox.scrollLeft = 0;
             scrollBox.scrollTop = 0;

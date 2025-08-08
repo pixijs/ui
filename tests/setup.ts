@@ -25,16 +25,20 @@ global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
 global.cancelAnimationFrame = jest.fn();
 
 // Mock Image constructor for texture loading
-global.Image = class {
+global.Image = class
+{
     onload?: () => void;
     onerror?: () => void;
     src?: string;
     width = 1;
     height = 1;
 
-    constructor() {
-        setTimeout(() => {
-            if (this.onload) {
+    constructor()
+    {
+        setTimeout(() =>
+        {
+            if (this.onload)
+            {
                 this.onload();
             }
         }, 0);
@@ -54,12 +58,14 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 // Mock PointerEvent for better event handling
-global.PointerEvent = class extends Event {
+global.PointerEvent = class extends Event
+{
     pointerId: number;
     pointerType: string;
     isPrimary: boolean;
 
-    constructor(type: string, options: any = {}) {
+    constructor(type: string, options: any = {})
+    {
         super(type, options);
         this.pointerId = options.pointerId || 0;
         this.pointerType = options.pointerType || 'mouse';
