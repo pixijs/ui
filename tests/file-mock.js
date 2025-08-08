@@ -1,2 +1,6 @@
-// Mock file imports for Jest (images, assets, etc.)
-module.exports = 'test-file-stub';
+// Jest transformer for static assets (images, assets, etc.)
+module.exports = {
+  process() {
+    return { code: 'module.exports = "test-file-stub";' };
+  },
+};
