@@ -1,74 +1,26 @@
-// Mock PixiJS environment for Jest testing
+// Minimal PixiJS environment setup for Jest testing
 import { jest } from '@jest/globals';
 
-// Mock canvas and WebGL context for PixiJS
+// Mock canvas context for PixiJS (basic 2D context mock)
+const mockContext = {
+    fillRect: jest.fn(),
+    clearRect: jest.fn(),
+    getImageData: jest.fn(() => ({ data: new Array(4) })),
+    putImageData: jest.fn(),
+    drawImage: jest.fn(),
+    save: jest.fn(),
+    restore: jest.fn(),
+    measureText: jest.fn(() => ({ width: 0 })),
+    // Add basic properties PixiJS might check
+    canvas: { width: 800, height: 600 },
+};
+
 Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
-    value: jest.fn(() => ({
-        fillRect: jest.fn(),
-        clearRect: jest.fn(),
-        getImageData: jest.fn(() => ({ data: new Array(4) })),
-        putImageData: jest.fn(),
-        createImageData: jest.fn(() => []),
-        setTransform: jest.fn(),
-        drawImage: jest.fn(),
-        save: jest.fn(),
-        fillText: jest.fn(),
-        restore: jest.fn(),
-        beginPath: jest.fn(),
-        moveTo: jest.fn(),
-        lineTo: jest.fn(),
-        closePath: jest.fn(),
-        stroke: jest.fn(),
-        translate: jest.fn(),
-        scale: jest.fn(),
-        rotate: jest.fn(),
-        arc: jest.fn(),
-        fill: jest.fn(),
-        measureText: jest.fn(() => ({ width: 0 })),
-        transform: jest.fn(),
-        rect: jest.fn(),
-        clip: jest.fn(),
-    })),
+    value: jest.fn(() => mockContext),
     writable: true,
 });
 
-// Mock WebGL context
-Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
-    value: jest.fn((contextType) => {
-        if (contextType === '2d') {
-            return {
-                fillRect: jest.fn(),
-                clearRect: jest.fn(),
-                getImageData: jest.fn(() => ({ data: new Array(4) })),
-                putImageData: jest.fn(),
-                createImageData: jest.fn(() => []),
-                setTransform: jest.fn(),
-                drawImage: jest.fn(),
-                save: jest.fn(),
-                fillText: jest.fn(),
-                restore: jest.fn(),
-                beginPath: jest.fn(),
-                moveTo: jest.fn(),
-                lineTo: jest.fn(),
-                closePath: jest.fn(),
-                stroke: jest.fn(),
-                translate: jest.fn(),
-                scale: jest.fn(),
-                rotate: jest.fn(),
-                arc: jest.fn(),
-                fill: jest.fn(),
-                measureText: jest.fn(() => ({ width: 0 })),
-                transform: jest.fn(),
-                rect: jest.fn(),
-                clip: jest.fn(),
-            };
-        }
-        return null;
-    }),
-    writable: true,
-});
-
-// Mock requestAnimationFrame
+// Mock basic browser APIs
 global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
 global.cancelAnimationFrame = jest.fn();
 
