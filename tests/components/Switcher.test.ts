@@ -1,41 +1,55 @@
 import { Switcher } from '../../src/Switcher';
 
-describe('Switcher Component', () => {
+describe('Switcher Component', () =>
+{
     const mockAssets = ['asset1.png', 'asset2.png', 'asset3.png'];
     const mockTriggerEvents = ['onPress', 'onHover', 'onOut'];
 
-    it('should create Switcher without errors', () => {
-        expect(() => {
+    it('should create Switcher without errors', () =>
+    {
+        expect(() =>
+        {
             new Switcher(mockAssets, mockTriggerEvents);
         }).not.toThrow();
     });
 
-    it('should handle different asset arrays', () => {
+    it('should handle different asset arrays', () =>
+    {
         const differentAssets = ['avatar-01.png', 'avatar-02.png'];
-        expect(() => {
+
+        expect(() =>
+        {
             new Switcher(differentAssets, mockTriggerEvents);
         }).not.toThrow();
     });
 
-    it('should handle different trigger events', () => {
+    it('should handle different trigger events', () =>
+    {
         const differentEvents = ['onDown', 'onUp'];
-        expect(() => {
+
+        expect(() =>
+        {
             new Switcher(mockAssets, differentEvents);
         }).not.toThrow();
     });
 
-    it('should connect onChange handler without errors', () => {
+    it('should connect onChange handler without errors', () =>
+    {
         const switcher = new Switcher(mockAssets, mockTriggerEvents);
         const mockAction = jest.fn();
 
-        expect(() => {
+        expect(() =>
+        {
             switcher.onChange.connect((state) => mockAction(`state: ${state}`));
         }).not.toThrow();
     });
 
-    it('should handle single asset', () => {
+    it('should handle single asset', () =>
+    {
         const singleAsset = ['single-asset.png'];
-        expect(() => {
+
+        expect(() =>
+        {
             new Switcher(singleAsset, ['onPress']);
         }).not.toThrow();
     });

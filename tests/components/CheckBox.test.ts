@@ -2,8 +2,10 @@ import { Graphics } from 'pixi.js';
 import { CheckBox } from '../../src/CheckBox';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
 
-describe('CheckBox Component', () => {
-    describe('CheckBox with Graphics', () => {
+describe('CheckBox Component', () =>
+{
+    describe('CheckBox with Graphics', () =>
+    {
         const defaultCheckBoxOptions = {
             text: 'Checkbox',
             checked: false,
@@ -30,40 +32,52 @@ describe('CheckBox Component', () => {
             },
         };
 
-        it('should create CheckBox without errors', () => {
-            expect(() => {
+        it('should create CheckBox without errors', () =>
+        {
+            expect(() =>
+            {
                 new CheckBox(defaultCheckBoxOptions);
             }).not.toThrow();
         });
 
-        it('should handle checked state', () => {
+        it('should handle checked state', () =>
+        {
             const checkBox = new CheckBox({ ...defaultCheckBoxOptions, checked: true });
+
             expect(checkBox.checked).toBe(true);
         });
 
-        it('should handle unchecked state', () => {
+        it('should handle unchecked state', () =>
+        {
             const checkBox = new CheckBox({ ...defaultCheckBoxOptions, checked: false });
+
             expect(checkBox.checked).toBe(false);
         });
 
-        it('should connect onCheck handler without errors', () => {
+        it('should connect onCheck handler without errors', () =>
+        {
             const checkBox = new CheckBox(defaultCheckBoxOptions);
             const mockAction = jest.fn();
 
-            expect(() => {
+            expect(() =>
+            {
                 checkBox.onCheck.connect((checked) => mockAction(`checked: ${checked}`));
             }).not.toThrow();
         });
 
-        it('should handle different text values', () => {
+        it('should handle different text values', () =>
+        {
             const options = { ...defaultCheckBoxOptions, text: 'Different Text' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new CheckBox(options);
             }).not.toThrow();
         });
     });
 
-    describe('CheckBox with Alternative Graphics', () => {
+    describe('CheckBox with Alternative Graphics', () =>
+    {
         const altStyle = {
             unchecked: new Graphics()
                 .roundRect(-1, -1, 32, 32, 6)
@@ -92,25 +106,34 @@ describe('CheckBox Component', () => {
             style: altStyle,
         };
 
-        it('should create CheckBox without errors', () => {
-            expect(() => {
+        it('should create CheckBox without errors', () =>
+        {
+            expect(() =>
+            {
                 new CheckBox(defaultOptions);
             }).not.toThrow();
         });
 
-        it('should handle checked state', () => {
+        it('should handle checked state', () =>
+        {
             const checkBox = new CheckBox({ ...defaultOptions, checked: true });
+
             expect(checkBox.checked).toBe(true);
         });
 
-        it('should handle unchecked state', () => {
+        it('should handle unchecked state', () =>
+        {
             const checkBox = new CheckBox({ ...defaultOptions, checked: false });
+
             expect(checkBox.checked).toBe(false);
         });
 
-        it('should handle different text values', () => {
+        it('should handle different text values', () =>
+        {
             const options = { ...defaultOptions, text: 'Different CheckBox Text' };
-            expect(() => {
+
+            expect(() =>
+            {
                 new CheckBox(options);
             }).not.toThrow();
         });

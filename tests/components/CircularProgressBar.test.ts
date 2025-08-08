@@ -1,42 +1,55 @@
 import { CircularProgressBar } from '../../src/CircularProgressBar';
 
-describe('CircularProgressBar Component', () => {
+describe('CircularProgressBar Component', () =>
+{
     const defaultOptions = {
         backgroundColor: '#CCCCCC',
-        fillColor: '#4CAF50', 
+        fillColor: '#4CAF50',
         radius: 50,
         lineWidth: 10,
         value: 50,
     };
 
-    it('should create CircularProgressBar without errors', () => {
-        expect(() => {
+    it('should create CircularProgressBar without errors', () =>
+    {
+        expect(() =>
+        {
             new CircularProgressBar(defaultOptions);
         }).not.toThrow();
     });
 
-    it('should handle different progress values', () => {
+    it('should handle different progress values', () =>
+    {
         const options = { ...defaultOptions, value: 75 };
-        expect(() => {
+
+        expect(() =>
+        {
             new CircularProgressBar(options);
         }).not.toThrow();
     });
 
-    it('should handle zero progress', () => {
+    it('should handle zero progress', () =>
+    {
         const options = { ...defaultOptions, value: 0 };
-        expect(() => {
+
+        expect(() =>
+        {
             new CircularProgressBar(options);
         }).not.toThrow();
     });
 
-    it('should handle full progress', () => {
+    it('should handle full progress', () =>
+    {
         const options = { ...defaultOptions, value: 100 };
-        expect(() => {
+
+        expect(() =>
+        {
             new CircularProgressBar(options);
         }).not.toThrow();
     });
 
-    it('should handle different colors and dimensions', () => {
+    it('should handle different colors and dimensions', () =>
+    {
         const options = {
             ...defaultOptions,
             backgroundColor: '#DDDDDD',
@@ -45,14 +58,19 @@ describe('CircularProgressBar Component', () => {
             lineWidth: 15,
             value: 30,
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new CircularProgressBar(options);
         }).not.toThrow();
     });
 
-    it('should handle different line width', () => {
+    it('should handle different line width', () =>
+    {
         const options = { ...defaultOptions, lineWidth: 20 };
-        expect(() => {
+
+        expect(() =>
+        {
             new CircularProgressBar(options);
         }).not.toThrow();
     });

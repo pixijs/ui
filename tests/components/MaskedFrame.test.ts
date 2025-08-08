@@ -1,7 +1,8 @@
 import { Graphics, Sprite } from 'pixi.js';
 import { MaskedFrame } from '../../src/MaskedFrame';
 
-describe('MaskedFrame Component', () => {
+describe('MaskedFrame Component', () =>
+{
     const defaultOptions = {
         target: new Sprite(),
         mask: new Graphics().rect(0, 0, 200, 200).fill('#FFFFFF'),
@@ -9,34 +10,45 @@ describe('MaskedFrame Component', () => {
         borderColor: 0x000000,
     };
 
-    it('should create MaskedFrame without errors', () => {
-        expect(() => {
+    it('should create MaskedFrame without errors', () =>
+    {
+        expect(() =>
+        {
             new MaskedFrame(defaultOptions);
         }).not.toThrow();
     });
 
-    it('should handle different border configurations', () => {
-        const options = { 
-            ...defaultOptions, 
-            borderWidth: 10, 
-            borderColor: 0xFF0000 
+    it('should handle different border configurations', () =>
+    {
+        const options = {
+            ...defaultOptions,
+            borderWidth: 10,
+            borderColor: 0xFF0000
         };
-        expect(() => {
+
+        expect(() =>
+        {
             new MaskedFrame(options);
         }).not.toThrow();
     });
 
-    it('should handle no border', () => {
+    it('should handle no border', () =>
+    {
         const options = { ...defaultOptions, borderWidth: 0 };
-        expect(() => {
+
+        expect(() =>
+        {
             new MaskedFrame(options);
         }).not.toThrow();
     });
 
-    it('should handle different mask shapes', () => {
+    it('should handle different mask shapes', () =>
+    {
         const circularMask = new Graphics().circle(100, 100, 50).fill('#FFFFFF');
         const options = { ...defaultOptions, mask: circularMask };
-        expect(() => {
+
+        expect(() =>
+        {
             new MaskedFrame(options);
         }).not.toThrow();
     });
