@@ -8,6 +8,7 @@ describe('Select Component', () => {
 
     const defaultOptions = {
         closedBG: new Graphics().roundRect(0, 0, 200, 40, 5).fill('#FFFFFF'),
+        openBG: new Graphics().roundRect(0, 0, 200, 120, 5).fill('#EEEEEE'),
         textStyle: {
             fontFamily: 'Arial',
             fontSize: 16,

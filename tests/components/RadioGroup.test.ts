@@ -60,12 +60,12 @@ describe('RadioGroup Component', () => {
         }).not.toThrow();
     });
 
-    it('should connect onSelect handler without errors', () => {
-        const mockOnSelect = jest.fn();
+    it('should connect onChange handler without errors', () => {
+        const mockOnChange = jest.fn();
         const radioGroup = new RadioGroup(defaultOptions);
         
         expect(() => {
-            radioGroup.onSelect.connect(mockOnSelect);
+            radioGroup.onChange.connect(mockOnChange);
         }).not.toThrow();
     });
 
