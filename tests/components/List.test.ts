@@ -6,7 +6,7 @@ describe('List Component', () =>
     {
         expect(() =>
         {
-            new List({ type: 'vertical', elementsMargin: 10 });
+            new List({ type: 'vertical', elementsMargin: 10 }); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -14,7 +14,7 @@ describe('List Component', () =>
     {
         expect(() =>
         {
-            new List({ type: 'horizontal', elementsMargin: 10 });
+            new List({ type: 'horizontal', elementsMargin: 10 }); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -22,7 +22,7 @@ describe('List Component', () =>
     {
         expect(() =>
         {
-            new List({ type: 'vertical', elementsMargin: 20 });
+            new List({ type: 'vertical', elementsMargin: 20 }); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -30,7 +30,7 @@ describe('List Component', () =>
     {
         expect(() =>
         {
-            new List({ type: 'vertical', elementsMargin: 0 });
+            new List({ type: 'vertical', elementsMargin: 0 }); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -38,7 +38,7 @@ describe('List Component', () =>
     {
         expect(() =>
         {
-            new List();
+            new List(); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

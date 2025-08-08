@@ -32,7 +32,7 @@ describe('Select Component', () =>
     {
         expect(() =>
         {
-            new Select(defaultOptions);
+            new Select(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -51,7 +51,7 @@ describe('Select Component', () =>
 
         expect(() =>
         {
-            new Select(options);
+            new Select(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -70,7 +70,7 @@ describe('Select Component', () =>
 
         expect(() =>
         {
-            new Select(options);
+            new Select(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -83,7 +83,7 @@ describe('Select Component', () =>
 
         expect(() =>
         {
-            new Select(options);
+            new Select(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -96,7 +96,7 @@ describe('Select Component', () =>
 
         expect(() =>
         {
-            new Select(options);
+            new Select(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 

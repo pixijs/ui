@@ -27,7 +27,7 @@ describe('RadioGroup Component', () =>
     {
         expect(() =>
         {
-            new RadioGroup(defaultOptions);
+            new RadioGroup(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -37,7 +37,7 @@ describe('RadioGroup Component', () =>
 
         expect(() =>
         {
-            new RadioGroup(options);
+            new RadioGroup(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -50,7 +50,7 @@ describe('RadioGroup Component', () =>
 
         expect(() =>
         {
-            new RadioGroup(options);
+            new RadioGroup(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -68,7 +68,7 @@ describe('RadioGroup Component', () =>
 
         expect(() =>
         {
-            new RadioGroup(options);
+            new RadioGroup(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -92,7 +92,7 @@ describe('RadioGroup Component', () =>
 
         expect(() =>
         {
-            new RadioGroup(options);
+            new RadioGroup(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

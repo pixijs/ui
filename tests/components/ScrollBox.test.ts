@@ -4,7 +4,7 @@ import { ScrollBox } from '../../src/ScrollBox';
 describe('ScrollBox Component', () =>
 {
     const createItems = (count: number): Container[] =>
-        Array.from({ length: count }, (_, i) =>
+        Array.from({ length: count }, (_, _i) =>
         {
             const container = new Container();
             const bg = new Graphics().roundRect(0, 0, 200, 40, 5).fill('#F0F0F0');
@@ -25,7 +25,7 @@ describe('ScrollBox Component', () =>
     {
         expect(() =>
         {
-            new ScrollBox(defaultOptions);
+            new ScrollBox(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -39,7 +39,7 @@ describe('ScrollBox Component', () =>
 
         expect(() =>
         {
-            new ScrollBox(options);
+            new ScrollBox(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -52,7 +52,7 @@ describe('ScrollBox Component', () =>
 
         expect(() =>
         {
-            new ScrollBox(options);
+            new ScrollBox(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -65,7 +65,7 @@ describe('ScrollBox Component', () =>
 
         expect(() =>
         {
-            new ScrollBox(options);
+            new ScrollBox(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -78,7 +78,7 @@ describe('ScrollBox Component', () =>
 
         expect(() =>
         {
-            new ScrollBox(options);
+            new ScrollBox(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -91,7 +91,7 @@ describe('ScrollBox Component', () =>
 
         expect(() =>
         {
-            new ScrollBox(options);
+            new ScrollBox(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 

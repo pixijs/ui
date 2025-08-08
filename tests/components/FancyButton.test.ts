@@ -25,7 +25,7 @@ describe('FancyButton Component', () =>
         {
             expect(() =>
             {
-                new FancyButton(defaultOptions);
+                new FancyButton(defaultOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -83,7 +83,7 @@ describe('FancyButton Component', () =>
 
             expect(() =>
             {
-                new FancyButton(options);
+                new FancyButton(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
     });
@@ -111,7 +111,7 @@ describe('FancyButton Component', () =>
         {
             expect(() =>
             {
-                new FancyButton(defaultOptions);
+                new FancyButton(defaultOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -122,7 +122,7 @@ describe('FancyButton Component', () =>
 
             expect(() =>
             {
-                new FancyButton(options);
+                new FancyButton(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
 

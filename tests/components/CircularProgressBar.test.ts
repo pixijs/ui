@@ -14,7 +14,7 @@ describe('CircularProgressBar Component', () =>
     {
         expect(() =>
         {
-            new CircularProgressBar(defaultOptions);
+            new CircularProgressBar(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -24,7 +24,7 @@ describe('CircularProgressBar Component', () =>
 
         expect(() =>
         {
-            new CircularProgressBar(options);
+            new CircularProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -34,7 +34,7 @@ describe('CircularProgressBar Component', () =>
 
         expect(() =>
         {
-            new CircularProgressBar(options);
+            new CircularProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -44,7 +44,7 @@ describe('CircularProgressBar Component', () =>
 
         expect(() =>
         {
-            new CircularProgressBar(options);
+            new CircularProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -61,7 +61,7 @@ describe('CircularProgressBar Component', () =>
 
         expect(() =>
         {
-            new CircularProgressBar(options);
+            new CircularProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -71,7 +71,7 @@ describe('CircularProgressBar Component', () =>
 
         expect(() =>
         {
-            new CircularProgressBar(options);
+            new CircularProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

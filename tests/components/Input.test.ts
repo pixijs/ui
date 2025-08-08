@@ -30,7 +30,7 @@ describe('Input Component', () =>
         {
             expect(() =>
             {
-                new Input(defaultOptions);
+                new Input(defaultOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -40,7 +40,7 @@ describe('Input Component', () =>
 
             expect(() =>
             {
-                new Input(options);
+                new Input(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -50,7 +50,7 @@ describe('Input Component', () =>
 
             expect(() =>
             {
-                new Input(options);
+                new Input(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -60,7 +60,7 @@ describe('Input Component', () =>
 
             expect(() =>
             {
-                new Input(options);
+                new Input(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -85,7 +85,7 @@ describe('Input Component', () =>
 
                 expect(() =>
                 {
-                    new Input(options);
+                    new Input(options); // eslint-disable-line no-new
                 }).not.toThrow();
             });
         });
@@ -113,7 +113,7 @@ describe('Input Component', () =>
         {
             expect(() =>
             {
-                new Input(defaultOptions);
+                new Input(defaultOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -123,7 +123,7 @@ describe('Input Component', () =>
 
             expect(() =>
             {
-                new Input(options);
+                new Input(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -133,7 +133,7 @@ describe('Input Component', () =>
 
             expect(() =>
             {
-                new Input(options);
+                new Input(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
     });

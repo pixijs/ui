@@ -13,7 +13,7 @@ describe('ProgressBar Component', () =>
     {
         expect(() =>
         {
-            new ProgressBar(defaultOptions);
+            new ProgressBar(defaultOptions); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -23,7 +23,7 @@ describe('ProgressBar Component', () =>
 
         expect(() =>
         {
-            new ProgressBar(options);
+            new ProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -33,7 +33,7 @@ describe('ProgressBar Component', () =>
 
         expect(() =>
         {
-            new ProgressBar(options);
+            new ProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 
@@ -43,7 +43,7 @@ describe('ProgressBar Component', () =>
 
         expect(() =>
         {
-            new ProgressBar(options);
+            new ProgressBar(options); // eslint-disable-line no-new
         }).not.toThrow();
     });
 

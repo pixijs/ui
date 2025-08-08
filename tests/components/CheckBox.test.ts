@@ -36,7 +36,7 @@ describe('CheckBox Component', () =>
         {
             expect(() =>
             {
-                new CheckBox(defaultCheckBoxOptions);
+                new CheckBox(defaultCheckBoxOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -71,7 +71,7 @@ describe('CheckBox Component', () =>
 
             expect(() =>
             {
-                new CheckBox(options);
+                new CheckBox(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
     });
@@ -110,7 +110,7 @@ describe('CheckBox Component', () =>
         {
             expect(() =>
             {
-                new CheckBox(defaultOptions);
+                new CheckBox(defaultOptions); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -134,7 +134,7 @@ describe('CheckBox Component', () =>
 
             expect(() =>
             {
-                new CheckBox(options);
+                new CheckBox(options); // eslint-disable-line no-new
             }).not.toThrow();
         });
     });

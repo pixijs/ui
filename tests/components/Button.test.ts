@@ -20,7 +20,7 @@ describe('Button Component', () =>
 
             expect(() =>
             {
-                new Button(buttonView);
+                new Button(buttonView); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -57,7 +57,7 @@ describe('Button Component', () =>
         {
             expect(() =>
             {
-                new ButtonContainer();
+                new ButtonContainer(); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -154,7 +154,7 @@ describe('Button Component', () =>
         {
             expect(() =>
             {
-                new SpriteButton(defaultProps);
+                new SpriteButton(defaultProps); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
@@ -164,7 +164,7 @@ describe('Button Component', () =>
 
             expect(() =>
             {
-                new SpriteButton(props);
+                new SpriteButton(props); // eslint-disable-line no-new
             }).not.toThrow();
         });
 
