@@ -14,8 +14,7 @@ jobs:
             - run: npm ci
             - run: npm run lint
             - run: npm run types
-              #   TODO: add tests
-              #   - run: npm run test
+            - run: npm run test
               env:
                   CI: true
             - run: npm run docs

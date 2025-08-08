@@ -53,7 +53,8 @@
     },
     "lint-staged": {
         "*.{ts,js,mjs}": [
-            "npm run lint:fix --"
+            "npm run lint:fix --",
+            "npm run test -- --bail --findRelatedTests"
         ]
     },
     "extensionConfig": {
