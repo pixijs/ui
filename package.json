@@ -38,6 +38,11 @@
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
+        "test": "npx jest --silent --passWithNoTests",
+        "test:debug": "cross-env DEBUG_MODE=1 npx jest",
+        "test:watch": "npx jest --watch",
+        "test:coverage": "npx jest --coverage",
+        "test:types": "tsc --noEmit",
         "types": "xs types",
         "watch": "xs watch"
     },
@@ -75,6 +80,7 @@
     "devDependencies": {
         "@babel/preset-env": "^7.28.0",
         "@babel/preset-typescript": "^7.27.1",
+        "@jest/globals": "^30.0.5",
         "@pixi/extension-scripts": "^2.4.1",
         "@pixi/storybook-renderer": "^0.1.0",
         "@pixi/storybook-webpack5": "^0.1.0",
@@ -91,11 +97,13 @@
         "eslint-plugin-jsdoc": "^51.4.1",
         "eslint-plugin-no-mixed-operators": "^1.1.1",
         "husky": "^8.0.3",
-        "jest": "^26.6.3",
+        "jest": "^30.0.5",
+        "jest-environment-jsdom": "^30.0.5",
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^13.3.0",
         "pixi.js": "^8.6.2",
         "storybook": "7.6.20",
+        "ts-jest": "^29.4.1",
         "typescript": "^5.8.3"
     },
     "publishConfig": {
