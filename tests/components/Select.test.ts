@@ -14,8 +14,18 @@ describe('Select Component', () => {
             fontSize: 16,
             fill: '#000000',
         },
-        items: createSelectItems(3),
+        items: {
+            items: createSelectItems(3),
+            backgroundColor: '#FFFFFF',
+            width: 200,
+            height: 40,
+        },
         selectedItem: 0,
+        scrollBox: {
+            width: 200,
+            height: 120,
+            radius: 5,
+        },
     };
 
     it('should create Select without errors', () => {
@@ -27,7 +37,12 @@ describe('Select Component', () => {
     it('should handle different items', () => {
         const options = {
             ...defaultOptions,
-            items: createSelectItems(5),
+            items: {
+                items: createSelectItems(5),
+                backgroundColor: '#FFFFFF',
+                width: 200,
+                height: 40,
+            },
             selectedItem: 1,
         };
         expect(() => {
@@ -38,7 +53,12 @@ describe('Select Component', () => {
     it('should handle single item', () => {
         const options = {
             ...defaultOptions,
-            items: ['Only Option'],
+            items: {
+                items: ['Only Option'],
+                backgroundColor: '#FFFFFF',
+                width: 200,
+                height: 40,
+            },
             selectedItem: 0,
         };
         expect(() => {
