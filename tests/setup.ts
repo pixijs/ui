@@ -21,7 +21,12 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
 });
 
 // Mock basic browser APIs
-global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
+global.requestAnimationFrame = jest.fn((cb: FrameRequestCallback) =>
+{
+    setTimeout(cb, 16);
+
+    return 1;
+});
 global.cancelAnimationFrame = jest.fn();
 
 // Mock Image constructor for texture loading
@@ -51,11 +56,13 @@ Object.defineProperty(URL, 'createObjectURL', {
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
-}));
+global.ResizeObserver = class
+{
+    constructor(callback: ResizeObserverCallback) {}
+    observe = jest.fn();
+    unobserve = jest.fn();
+    disconnect = jest.fn();
+};
 
 // Mock PointerEvent for better event handling
 global.PointerEvent = class extends Event

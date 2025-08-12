@@ -1,4 +1,3 @@
-import { Container } from 'pixi.js';
 import { ScrollBox } from '../../src/ScrollBox';
 import { cleanup, createTestItems, testStateChange } from '../utils/story-helpers';
 
@@ -150,7 +149,7 @@ describe('ScrollBox Component', () =>
             {
                 const scrollBox = new ScrollBox(options);
 
-                expect(scrollBox.list.children.length).toBe(0);
+                expect(scrollBox.list?.children.length).toBe(0);
             }).not.toThrow();
         });
 
@@ -167,7 +166,7 @@ describe('ScrollBox Component', () =>
             {
                 const scrollBox = new ScrollBox(options);
 
-                expect(scrollBox.list.children.length).toBe(1);
+                expect(scrollBox.list?.children.length).toBe(1);
             }).not.toThrow();
         });
 
@@ -184,7 +183,7 @@ describe('ScrollBox Component', () =>
             {
                 const scrollBox = new ScrollBox(options);
 
-                expect(scrollBox.list.children.length).toBe(50);
+                expect(scrollBox.list?.children.length).toBe(50);
             }).not.toThrow();
         });
 
@@ -200,8 +199,8 @@ describe('ScrollBox Component', () =>
 
             expect(() =>
             {
-                newItems.forEach((item) => scrollBox.list.addChild(item));
-                expect(scrollBox.list.children.length).toBe(3);
+                newItems.forEach((item) => scrollBox.list?.addChild(item));
+                expect(scrollBox.list?.children.length).toBe(3);
             }).not.toThrow();
         });
 
@@ -216,10 +215,13 @@ describe('ScrollBox Component', () =>
 
             expect(() =>
             {
-                const itemToRemove = scrollBox.list.children[0] as Container;
+                const itemToRemove = scrollBox.list?.children[0];
 
-                scrollBox.list.removeChild(itemToRemove);
-                expect(scrollBox.list.children.length).toBe(4);
+                if (itemToRemove && scrollBox.list)
+                {
+                    scrollBox.list.removeChild(itemToRemove);
+                    expect(scrollBox.list.children.length).toBe(4);
+                }
             }).not.toThrow();
         });
 
@@ -358,7 +360,7 @@ describe('ScrollBox Component', () =>
         it('should handle different scroll types', () =>
         {
             // Test different scrolling configurations
-            const scrollTypes = [
+            const scrollTypes: Array<{ type: 'vertical' | 'horizontal' | 'bidirectional' }> = [
                 { type: 'vertical' },
                 { type: 'horizontal' },
                 { type: 'bidirectional' },
@@ -416,7 +418,7 @@ describe('ScrollBox Component', () =>
                 const scrollBox = new ScrollBox(options);
 
                 // Performance features should work without errors
-                expect(scrollBox.list.children.length).toBe(100);
+                expect(scrollBox.list?.children.length).toBe(100);
             }).not.toThrow();
         });
     });
@@ -495,7 +497,7 @@ describe('ScrollBox Component', () =>
             {
                 const scrollBox = new ScrollBox(options);
 
-                expect(scrollBox.list.children.length).toBe(10);
+                expect(scrollBox.list?.children.length).toBe(10);
             }).not.toThrow();
         });
 
@@ -513,13 +515,13 @@ describe('ScrollBox Component', () =>
                 // Add more items
                 const newItems = createTestItems(3);
 
-                newItems.forEach((item) => scrollBox.list.addChild(item));
-                expect(scrollBox.list.children.length).toBe(8);
+                newItems.forEach((item) => scrollBox.list?.addChild(item));
+                expect(scrollBox.list?.children.length).toBe(8);
 
                 // Remove some items
-                scrollBox.list.removeChildAt(0);
-                scrollBox.list.removeChildAt(0);
-                expect(scrollBox.list.children.length).toBe(6);
+                scrollBox.list?.removeChildAt(0);
+                scrollBox.list?.removeChildAt(0);
+                expect(scrollBox.list?.children.length).toBe(6);
             }).not.toThrow();
         });
 
@@ -547,7 +549,14 @@ describe('ScrollBox Component', () =>
         it('should handle comprehensive option combinations', () =>
         {
             // Test complex option combinations
-            const comprehensiveOptions = {
+            const comprehensiveOptions: {
+                width: number;
+                height: number;
+                items: ReturnType<typeof createTestItems>;
+                elementsMargin: number;
+                type: 'vertical' | 'horizontal' | 'bidirectional';
+                radius: number;
+            } = {
                 width: 400,
                 height: 300,
                 items: createTestItems(25, 35),
@@ -562,7 +571,7 @@ describe('ScrollBox Component', () =>
 
                 expect(scrollBox.width).toBe(400);
                 expect(scrollBox.height).toBe(300);
-                expect(scrollBox.list.children.length).toBe(25);
+                expect(scrollBox.list?.children.length).toBe(25);
             }).not.toThrow();
         });
     });

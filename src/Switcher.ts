@@ -20,7 +20,7 @@ import { ButtonEvent } from './utils/HelpTypes';
  */
 export class Switcher extends Container
 {
-    protected _triggerEvents: Set<ButtonEvent> = new Set(['onPress']);
+    protected _triggerEvents: Set<ButtonEvent> = new Set(['onPress'] satisfies ButtonEvent[]);
 
     /** Container that holds all the content of the component. */
     innerView: Container;

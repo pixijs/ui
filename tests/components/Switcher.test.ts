@@ -3,7 +3,7 @@ import { Switcher } from '../../src/Switcher';
 describe('Switcher Component', () =>
 {
     const mockAssets = ['asset1.png', 'asset2.png', 'asset3.png'];
-    const mockTriggerEvents = ['onPress', 'onHover', 'onOut'];
+    const mockTriggerEvents: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = ['onPress', 'onHover', 'onOut'];
 
     it('should create Switcher without errors', () =>
     {
@@ -25,7 +25,7 @@ describe('Switcher Component', () =>
 
     it('should handle different trigger events', () =>
     {
-        const differentEvents = ['onDown', 'onUp'];
+        const differentEvents: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = ['onDown', 'onUp'];
 
         expect(() =>
         {
@@ -48,9 +48,11 @@ describe('Switcher Component', () =>
     {
         const singleAsset = ['single-asset.png'];
 
+        const singleEvent: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = ['onPress'];
+
         expect(() =>
         {
-            new Switcher(singleAsset, ['onPress']); // eslint-disable-line no-new
+            new Switcher(singleAsset, singleEvent); // eslint-disable-line no-new
         }).not.toThrow();
     });
 });

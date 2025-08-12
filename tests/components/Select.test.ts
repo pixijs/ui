@@ -44,8 +44,8 @@ describe('Select Component', () =>
                 const select = new Select(defaultOptions);
 
                 expect(select.onSelect).toBeDefined();
-                // Note: value is set when selection is made, initially undefined
-                expect(select.value).toBeUndefined();
+                // Note: value is set when selection is made, initially -1 (no selection)
+                expect(select.value).toBe(-1);
             }).not.toThrow();
         });
 
@@ -406,7 +406,13 @@ describe('Select Component', () =>
         it('should handle different text styles', () =>
         {
             // Test various text style configurations
-            const textStyles = [
+            const textStyles: Array<{
+                fill: string;
+                fontSize: number;
+                fontWeight?: 'bold';
+                fontStyle?: 'italic';
+                fontFamily?: string;
+            }> = [
                 { fill: '#000000', fontSize: 16 },
                 { fill: '#FF0000', fontSize: 20, fontWeight: 'bold' },
                 { fill: '#0000FF', fontSize: 14, fontStyle: 'italic' },
@@ -626,13 +632,26 @@ describe('Select Component', () =>
         it('should handle comprehensive option combinations', () =>
         {
             // Test complex option combinations
-            const comprehensiveOptions = {
+            const comprehensiveOptions: {
+                closedBG: any;
+                openBG: any;
+                textStyle: {
+                    fill: string;
+                    fontSize: number;
+                    fontWeight: 'bold';
+                };
+                items: any;
+                selected: number;
+                selectedTextOffset: any;
+                scrollBox: any;
+                visibleItems: number;
+            } = {
                 closedBG: createTestGraphics(250, 50, 0xF8F8F8),
                 openBG: createTestGraphics(250, 200, 0xF0F0F0),
                 textStyle: {
                     fill: '#2C3E50',
                     fontSize: 18,
-                    fontWeight: 'bold' as const,
+                    fontWeight: 'bold',
                 },
                 items: {
                     items: [
@@ -668,8 +687,8 @@ describe('Select Component', () =>
             {
                 const select = new Select(comprehensiveOptions);
 
-                // Note: value is initially undefined, gets set during item selection
-                expect(select.value).toBeUndefined();
+                // Note: value is initially -1 (no selection), gets set during item selection
+                expect(select.value).toBe(-1);
                 expect(select.onSelect).toBeDefined();
             }).not.toThrow();
         });

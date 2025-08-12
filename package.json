@@ -54,7 +54,7 @@
     "lint-staged": {
         "*.{ts,js,mjs}": [
             "npx eslint --fix --",
-            "npx tsc --noEmit --",
+            "npm run types",
             "npm run test --silent --passWithNoTests --"
         ]
     },
