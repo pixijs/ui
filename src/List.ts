@@ -44,14 +44,11 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 {
     protected options?: { type?: ListType } & ListOptions<C>;
 
-    /** Container, that holds all inner elements. */
-    view: Container;
-
-    /** Arrange direction. */
-    protected _type: ListType;
+    /** Arrange direction. Defaults to 'bidirectional' for multi-column layout when type is not specified. */
+    protected _type: ListType = 'bidirectional';
 
     /** Width of area to fit elements when arrange. (If not set parent width will be used). */
-    protected _maxWidth: number;
+    protected _maxWidth: number = 0;
 
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
@@ -84,6 +81,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     {
         this.options = options;
 
+        // Only override the default 'bidirectional' type if explicitly specified
         if (options?.type)
         {
             this.type = options.type;
@@ -295,7 +293,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        let maxWidth = this.maxWidth ?? this.parent?.width;
+        let maxWidth = this.maxWidth || this.parent?.width;
 
         if (this.rightPadding)
         {

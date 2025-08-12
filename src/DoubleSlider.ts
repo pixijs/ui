@@ -23,7 +23,7 @@ export class DoubleSlider extends SliderBase
 {
     protected sliderOptions: DoubleSliderOptions;
 
-    protected activeValue: 'value1' | 'value2';
+    protected activeValue: 'value1' | 'value2' | undefined;
 
     /** Signal that fires when value have changed. */
     onChange: Signal<(value1: number, value2: number) => void> = new Signal();
@@ -47,8 +47,8 @@ export class DoubleSlider extends SliderBase
 
         this.updateProgress(value1, value2);
 
-        this.value2 = value2;
-        this.value1 = value1;
+        this.value2 = value2 ?? 0;
+        this.value1 = value1 ?? 0;
     }
 
     protected updateProgress(value1 = this.value1, value2 = this.value2)
@@ -59,35 +59,47 @@ export class DoubleSlider extends SliderBase
 
     protected validateValues()
     {
+        const min = this.sliderOptions.min ?? this.min;
+        const max = this.sliderOptions.max ?? this.max;
+
+        // Initialize missing values with safe defaults
         if (!this.sliderOptions.value1)
         {
-            this.sliderOptions.value1 = this.min;
+            this.sliderOptions.value1 = min;
         }
 
         if (!this.sliderOptions.value2)
         {
-            this.sliderOptions.value2 = this.sliderOptions.max;
+            this.sliderOptions.value2 = max;
         }
 
-        if (this.sliderOptions.value2 < this.sliderOptions.value1)
+        let value1 = this.sliderOptions.value1 ?? min;
+        let value2 = this.sliderOptions.value2 ?? max;
+
+        // Ensure value2 is not less than value1
+        if (value2 < value1)
         {
-            this.sliderOptions.value2 = this.sliderOptions.value1;
+            value2 = value1;
         }
 
-        if (this.sliderOptions.value1 < this.sliderOptions.min)
+        // Clamp values to min/max bounds
+        if (value1 < min)
         {
-            this.sliderOptions.value1 = this.sliderOptions.min;
+            value1 = min;
         }
 
-        if (this.sliderOptions.value1 > this.sliderOptions.max)
+        if (value1 > max)
         {
-            this.sliderOptions.value1 = this.sliderOptions.max;
+            value1 = max;
         }
 
-        if (this.sliderOptions.value2 > this.sliderOptions.max)
+        if (value2 > max)
         {
-            this.sliderOptions.value2 = this.sliderOptions.max;
+            value2 = max;
         }
+
+        this.sliderOptions.value1 = value1;
+        this.sliderOptions.value2 = value2;
     }
 
     /** Returns left value. */
@@ -141,8 +153,8 @@ export class DoubleSlider extends SliderBase
         const obj = event.currentTarget as DragObject;
         const { x } = obj.parent.worldTransform.applyInverse(event.global);
 
-        const slider1Dist = Math.abs(x - this._slider1.x - this._slider1.width);
-        const slider2Dist = Math.abs(x - this._slider2.x);
+        const slider1Dist = this._slider1 ? Math.abs(x - this._slider1.x - this._slider1.width) : Infinity;
+        const slider2Dist = this._slider2 ? Math.abs(x - this._slider2.x) : Infinity;
 
         if (!this.activeValue)
         {
@@ -180,7 +192,7 @@ export class DoubleSlider extends SliderBase
     {
         super.endUpdate();
 
-        this.activeValue = null;
+        this.activeValue = undefined;
     }
 
     protected override change()
@@ -199,7 +211,7 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Get Slider1 instance. */
-    override get slider1(): Container
+    override get slider1(): Container | undefined
     {
         return this._slider1;
     }
@@ -215,24 +227,26 @@ export class DoubleSlider extends SliderBase
     }
 
     /** Get Slider2 instance. */
-    override get slider2(): Container
+    override get slider2(): Container | undefined
     {
         return this._slider2;
     }
 
     protected updateSlider1()
     {
+        if (!this._slider1) return;
+
         this.updateProgress(this.value1, this.value2);
 
-        this._slider1.x = ((this.bg?.width / 100) * this.progressStart) - (this._slider1.width / 2);
-        this._slider1.y = this.bg?.height / 2;
+        this._slider1.x = ((this.bg?.width ?? 0) / 100 * this.progressStart) - (this._slider1.width / 2);
+        this._slider1.y = (this.bg?.height ?? 0) / 2;
 
         if (this._slider2 && this._slider1.x > this._slider2.x)
         {
             this._slider1.x = this._slider2.x;
         }
 
-        if (this.sliderOptions?.showValue)
+        if (this.sliderOptions?.showValue && this.value1Text && this._slider1)
         {
             this.value1Text.text = `${Math.round(this.value1)}`;
 
@@ -246,17 +260,19 @@ export class DoubleSlider extends SliderBase
 
     protected updateSlider2()
     {
+        if (!this._slider2) return;
+
         this.updateProgress(this.value1, this.value2);
 
-        this._slider2.x = ((this.bg?.width / 100) * this.progress) - (this._slider2.width / 2);
-        this._slider2.y = this.bg?.height / 2;
+        this._slider2.x = ((this.bg?.width ?? 0) / 100 * this.progress) - (this._slider2.width / 2);
+        this._slider2.y = (this.bg?.height ?? 0) / 2;
 
-        if (this._slider2.x < this._slider1.x)
+        if (this._slider1 && this._slider2.x < this._slider1.x)
         {
             this._slider2.x = this._slider1.x;
         }
 
-        if (this.sliderOptions?.showValue)
+        if (this.sliderOptions?.showValue && this.value2Text && this._slider2)
         {
             this.value2Text.text = `${Math.round(this.value2)}`;
 

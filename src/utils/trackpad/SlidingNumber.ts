@@ -28,12 +28,12 @@ export class SlidingNumber
     protected _offset = 0;
     protected _prev = 0;
     protected _speed = 0;
-    protected _hasStopped: boolean;
+    protected _hasStopped: boolean = false;
 
     protected _targetSpeed = 0;
     protected _speedChecker = 0;
     protected _grab = 0;
-    protected _activeEase: ConstrainEase;
+    protected _activeEase: ConstrainEase | undefined;
 
     constructor(options: SlidingNumberOptions = {})
     {
@@ -82,7 +82,7 @@ export class SlidingNumber
 
         if (this.constrain)
         {
-            this._activeEase = null;
+            this._activeEase = undefined;
 
             if (this.position > this.min)
             {
@@ -173,7 +173,7 @@ export class SlidingNumber
             {
                 this.position = this._activeEase.to;
                 this._speed = 0;
-                this._activeEase = null;
+                this._activeEase = undefined;
             }
         }
         else

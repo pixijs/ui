@@ -2,13 +2,13 @@ import { Spring } from './Spring';
 
 export default class ScrollSpring
 {
-    done: boolean;
-    to: number;
+    done: boolean = false;
+    to: number = 0;
 
     protected _spring: Spring;
-    protected _pos: number;
-    protected _speed: number;
-    protected _correctSpeed: boolean;
+    protected _pos: number = 0;
+    protected _speed: number = 0;
+    protected _correctSpeed: boolean = false;
 
     constructor()
     {

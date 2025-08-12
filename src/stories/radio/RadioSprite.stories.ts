@@ -61,7 +61,10 @@ export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onCha
                     onChange({ id: selectedItemID, val: selectedVal }),
                 );
 
-                list.addChild(radioGroup.innerView);
+                if (radioGroup.innerView)
+                {
+                    list.addChild(radioGroup.innerView);
+                }
 
                 centerElement(list);
             });

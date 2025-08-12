@@ -9,7 +9,6 @@ import {
     Size,
     Sprite,
     Text,
-    TextStyleOptions,
     Texture,
     Ticker,
 } from 'pixi.js';
@@ -54,19 +53,19 @@ const SECURE_CHARACTER = '*';
 export class Input extends Container
 {
     protected _bg?: Container | NineSliceSprite | Graphics;
-    protected inputMask: Container | NineSliceSprite | Graphics;
-    protected _cursor: Sprite;
+    protected inputMask: Container | NineSliceSprite | Graphics | undefined;
+    protected _cursor: Sprite | undefined;
     protected _value: string = '';
-    protected _secure: boolean;
-    protected inputField: PixiText;
-    protected placeholder: PixiText;
+    protected _secure: boolean = false;
+    protected inputField: PixiText | undefined;
+    protected placeholder: PixiText | undefined;
     protected editing = false;
     protected tick = 0;
-    protected lastInputData: string;
+    protected lastInputData: string = '';
 
     protected activation = false;
     protected readonly options: InputOptions;
-    protected input: HTMLInputElement;
+    protected input: HTMLInputElement | undefined;
 
     protected handleActivationBinding = this.handleActivation.bind(this);
     protected onKeyUpBinding = this.onKeyUp.bind(this);
@@ -118,11 +117,31 @@ export class Input extends Container
     {
         super();
 
-        this.options = options;
+        // Establish sensible defaults for all input options
+        // to avoid null checks throughout the component
+        const defaultOptions: InputOptions = {
+            bg: Texture.WHITE,
+            textStyle: {
+                fill: 0x000000,
+                align: 'center',
+            },
+            TextClass: Text,
+            placeholder: '',
+            value: '',
+            maxLength: undefined,
+            secure: false,
+            align: 'left',
+            padding: 0,
+            cleanOnFocus: false,
+            addMask: false,
+        };
 
-        this.options = options;
-        this.padding = options.padding;
-        this._secure = options.secure ?? false;
+        this.options = { ...defaultOptions, ...options };
+
+        const { padding = 0, secure = false } = this.options;
+
+        this.padding = padding;
+        this._secure = secure;
 
         this.cursor = 'text';
         this.interactive = true;
@@ -152,7 +171,7 @@ export class Input extends Container
 
     protected onInput(e: InputEvent)
     {
-        this.lastInputData = e.data;
+        this.lastInputData = e.data ?? '';
     }
 
     protected onKeyUp(e: KeyboardEvent)
@@ -198,22 +217,17 @@ export class Input extends Container
 
     protected init()
     {
-        const options = this.options;
+        const {
+            textStyle = { fill: 0x000000, align: 'center' },
+            TextClass = Text,
+            placeholder = ''
+        } = this.options;
 
-        const defaultTextStyle = {
-            fill: 0x000000,
-            align: 'center',
-        } as TextStyleOptions;
-
-        this.options.textStyle = options.textStyle ?? defaultTextStyle;
-        this.options.TextClass = options.TextClass ?? Text;
-
-        const textStyle = { ...defaultTextStyle, ...options.textStyle };
         const colorSource = textStyle.fill && Color.isColorLike(textStyle.fill)
             ? textStyle.fill
             : 0x000000;
 
-        this.inputField = new this.options.TextClass({
+        this.inputField = new TextClass({
             text: '',
             style: textStyle,
         });
@@ -226,15 +240,15 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
-        this.placeholder = new this.options.TextClass({
-            text: options.placeholder,
-            style: textStyle ?? defaultTextStyle,
+        this.placeholder = new TextClass({
+            text: placeholder,
+            style: textStyle,
         });
-        this.placeholder.visible = !!options.placeholder;
+        this.placeholder.visible = !!placeholder;
 
         this.addChild(this.inputField, this.placeholder, this._cursor);
 
-        this.value = options.value ?? '';
+        this.value = this.options.value ?? '';
 
         this.align();
     }
@@ -246,22 +260,25 @@ export class Input extends Container
             this._bg.destroy();
         }
 
+        // Use Texture.WHITE as fallback if bg is undefined
+        const bgValue = bg ?? Texture.WHITE;
+
         if (this.options?.nineSliceSprite)
         {
-            if (typeof bg === 'string')
+            if (typeof bgValue === 'string')
             {
                 this._bg = new NineSliceSprite({
-                    texture: Texture.from(bg),
+                    texture: Texture.from(bgValue),
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
                     rightWidth: this.options.nineSliceSprite[2],
                     bottomHeight: this.options.nineSliceSprite[3],
                 });
             }
-            else if (bg instanceof Texture)
+            else if (bgValue instanceof Texture)
             {
                 this._bg = new NineSliceSprite({
-                    texture: bg,
+                    texture: bgValue,
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
                     rightWidth: this.options.nineSliceSprite[2],
@@ -277,7 +294,7 @@ export class Input extends Container
 
         if (!this._bg)
         {
-            this._bg = getView(bg);
+            this._bg = getView(bgValue);
         }
 
         this._bg.cursor = 'text';
@@ -296,7 +313,7 @@ export class Input extends Container
         }
     }
 
-    get bg(): Container | string
+    get bg(): Container | NineSliceSprite | Graphics | undefined
     {
         return this._bg;
     }
@@ -338,8 +355,14 @@ export class Input extends Container
 
         this.tick = 0;
         this.editing = true;
-        this.placeholder.visible = false;
-        this._cursor.alpha = 1;
+        if (this.placeholder)
+        {
+            this.placeholder.visible = false;
+        }
+        if (this._cursor)
+        {
+            this._cursor.alpha = 1;
+        }
 
         this.createInputField();
 
@@ -357,7 +380,7 @@ export class Input extends Container
 
             this.input?.blur();
             this.input?.remove();
-            this.input = null;
+            this.input = undefined;
         }
 
         const input: HTMLInputElement = document.createElement('input');
@@ -368,8 +391,8 @@ export class Input extends Container
         input.style.left = `${this.getGlobalPosition().x}px`;
         input.style.top = `${this.getGlobalPosition().y}px`;
         input.style.opacity = '0.0000001';
-        input.style.width = `${this._bg.width}px`;
-        input.style.height = `${this._bg.height}px`;
+        input.style.width = `${this._bg?.width ?? 100}px`;
+        input.style.height = `${this._bg?.height ?? 30}px`;
         input.style.border = 'none';
         input.style.outline = 'none';
         input.style.background = 'white';
@@ -417,19 +440,20 @@ export class Input extends Container
     {
         if (!this.editing) return;
 
-        this._cursor.alpha = 0;
+        if (this._cursor)
+        {
+            this._cursor.alpha = 0;
+        }
         this.editing = false;
 
-        if (this.inputField.text === '')
+        if (this.placeholder && this.value.length === 0)
         {
             this.placeholder.visible = true;
         }
 
-        if (this.value.length === 0) this.placeholder.visible = true;
-
         this.input?.blur();
         this.input?.remove();
-        this.input = null;
+        this.input = undefined;
 
         this.align();
 
@@ -440,7 +464,10 @@ export class Input extends Container
     {
         if (!this.editing) return;
         this.tick += dt * 0.1;
-        this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
+        if (this._cursor)
+        {
+            this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
+        }
     }
 
     protected align()
@@ -449,22 +476,33 @@ export class Input extends Container
 
         const align = this.getAlign();
 
-        this.inputField.anchor.set(align, 0.5);
-        this.inputField.x
-            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        if (this.inputField)
+        {
+            this.inputField.anchor.set(align, 0.5);
+            this.inputField.x
+                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+            this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
+        }
 
-        this.placeholder.anchor.set(align, 0.5);
-        this.placeholder.x
-            = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
-        this.placeholder.y = this._bg.height / 2;
+        if (this.placeholder)
+        {
+            this.placeholder.anchor.set(align, 0.5);
+            this.placeholder.x
+                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+            this.placeholder.y = this._bg.height / 2;
+        }
 
-        this._cursor.x = this.getCursorPosX();
-        this._cursor.y = this.inputField.y;
+        if (this._cursor && this.inputField)
+        {
+            this._cursor.x = this.getCursorPosX();
+            this._cursor.y = this.inputField.y;
+        }
     }
 
     protected getAlign(): 0 | 1 | 0.5
     {
+        if (!(this._bg && this.inputField)) return 0;
+
         const maxWidth = this._bg.width * 0.95;
         const paddings = this.paddingLeft + this.paddingRight - 10;
         const isOverflowed = this.inputField.width + paddings > maxWidth;
@@ -488,6 +526,8 @@ export class Input extends Container
 
     protected getCursorPosX()
     {
+        if (!this.inputField) return 0;
+
         const align = this.getAlign();
 
         switch (align)
@@ -509,15 +549,15 @@ export class Input extends Container
         const textLength = text.length;
 
         this._value = text;
-        this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
 
-        if (textLength !== 0)
+        if (this.inputField)
         {
-            this.placeholder.visible = false;
+            this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
         }
-        else
+
+        if (this.placeholder)
         {
-            this.placeholder.visible = !this.editing;
+            this.placeholder.visible = textLength === 0 && !this.editing;
         }
 
         this.align();
@@ -679,8 +719,14 @@ export class Input extends Container
     {
         if (this.inputMask)
         {
-            this.inputField.mask = null;
-            this._cursor.mask = null;
+            if (this.inputField)
+            {
+                this.inputField.mask = null; // PixiJS API expects null
+            }
+            if (this._cursor)
+            {
+                this._cursor.mask = null; // PixiJS API expects null
+            }
             this.inputMask.destroy();
         }
 
@@ -707,9 +753,15 @@ export class Input extends Container
             this.inputMask = getView(bg);
         }
 
-        this.inputField.mask = this.inputMask;
+        if (this.inputField)
+        {
+            this.inputField.mask = this.inputMask;
+        }
 
-        this._cursor.mask = this.inputMask;
+        if (this._cursor)
+        {
+            this._cursor.mask = this.inputMask;
+        }
 
         this.updateInputMaskSize();
 
