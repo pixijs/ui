@@ -53,8 +53,9 @@
     },
     "lint-staged": {
         "*.{ts,js,mjs}": [
-            "npm run lint:fix --",
-            "npm run types"
+            "npx eslint --fix --",
+            "npx tsc --noEmit --",
+            "npm run test --silent --passWithNoTests --"
         ]
     },
     "extensionConfig": {
