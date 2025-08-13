@@ -331,7 +331,7 @@ describe('CheckBox Component', () =>
                 { fontSize: 18, fill: '#00FF00', fontFamily: 'Arial' },
             ];
 
-            textStyles.forEach((textStyle, index) =>
+            textStyles.forEach((textStyle, _index) =>
             {
                 const options = {
                     text: 'Styled CheckBox',
@@ -447,7 +447,7 @@ describe('CheckBox Component', () =>
                 },
             ];
 
-            visualConfigurations.forEach((style, index) =>
+            visualConfigurations.forEach((style, _index) =>
             {
                 const options = {
                     text: 'Visual Test',
@@ -552,7 +552,7 @@ describe('CheckBox Component', () =>
                 },
             ];
 
-            edgeCases.forEach((options, index) =>
+            edgeCases.forEach((options, _index) =>
             {
                 const checkBox = new CheckBox(options);
 

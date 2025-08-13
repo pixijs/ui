@@ -1,6 +1,39 @@
 import { Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { jest } from '@jest/globals';
 
+// Track components and containers for cleanup
+const createdComponents: any[] = [];
+const createdContainers: any[] = [];
+const activeEventListeners: Array<{ target: any; event: string; handler: any }> = [];
+
+/**
+ * Register a container for automatic cleanup
+ * @param container Container to track for cleanup
+ */
+export const trackContainer = <T>(container: T): T =>
+{
+    if (container)
+    {
+        createdContainers.push(container);
+    }
+
+    return container;
+};
+
+/**
+ * Register a component for automatic cleanup
+ * @param component Component to track for cleanup
+ */
+export const trackComponent = <T>(component: T): T =>
+{
+    if (component)
+    {
+        createdComponents.push(component);
+    }
+
+    return component;
+};
+
 /**
  * Creates a mock event with specified type and properties
  * @param type Event type (e.g., 'pointerdown', 'pointerup')
@@ -164,11 +197,6 @@ export const testPropertyValidation = (
     });
 };
 
-// Track components and containers for cleanup
-const createdComponents: any[] = [];
-const createdContainers: any[] = [];
-const activeEventListeners: Array<{ target: any; event: string; handler: any }> = [];
-
 /** Enhanced cleanup helper - provides thorough cleanup and isolation */
 export const cleanup = () =>
 {
@@ -254,34 +282,6 @@ export const cleanup = () =>
     {
         global.gc();
     }
-};
-
-/**
- * Register a component for automatic cleanup
- * @param component Component to track for cleanup
- */
-export const trackComponent = <T>(component: T): T =>
-{
-    if (component)
-    {
-        createdComponents.push(component);
-    }
-
-    return component;
-};
-
-/**
- * Register a container for automatic cleanup
- * @param container Container to track for cleanup
- */
-export const trackContainer = <T>(container: T): T =>
-{
-    if (container)
-    {
-        createdContainers.push(container);
-    }
-
-    return container;
 };
 
 /**
@@ -426,6 +426,7 @@ export const withTestIsolation = async (testFn: () => void | Promise<void>): Pro
         // Report excessive warnings (may indicate memory leaks)
         if (warnings.length > 5)
         {
+            // eslint-disable-next-line no-console
             console.info(`Test generated ${warnings.length} cleanup warnings - possible memory leak`);
         }
     }

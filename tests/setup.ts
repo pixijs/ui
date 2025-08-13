@@ -63,6 +63,27 @@ const mockContext = {
     canvas: { width: 800, height: 600 },
 };
 
+// Mock additional canvas/WebGL extensions that PixiJS might query
+/* eslint-disable camelcase */
+const mockExtensions = {
+    WEBGL_debug_renderer_info: {
+        UNMASKED_VENDOR_WEBGL: 37445,
+        UNMASKED_RENDERER_WEBGL: 37446,
+    },
+    OES_texture_float: {},
+    OES_texture_half_float: {},
+    WEBGL_lose_context: {
+        loseContext: jest.fn(),
+        restoreContext: jest.fn(),
+    },
+    ANGLE_instanced_arrays: {
+        drawArraysInstancedANGLE: jest.fn(),
+        drawElementsInstancedANGLE: jest.fn(),
+        vertexAttribDivisorANGLE: jest.fn(),
+    },
+};
+/* eslint-enable camelcase */
+
 // Mock WebGL context for PixiJS renderer compatibility
 const mockWebGLContext = {
     // WebGL constants
@@ -144,7 +165,7 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
 
 // Override getContext to return appropriate mock contexts
 Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
-    value: jest.fn((contextType: string, ...args) =>
+    value: jest.fn((contextType: string, ..._args) =>
     {
         if (contextType === '2d')
         {
@@ -251,7 +272,7 @@ global.Image = class
 
 // Enhanced URL API mocking
 Object.defineProperty(URL, 'createObjectURL', {
-    value: jest.fn((obj) => `mock-object-url-${Math.random().toString(36).substr(2, 9)}`),
+    value: jest.fn((_obj) => `mock-object-url-${Math.random().toString(36).substr(2, 9)}`),
 });
 
 Object.defineProperty(URL, 'revokeObjectURL', {
@@ -309,7 +330,8 @@ global.PointerEvent = class extends Event
 // Mock IntersectionObserver
 global.IntersectionObserver = class
 {
-    constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+    constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) { /* noop */ }
     observe = jest.fn();
     unobserve = jest.fn();
     disconnect = jest.fn();
@@ -321,7 +343,8 @@ global.IntersectionObserver = class
 // Mock MutationObserver
 global.MutationObserver = class
 {
-    constructor(callback: MutationCallback) {}
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+    constructor(_callback: MutationCallback) { /* noop */ }
     observe = jest.fn();
     disconnect = jest.fn();
     takeRecords = jest.fn(() => []);
@@ -334,7 +357,8 @@ if (!global.Blob)
     {
         size = 0;
         type = '';
-        constructor(parts: any[] = [], options: any = {})
+        // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+        constructor(_parts: any[] = [], options: any = {})
         {
             this.type = options.type || '';
         }
@@ -352,6 +376,7 @@ if (!global.File)
     {
         name = '';
         lastModified = Date.now();
+        // eslint-disable-next-line @typescript-eslint/no-useless-constructor
         constructor(bits: any[], name: string, options: any = {})
         {
             super(bits, options);
@@ -360,25 +385,6 @@ if (!global.File)
         }
     } as any;
 }
-
-// Mock additional canvas/WebGL extensions that PixiJS might query
-const mockExtensions = {
-    WEBGL_debug_renderer_info: {
-        UNMASKED_VENDOR_WEBGL: 37445,
-        UNMASKED_RENDERER_WEBGL: 37446,
-    },
-    OES_texture_float: {},
-    OES_texture_half_float: {},
-    WEBGL_lose_context: {
-        loseContext: jest.fn(),
-        restoreContext: jest.fn(),
-    },
-    ANGLE_instanced_arrays: {
-        drawArraysInstancedANGLE: jest.fn(),
-        drawElementsInstancedANGLE: jest.fn(),
-        vertexAttribDivisorANGLE: jest.fn(),
-    },
-};
 
 // Extend Jest matchers if needed
 expect.extend({

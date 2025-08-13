@@ -60,7 +60,7 @@
     },
     "extensionConfig": {
         "lint": [
-            "src"
+            "."
         ],
         "docsName": "PixiUI",
         "docsTitle": "PixiUI",

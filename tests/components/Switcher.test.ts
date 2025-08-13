@@ -3,7 +3,9 @@ import { Switcher } from '../../src/Switcher';
 describe('Switcher Component', () =>
 {
     const mockAssets = ['asset1.png', 'asset2.png', 'asset3.png'];
-    const mockTriggerEvents: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = ['onPress', 'onHover', 'onOut'];
+    const mockTriggerEvents: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = [
+        'onPress', 'onHover', 'onOut'
+    ];
 
     it('should create Switcher without errors', () =>
     {
