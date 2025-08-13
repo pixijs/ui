@@ -21,28 +21,39 @@ export const createMockEvent = (type: string, properties: any = {}) => ({
  * @param width Width of the graphics
  * @param height Height of the graphics
  * @param color Fill color
+ * @param track Whether to automatically track for cleanup (default: false)
  * @returns Graphics object
  */
-export const createTestGraphics = (width = 100, height = 100, color = 0xFFFFFF) =>
-    new Graphics().roundRect(0, 0, width, height, 5).fill(color);
+export const createTestGraphics = (width = 100, height = 100, color = 0xFFFFFF, track = false) =>
+{
+    const graphics = new Graphics().roundRect(0, 0, width, height, 5).fill(color);
+
+    return track ? trackContainer(graphics) : graphics;
+};
 
 /**
  * Creates a basic text object for testing
  * @param text Text content
  * @param fontSize Font size
+ * @param track Whether to automatically track for cleanup (default: false)
  * @returns Text object
  */
-export const createTestText = (text = 'Test Text', fontSize = 16) =>
-    new Text({
+export const createTestText = (text = 'Test Text', fontSize = 16, track = false) =>
+{
+    const textObj = new Text({
         text,
         style: { fontSize, fill: '#000000' },
     });
 
+    return track ? trackContainer(textObj) : textObj;
+};
+
 /**
  * Creates a basic sprite for testing
+ * @param track Whether to automatically track for cleanup (default: false)
  * @returns Sprite object with white texture
  */
-export const createTestSprite = () =>
+export const createTestSprite = (track = false) =>
 {
     const sprite = new Sprite();
 
@@ -50,16 +61,17 @@ export const createTestSprite = () =>
     sprite.width = 100;
     sprite.height = 100;
 
-    return sprite;
+    return track ? trackContainer(sprite) : sprite;
 };
 
 /**
  * Creates a container with test children for testing lists/scrollboxes
  * @param count Number of child items to create
  * @param itemHeight Height of each item
- * @returns Container with child items
+ * @param track Whether to automatically track for cleanup (default: false)
+ * @returns Array of containers with child items
  */
-export const createTestItems = (count: number, itemHeight = 40) =>
+export const createTestItems = (count: number, itemHeight = 40, track = false) =>
     Array.from({ length: count }, (_, i) =>
     {
         const container = new Container();
@@ -67,7 +79,7 @@ export const createTestItems = (count: number, itemHeight = 40) =>
 
         container.addChild(bg);
 
-        return container;
+        return track ? trackContainer(container) : container;
     });
 
 /**
@@ -152,9 +164,82 @@ export const testPropertyValidation = (
     });
 };
 
-/** Basic cleanup helper - clears DOM and resets test state */
+// Track components and containers for cleanup
+const createdComponents: any[] = [];
+const createdContainers: any[] = [];
+const activeEventListeners: Array<{ target: any; event: string; handler: any }> = [];
+
+/** Enhanced cleanup helper - provides thorough cleanup and isolation */
 export const cleanup = () =>
 {
+    // Clean up tracked PixiJS components
+    createdComponents.forEach((component) =>
+    {
+        try
+        {
+            if (component && typeof component.destroy === 'function')
+            {
+                component.destroy({ children: true, texture: false, baseTexture: false });
+            }
+            if (component && typeof component.removeFromParent === 'function')
+            {
+                component.removeFromParent();
+            }
+        }
+        catch (error)
+        {
+            // Ignore cleanup errors to prevent test failures
+            console.warn('Component cleanup warning:', error);
+        }
+    });
+    createdComponents.length = 0;
+
+    // Clean up tracked containers
+    createdContainers.forEach((container) =>
+    {
+        try
+        {
+            if (container && typeof container.removeChildren === 'function')
+            {
+                container.removeChildren();
+            }
+            if (container && typeof container.destroy === 'function')
+            {
+                container.destroy({ children: true });
+            }
+        }
+        catch (error)
+        {
+            console.warn('Container cleanup warning:', error);
+        }
+    });
+    createdContainers.length = 0;
+
+    // Clean up tracked event listeners
+    activeEventListeners.forEach(({ target, event, handler }) =>
+    {
+        try
+        {
+            if (target && typeof target.removeEventListener === 'function')
+            {
+                target.removeEventListener(event, handler);
+            }
+            else if (target && target.off && typeof target.off === 'function')
+            {
+                target.off(event, handler);
+            }
+            else if (target && target.disconnectAll && typeof target.disconnectAll === 'function')
+            {
+                target.disconnectAll();
+            }
+        }
+        catch (error)
+        {
+            console.warn('Event listener cleanup warning:', error);
+        }
+    });
+    activeEventListeners.length = 0;
+
     // Clean up DOM elements created during tests
     document.body.innerHTML = '';
 
@@ -163,6 +248,54 @@ export const cleanup = () =>
 
     // Reset all mocks
     jest.clearAllMocks();
+
+    // Force garbage collection if available (for Node.js environments)
+    if (global.gc)
+    {
+        global.gc();
+    }
+};
+
+/**
+ * Register a component for automatic cleanup
+ * @param component Component to track for cleanup
+ */
+export const trackComponent = <T>(component: T): T =>
+{
+    if (component)
+    {
+        createdComponents.push(component);
+    }
+
+    return component;
+};
+
+/**
+ * Register a container for automatic cleanup
+ * @param container Container to track for cleanup
+ */
+export const trackContainer = <T>(container: T): T =>
+{
+    if (container)
+    {
+        createdContainers.push(container);
+    }
+
+    return container;
+};
+
+/**
+ * Register an event listener for automatic cleanup
+ * @param target Event target
+ * @param event Event name
+ * @param handler Event handler
+ */
+export const trackEventListener = (target: any, event: string, handler: any): void =>
+{
+    if (target && event && handler)
+    {
+        activeEventListeners.push({ target, event, handler });
+    }
 };
 
 /**
@@ -189,3 +322,179 @@ export const createDefaultTestOptions = (overrides: any = {}) => ({
     visible: true,
     ...overrides,
 });
+
+/**
+ * Creates an isolated test environment for component testing
+ * Automatically tracks all created components and cleans them up
+ */
+export const createTestEnvironment = () =>
+{
+    const environment = {
+        components: [] as any[],
+        containers: [] as any[],
+
+        // Helper to create and track a component
+        createComponent: <T>(factory: () => T): T =>
+        {
+            const component = factory();
+
+            environment.components.push(component);
+            trackComponent(component);
+
+            return component;
+        },
+
+        // Helper to create and track a container
+        createContainer: <T>(factory: () => T): T =>
+        {
+            const container = factory();
+
+            environment.containers.push(container);
+            trackContainer(container);
+
+            return container;
+        },
+
+        // Cleanup just this environment's components
+        cleanup: () =>
+        {
+            environment.components.forEach((component) =>
+            {
+                try
+                {
+                    if (component && typeof component.destroy === 'function')
+                    {
+                        component.destroy({ children: true, texture: false, baseTexture: false });
+                    }
+                }
+                catch (error)
+                {
+                    console.warn('Environment component cleanup warning:', error);
+                }
+            });
+
+            environment.containers.forEach((container) =>
+            {
+                try
+                {
+                    if (container && typeof container.destroy === 'function')
+                    {
+                        container.destroy({ children: true });
+                    }
+                }
+                catch (error)
+                {
+                    console.warn('Environment container cleanup warning:', error);
+                }
+            });
+
+            environment.components.length = 0;
+            environment.containers.length = 0;
+        }
+    };
+
+    return environment;
+};
+
+/**
+ * Safely executes a test function with automatic cleanup
+ * @param testFn Test function to execute
+ * @returns Promise that resolves when test is complete and cleanup is done
+ */
+export const withTestIsolation = async (testFn: () => void | Promise<void>): Promise<void> =>
+{
+    const originalConsoleWarn = console.warn;
+    const warnings: string[] = [];
+
+    // Capture warnings during test execution
+    console.warn = (message: string, ...args: any[]) =>
+    {
+        warnings.push(message);
+        originalConsoleWarn(message, ...args);
+    };
+
+    try
+    {
+        await testFn();
+    }
+    finally
+    {
+        // Always cleanup, even if test fails
+        cleanup();
+        console.warn = originalConsoleWarn;
+
+        // Report excessive warnings (may indicate memory leaks)
+        if (warnings.length > 5)
+        {
+            console.info(`Test generated ${warnings.length} cleanup warnings - possible memory leak`);
+        }
+    }
+};
+
+/**
+ * Validates that a component has expected properties and methods
+ * @param component Component to validate
+ * @param expectedProperties Array of property names that should exist
+ * @param expectedMethods Array of method names that should exist
+ */
+export const validateComponentInterface = (
+    component: any,
+    expectedProperties: string[] = [],
+    expectedMethods: string[] = []
+) =>
+{
+    expectedProperties.forEach((prop) =>
+    {
+        expect(component).toHaveProperty(prop);
+    });
+
+    expectedMethods.forEach((method) =>
+    {
+        expect(component).toHaveProperty(method);
+        expect(typeof component[method]).toBe('function');
+    });
+};
+
+/**
+ * Measures the performance of a test operation
+ * @param operation Operation to measure
+ * @param iterations Number of iterations to run (default: 1)
+ * @returns Object with timing information
+ */
+export const measurePerformance = async (
+    operation: () => void | Promise<void>,
+    iterations = 1
+): Promise<{ totalTime: number; averageTime: number; iterations: number }> =>
+{
+    const startTime = performance.now();
+
+    for (let i = 0; i < iterations; i++)
+    {
+        await operation();
+    }
+
+    const endTime = performance.now();
+    const totalTime = endTime - startTime;
+
+    return {
+        totalTime,
+        averageTime: totalTime / iterations,
+        iterations,
+    };
+};
+
+/**
+ * Creates a spy on a component's method and tracks calls
+ * @param component Component to spy on
+ * @param methodName Name of method to spy on
+ * @returns Jest spy function
+ */
+export const spyOnComponent = (component: any, methodName: string) =>
+{
+    if (!component || typeof component[methodName] !== 'function')
+    {
+        throw new Error(`Component does not have method: ${methodName}`);
+    }
+
+    return jest.spyOn(component, methodName);
+};
