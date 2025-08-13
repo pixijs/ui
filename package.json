@@ -39,10 +39,7 @@
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
         "test": "npx jest --silent",
-        "test:debug": "cross-env DEBUG_MODE=1 npx jest",
-        "test:watch": "npx jest --watch",
         "test:coverage": "npx jest --coverage",
-        "test:types": "tsc --noEmit",
         "types": "xs types",
         "watch": "xs watch"
     },
