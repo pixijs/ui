@@ -46,6 +46,8 @@ describe('RadioGroup Component', () =>
         const options = {
             items: [createCheckBoxItem('Single Option')],
             selectedItem: 0,
+            type: 'vertical' as const,
+            elementsMargin: 5,
         };
 
         expect(() =>
@@ -64,6 +66,8 @@ describe('RadioGroup Component', () =>
                 createCheckBoxItem('Fourth'),
             ],
             selectedItem: 2,
+            type: 'horizontal' as const,
+            elementsMargin: 10,
         };
 
         expect(() =>

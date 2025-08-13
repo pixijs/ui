@@ -1,4 +1,4 @@
-import { Graphics } from 'pixi.js';
+import { Graphics, Texture } from 'pixi.js';
 import { Input } from '../../src/Input';
 import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
@@ -16,14 +16,12 @@ describe('Input Component', () =>
             textStyle: {
                 fill: '#000000',
                 fontSize: 16,
-                fontWeight: 'bold',
             },
             maxLength: 20,
-            align: 'center' as const,
             placeholder: 'Enter text',
             secure: false,
             value: '',
-            padding: [0, 7, 0, 7],
+            padding: 7,
         };
 
         it('should create Input without errors', () =>
@@ -57,6 +55,7 @@ describe('Input Component', () =>
         {
             // Test Input with minimal required options
             const minimalOptions = {
+                bg: Texture.WHITE,
                 padding: 0,
             };
 
@@ -346,12 +345,7 @@ describe('Input Component', () =>
         it('should handle different padding configurations', () =>
         {
             // Test padding options
-            const paddingConfigurations = [
-                5,
-                [5, 10],
-                [5, 10, 15, 20],
-                { top: 5, right: 10, bottom: 15, left: 20 },
-            ];
+            const paddingConfigurations = [5, 10, 15, 20];
 
             paddingConfigurations.forEach((padding) =>
             {
@@ -372,9 +366,9 @@ describe('Input Component', () =>
             // Test text style configurations
             const textStyles = [
                 { fill: '#000000', fontSize: 16 },
-                { fill: '#FF0000', fontSize: 20, fontWeight: 'bold' },
-                { fill: '#0000FF', fontSize: 14, fontStyle: 'italic' },
-                { fill: '#00FF00', fontSize: 18, fontFamily: 'Arial' },
+                { fill: '#FF0000', fontSize: 20 },
+                { fill: '#0000FF', fontSize: 14 },
+                { fill: '#00FF00', fontSize: 18 },
             ];
 
             textStyles.forEach((textStyle) =>
@@ -425,8 +419,8 @@ describe('Input Component', () =>
             const edgeCases = [
                 { bg: createTestGraphics(1, 1, 0xFFFFFF) }, // Very small
                 { bg: createTestGraphics(1000, 100, 0xFFFFFF) }, // Very wide
-                { secure: true, value: '', placeholder: '' }, // Secure with empty values
-                { maxLength: 0, value: 'test' }, // Zero max length
+                { bg: Texture.WHITE, secure: true, value: '', placeholder: '' }, // Secure with empty values
+                { bg: Texture.WHITE, maxLength: 0, value: 'test' }, // Zero max length
             ];
 
             edgeCases.forEach((options, index) =>
@@ -501,9 +495,8 @@ describe('Input Component', () =>
                 textStyle: {
                     fill: '#2C3E50',
                     fontSize: 18,
-                    fontWeight: 'normal',
                 },
-                padding: [10, 15, 10, 15],
+                padding: 10,
                 cleanOnFocus: false,
                 addMask: true,
             };

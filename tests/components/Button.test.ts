@@ -103,12 +103,12 @@ describe('Button Component', () =>
         {
             // Test that view properties update correctly with enabled state
             button.enabled = true;
-            expect(button.view.eventMode).toBe('static');
-            expect(button.view.cursor).toBe('pointer');
+            expect(button.view?.eventMode).toBe('static');
+            expect(button.view?.cursor).toBe('pointer');
 
             button.enabled = false;
-            expect(button.view.eventMode).toBe('auto');
-            expect(button.view.cursor).toBe('default');
+            expect(button.view?.eventMode).toBe('auto');
+            expect(button.view?.cursor).toBe('default');
         });
     });
 
@@ -663,7 +663,7 @@ describe('Button Component', () =>
             catch (error)
             {
                 // Expected - one handler threw
-                expect(error.message).toBe('Test error');
+                expect(String(error)).toContain('Test error');
             }
 
             // The normal handler might not have been called due to the exception

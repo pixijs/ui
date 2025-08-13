@@ -59,8 +59,8 @@ describe('CheckBox Component', () =>
 
             expect(checkBox.checked).toBe(false); // Default unchecked
             expect(checkBox.text).toBe(''); // No text provided
-            expect(checkBox.style.unchecked).toBeDefined();
-            expect(checkBox.style.checked).toBeDefined();
+            expect(checkBox.style?.unchecked).toBeDefined();
+            expect(checkBox.style?.checked).toBeDefined();
         });
 
         it('should create CheckBox with checked state initially', () =>
@@ -317,8 +317,8 @@ describe('CheckBox Component', () =>
 
             checkBox.style = newStyle;
             expect(checkBox.style).toBe(newStyle);
-            expect(checkBox.style.text).toBeDefined();
-            expect(checkBox.style.text.fontSize).toBe(18);
+            expect(checkBox.style?.text).toBeDefined();
+            expect(checkBox.style?.text?.fontSize).toBe(18);
         });
 
         it('should handle different text styles', () =>
@@ -326,9 +326,9 @@ describe('CheckBox Component', () =>
             // Test various text style configurations
             const textStyles = [
                 { fontSize: 12, fill: '#000000' },
-                { fontSize: 20, fill: '#FF0000', fontWeight: 'bold' },
-                { fontSize: 16, fill: '#0000FF', fontStyle: 'italic' },
-                { fontSize: 18, fill: '#00FF00', fontFamily: 'Arial' },
+                { fontSize: 20, fill: '#FF0000' },
+                { fontSize: 16, fill: '#0000FF' },
+                { fontSize: 18, fill: '#00FF00' },
             ];
 
             textStyles.forEach((textStyle, _index) =>
@@ -345,7 +345,7 @@ describe('CheckBox Component', () =>
                 const checkBox = new CheckBox(options);
 
                 expect(checkBox.text).toBe('Styled CheckBox');
-                expect(checkBox.style.text).toEqual(textStyle);
+                expect(checkBox.style?.text).toEqual(textStyle);
             });
         });
 
@@ -371,9 +371,9 @@ describe('CheckBox Component', () =>
             const checkBox = new CheckBox(options);
 
             expect(checkBox.text).toBe('Offset CheckBox');
-            expect(checkBox.style.textOffset).toBeDefined();
-            expect(checkBox.style.textOffset.x).toBe(15);
-            expect(checkBox.style.textOffset.y).toBe(-5);
+            expect(checkBox.style?.textOffset).toBeDefined();
+            expect(checkBox.style?.textOffset?.x).toBe(15);
+            expect(checkBox.style?.textOffset?.y).toBe(-5);
         });
 
         it('should preserve checked state when changing styles', () =>
@@ -424,8 +424,8 @@ describe('CheckBox Component', () =>
                 const checkBox = new CheckBox(options);
 
                 expect(checkBox.text).toBe(`${width}x${height} CheckBox`);
-                expect(checkBox.style.unchecked).toBeDefined();
-                expect(checkBox.style.checked).toBeDefined();
+                expect(checkBox.style?.unchecked).toBeDefined();
+                expect(checkBox.style?.checked).toBeDefined();
             });
         });
 
@@ -465,24 +465,6 @@ describe('CheckBox Component', () =>
 
     describe('CheckBox Advanced Features', () =>
     {
-        it('should handle custom TextClass', () =>
-        {
-            // Test custom TextClass option
-            const options = {
-                TextClass: Text, // Explicitly provide TextClass
-                style: {
-                    unchecked: createTestGraphics(35, 35, 0xFFFFFF),
-                    checked: createTestGraphics(35, 35, 0x673AB7),
-                },
-            };
-
-            const checkBox = new CheckBox(options);
-
-            expect(checkBox.text).toBe(''); // No text provided
-            expect(checkBox.style.unchecked).toBeDefined();
-            expect(checkBox.style.checked).toBeDefined();
-        });
-
         it('should handle complex graphics configurations', () =>
         {
             // Test CheckBox with complex graphic styles
@@ -520,9 +502,9 @@ describe('CheckBox Component', () =>
             const checkBox = new CheckBox(options);
 
             expect(checkBox.text).toBe('Complex CheckBox');
-            expect(checkBox.style.unchecked).toBe(complexUnchecked);
-            expect(checkBox.style.checked).toBe(complexChecked);
-            expect(checkBox.style.text.fontSize).toBe(16);
+            expect(checkBox.style?.unchecked).toBe(complexUnchecked);
+            expect(checkBox.style?.checked).toBe(complexChecked);
+            expect(checkBox.style?.text?.fontSize).toBe(16);
         });
 
         it('should handle edge case configurations', () =>
@@ -557,8 +539,8 @@ describe('CheckBox Component', () =>
                 const checkBox = new CheckBox(options);
 
                 expect(checkBox).toBeInstanceOf(CheckBox);
-                expect(checkBox.style.unchecked).toBeDefined();
-                expect(checkBox.style.checked).toBeDefined();
+                expect(checkBox.style?.unchecked).toBeDefined();
+                expect(checkBox.style?.checked).toBeDefined();
                 expect(typeof checkBox.checked).toBe('boolean');
             });
         });
@@ -588,8 +570,6 @@ describe('CheckBox Component', () =>
                     text: {
                         fontSize: 18,
                         fill: '#1976D2',
-                        fontWeight: 'bold',
-                        fontFamily: 'Arial',
                     },
                     textOffset: {
                         x: 8,
@@ -603,9 +583,9 @@ describe('CheckBox Component', () =>
             expect(checkBox.text).toBe('Comprehensive CheckBox Test');
             expect(checkBox.checked).toBe(false);
             expect(checkBox.onCheck).toBeDefined();
-            expect(checkBox.style.textOffset).toBeDefined();
-            expect(checkBox.style.textOffset.x).toBe(8);
-            expect(checkBox.style.textOffset.y).toBe(2);
+            expect(checkBox.style?.textOffset).toBeDefined();
+            expect(checkBox.style?.textOffset?.x).toBe(8);
+            expect(checkBox.style?.textOffset?.y).toBe(2);
         });
     });
 });

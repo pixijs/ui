@@ -144,7 +144,7 @@ describe('FancyButton Component', () =>
             button.onPress.connect(mockAction2);
 
             // Simulate press event
-            button.onPress.emit(button);
+            button.onPress.emit();
 
             expect(mockAction).toHaveBeenCalledTimes(1);
             expect(mockAction2).toHaveBeenCalledTimes(1);
@@ -156,8 +156,8 @@ describe('FancyButton Component', () =>
             button.onPress.connect(() => mockAction('press'));
             button.onHover.connect(() => mockAction('hover'));
 
-            button.onPress.emit(button);
-            button.onHover.emit(button);
+            button.onPress.emit();
+            button.onHover.emit();
 
             expect(mockAction).toHaveBeenCalledWith('press');
             expect(mockAction).toHaveBeenCalledWith('hover');
