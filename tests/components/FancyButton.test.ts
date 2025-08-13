@@ -1,7 +1,7 @@
 import { Graphics, Text } from 'pixi.js';
 import { FancyButton } from '../../src/FancyButton';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
-import { cleanup, createTestGraphics, createTestText, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestGraphics, createTestText, testStateChange } from '../utils/components';
 
 describe('FancyButton Component', () =>
 {

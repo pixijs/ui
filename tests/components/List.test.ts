@@ -1,5 +1,5 @@
 import { List } from '../../src/List';
-import { cleanup, createTestItems, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
 describe('List Component', () =>
 {

@@ -1,7 +1,7 @@
 import { Container, Sprite, Text, Texture } from 'pixi.js';
 import { Button, ButtonContainer } from '../../src/Button';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
-import { cleanup, createTestGraphics, createTestText, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestGraphics, createTestText, testStateChange } from '../utils/components';
 
 describe('Button Component', () =>
 {

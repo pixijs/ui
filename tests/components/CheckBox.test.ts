@@ -1,7 +1,7 @@
 import { Graphics } from 'pixi.js';
 import { CheckBox } from '../../src/CheckBox';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
-import { cleanup, createTestGraphics, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
 describe('CheckBox Component', () =>
 {

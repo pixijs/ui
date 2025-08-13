@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js';
 import { Select } from '../../src/Select';
-import { cleanup, createTestGraphics, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
 describe('Select Component', () =>
 {

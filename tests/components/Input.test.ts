@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js';
 import { Input } from '../../src/Input';
-import { cleanup, createTestGraphics, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
 describe('Input Component', () =>
 {

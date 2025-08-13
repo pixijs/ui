@@ -1,5 +1,5 @@
 import { ScrollBox } from '../../src/ScrollBox';
-import { cleanup, createTestItems, testStateChange } from '../utils/story-helpers';
+import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
 describe('ScrollBox Component', () =>
 {
