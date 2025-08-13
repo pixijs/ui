@@ -54,8 +54,13 @@
     "lint-staged": {
         "*.{ts,js,mjs}": [
             "npm run lint:fix --",
-            "npm run types",
-            "npm run test --silent --passWithNoTests --"
+            "npm run types"
+        ],
+        "src/*.{ts,js,mjs}": [
+            "npm run test --silent --passWithNoTests"
+        ],
+        "tests/components/*.test.ts": [
+            "npm run test --silent --passWithNoTests"
         ]
     },
     "extensionConfig": {

@@ -330,8 +330,8 @@ export const createDefaultTestOptions = (overrides: any = {}) => ({
 export const createTestEnvironment = () =>
 {
     const environment = {
-        components: [] as any[],
-        containers: [] as any[],
+        components: [],
+        containers: [],
 
         // Helper to create and track a component
         createComponent: <T>(factory: () => T): T =>

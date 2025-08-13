@@ -123,7 +123,7 @@ const mockWebGLContext = {
     viewport: jest.fn(),
     enable: jest.fn(),
     disable: jest.fn(),
-    getExtension: jest.fn((name: string) => mockExtensions[name] || null),
+    getExtension: jest.fn((name: string) => mockExtensions[name]),
     getParameter: jest.fn((param) =>
     {
         // Return reasonable defaults for common parameters
