@@ -1,4 +1,4 @@
-import { Graphics, Text } from 'pixi.js';
+import { Graphics, Text, Texture } from 'pixi.js';
 import { FancyButton } from '../../src/FancyButton';
 import { defaultTextStyle } from '../../src/utils/helpers/styles';
 import { cleanup, createTestGraphics, createTestText, testStateChange } from '../utils/components';
@@ -38,7 +38,7 @@ describe('FancyButton Component', () =>
         {
             // Test FancyButton with only defaultView
             const minimalOptions = {
-                defaultView: createTestGraphics(100, 50, 0xFFFFFF),
+                defaultView: Texture.WHITE,
             };
 
             expect(() =>
@@ -171,7 +171,7 @@ describe('FancyButton Component', () =>
         {
             // Test anchor property
             const button = new FancyButton({
-                defaultView: createTestGraphics(100, 100, 0xFFFFFF),
+                defaultView: Texture.WHITE,
             });
 
             expect(() =>

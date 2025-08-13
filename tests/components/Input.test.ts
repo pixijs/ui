@@ -40,7 +40,7 @@ describe('Input Component', () =>
         {
             // Test Input with only background
             const minimalOptions = {
-                bg: createTestGraphics(200, 40, 0xFFFFFF),
+                bg: Texture.WHITE,
             };
 
             expect(() =>
@@ -271,7 +271,7 @@ describe('Input Component', () =>
             placeholders.forEach((placeholder) =>
             {
                 const options = {
-                    bg: createTestGraphics(200, 40, 0xFFFFFF),
+                    bg: Texture.WHITE,
                     placeholder,
                 };
 
@@ -290,7 +290,7 @@ describe('Input Component', () =>
             initialValues.forEach((value) =>
             {
                 const options = {
-                    bg: createTestGraphics(200, 40, 0xFFFFFF),
+                    bg: Texture.WHITE,
                     value,
                 };
 
