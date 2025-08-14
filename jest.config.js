@@ -6,15 +6,7 @@ module.exports = {
     setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
 
     transform: {
-        '^.+\\.tsx?$': ['ts-jest', {
-            tsconfig: {
-                module: 'ESNext',
-                esModuleInterop: true,
-                skipLibCheck: true,
-                allowSyntheticDefaultImports: true,
-            },
-            diagnostics: false,
-        }],
+        '^.+\\.tsx?$': 'ts-jest',
         '\\.(png|jpg|gif|svg)$': '<rootDir>/tests/file-mock.js'
     },
 
@@ -23,7 +15,5 @@ module.exports = {
     collectCoverageFrom: ['<rootDir>/src/*.ts'],
     coverageDirectory: '<rootDir>/coverage',
 
-    testTimeout: 10000,
-    cache: true,
-    cacheDirectory: '<rootDir>/.jest-cache',
+    testTimeout: 5000,
 };
