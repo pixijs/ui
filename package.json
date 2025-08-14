@@ -38,6 +38,8 @@
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
+        "test": "npx jest --silent",
+        "test:coverage": "npx jest --coverage",
         "types": "xs types",
         "watch": "xs watch"
     },
@@ -50,11 +52,17 @@
         "*.{ts,js,mjs}": [
             "npm run lint:fix --",
             "npm run types"
+        ],
+        "src/*.{ts,js,mjs}": [
+            "npm run test --silent --passWithNoTests"
+        ],
+        "tests/components/*.test.ts": [
+            "npm run test --silent --passWithNoTests"
         ]
     },
     "extensionConfig": {
         "lint": [
-            "src"
+            "."
         ],
         "docsName": "PixiUI",
         "docsTitle": "PixiUI",
@@ -90,12 +98,15 @@
         "eslint": "^8.57.0",
         "eslint-plugin-jsdoc": "^51.4.1",
         "eslint-plugin-no-mixed-operators": "^1.1.1",
-        "husky": "^8.0.3",
-        "jest": "^26.6.3",
+        "husky": "^9.1.7",
+        "jest": "^30.0.5",
+        "jest-canvas-mock": "^2.5.2",
+        "jest-environment-jsdom": "^30.0.5",
         "jest-raw-loader": "^1.0.1",
-        "lint-staged": "^13.3.0",
+        "lint-staged": "^16.1.5",
         "pixi.js": "^8.6.2",
         "storybook": "7.6.20",
+        "ts-jest": "^29.4.1",
         "typescript": "^5.8.3"
     },
     "publishConfig": {

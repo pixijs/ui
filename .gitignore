@@ -34,6 +34,9 @@ types
 yarn.lock
 pnpm-lock.yaml
 
+# Jest cache directory
+.jest-cache/
+
 # jetBrains IDE ignores
 .idea
 .vs-code
