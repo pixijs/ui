@@ -7,7 +7,6 @@ module.exports = {
 
     transform: {
         '^.+\\.tsx?$': 'ts-jest',
-        '\\.(png|jpg|gif|svg)$': '<rootDir>/tests/file-mock.js'
     },
 
     testMatch: ['<rootDir>/tests/components/*.test.ts'],
