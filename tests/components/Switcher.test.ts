@@ -1,8 +1,9 @@
+import { Sprite, Texture } from 'pixi.js';
 import { Switcher } from '../../src/Switcher';
 
 describe('Switcher Component', () =>
 {
-    const mockAssets = ['asset1.png', 'asset2.png', 'asset3.png'];
+    const mockAssets = [new Sprite(Texture.WHITE), new Sprite(Texture.WHITE), new Sprite(Texture.WHITE)];
     const mockTriggerEvents: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = [
         'onPress', 'onHover', 'onOut'
     ];
@@ -17,7 +18,7 @@ describe('Switcher Component', () =>
 
     it('should handle different asset arrays', () =>
     {
-        const differentAssets = ['avatar-01.png', 'avatar-02.png'];
+        const differentAssets = [new Sprite(Texture.WHITE), new Sprite(Texture.WHITE)];
 
         expect(() =>
         {
@@ -48,7 +49,7 @@ describe('Switcher Component', () =>
 
     it('should handle single asset', () =>
     {
-        const singleAsset = ['single-asset.png'];
+        const singleAsset = [new Sprite(Texture.WHITE)];
 
         const singleEvent: Array<'onPress' | 'onHover' | 'onDown' | 'onUp' | 'onOut' | 'onUpOut'> = ['onPress'];
 
