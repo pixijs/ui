@@ -11,12 +11,11 @@ const args = {
     text: 'Checkbox',
     textColor: colors.textColor,
     amount: 3,
-    checked: false,
     onChange: action('Checkbox'),
 };
 
 export const UseSprite: StoryFn<typeof args> = (
-    { checked, onChange, amount, textColor, text },
+    { onChange, amount, textColor, text },
     context,
 ) =>
     new PixiStory({
@@ -37,7 +36,7 @@ export const UseSprite: StoryFn<typeof args> = (
                     // Component usage !!!
                     const checkBox = new CheckBox({
                         text: `${text} ${i + 1}`,
-                        checked,
+                        checked: i % 2 === 0,
                         style: {
                             unchecked: `radio.png`,
                             checked: `radio_checked.png`,

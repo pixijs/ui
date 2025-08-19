@@ -2,6 +2,7 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
@@ -11,7 +12,7 @@ const args = {
     placeholder: 'Enter text',
     secure: false,
     align: ['center', 'left', 'right'],
-    textColor: '#000000',
+    textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,
     paddingTop: 0,
@@ -48,44 +49,43 @@ export const UseNineSliceSprite: StoryFn<typeof args & { align: 'center' | 'left
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
+        init: async (view) =>
         {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
             const assets = [`input.png`];
 
-            preload(assets).then(() =>
+            await preload(assets);
+
+            for (let i = 0; i < amount; i++)
             {
-                for (let i = 0; i < amount; i++)
-                {
-                    // Component usage
-                    const input = new Input({
-                        bg: 'input.png',
-                        nineSliceSprite: [160, 27, 160, 27],
-                        padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
-                        textStyle: {
-                            fill: textColor,
-                            fontSize,
-                            fontWeight: 'bold',
-                        },
-                        maxLength,
-                        align,
-                        placeholder,
-                        secure,
-                        value: text,
-                        addMask,
-                    });
+                // Component usage
+                const input = new Input({
+                    bg: 'input.png',
+                    nineSliceSprite: [160, 27, 160, 27],
+                    padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
+                    textStyle: {
+                        fill: textColor,
+                        fontSize,
+                        fontWeight: 'bold',
+                    },
+                    maxLength,
+                    align,
+                    placeholder,
+                    secure,
+                    value: text,
+                    addMask,
+                });
 
-                    input.width = width;
-                    input.height = height;
+                input.width = width;
+                input.height = height;
 
-                    input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
+                input.onChange.connect(() => onChange(`${i + 1} - ${input.value}`));
 
-                    list.addChild(input);
-                }
+                list.addChild(input);
+            }
 
-                centerElement(list);
-            });
+            centerElement(list);
 
             view.addChild(list);
         },

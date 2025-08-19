@@ -20,7 +20,6 @@ const args = {
     radius: 50,
     amount: 3,
     useHTMLtext: false,
-    checked: false,
     onPress: action('Checkbox'),
 };
 
@@ -29,7 +28,6 @@ export const UseGraphics: StoryFn<typeof args> = (
         text,
         amount,
         useHTMLtext,
-        checked,
 
         textColor,
         borderColor,
@@ -56,7 +54,7 @@ export const UseGraphics: StoryFn<typeof args> = (
                 const checkBox = new CheckBox({
                     text: `${text} ${i + 1}`,
                     TextClass: useHTMLtext ? HTMLText : undefined,
-                    checked,
+                    checked: i % 2 === 0,
                     style: {
                         unchecked: new Graphics()
                             .roundRect(-2, -2, width + 4, height + 4, radius)

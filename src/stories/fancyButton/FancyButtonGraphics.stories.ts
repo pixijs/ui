@@ -3,19 +3,15 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
-    textColor: '#FFFFFF',
-    color: '#e91e63',
-    hoverColor: '#FEC230',
-    pressedColor: '#FE6048',
-    disabledColor: '#6E6E6E',
+    text: '👉 Click me 👈',
+    ...colors,
     width: 350,
     height: 350,
     padding: 11,
@@ -181,8 +177,6 @@ export const UseGraphics: StoryFn<typeof args> = (
             button.onUpOut.connect(() => action('onUpOut'));
 
             view.addChild(button);
-
-            centerView(view);
         },
         resize: centerView,
     });

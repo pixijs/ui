@@ -3,15 +3,13 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    color: '#e91e63',
-    hoverColor: '#FEC230',
-    pressedColor: '#FE6048',
-    disabledColor: '#6E6E6E',
+    ...colors,
     width: 250,
     height: 250,
     padding: 30,

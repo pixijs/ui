@@ -8,7 +8,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
+    text: '👉 Click me 👈',
     textColor: '#FFFFFF',
     padding: 11,
     textOffsetX: 0,

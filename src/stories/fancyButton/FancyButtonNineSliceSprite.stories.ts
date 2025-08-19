@@ -9,7 +9,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
+    text: 'Click me',
     textColor: '#FFFFFF',
     padding: 11,
     width: 300,
@@ -73,7 +73,7 @@ export const UseNineSliceSprite: StoryFn<
                     hoverView: `button_hover.png`,
                     pressedView: `button_pressed.png`,
                     disabledView: `button_disabled.png`,
-                    nineSliceSprite: [150, 66, 150, 66],
+                    nineSliceSprite: [25, 20, 25, 20],
                     text: new Text({
                         text,
                         style: {
