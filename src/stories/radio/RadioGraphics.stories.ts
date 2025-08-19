@@ -3,15 +3,15 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { RadioGroup } from '../../RadioGroup';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Radio',
-    textColor: '#FFFFFF',
-    bgColor: '#F1D583',
-    fillColor: '#82C822',
+    textColor: colors.textColor,
+    bgColor: colors.color,
+    fillColor: colors.textColor,
     width: 50,
     height: 50,
     padding: 5,
