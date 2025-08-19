@@ -3,17 +3,21 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
     type: [null, ...LIST_TYPE],
-    fontColor: '#000000',
-    bgColor: '#f5e3a9',
-    width: 271,
-    height: 270,
+    fontColor: colors.textColor,
+    bgColor: colors.pannelColor,
+    bgBorderColor: colors.pannelBorderColor,
+    buttonColor: colors.color,
+    hoverButtonColor: colors.hoverColor,
+    pressedButtonColor: colors.pressedColor,
+    width: 290,
+    height: 290,
     radius: 20,
     elementsMargin: 10,
     topPadding: 20,
@@ -30,6 +34,10 @@ export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
         type,
         fontColor,
         bgColor,
+        bgBorderColor,
+        buttonColor,
+        hoverButtonColor,
+        pressedButtonColor,
         width,
         height,
         elementsMargin,
@@ -50,30 +58,67 @@ export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
         {
             const viewGraphics = new Graphics()
                 .roundRect(0, 0, width, height, radius)
-                .fill(bgColor);
+                .fill(bgColor)
+                .stroke({
+                    color: bgBorderColor,
+                    width: 1,
+                });
 
             const items = [];
 
             for (let i = 0; i < itemsAmount; i++)
             {
+                const text = new Text({
+                    text: i + 1,
+                    style: {
+                        ...defaultTextStyle,
+                        fill: fontColor,
+                    },
+                });
+
                 const button = new FancyButton({
                     defaultView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xa5e24d),
+                        .fill(buttonColor)
+                        .roundRect(8, 8, elementsWidth - 3, elementsHeight - 3, radius)
+                        .stroke({
+                            color: buttonColor,
+                            width: 2,
+                        }),
                     hoverView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xfec230),
+                        .fill(hoverButtonColor)
+                        .roundRect(8, 8, elementsWidth - 3, elementsHeight - 3, radius)
+                        .stroke({
+                            color: hoverButtonColor,
+                            width: 2,
+                        }),
                     pressedView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xfe6048),
-                    text: new Text({
-                        text: i + 1,
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 28,
-                            fill: fontColor,
-                        },
-                    }),
+                        .roundRect(4, 4, elementsWidth, elementsHeight, radius)
+                        .fill(pressedButtonColor)
+                        .roundRect(8, 8, elementsWidth - 1, elementsHeight - 1, radius)
+                        .stroke({
+                            color: pressedButtonColor,
+                            width: 2,
+                        }),
+                    text,
+                });
+
+                button.onDown.connect(() =>
+                {
+                    text.x += 4;
+                    text.y += 4;
+                });
+
+                button.onUp.connect(() =>
+                {
+                    text.x -= 4;
+                    text.y -= 4;
+                });
+                button.onUpOut.connect(() =>
+                {
+                    text.x -= 4;
+                    text.y -= 4;
                 });
 
                 button.anchor.set(0);

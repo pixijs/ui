@@ -94,16 +94,38 @@ export const UseGraphics: StoryFn<typeof args> = (
 
             // Component usage !!!
             const button = new FancyButton({
-                defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
+                defaultView: new Graphics()
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(color)
+                    .roundRect(12, 12, width - 4, height - 4, radius)
+                    .stroke({
+                        color,
+                        width: 3,
+                    }),
                 hoverView: new Graphics()
                     .roundRect(0, 0, width, height, radius)
-                    .fill(hoverColor),
+                    .fill(hoverColor)
+                    .roundRect(12, 12, width - 4, height - 4, radius)
+                    .stroke({
+                        color: hoverColor,
+                        width: 3,
+                    }),
                 pressedView: new Graphics()
                     .roundRect(0, 0, width, height, radius)
-                    .fill(pressedColor),
+                    .fill(pressedColor)
+                    .roundRect(9, 8, width - 4, height - 4, radius)
+                    .stroke({
+                        color: pressedColor,
+                        width: 3,
+                    }),
                 disabledView: new Graphics()
                     .roundRect(0, 0, width, height, radius)
-                    .fill(disabledColor),
+                    .fill(disabledColor)
+                    .roundRect(12, 12, width - 4, height - 4, radius)
+                    .stroke({
+                        color: disabledColor,
+                        width: 3,
+                    }),
                 icon,
                 text: new Text({
                     text,

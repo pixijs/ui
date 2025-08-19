@@ -19,4 +19,6 @@ export const colors = {
     pressedColor: '#b42e5b',
     disabledColor: '#6e6e6e',
     textColor: '#FFFFFF',
+    pannelColor: '#222425',
+    pannelBorderColor: '#3e3f40',
 };

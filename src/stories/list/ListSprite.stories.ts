@@ -1,9 +1,9 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
@@ -11,68 +11,75 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    type: LIST_TYPE,
-    fontColor: '#000000',
+    type: [null, ...LIST_TYPE],
+    width: 430,
+    height: 330,
+    radius: 20,
+    bgColor: colors.pannelColor,
+    bgBorderColor: colors.pannelBorderColor,
+    fontColor: colors.textColor,
     elementsMargin: 29,
-    itemsAmount: 12,
-    maxWidth: 500,
+    topPadding: 20,
+    leftPadding: 20,
+    rightPadding: 20,
+    itemsAmount: 16,
     onPress: action('Button pressed'),
 };
 
 export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
     {
         fontColor,
+        width,
+        height,
+        radius,
+        bgColor,
+        bgBorderColor,
         elementsMargin,
+        topPadding,
+        leftPadding,
+        rightPadding,
         itemsAmount,
         type,
-        maxWidth,
         onPress,
     },
     context,
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
+        init: async (view) =>
         {
             const assets = [
-                `window.png`,
-                `SmallButton.png`,
-                `SmallButton-hover.png`,
-                `SmallButton-pressed.png`,
+                `button.png`,
+                `button_hover.png`,
+                `button_pressed.png`,
             ];
 
-            preload(assets).then(() =>
-            {
-                const window = Sprite.from(`window.png`);
-                const title = new Text({
-                    text: `Levels`,
-                    style: { fill: 0x000000, fontSize: 40 },
+            await preload(assets);
+
+            const viewGraphics = new Graphics()
+                .roundRect(0, 0, width, height, radius)
+                .fill(bgColor)
+                .stroke({
+                    color: bgBorderColor,
+                    width: 1,
                 });
 
-                title.anchor.set(0.5);
-                window.addChild(title);
-                title.x = window.width / 2;
-                title.y = 25;
+            const items: Container[] = createItems(itemsAmount, getColor(fontColor) ?? 0x000000, onPress);
 
-                view.addChild(window);
-
-                const items: Container[] = createItems(itemsAmount, getColor(fontColor) ?? 0x000000, onPress);
-
-                // Component usage !!!
-                const list = new List({
-                    type,
-                    vertPadding: 70,
-                    horPadding: 50,
-                    elementsMargin,
-                    maxWidth,
-                });
-
-                items.forEach((item) => list.addChild(item));
-
-                window.addChild(list);
-
-                centerElement(view);
+            // Component usage !!!
+            const list = new List({
+                elementsMargin,
+                topPadding,
+                leftPadding,
+                rightPadding,
+                type,
             });
+
+            viewGraphics.addChild(list);
+            view.addChild(viewGraphics);
+            items.forEach((item) => list.addChild(item));
+
+            centerElement(view);
         },
         resize: centerElement,
     });
@@ -88,9 +95,10 @@ function createItems(
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: `SmallButton.png`,
-            hoverView: `SmallButton-hover.png`,
-            pressedView: `SmallButton-pressed.png`,
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
+            pressedView: `button_pressed.png`,
+            nineSliceSprite: [25, 20, 25, 20],
             text: new Text({
                 text: i + 1,
                 style: {
@@ -104,6 +112,9 @@ function createItems(
                 y: -7,
             },
         });
+
+        button.width = 150;
+        button.height = 100;
 
         button.scale.set(0.5);
 
