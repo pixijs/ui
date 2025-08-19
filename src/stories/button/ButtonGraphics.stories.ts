@@ -43,6 +43,47 @@ export const UseGraphics: StoryFn<typeof args> = ({
 
             button.enabled = !disabled;
 
+            const defaultButton = (fillColor = color) =>
+            {
+                buttonBg
+                    .clear()
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(disabled ? disabledColor : fillColor)
+                    .roundRect(12, 12, width - 4, height - 4, radius)
+                    .stroke({
+                        color: disabled ? disabledColor : fillColor,
+                        width: 3,
+                    });
+
+                buttonBg.x = -buttonBg.width / 2;
+                buttonBg.y = -buttonBg.height / 2;
+                textInstance.x = -4;
+                textInstance.y = -5;
+            };
+
+            const hoverButton = () =>
+            {
+                defaultButton(hoverColor);
+            };
+
+            const pressButton = () =>
+            {
+                buttonBg
+                    .clear()
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(pressedColor)
+                    .roundRect(9, 8, width - 4, height - 4, radius)
+                    .stroke({
+                        color: pressedColor,
+                        width: 3,
+                    });
+
+                buttonBg.x += 2;
+                buttonBg.y += 2;
+                textInstance.x += 2;
+                textInstance.y += 2;
+            };
+
             button.onPress.connect(() => action('onPress'));
             button.onDown.connect(() =>
             {
@@ -72,48 +113,7 @@ export const UseGraphics: StoryFn<typeof args> = ({
 
             view.addChild(buttonView);
 
-            const defaultButton = (fillColor = color) =>
-            {
-                buttonBg
-                    .clear()
-                    .roundRect(0, 0, width, height, radius)
-                    .fill(disabled ? disabledColor : fillColor)
-                    .roundRect(12, 12, width - 4, height - 4, radius)
-                    .stroke({
-                        color: disabled ? disabledColor : fillColor,
-                        width: 3,
-                    });
-
-                buttonBg.x = -buttonBg.width / 2;
-                buttonBg.y = -buttonBg.height / 2;
-                textInstance.x = -4;
-                textInstance.y = -5;
-            };
-
             defaultButton();
-
-            const hoverButton = () =>
-            {
-                defaultButton(hoverColor);
-            };
-
-            const pressButton = () =>
-            {
-                buttonBg
-                    .clear()
-                    .roundRect(0, 0, width, height, radius)
-                    .fill(pressedColor)
-                    .roundRect(9, 8, width - 4, height - 4, radius)
-                    .stroke({
-                        color: pressedColor,
-                        width: 3,
-                    });
-
-                buttonBg.x += 2;
-                buttonBg.y += 2;
-                textInstance.x += 2;
-                textInstance.y += 2;
-            };
         },
         resize: centerView,
     });

@@ -77,9 +77,9 @@ export const DynamicUpdate: StoryFn<typeof args> = (
             // Component usage !!!
             const button = new FancyButton();
 
-            let currentDefaultViewTexture = 'button.png';
+            let currentHoverViewTexture = 'button.png';
 
-            button.defaultView = currentDefaultViewTexture;
+            button.defaultView = currentHoverViewTexture;
             button.hoverView = `button_hover.png`;
             button.pressedView = `button_pressed.png`;
             button.disabledView = `button_disabled.png`;
@@ -119,13 +119,13 @@ export const DynamicUpdate: StoryFn<typeof args> = (
 
             button.onPress.connect(() =>
             {
-                currentDefaultViewTexture = randomItem(
+                currentHoverViewTexture = randomItem(
                     [`button.png`, `button_green.png`, `button_blue.png`, `button_black.png`, `button_white.png`].filter(
-                        (texture) => texture !== currentDefaultViewTexture,
+                        (texture) => texture !== currentHoverViewTexture,
                     ),
                 ) as string;
 
-                button.defaultView = currentDefaultViewTexture;
+                button.hoverView = currentHoverViewTexture;
 
                 const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
                 const text = randomItem(texts.filter((text) => text !== button.text)) as string;
