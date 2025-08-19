@@ -2,14 +2,14 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: '',
-    textColor: '#FFFFFF',
+    text: 'Checkbox',
+    textColor: colors.textColor,
     amount: 3,
     checked: false,
     onChange: action('Checkbox'),
@@ -28,7 +28,7 @@ export const UseSprite: StoryFn<typeof args> = (
                 elementsMargin: 5,
             });
 
-            const assets = [`switch_off.png`, `switch_on.png`];
+            const assets = [`radio.png`, `radio_checked.png`];
 
             preload(assets).then(() =>
             {
@@ -36,11 +36,11 @@ export const UseSprite: StoryFn<typeof args> = (
                 {
                     // Component usage !!!
                     const checkBox = new CheckBox({
-                        text: text ?? `${text} ${i + 1}`,
+                        text: `${text} ${i + 1}`,
                         checked,
                         style: {
-                            unchecked: `switch_off.png`,
-                            checked: `switch_on.png`,
+                            unchecked: `radio.png`,
+                            checked: `radio_checked.png`,
                             text: {
                                 ...defaultTextStyle,
                                 fontSize: 22,

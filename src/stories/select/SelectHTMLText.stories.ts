@@ -12,7 +12,7 @@ import type { StoryFn } from '@storybook/types';
 const args = {
     backgroundColor: '#F5E3A9',
     dropDownBackgroundColor: '#F5E3A9',
-    dropDownHoverColor: '#A5E24D',
+    dropDownHoverColor: '#e91e63',
     fontColor: '#000000',
     fontSize: 28,
     width: 250,

@@ -8,7 +8,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    color: '#A5E24D',
+    color: '#e91e63',
     hoverColor: '#FEC230',
     pressedColor: '#FE6048',
     disabledColor: '#6E6E6E',

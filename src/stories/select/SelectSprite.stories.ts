@@ -8,7 +8,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    dropDownHoverColor: '#A5E24D',
+    dropDownHoverColor: '#e91e63',
     fontColor: '#FFFFFF',
     fontSize: 28,
     itemsAmount: 100,
