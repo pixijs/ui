@@ -17,7 +17,7 @@ describe('FancyButton Component', () =>
             hoverView: createTestGraphics(150, 150, 0xFEC230),
             pressedView: createTestGraphics(150, 150, 0xFE6048),
             disabledView: createTestGraphics(150, 150, 0x6E6E6E),
-            text: createTestText('👉 Click me 👈', 16),
+            text: createTestText('Click me!', 16),
             padding: 11,
         };
 
