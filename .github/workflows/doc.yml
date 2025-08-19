@@ -5,7 +5,7 @@ permissions:
 jobs:
     build-and-deploy:
         concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
-        runs-on: ubuntu-latest
+        runs-on: darwin-12-arm64 # Use the appropriate runner for your project.
         if: contains(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/docs'  || github.ref == 'refs/heads/main'
         steps:
             - name: Checkout 🛎️
