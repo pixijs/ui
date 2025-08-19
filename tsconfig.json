@@ -20,5 +20,5 @@
         "skipLibCheck": true,
         "noImplicitOverride": true
     },
-    "include": ["./src", "./typings", "./test", "./docs-source"]
+    "include": ["./src", "./typings", "./tests", "./docs-source"]
 }
