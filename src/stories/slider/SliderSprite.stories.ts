@@ -52,8 +52,8 @@ export const Single: StoryFn<typeof args> = (
                             y: -40,
                         },
                         fillPaddings: {
-                            left: 4.5,
-                            top: 2,
+                            top: 4,
+                            left: 0,
                         },
                     });
 

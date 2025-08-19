@@ -3,15 +3,16 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { DoubleSlider } from '../../DoubleSlider';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    meshColor: '#a5e34d',
-    fillColor: '#00b1dd',
-    borderColor: '#FFFFFF',
-    backgroundColor: '#fe6048',
-    fontColor: '#FFFFFF',
+    meshColor: colors.color,
+    fillColor: colors.color,
+    borderColor: colors.textColor,
+    backgroundColor: colors.hoverColor,
+    fontColor: colors.textColor,
     min: 0,
     max: 100,
     value1: 15,
@@ -20,7 +21,7 @@ const args = {
     height: 35,
     radius: 25,
     fontSize: 20,
-    border: 5,
+    border: 4,
     handleBorder: 3,
     showValue: true,
     onChange: action('Slider'),
