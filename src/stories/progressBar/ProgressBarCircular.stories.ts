@@ -1,11 +1,12 @@
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
-    backgroundColor: '#3d3d3d',
-    fillColor: '#00b1dd',
+    backgroundColor: colors.pannelBorderColor,
+    fillColor: colors.color,
     radius: 50,
     lineWidth: 15,
     value: 50,

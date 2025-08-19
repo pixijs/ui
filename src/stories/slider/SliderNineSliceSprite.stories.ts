@@ -26,7 +26,7 @@ export const Single: StoryFn<typeof args> = (
         context,
         init: (view) =>
         {
-            const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
+            const assets = ['slider_bg.png', 'radio_checked.png', 'slider_progress.png'];
 
             preload(assets).then(() =>
             {
@@ -34,7 +34,7 @@ export const Single: StoryFn<typeof args> = (
                 const singleSlider = new Slider({
                     bg: 'slider_bg.png',
                     fill: 'slider_progress.png',
-                    slider: 'slider.png',
+                    slider: 'radio_checked.png',
                     nineSliceSprite: {
                         bg: [22, 15, 22, 23],
                         fill: [22, 15, 22, 15],

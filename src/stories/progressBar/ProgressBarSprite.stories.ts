@@ -8,11 +8,13 @@ import { preload } from '../utils/loader';
 
 const args = {
     value: 50,
+    fillPaddingsTop: 4,
+    fillPaddingsLeft: 0,
     animate: true,
     vertical: false,
 };
 
-export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, context) =>
+export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical, fillPaddingsTop, fillPaddingsLeft }, context) =>
 {
     let isFilling = true;
     let progressBar: ProgressBar;
@@ -32,8 +34,8 @@ export const Sprite: StoryFn<typeof args> = ({ value, animate, vertical }, conte
                     fill: 'slider_progress.png',
                     progress: value,
                     fillPaddings: {
-                        top: 3,
-                        left: 4.5,
+                        top: fillPaddingsTop,
+                        left: fillPaddingsLeft,
                     },
                 });
 
