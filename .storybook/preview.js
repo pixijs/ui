@@ -3,7 +3,7 @@ export const parameters = {
     pixi: {
         applicationOptions: {
             backgroundAlpha: 0,
-            resolution: 1,
+            resolution: 2,
             antialias: true,
         },
     },

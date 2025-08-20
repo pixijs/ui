@@ -8,14 +8,16 @@ import { preload } from '../utils/loader';
 
 const args = {
     value: 50,
-    width: 500,
-    height: 60,
+    width: 490,
+    height: 38,
+    fillPaddingsVertical: 4,
+    fillPaddingsHorizontal: 0,
     animate: true,
     vertical: false,
 };
 
 export const NineSliceSprite: StoryFn<typeof args> = (
-    { value, animate, vertical, width, height },
+    { value, animate, vertical, width, height, fillPaddingsVertical, fillPaddingsHorizontal },
     context,
 ) =>
 {
@@ -37,15 +39,15 @@ export const NineSliceSprite: StoryFn<typeof args> = (
                     bg: Sprite.from('slider_bg.png'),
                     fill: 'slider_progress.png',
                     nineSliceSprite: {
-                        bg: [22, 15, 22, 23],
-                        fill: [22, 15, 22, 15],
+                        bg: [44, 20, 44, 19],
+                        fill: [34, 16, 34, 15],
                     },
                     progress: value,
                     fillPaddings: {
-                        top: 3,
-                        right: 5,
-                        bottom: 4.5,
-                        left: 4.5,
+                        top: fillPaddingsVertical,
+                        right: fillPaddingsHorizontal,
+                        bottom: fillPaddingsVertical,
+                        left: fillPaddingsHorizontal,
                     },
                 });
 

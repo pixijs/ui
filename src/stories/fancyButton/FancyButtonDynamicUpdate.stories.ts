@@ -11,6 +11,10 @@ import { action } from '@storybook/addon-actions';
 const args = {
     text: 'Click me!',
     textColor: '#FFFFFF',
+    iconOffsetX: -100,
+    iconOffsetY: -7,
+    textOffsetX: 30,
+    textOffsetY: -7,
     defaultTextScale: 0.99,
     defaultIconScale: 0.2,
     defaultTextAnchorX: 0.5,
@@ -28,6 +32,10 @@ export const DynamicUpdate: StoryFn<typeof args> = (
     {
         text,
         textColor,
+        iconOffsetX,
+        iconOffsetY,
+        textOffsetX,
+        textOffsetY,
         defaultTextScale,
         defaultIconScale,
         defaultTextAnchorX,
@@ -44,13 +52,17 @@ export const DynamicUpdate: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
+        init: async (view) =>
         {
             const assets = [
                 `button.png`,
                 `button_hover.png`,
                 `button_pressed.png`,
                 `button_disabled.png`,
+                `button_green.png`,
+                `button_blue.png`,
+                `button_black.png`,
+                `button_white.png`,
             ];
             const avatars = [
                 `avatar-01.png`,
@@ -60,79 +72,79 @@ export const DynamicUpdate: StoryFn<typeof args> = (
                 `avatar-05.png`,
             ];
 
-            preload([...assets, ...avatars]).then(() =>
+            await preload([...assets, ...avatars]);
+
+            // Component usage !!!
+            const button = new FancyButton();
+
+            let currentHoverViewTexture = 'button.png';
+
+            button.defaultView = currentHoverViewTexture;
+            button.hoverView = `button_hover.png`;
+            button.pressedView = `button_pressed.png`;
+            button.disabledView = `button_disabled.png`;
+
+            let icon = avatars[0];
+
+            button.iconView = icon;
+
+            button.defaultIconScale = defaultIconScale;
+            button.defaultIconAnchor = {
+                x: defaultIconAnchorX,
+                y: defaultIconAnchorY,
+            };
+            button.iconOffset = { x: iconOffsetX, y: iconOffsetY };
+
+            button.textView = new Text({
+                text,
+                style: {
+                    ...defaultTextStyle,
+                    fill: textColor || defaultTextStyle.fill,
+                },
+            });
+            button.defaultTextScale = defaultTextScale;
+            button.defaultTextAnchor = {
+                x: defaultTextAnchorX,
+                y: defaultTextAnchorY,
+            };
+            button.textOffset = { x: textOffsetX, y: textOffsetY };
+
+            button.padding = padding;
+
+            button.anchor.set(anchorX, anchorY);
+
+            button.enabled = !disabled;
+
+            button.onPress.connect(onPress);
+
+            button.onPress.connect(() =>
             {
-                // Component usage !!!
-                const button = new FancyButton();
+                currentHoverViewTexture = randomItem(
+                    [`button.png`, `button_green.png`, `button_blue.png`, `button_black.png`, `button_white.png`].filter(
+                        (texture) => texture !== currentHoverViewTexture,
+                    ),
+                ) as string;
 
-                button.defaultView = `button.png`;
-                button.hoverView = `button_hover.png`;
+                button.hoverView = currentHoverViewTexture;
 
-                let icon = avatars[0];
-
-                button.iconView = Sprite.from(icon);
-                button.defaultIconScale = defaultIconScale;
-                button.defaultIconAnchor = {
-                    x: defaultIconAnchorX,
-                    y: defaultIconAnchorY,
-                };
-                button.iconOffset = { x: -100, y: -7 };
+                const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
+                const text = randomItem(texts.filter((text) => text !== button.text)) as string;
 
                 button.textView = new Text({
                     text,
-                    style: {
-                        ...defaultTextStyle,
-                        fill: textColor || defaultTextStyle.fill,
-                    },
-                });
-                button.defaultTextScale = defaultTextScale;
-                button.defaultTextAnchor = {
-                    x: defaultTextAnchorX,
-                    y: defaultTextAnchorY,
-                };
-                button.textOffset = { x: 30, y: -7 };
-
-                button.padding = padding;
-
-                button.anchor.set(anchorX, anchorY);
-
-                button.enabled = !disabled;
-
-                button.onPress.connect(onPress);
-
-                let currentTexture = 'button_hover.png';
-
-                button.onPress.connect(() =>
-                {
-                    currentTexture = randomItem(
-                        [`button_hover.png`, `button_pressed.png`, `button_disabled.png`].filter(
-                            (texture) => texture !== currentTexture,
-                        ),
-                    ) as string;
-
-                    button.hoverView = currentTexture;
-
-                    const texts: string[] = ['🤙', '👌', '👍', '👏', '👋', '🤟', '🤘', '🤞'];
-                    const text = randomItem(texts.filter((text) => text !== button.text)) as string;
-
-                    button.textView = new Text({
-                        text,
-                        style: { fontSize: 70 },
-                    });
-
-                    icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
-
-                    const sprite = Sprite.from(icon);
-
-                    sprite.scale.set(0.2);
-
-                    button.iconView = sprite;
+                    style: { fontSize: 70 },
                 });
 
-                centerView(view);
+                icon = randomItem(avatars.filter((avatar) => avatar !== icon)) as string;
 
-                view.addChild(button);
+                const sprite = Sprite.from(icon);
+
+                sprite.scale.set(0.2);
+
+                button.iconView = sprite;
             });
+
+            view.addChild(button);
         },
         resize: centerView,
     });

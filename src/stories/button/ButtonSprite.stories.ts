@@ -2,14 +2,14 @@ import { Container, isMobile, Sprite, Text, Texture } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
-    textColor: '#FFFFFF',
+    text: '👉 Click me 👈',
+    textColor: colors.textColor,
     disabled: false,
     action: action('Button'),
 };
@@ -17,11 +17,11 @@ const args = {
 export class SpriteButton extends Button
 {
     private buttonView = new Container();
-    private textView: Text | undefined;
+    private textView: Text;
     private buttonBg = new Sprite();
     private action: (event: string) => void;
 
-    constructor(props: {
+    constructor(private props: {
         text: string;
         textColor: string;
         disabled: boolean;
@@ -29,37 +29,39 @@ export class SpriteButton extends Button
     })
     {
         super(/* we can set a view for button later */);
-
         this.view = this.buttonView;
-
-        preload([`button.png`, `button_hover.png`, `button_pressed.png`]).then(() =>
-        {
-            this.buttonBg.texture = Texture.from('button.png');
-
-            this.buttonBg.anchor.set(0.5);
-
-            this.textView = new Text({
-                text: props.text,
-                style: {
-                    ...defaultTextStyle,
-                    fontSize: 40,
-                    fill: props.textColor,
-                },
-            });
-            this.textView.y = -10;
-            this.textView.anchor.set(0.5);
-
-            this.buttonView.addChild(this.buttonBg, this.textView);
-
-            this.enabled = !props.disabled;
-        });
-
         this.action = props.action;
+        this.enabled = !props.disabled;
+
+        this.textView = new Text({
+            text: this.props.text,
+            style: { ...defaultTextStyle, fill: this.props.textColor },
+        });
+        this.textView.y = -5;
+        this.textView.x = -4;
+        this.textView.anchor.set(0.5);
+
+        this.buttonBg.addChild(this.textView);
+
+        this.init();
+    }
+
+    private async init()
+    {
+        await preload([`button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`]);
+
+        this.buttonBg.texture = Texture.from(this.props.disabled ? 'button_disabled.png' : 'button.png');
+
+        this.buttonBg.anchor.set(0.5);
+
+        this.buttonView.addChild(this.buttonBg);
     }
 
     override down()
     {
         this.buttonBg.texture = Texture.from('button_pressed.png');
+        this.textView.x = 0;
+        this.textView.y = 0;
         this.action('down');
     }
 
@@ -69,6 +71,8 @@ export class SpriteButton extends Button
             ? Texture.from('button.png')
             : Texture.from('button_hover.png');
 
+        this.textView.y = -5;
+        this.textView.x = -4;
         this.action('up');
     }
 
@@ -113,8 +117,6 @@ export const UseSprite: StoryFn<typeof args> = (params, context) =>
             {
                 view.addChild(buttonView.view);
             }
-
-            centerView(view);
         },
         resize: centerView,
     });

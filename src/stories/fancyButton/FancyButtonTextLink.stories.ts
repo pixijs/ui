@@ -7,7 +7,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
+    text: '👉 Click me 👈',
     textColor: '#FFFFFF',
     animationDuration: 100,
     disabled: false,

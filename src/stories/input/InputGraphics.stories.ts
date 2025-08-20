@@ -3,6 +3,7 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
@@ -11,9 +12,9 @@ const args = {
     placeholder: 'Enter text',
     secure: false,
     align: ['center', 'left', 'right'],
-    textColor: '#000000',
-    backgroundColor: '#F1D583',
-    borderColor: '#DCB000',
+    textColor: colors.textColor,
+    backgroundColor: colors.color,
+    borderColor: colors.pressedColor,
     maxLength: 20,
     fontSize: 24,
     border: 5,

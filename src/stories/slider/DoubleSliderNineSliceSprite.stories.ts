@@ -26,7 +26,7 @@ export const Double: StoryFn<typeof args> = (
         context,
         init: (view) =>
         {
-            const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
+            const assets = ['slider_bg.png', 'radio_checked.png', 'slider_progress.png'];
 
             preload(assets).then(() =>
             {
@@ -34,17 +34,17 @@ export const Double: StoryFn<typeof args> = (
                 const singleSlider = new DoubleSlider({
                     bg: 'slider_bg.png',
                     fill: 'slider_progress.png',
-                    slider1: 'slider.png',
-                    slider2: 'slider.png',
+                    slider1: 'radio_checked.png',
+                    slider2: 'radio_checked.png',
                     nineSliceSprite: {
-                        bg: [22, 15, 22, 23],
-                        fill: [22, 15, 22, 15],
+                        bg: [44, 20, 44, 19],
+                        fill: [34, 16, 34, 15],
                     },
                     fillPaddings: {
-                        top: 2.5,
-                        left: 5,
-                        right: 5,
-                        bottom: 7,
+                        top: 4,
+                        left: 0,
+                        right: 0,
+                        bottom: 4,
                     },
                     min,
                     max,

@@ -1,7 +1,7 @@
 import { Container, Graphics, HTMLText, Sprite } from 'pixi.js';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
@@ -10,10 +10,10 @@ import { action } from '@storybook/addon-actions';
 import type { StoryFn } from '@storybook/types';
 
 const args = {
-    backgroundColor: '#F5E3A9',
-    dropDownBackgroundColor: '#F5E3A9',
-    dropDownHoverColor: '#A5E24D',
-    fontColor: '#000000',
+    backgroundColor: colors.color,
+    dropDownBackgroundColor: colors.color,
+    dropDownHoverColor: colors.hoverColor,
+    fontColor: colors.textColor,
     fontSize: 28,
     width: 250,
     height: 50,

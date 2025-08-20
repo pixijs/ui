@@ -3,15 +3,16 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { Slider } from '../../Slider';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    meshColor: '#a5e34d',
-    fillColor: '#00b1dd',
-    borderColor: '#FFFFFF',
-    backgroundColor: '#fe6048',
-    fontColor: '#FFFFFF',
+    meshColor: colors.color,
+    fillColor: colors.color,
+    borderColor: colors.textColor,
+    backgroundColor: colors.hoverColor,
+    fontColor: colors.textColor,
     min: 0,
     max: 100,
     step: 1,

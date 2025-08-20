@@ -8,7 +8,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    text: 'Click me!',
+    text: '👉 Click me 👈',
     textColor: '#FFFFFF',
     padding: 11,
     textOffsetX: 0,
@@ -43,7 +43,7 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
 ) =>
     new PixiStory({
         context,
-        init: (view) =>
+        init: async (view) =>
         {
             const assets = [
                 `button.png`,
@@ -52,69 +52,68 @@ export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
                 `button_disabled.png`,
             ];
 
-            preload(assets).then(() =>
-            {
-                BitmapFontManager.install({
-                    name: 'TitleFont',
-                    style: {
-                        ...defaultTextStyle,
-                        fill: textColor || defaultTextStyle.fill,
-                    },
-                });
+            await preload(assets);
 
-                const title = new BitmapText({
-                    text,
-                    style: {
-                        fontFamily: 'TitleFont',
-                        fontSize: defaultTextStyle.fontSize,
-                    },
-                });
-
-                // Component usage !!!
-                const button = new FancyButton({
-                    defaultView: `button.png`,
-                    hoverView: `button_hover.png`,
-                    pressedView: `button_pressed.png`,
-                    disabledView: `button_disabled.png`,
-                    text: title,
-                    padding,
-                    textOffset: { x: textOffsetX, y: textOffsetY },
-                    defaultTextScale,
-                    defaultTextAnchor: {
-                        x: defaultTextAnchorX,
-                        y: defaultTextAnchorY,
-                    },
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: { x: 1.03, y: 1.03 },
-                                y: 0,
-                            },
-                            duration: animationDuration,
-                        },
-                        pressed: {
-                            props: {
-                                scale: { x: 0.9, y: 0.9 },
-                                y: 10,
-                            },
-                            duration: animationDuration,
-                        },
-                    },
-                });
-
-                button.anchor.set(anchorX, anchorY);
-
-                if (disabled)
-                {
-                    button.enabled = false;
-                }
-
-                button.onPress.connect(onPress);
-
-                centerView(view);
-
-                view.addChild(button);
+            BitmapFontManager.install({
+                name: 'TitleFont',
+                style: {
+                    ...defaultTextStyle,
+                    fill: textColor || defaultTextStyle.fill,
+                },
             });
+
+            const title = new BitmapText({
+                text,
+                style: {
+                    fontFamily: 'TitleFont',
+                    fontSize: defaultTextStyle.fontSize,
+                },
+            });
+
+            // Component usage !!!
+            const button = new FancyButton({
+                defaultView: `button.png`,
+                hoverView: `button_hover.png`,
+                pressedView: `button_pressed.png`,
+                disabledView: `button_disabled.png`,
+                text: title,
+                padding,
+                textOffset: { x: textOffsetX, y: textOffsetY },
+                defaultTextScale,
+                defaultTextAnchor: {
+                    x: defaultTextAnchorX,
+                    y: defaultTextAnchorY,
+                },
+                animations: {
+                    hover: {
+                        props: {
+                            scale: { x: 1.03, y: 1.03 },
+                            y: 0,
+                        },
+                        duration: animationDuration,
+                    },
+                    pressed: {
+                        props: {
+                            scale: { x: 0.9, y: 0.9 },
+                            y: 10,
+                        },
+                        duration: animationDuration,
+                    },
+                },
+            });
+
+            button.anchor.set(anchorX, anchorY);
+
+            if (disabled)
+            {
+                button.enabled = false;
+            }
+
+            button.onPress.connect(onPress);
+
+            centerView(view);
+
+            view.addChild(button);
         },
         resize: centerView,
     });

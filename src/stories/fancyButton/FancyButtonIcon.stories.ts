@@ -3,15 +3,13 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    color: '#A5E24D',
-    hoverColor: '#FEC230',
-    pressedColor: '#FE6048',
-    disabledColor: '#6E6E6E',
+    ...colors,
     width: 250,
     height: 250,
     padding: 30,
@@ -80,16 +78,38 @@ export const UseIcon: StoryFn<typeof args> = (
 
                 // Component usage !!!
                 const button = new FancyButton({
-                    defaultView: new Graphics().roundRect(0, 0, width, height, radius).fill(color),
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, width, height, radius)
+                        .fill(color)
+                        .roundRect(6, 6, width, height, radius)
+                        .stroke({
+                            color,
+                            width: 3,
+                        }),
                     hoverView: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(hoverColor),
+                        .fill(hoverColor)
+                        .roundRect(6, 6, width, height, radius)
+                        .stroke({
+                            color: hoverColor,
+                            width: 3,
+                        }),
                     pressedView: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(pressedColor),
+                        .fill(pressedColor)
+                        .roundRect(3, 3, width, height, radius)
+                        .stroke({
+                            color: pressedColor,
+                            width: 3,
+                        }),
                     disabledView: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(disabledColor),
+                        .fill(disabledColor)
+                        .roundRect(6, 6, width, height, radius)
+                        .stroke({
+                            color: disabledColor,
+                            width: 3,
+                        }),
                     icon,
                     padding,
                     offset: {

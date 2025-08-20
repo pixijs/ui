@@ -1,25 +1,25 @@
-import { Graphics } from 'pixi.js';
+import { Graphics, HTMLText } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
 
 const args = {
     text: 'Checkbox',
-    textColor: '#FFFFFF',
-    color: '#F1D583',
-    borderColor: '#DCB000',
-    fillBorderColor: '#FFFFFF',
-    fillColor: '#A5E24D',
+    textColor: colors.textColor,
+    color: colors.color,
+    borderColor: colors.hoverColor,
+    fillBorderColor: colors.textColor,
+    fillColor: colors.hoverColor,
     width: 50,
     height: 50,
-    radius: 11,
+    radius: 50,
     amount: 3,
-    checked: false,
+    useHTMLtext: false,
     onPress: action('Checkbox'),
 };
 
@@ -27,7 +27,7 @@ export const UseGraphics: StoryFn<typeof args> = (
     {
         text,
         amount,
-        checked,
+        useHTMLtext,
 
         textColor,
         borderColor,
@@ -46,14 +46,15 @@ export const UseGraphics: StoryFn<typeof args> = (
         context,
         init: (view) =>
         {
-            const list = new List({ type: 'vertical', elementsMargin: 10 });
+            const list = new List({ type: 'vertical', elementsMargin: 5 });
 
             for (let i = 0; i < amount; i++)
             {
                 // Component usage !!!
                 const checkBox = new CheckBox({
                     text: `${text} ${i + 1}`,
-                    checked,
+                    TextClass: useHTMLtext ? HTMLText : undefined,
+                    checked: i % 2 === 0,
                     style: {
                         unchecked: new Graphics()
                             .roundRect(-2, -2, width + 4, height + 4, radius)

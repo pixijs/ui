@@ -1,17 +1,22 @@
-import { ColorSource, Container, Sprite, Text } from 'pixi.js';
+import { ColorSource, Container, Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    fontColor: '#000000',
+    fontColor: colors.textColor,
+    bgColor: colors.pannelColor,
+    bgBorderColor: colors.pannelBorderColor,
+    windowWidth: 400,
+    windowHeight: 400,
+    radius: 20,
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
@@ -25,7 +30,12 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
     {
         fontColor,
         elementsMargin,
+        bgColor,
+        windowWidth,
+        windowHeight,
+        radius,
         itemsAmount,
+        bgBorderColor,
         disableEasing,
         type,
         onPress,
@@ -36,67 +46,69 @@ export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
 ) =>
     new PixiStory<typeof args>({
         context,
-        init: (view) =>
+        init: async (view) =>
         {
             const assets = [
-                `window.png`,
-                `SmallButton.png`,
-                `SmallButton-hover.png`,
-                `SmallButton-pressed.png`,
+                `button.png`,
+                `button_hover.png`,
+                `button_pressed.png`,
             ];
 
-            preload(assets).then(() =>
-            {
-                const window = new Container();
-                const windowBg = Sprite.from(`window.png`);
-                const title = new Text({
-                    text: `Levels`,
-                    style: { fill: 0x000000, fontSize: 40 },
+            await preload(assets);
+
+            const window = new Graphics()
+                .roundRect(0, 0, windowWidth, windowHeight, radius)
+                .fill(bgColor)
+                .stroke({
+                    color: bgBorderColor,
+                    width: 1,
                 });
 
-                title.anchor.set(0.5);
-                window.addChild(windowBg, title);
-                title.x = windowBg.width / 2;
-                title.y = 25;
+            const width = window.width - 40;
+            const height = window.height - 40;
 
-                view.addChild(window);
+            const items: Container[] = createItems(
+                width * 2,
+                itemsAmount,
+                fontColor,
+                onPress);
 
-                const items: Container[] = createItems(itemsAmount, fontColor, onPress);
-
-                // Component usage !!!
-                const scrollBox = new ScrollBox({
-                    elementsMargin,
-                    width: window.width - 80,
-                    height: window.height - 90,
-                    vertPadding: 18,
-                    radius: 5,
-                    disableEasing,
-                    type,
-                    globalScroll,
-                    shiftScroll,
-                });
-
-                if (type === 'bidirectional' && scrollBox.list)
-                {
-                    scrollBox.list.width = window.width - 40;
-                    scrollBox.list.height = window.height - 60;
-                }
-
-                scrollBox.addItems(items);
-
-                scrollBox.x = (window.width / 2) - (scrollBox.width / 2);
-                scrollBox.y = (window.height / 2) - (scrollBox.height / 2) + 18;
-
-                window.addChild(scrollBox);
-
-                centerElement(view);
+            // Component usage !!!
+            const scrollBox = new ScrollBox({
+                elementsMargin,
+                width,
+                height,
+                vertPadding: 0,
+                radius: 5,
+                disableEasing,
+                type,
+                globalScroll,
+                shiftScroll,
             });
+
+            if (type === 'bidirectional' && scrollBox.list)
+            {
+                scrollBox.list.width = window.width - 40;
+                scrollBox.list.height = window.height - 40;
+            }
+
+            scrollBox.addItems(items);
+
+            scrollBox.x = 20;
+            scrollBox.y = 20;
+
+            window.addChild(scrollBox);
+
+            view.addChild(window);
+
+            centerElement(view);
         },
 
         resize: centerElement,
     });
 
 function createItems(
+    width: number,
     itemsAmount: number,
     fontColor: ColorSource,
     onPress: (buttonID: number) => void,
@@ -107,9 +119,10 @@ function createItems(
     for (let i = 0; i < itemsAmount; i++)
     {
         const button = new FancyButton({
-            defaultView: `SmallButton.png`,
-            hoverView: `SmallButton-hover.png`,
-            pressedView: `SmallButton-pressed.png`,
+            defaultView: `button.png`,
+            hoverView: `button_hover.png`,
+            pressedView: `button_pressed.png`,
+            nineSliceSprite: [25, 20, 25, 20],
             text: new Text({
                 text: i + 1,
                 style: {
@@ -123,6 +136,9 @@ function createItems(
                 y: -7,
             },
         });
+
+        button.width = width;
+        button.height = 100;
 
         button.anchor.set(0);
         button.scale.set(0.5);

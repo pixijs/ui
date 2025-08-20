@@ -28,7 +28,7 @@ export const Single: StoryFn<typeof args> = (
         {
             const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-            const assets = ['slider_bg.png', 'slider.png', 'slider_progress.png'];
+            const assets = ['slider_bg.png', 'radio_checked.png', 'slider_progress.png'];
 
             preload(assets).then(() =>
             {
@@ -38,7 +38,7 @@ export const Single: StoryFn<typeof args> = (
                     const singleSlider = new Slider({
                         bg: 'slider_bg.png',
                         fill: 'slider_progress.png',
-                        slider: 'slider.png',
+                        slider: 'radio_checked.png',
                         min,
                         max,
                         step,
@@ -52,8 +52,8 @@ export const Single: StoryFn<typeof args> = (
                             y: -40,
                         },
                         fillPaddings: {
-                            left: 4.5,
-                            top: 2,
+                            top: 4,
+                            left: 0,
                         },
                     });
 

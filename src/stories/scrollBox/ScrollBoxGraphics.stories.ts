@@ -4,14 +4,18 @@ import { FancyButton } from '../../FancyButton';
 import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 const args = {
-    fontColor: '#000000',
-    backgroundColor: '#F5E3A9',
+    fontColor: colors.textColor,
+    backgroundColor: colors.pannelBorderColor,
+    bgBorderColor: colors.pannelBorderColor,
+    buttonColor: colors.color,
+    hoverButtonColor: colors.hoverColor,
+    pressedButtonColor: colors.pressedColor,
     width: 490,
     height: 420,
     radius: 20,
@@ -46,6 +50,9 @@ export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
         globalScroll,
         shiftScroll,
         innerListWidth,
+        buttonColor,
+        hoverButtonColor,
+        pressedButtonColor,
     },
     context,
 ) =>
@@ -60,13 +67,13 @@ export const UseGraphics: StoryFn<typeof args & { type: ListType }> = (
                 const button = new FancyButton({
                     defaultView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xa5e24d),
+                        .fill(buttonColor),
                     hoverView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xfec230),
+                        .fill(hoverButtonColor),
                     pressedView: new Graphics()
                         .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(0xfe6048),
+                        .fill(pressedButtonColor),
                     text: new Text({
                         text: `Item ${i + 1}`,
                         style: {

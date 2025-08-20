@@ -3,12 +3,13 @@ import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
+import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 const args = {
-    fillColor: '#00b1dd',
-    borderColor: '#FFFFFF',
-    backgroundColor: '#fe6048',
+    fillColor: colors.color,
+    borderColor: colors.textColor,
+    backgroundColor: colors.pannelBorderColor,
     value: 50,
     width: 450,
     height: 35,
