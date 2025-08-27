@@ -9,8 +9,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
-
-type ContentFittingMode = 'default' | 'fill' | 'none';
+import type { ContentFittingMode } from '../../FancyButton';
 
 const args = {
     text: 'Click me',

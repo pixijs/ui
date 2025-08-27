@@ -9,14 +9,13 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
-
-type AlignType = 'left' | 'center' | 'right';
+import type { InputAlign } from '../../Input';
 
 const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: 'center' as AlignType,
+    align: 'center' as InputAlign,
     textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,

@@ -2,7 +2,7 @@ import { Graphics, Texture } from 'pixi.js';
 import { Input } from '../../src/Input';
 import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
-type AlignType = 'left' | 'center' | 'right';
+import type { InputAlign } from '../../src/Input';
 
 describe('Input Component', () =>
 {
@@ -492,7 +492,7 @@ describe('Input Component', () =>
                 placeholder: 'Comprehensive Test Input',
                 value: 'Initial Text',
                 maxLength: 50,
-                align: 'left' as AlignType,
+                align: 'left' as InputAlign,
                 secure: false,
                 textStyle: {
                     fill: '#2C3E50',
