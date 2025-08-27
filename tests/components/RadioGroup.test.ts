@@ -1,5 +1,6 @@
 import { Graphics } from 'pixi.js';
 import { CheckBox } from '../../src/CheckBox';
+import { ListType } from '../../src/List';
 import { RadioGroup } from '../../src/RadioGroup';
 
 describe('RadioGroup Component', () =>
@@ -19,7 +20,7 @@ describe('RadioGroup Component', () =>
             createCheckBoxItem('Option 3'),
         ],
         selectedItem: 0,
-        type: 'vertical' as const,
+        type: 'vertical' as ListType,
         elementsMargin: 5,
     };
 
@@ -46,7 +47,7 @@ describe('RadioGroup Component', () =>
         const options = {
             items: [createCheckBoxItem('Single Option')],
             selectedItem: 0,
-            type: 'vertical' as const,
+            type: 'vertical' as ListType,
             elementsMargin: 5,
         };
 
@@ -66,7 +67,7 @@ describe('RadioGroup Component', () =>
                 createCheckBoxItem('Fourth'),
             ],
             selectedItem: 2,
-            type: 'horizontal' as const,
+            type: 'horizontal' as ListType,
             elementsMargin: 10,
         };
 

@@ -1,3 +1,4 @@
+import { LineCap } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
@@ -15,7 +16,7 @@ const args = {
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
     animate: true,
-    cap: 'round' as const,
+    cap: 'round' as LineCap,
 };
 
 type Args = typeof args;

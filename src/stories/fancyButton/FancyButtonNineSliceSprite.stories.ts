@@ -10,6 +10,8 @@ import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
 
+type ContentFittingMode = 'default' | 'fill' | 'none';
+
 const args = {
     text: 'Click me',
     textColor: '#FFFFFF',
@@ -26,7 +28,7 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
-    contentFittingMode: 'default' as const,
+    contentFittingMode: 'default' as ContentFittingMode,
     onPress: action('button was pressed! (tap or click!)'),
 };
 

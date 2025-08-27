@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { List } from '../../List';
+import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -12,7 +12,7 @@ import { action } from '@storybook/addon-actions';
 import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
-    type: 'vertical' as const,
+    type: 'vertical' as ListType,
     width: 430,
     height: 330,
     radius: 20,

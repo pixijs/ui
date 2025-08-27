@@ -1,6 +1,7 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
+import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
@@ -16,7 +17,7 @@ const args = {
     hoverButtonColor: colors.hoverColor,
     pressedButtonColor: colors.pressedColor,
     itemsAmount: 100,
-    type: 'vertical' as const,
+    type: 'vertical' as ListType,
 };
 
 type Args = typeof args;

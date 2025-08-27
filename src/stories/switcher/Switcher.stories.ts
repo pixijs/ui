@@ -1,6 +1,7 @@
 import { PixiStory } from '@pixi/storybook-renderer';
 import { Switcher } from '../../Switcher';
 import { centerElement } from '../../utils/helpers/resize';
+import { ButtonEvent } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
@@ -8,9 +9,9 @@ import { action } from '@storybook/addon-actions';
 import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
-    triggerEvent1: 'onPress' as const,
-    triggerEvent2: 'onHover' as const,
-    triggerEvent3: 'onOut' as const,
+    triggerEvent1: 'onPress' as ButtonEvent,
+    triggerEvent2: 'onHover' as ButtonEvent,
+    triggerEvent3: 'onOut' as ButtonEvent,
     action: action('swich: '),
 };
 
