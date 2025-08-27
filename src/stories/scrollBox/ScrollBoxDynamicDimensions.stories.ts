@@ -1,12 +1,13 @@
 import { Graphics, Text } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fontColor: colors.textColor,
@@ -19,85 +20,88 @@ const args = {
     type: [null, ...LIST_TYPE],
 };
 
-export const UseDynamicDimensions: StoryFn<typeof args & { type: ListType }> = (
-    { fontColor, itemsAmount, backgroundColor, type, buttonColor, hoverButtonColor, pressedButtonColor },
-    context,
-) =>
-    new PixiStory({
-        context,
-        init(view)
-        {
-            const sizes: { w: number; h: number }[] = [
-                { w: 320, h: 440 },
-                { w: 630, h: 440 },
-                { w: 630, h: 360 },
-                { w: 320, h: 200 },
-            ];
-            const elementsWidth = 300;
-            const elementsHeight = 80;
-            const radius = 20;
-            let currentSizeID = 0;
+export const UseDynamicDimensions = {
+    render: (args: Args, ctx: StoryContext) =>
+    {
+        const { fontColor, itemsAmount, backgroundColor, type, buttonColor, hoverButtonColor, pressedButtonColor } = args;
 
-            // Component usage !!!
-            const scrollBox = new ScrollBox({
-                background: backgroundColor,
-                elementsMargin: 10,
-                width: sizes[currentSizeID].w,
-                height: sizes[currentSizeID].h,
-                radius,
-                type,
-                padding: 10,
-            });
-
-            const items = [];
-            const resizeScrollBox = () =>
+        return new PixiStory({
+            context: ctx,
+            init(view)
             {
-                currentSizeID++;
+                const sizes: { w: number; h: number }[] = [
+                    { w: 320, h: 440 },
+                    { w: 630, h: 440 },
+                    { w: 630, h: 360 },
+                    { w: 320, h: 200 },
+                ];
+                const elementsWidth = 300;
+                const elementsHeight = 80;
+                const radius = 20;
+                let currentSizeID = 0;
 
-                if (currentSizeID >= sizes.length)
-                {
-                    currentSizeID = 0;
-                }
-
-                const size = sizes[currentSizeID];
-
-                scrollBox.width = size.w;
-                scrollBox.height = size.h;
-            };
-
-            for (let i = 0; i < itemsAmount; i++)
-            {
-                const button = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(buttonColor),
-                    hoverView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(hoverButtonColor),
-                    pressedView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(pressedButtonColor),
-                    text: new Text({
-                        text: `Item ${i + 1}`,
-                        style: {
-                            ...defaultTextStyle,
-                            fill: fontColor,
-                        },
-                    }),
+                // Component usage !!!
+                const scrollBox = new ScrollBox({
+                    background: backgroundColor,
+                    elementsMargin: 10,
+                    width: sizes[currentSizeID].w,
+                    height: sizes[currentSizeID].h,
+                    radius,
+                    type,
+                    padding: 10,
                 });
 
-                button.anchor.set(0);
-                button.onPress.connect(() => resizeScrollBox());
+                const items = [];
+                const resizeScrollBox = () =>
+                {
+                    currentSizeID++;
 
-                items.push(button);
-            }
+                    if (currentSizeID >= sizes.length)
+                    {
+                        currentSizeID = 0;
+                    }
 
-            scrollBox.addItems(items);
+                    const size = sizes[currentSizeID];
 
-            view.addChild(scrollBox);
-        },
-        resize: (view) => centerElement(view.children[0]),
-    });
+                    scrollBox.width = size.w;
+                    scrollBox.height = size.h;
+                };
+
+                for (let i = 0; i < itemsAmount; i++)
+                {
+                    const button = new FancyButton({
+                        defaultView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(buttonColor),
+                        hoverView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(hoverButtonColor),
+                        pressedView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(pressedButtonColor),
+                        text: new Text({
+                            text: `Item ${i + 1}`,
+                            style: {
+                                ...defaultTextStyle,
+                                fill: fontColor,
+                            },
+                        }),
+                    });
+
+                    button.anchor.set(0);
+                    button.onPress.connect(() => resizeScrollBox());
+
+                    items.push(button);
+                }
+
+                scrollBox.addItems(items);
+
+                view.addChild(scrollBox);
+            },
+            resize: (view) => centerElement(view.children[0]),
+        });
+    },
+};
 
 export default {
     title: 'Components/ScrollBox/Use Dynamic Dimensions',

@@ -1,10 +1,12 @@
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { Switcher } from '../../Switcher';
 import { centerElement } from '../../utils/helpers/resize';
-import { BUTTON_EVENTS, ButtonEvent } from '../../utils/HelpTypes';
+import { BUTTON_EVENTS } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     triggerEvent1: BUTTON_EVENTS,
@@ -13,39 +15,36 @@ const args = {
     action: action('swich: '),
 };
 
-export const Sprites: StoryFn<
-    typeof args & {
-    triggerEvent1: ButtonEvent;
-    triggerEvent2: ButtonEvent;
-    triggerEvent3: ButtonEvent;
-}
-> = ({ action, triggerEvent1, triggerEvent2, triggerEvent3 }, context) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = [
-                `avatar-01.png`,
-                `avatar-02.png`,
-                `avatar-03.png`,
-                `avatar-04.png`,
-                `avatar-05.png`,
-            ];
-
-            preload(assets).then(() =>
+export const Sprites = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
+                const { action, triggerEvent1, triggerEvent2, triggerEvent3 } = args;
+                const assets = [
+                    `avatar-01.png`,
+                    `avatar-02.png`,
+                    `avatar-03.png`,
+                    `avatar-04.png`,
+                    `avatar-05.png`,
+                ];
+
+                preload(assets).then(() =>
+                {
                 // Component usage !!!
-                const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
+                    const swich = new Switcher(assets, [triggerEvent1, triggerEvent2, triggerEvent3]);
 
-                swich.onChange.connect((state) => action(`state ${state}`));
+                    swich.onChange.connect((state) => action(`state ${state}`));
 
-                view.addChild(swich);
+                    view.addChild(swich);
 
-                centerElement(view);
-            });
-        },
-        resize: centerElement,
-    });
+                    centerElement(view);
+                });
+            },
+            resize: centerElement,
+        }),
+};
 
 export default {
     title: 'Components/Switcher/Sprites',

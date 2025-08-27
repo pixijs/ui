@@ -4,6 +4,7 @@ module.exports = {
     output: '../docs/',
     logLevel: 'debug',
     addons: [
+        '@storybook/addon-webpack5-compiler-babel',
         '@storybook/addon-actions',
         '@storybook/addon-backgrounds',
         '@storybook/addon-controls',
@@ -18,8 +19,14 @@ module.exports = {
     },
     features: {
         buildStoriesJson: true,
-        breakingChangesV7: true,
-        babelModeV7: true,
     },
     framework: '@pixi/storybook-webpack5',
+    typescript: {
+        check: false,
+        reactDocgen: 'react-docgen-typescript',
+        reactDocgenTypescriptOptions: {
+            shouldExtractLiteralValuesFromEnum: true,
+            propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+        },
+    },
 };

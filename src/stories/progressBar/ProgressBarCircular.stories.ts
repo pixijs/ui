@@ -1,8 +1,10 @@
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { CircularProgressBar } from '../../CircularProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     backgroundColor: colors.pannelBorderColor,
@@ -16,71 +18,72 @@ const args = {
     cap: ['round', 'butt', 'square'],
 };
 
-export const circular: StoryFn<typeof args & { cap: 'round' | 'butt' | 'square' }> = (
+export const circular = {
+    render: (args: Args, ctx: StoryContext) =>
     {
-        backgroundColor,
-        fillColor,
-        radius,
-        lineWidth,
-        value,
-        backgroundAlpha,
-        fillAlpha,
-        animate,
-        cap,
+        const {
+            backgroundColor,
+            fillColor,
+            radius,
+            lineWidth,
+            value: initialValue,
+            backgroundAlpha,
+            fillAlpha,
+            animate,
+            cap,
+        } = args;
+        let isFilling = true;
+        let progressBar1: CircularProgressBar;
+        let value = initialValue;
+
+        return new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
+            {
+                progressBar1 = new CircularProgressBar({
+                    backgroundColor,
+                    lineWidth,
+                    fillColor,
+                    radius,
+                    value,
+                    backgroundAlpha,
+                    fillAlpha,
+                    cap,
+                });
+
+                progressBar1.x += progressBar1.width / 2;
+                progressBar1.y += -progressBar1.height / 2;
+
+                view.addChild(progressBar1);
+            },
+            resize: (view) =>
+            {
+                centerElement(view);
+                view.y += view.height;
+            },
+            update: () =>
+            {
+                if (!animate)
+                {
+                    return;
+                }
+
+                isFilling ? value++ : value--;
+
+                if (value >= 100)
+                {
+                    isFilling = false;
+                }
+                else if (value <= 0)
+                {
+                    isFilling = true;
+                }
+
+                progressBar1.progress = value;
+                progressBar1.rotation += 0.1;
+            },
+        });
     },
-    context,
-) =>
-{
-    let isFilling = true;
-    let progressBar1: CircularProgressBar;
-
-    return new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            progressBar1 = new CircularProgressBar({
-                backgroundColor,
-                lineWidth,
-                fillColor,
-                radius,
-                value,
-                backgroundAlpha,
-                fillAlpha,
-                cap,
-            });
-
-            progressBar1.x += progressBar1.width / 2;
-            progressBar1.y += -progressBar1.height / 2;
-
-            view.addChild(progressBar1);
-        },
-        resize: (view) =>
-        {
-            centerElement(view);
-            view.y += view.height;
-        },
-        update: () =>
-        {
-            if (!animate)
-            {
-                return;
-            }
-
-            isFilling ? value++ : value--;
-
-            if (value >= 100)
-            {
-                isFilling = false;
-            }
-            else if (value <= 0)
-            {
-                isFilling = true;
-            }
-
-            progressBar1.progress = value;
-            progressBar1.rotation += 0.1;
-        },
-    });
 };
 
 export default {

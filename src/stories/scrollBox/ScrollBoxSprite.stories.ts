@@ -1,7 +1,6 @@
 import { ColorSource, Container, Graphics, Text } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
@@ -9,6 +8,8 @@ import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fontColor: colors.textColor,
@@ -26,86 +27,89 @@ const args = {
     shiftScroll: false,
 };
 
-export const UseSprite: StoryFn<typeof args & { type: ListType }> = (
+export const UseSprite = {
+    render: (args: Args, ctx: StoryContext) =>
     {
-        fontColor,
-        elementsMargin,
-        bgColor,
-        windowWidth,
-        windowHeight,
-        radius,
-        itemsAmount,
-        bgBorderColor,
-        disableEasing,
-        type,
-        onPress,
-        globalScroll,
-        shiftScroll,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: async (view) =>
-        {
-            const assets = [
-                `button.png`,
-                `button_hover.png`,
-                `button_pressed.png`,
-            ];
+        const {
+            fontColor,
+            elementsMargin,
+            bgColor,
+            windowWidth,
+            windowHeight,
+            radius,
+            itemsAmount,
+            bgBorderColor,
+            disableEasing,
+            type,
+            onPress,
+            globalScroll,
+            shiftScroll,
+        } = args;
 
-            await preload(assets);
+        return new PixiStory<typeof args>({
+            context: ctx,
+            init: async (view) =>
+            {
+                const assets = [
+                    `button.png`,
+                    `button_hover.png`,
+                    `button_pressed.png`,
+                ];
 
-            const window = new Graphics()
-                .roundRect(0, 0, windowWidth, windowHeight, radius)
-                .fill(bgColor)
-                .stroke({
-                    color: bgBorderColor,
-                    width: 1,
+                await preload(assets);
+
+                const window = new Graphics()
+                    .roundRect(0, 0, windowWidth, windowHeight, radius)
+                    .fill(bgColor)
+                    .stroke({
+                        color: bgBorderColor,
+                        width: 1,
+                    });
+
+                const width = window.width - 40;
+                const height = window.height - 40;
+
+                const items: Container[] = createItems(
+                    width * 2,
+                    itemsAmount,
+                    fontColor,
+                    onPress);
+
+                // Component usage !!!
+                const scrollBox = new ScrollBox({
+                    elementsMargin,
+                    width,
+                    height,
+                    vertPadding: 0,
+                    radius: 5,
+                    disableEasing,
+                    type,
+                    globalScroll,
+                    shiftScroll,
                 });
 
-            const width = window.width - 40;
-            const height = window.height - 40;
+                if (type === 'bidirectional' && scrollBox.list)
+                {
+                    scrollBox.list.width = window.width - 40;
+                    scrollBox.list.height = window.height - 40;
+                }
 
-            const items: Container[] = createItems(
-                width * 2,
-                itemsAmount,
-                fontColor,
-                onPress);
+                scrollBox.addItems(items);
 
-            // Component usage !!!
-            const scrollBox = new ScrollBox({
-                elementsMargin,
-                width,
-                height,
-                vertPadding: 0,
-                radius: 5,
-                disableEasing,
-                type,
-                globalScroll,
-                shiftScroll,
-            });
+                scrollBox.x = 20;
+                scrollBox.y = 20;
 
-            if (type === 'bidirectional' && scrollBox.list)
-            {
-                scrollBox.list.width = window.width - 40;
-                scrollBox.list.height = window.height - 40;
-            }
+                window.addChild(scrollBox);
 
-            scrollBox.addItems(items);
+                view.addChild(window);
 
-            scrollBox.x = 20;
-            scrollBox.y = 20;
+                centerElement(view);
+            },
 
-            window.addChild(scrollBox);
-
-            view.addChild(window);
-
-            centerElement(view);
-        },
-
-        resize: centerElement,
-    });
+            resize: centerElement,
+        });
+    },
+};
 
 function createItems(
     width: number,

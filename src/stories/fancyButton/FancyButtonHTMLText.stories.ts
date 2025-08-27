@@ -1,11 +1,13 @@
 import { HTMLText } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -23,90 +25,90 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const UsingSpriteAndHTMLText: StoryFn<typeof args> = (
-    {
-        text,
-        textColor,
-        disabled,
-        onPress,
-        padding,
-        textOffsetX,
-        textOffsetY,
-        defaultTextScale,
-        defaultTextAnchorX,
-        defaultTextAnchorY,
-        anchorX,
-        anchorY,
-        animationDuration,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = [
-                `button.png`,
-                `button_hover.png`,
-                `button_pressed.png`,
-                `button_disabled.png`,
-            ];
-
-            preload(assets).then(() =>
+export const UsingSpriteAndHTMLText = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
-                const title = new HTMLText({
+                const {
                     text,
-                    style: {
-                        ...defaultTextStyle,
-                        fill: textColor || defaultTextStyle.fill,
-                    },
-                });
-
-                // Component usage !!!
-                const button = new FancyButton({
-                    defaultView: `button.png`,
-                    hoverView: `button_hover.png`,
-                    pressedView: `button_pressed.png`,
-                    disabledView: `button_disabled.png`,
-                    text: title,
+                    textColor,
+                    disabled,
+                    onPress,
                     padding,
-                    textOffset: { x: textOffsetX, y: textOffsetY },
+                    textOffsetX,
+                    textOffsetY,
                     defaultTextScale,
-                    defaultTextAnchor: {
-                        x: defaultTextAnchorX,
-                        y: defaultTextAnchorY,
-                    },
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: { x: 1.03, y: 1.03 },
-                                y: 0,
-                            },
-                            duration: animationDuration,
-                        },
-                        pressed: {
-                            props: {
-                                scale: { x: 0.9, y: 0.9 },
-                                y: 10,
-                            },
-                            duration: animationDuration,
-                        },
-                    },
-                });
+                    defaultTextAnchorX,
+                    defaultTextAnchorY,
+                    anchorX,
+                    anchorY,
+                    animationDuration,
+                } = args;
+                const assets = [
+                    `button.png`,
+                    `button_hover.png`,
+                    `button_pressed.png`,
+                    `button_disabled.png`,
+                ];
 
-                button.anchor.set(anchorX, anchorY);
-
-                if (disabled)
+                preload(assets).then(() =>
                 {
-                    button.enabled = false;
-                }
+                    const title = new HTMLText({
+                        text,
+                        style: {
+                            ...defaultTextStyle,
+                            fill: textColor || defaultTextStyle.fill,
+                        },
+                    });
 
-                button.onPress.connect(onPress);
-                view.addChild(button);
-            });
-        },
-        resize: centerView,
-    });
+                    // Component usage !!!
+                    const button = new FancyButton({
+                        defaultView: `button.png`,
+                        hoverView: `button_hover.png`,
+                        pressedView: `button_pressed.png`,
+                        disabledView: `button_disabled.png`,
+                        text: title,
+                        padding,
+                        textOffset: { x: textOffsetX, y: textOffsetY },
+                        defaultTextScale,
+                        defaultTextAnchor: {
+                            x: defaultTextAnchorX,
+                            y: defaultTextAnchorY,
+                        },
+                        animations: {
+                            hover: {
+                                props: {
+                                    scale: { x: 1.03, y: 1.03 },
+                                    y: 0,
+                                },
+                                duration: animationDuration,
+                            },
+                            pressed: {
+                                props: {
+                                    scale: { x: 0.9, y: 0.9 },
+                                    y: 10,
+                                },
+                                duration: animationDuration,
+                            },
+                        },
+                    });
+
+                    button.anchor.set(anchorX, anchorY);
+
+                    if (disabled)
+                    {
+                        button.enabled = false;
+                    }
+
+                    button.onPress.connect(onPress);
+                    view.addChild(button);
+                });
+            },
+            resize: centerView,
+        }),
+};
 
 export default {
     title: 'Components/FancyButton/Using Sprite And HTMLText',

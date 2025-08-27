@@ -13,9 +13,9 @@
     "sideEffects": false,
     "exports": {
         ".": {
+            "types": "./lib/index.d.ts",
             "import": "./lib/index.mjs",
-            "require": "./lib/index.js",
-            "types": "./lib/index.d.ts"
+            "require": "./lib/index.js"
         }
     },
     "main": "lib/index.js",
@@ -84,14 +84,14 @@
         "@babel/preset-env": "^7.28.0",
         "@babel/preset-typescript": "^7.27.1",
         "@pixi/extension-scripts": "^2.4.1",
-        "@pixi/storybook-renderer": "^0.1.0",
-        "@pixi/storybook-webpack5": "^0.1.0",
-        "@storybook/addon-essentials": "7.6.20",
-        "@storybook/addon-interactions": "7.6.20",
-        "@storybook/addon-links": "7.6.20",
-        "@storybook/addon-storysource": "^7.6.20",
-        "@storybook/testing-library": "^0.2.2",
-        "@storybook/types": "^7.6.20",
+        "@pixi/storybook-renderer": "^1.0.0",
+        "@pixi/storybook-webpack5": "^1.0.0",
+        "@storybook/addon-essentials": "^8.6.14",
+        "@storybook/addon-interactions": "^8.6.14",
+        "@storybook/addon-links": "^8.6.14",
+        "@storybook/addon-storysource": "^8.6.14",
+        "@storybook/test": "^8.6.14",
+        "@storybook/types": "^8.6.14",
         "@types/babel__core": "^7.20.5",
         "@types/jest": "^29.5.12",
         "@types/node": "^18.19.120",
@@ -105,7 +105,7 @@
         "jest-raw-loader": "^1.0.1",
         "lint-staged": "^16.1.5",
         "pixi.js": "^8.6.2",
-        "storybook": "7.6.20",
+        "storybook": "^8.6.14",
         "ts-jest": "^29.4.1",
         "typescript": "^5.8.3"
     },

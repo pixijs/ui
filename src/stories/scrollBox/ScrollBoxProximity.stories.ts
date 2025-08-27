@@ -1,13 +1,14 @@
 import { Graphics, Text } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     proximityRange: 100,
@@ -27,103 +28,104 @@ const args = {
 const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
 
-export const ProximityEvent: StoryFn<
-    typeof args & { type: ListType }
-> = (
+export const ProximityEvent = {
+    render: (args: Args, ctx: StoryContext) =>
     {
-        width,
-        height,
-        radius,
-        elementsMargin,
-        elementsPadding,
-        elementsWidth,
-        elementsHeight,
-        itemsAmount,
-        proximityRange,
-        proximityDebounce,
-        type,
-        fadeSpeed,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const disableEasing = false;
-            const globalScroll = true;
-            const shiftScroll = type === 'horizontal';
-            const onPress = action('Button pressed');
+        const {
+            width,
+            height,
+            radius,
+            elementsMargin,
+            elementsPadding,
+            elementsWidth,
+            elementsHeight,
+            itemsAmount,
+            proximityRange,
+            proximityDebounce,
+            type,
+            fadeSpeed,
+        } = args;
 
-            items.length = 0;
-            inRangeCache.length = 0;
-
-            for (let i = 0; i < itemsAmount; i++)
+        return new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
-                const button = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(colors.color),
-                    hoverView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(colors.hoverColor),
-                    pressedView: new Graphics()
-                        .roundRect(0, 0, elementsWidth, elementsHeight, radius)
-                        .fill(colors.pressedColor),
-                    text: new Text({
-                        text: `Item ${i + 1}`,
-                        style: {
-                            ...defaultTextStyle,
-                        },
-                    }),
+                const disableEasing = false;
+                const globalScroll = true;
+                const shiftScroll = type === 'horizontal';
+                const onPress = action('Button pressed');
+
+                items.length = 0;
+                inRangeCache.length = 0;
+
+                for (let i = 0; i < itemsAmount; i++)
+                {
+                    const button = new FancyButton({
+                        defaultView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(colors.color),
+                        hoverView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(colors.hoverColor),
+                        pressedView: new Graphics()
+                            .roundRect(0, 0, elementsWidth, elementsHeight, radius)
+                            .fill(colors.pressedColor),
+                        text: new Text({
+                            text: `Item ${i + 1}`,
+                            style: {
+                                ...defaultTextStyle,
+                            },
+                        }),
+                    });
+
+                    button.anchor.set(0);
+                    button.onPress.connect(() => onPress(i + 1));
+                    button.alpha = 0;
+
+                    items.push(button);
+                    inRangeCache.push(false);
+                }
+
+                const scrollBox = new ScrollBox({
+                    background: colors.pannelBorderColor,
+                    elementsMargin,
+                    width,
+                    height,
+                    radius,
+                    padding: elementsPadding,
+                    disableEasing,
+                    globalScroll,
+                    shiftScroll,
+                    type,
+                    proximityRange,
+                    proximityDebounce,
                 });
 
-                button.anchor.set(0);
-                button.onPress.connect(() => onPress(i + 1));
-                button.alpha = 0;
+                scrollBox.addItems(items);
 
-                items.push(button);
-                inRangeCache.push(false);
-            }
+                // Handle on proximity change event.
+                scrollBox.onProximityChange.connect(({ index, inRange }) =>
+                {
+                    inRangeCache[index] = inRange;
+                });
 
-            const scrollBox = new ScrollBox({
-                background: colors.pannelBorderColor,
-                elementsMargin,
-                width,
-                height,
-                radius,
-                padding: elementsPadding,
-                disableEasing,
-                globalScroll,
-                shiftScroll,
-                type,
-                proximityRange,
-                proximityDebounce,
-            });
-
-            scrollBox.addItems(items);
-
-            // Handle on proximity change event.
-            scrollBox.onProximityChange.connect(({ index, inRange }) =>
+                view.addChild(scrollBox);
+            },
+            resize: (view) => centerElement(view.children[0]),
+            update: () =>
             {
-                inRangeCache[index] = inRange;
-            });
+                items.forEach((item, index) =>
+                {
+                    const inRange = inRangeCache[index];
 
-            view.addChild(scrollBox);
-        },
-        resize: (view) => centerElement(view.children[0]),
-        update: () =>
-        {
-            items.forEach((item, index) =>
-            {
-                const inRange = inRangeCache[index];
-
-                // Fade in/out according to whether the item is within the specified range.
-                if (inRange && item.alpha < 1) item.alpha += 0.04 * fadeSpeed;
-                else if (!inRange && item.alpha > 0) item.alpha -= 0.04 * fadeSpeed;
-            });
-        },
-    });
+                    // Fade in/out according to whether the item is within the specified range.
+                    if (inRange && item.alpha < 1) item.alpha += 0.04 * fadeSpeed;
+                    else if (!inRange && item.alpha > 0) item.alpha -= 0.04 * fadeSpeed;
+                });
+            },
+        });
+    },
+};
 
 export default {
     title: 'Components/ScrollBox/Proximity Event',

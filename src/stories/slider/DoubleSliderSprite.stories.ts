@@ -1,9 +1,11 @@
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { DoubleSlider } from '../../DoubleSlider';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -16,57 +18,60 @@ const args = {
     onChange: action('Slider'),
 };
 
-export const Double: StoryFn<typeof args> = (
-    { min, max, value1, value2, fontSize, fontColor, showValue, onChange },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = ['slider_bg.png', 'radio_checked.png', 'slider_progress.png'];
+export const Double = {
+    render: (args: Args, ctx: StoryContext) =>
+    {
+        const { min, max, value1, value2, fontSize, fontColor, showValue, onChange } = args;
 
-            preload(assets).then(() =>
+        return new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
-                // Component usage !!!
-                const doubleSlider = new DoubleSlider({
-                    bg: 'slider_bg.png',
-                    fill: 'slider_progress.png',
-                    slider1: 'radio_checked.png',
-                    slider2: 'radio_checked.png',
-                    min,
-                    max,
-                    value1,
-                    value2,
-                    valueTextStyle: {
-                        fill: fontColor,
-                        fontSize,
-                    },
-                    showValue,
-                    valueTextOffset: {
-                        y: -40,
-                    },
-                    fillPaddings: {
-                        top: 4,
-                        left: 0,
-                    },
-                });
+                const assets = ['slider_bg.png', 'radio_checked.png', 'slider_progress.png'];
 
-                doubleSlider.value1 = value1;
-                doubleSlider.value2 = value2;
-
-                doubleSlider.onChange.connect((value1, value2) =>
+                preload(assets).then(() =>
                 {
-                    onChange(`${value1} - ${value2}`);
+                    // Component usage !!!
+                    const doubleSlider = new DoubleSlider({
+                        bg: 'slider_bg.png',
+                        fill: 'slider_progress.png',
+                        slider1: 'radio_checked.png',
+                        slider2: 'radio_checked.png',
+                        min,
+                        max,
+                        value1,
+                        value2,
+                        valueTextStyle: {
+                            fill: fontColor,
+                            fontSize,
+                        },
+                        showValue,
+                        valueTextOffset: {
+                            y: -40,
+                        },
+                        fillPaddings: {
+                            top: 4,
+                            left: 0,
+                        },
+                    });
+
+                    doubleSlider.value1 = value1;
+                    doubleSlider.value2 = value2;
+
+                    doubleSlider.onChange.connect((value1, value2) =>
+                    {
+                        onChange(`${value1} - ${value2}`);
+                    });
+
+                    view.addChild(doubleSlider);
+
+                    centerElement(view);
                 });
-
-                view.addChild(doubleSlider);
-
-                centerElement(view);
-            });
-        },
-        resize: centerElement,
-    });
+            },
+            resize: centerElement,
+        });
+    },
+};
 
 export default {
     title: 'Components/Slider/Sprite',

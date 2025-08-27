@@ -1,11 +1,13 @@
 import { ColorSource, Graphics } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { RadioGroup } from '../../RadioGroup';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: 'Radio',
@@ -21,80 +23,83 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const UseGraphics: StoryFn<typeof args> = (
+export const UseGraphics = {
+    render: (args: Args, ctx: StoryContext) =>
     {
-        amount,
-        text,
+        const {
+            amount,
+            text,
 
-        textColor,
-        fillColor,
-        bgColor,
+            textColor,
+            fillColor,
+            bgColor,
 
-        width,
-        height,
-        padding,
-        radius,
+            width,
+            height,
+            padding,
+            radius,
 
-        onChange,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const items = [];
+            onChange,
+        } = args;
 
-            for (let i = 0; i < amount; i++)
+        return new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
-                items.push(
-                    new CheckBox({
-                        text: `${text} ${i + 1}`,
-                        style: {
-                            unchecked: drawRadio({
-                                color: bgColor,
-                                width,
-                                height,
-                                padding,
-                                radius,
-                            }),
-                            checked: drawRadio({
-                                color: bgColor,
-                                fillColor,
-                                width,
-                                height,
-                                padding,
-                                radius,
-                            }),
-                            text: {
-                                ...defaultTextStyle,
-                                fontSize: 22,
-                                fill: textColor,
+                const items = [];
+
+                for (let i = 0; i < amount; i++)
+                {
+                    items.push(
+                        new CheckBox({
+                            text: `${text} ${i + 1}`,
+                            style: {
+                                unchecked: drawRadio({
+                                    color: bgColor,
+                                    width,
+                                    height,
+                                    padding,
+                                    radius,
+                                }),
+                                checked: drawRadio({
+                                    color: bgColor,
+                                    fillColor,
+                                    width,
+                                    height,
+                                    padding,
+                                    radius,
+                                }),
+                                text: {
+                                    ...defaultTextStyle,
+                                    fontSize: 22,
+                                    fill: textColor,
+                                },
                             },
-                        },
-                    }),
+                        }),
+                    );
+                }
+
+                // Component usage
+                const radioGroup = new RadioGroup({
+                    selectedItem: 0,
+                    items,
+                    type: 'vertical',
+                    elementsMargin: 10,
+                });
+
+                radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+                    onChange({ id: selectedItemID, val: selectedVal }),
                 );
-            }
 
-            // Component usage
-            const radioGroup = new RadioGroup({
-                selectedItem: 0,
-                items,
-                type: 'vertical',
-                elementsMargin: 10,
-            });
-
-            radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-                onChange({ id: selectedItemID, val: selectedVal }),
-            );
-
-            if (radioGroup.innerView)
-            {
-                view.addChild(radioGroup.innerView);
-            }
-        },
-        resize: (view) => centerElement(view),
-    });
+                if (radioGroup.innerView)
+                {
+                    view.addChild(radioGroup.innerView);
+                }
+            },
+            resize: (view) => centerElement(view),
+        });
+    },
+};
 
 function drawRadio({ color, fillColor, width, height, radius, padding }: GraphicsType)
 {

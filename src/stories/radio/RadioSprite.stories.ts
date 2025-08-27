@@ -1,4 +1,4 @@
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
 import { RadioGroup } from '../../RadioGroup';
@@ -8,6 +8,8 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
+
 const args = {
     text: 'Radio',
     textColor: '#FFFFFF',
@@ -15,63 +17,66 @@ const args = {
     onChange: action('Radio changed'),
 };
 
-export const UseSprite: StoryFn<typeof args> = ({ amount, text, textColor, onChange }, context) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const list = new List({
-                type: 'vertical',
-                elementsMargin: 20,
-            });
-
-            const assets = [`radio.png`, `radio_checked.png`];
-
-            preload(assets).then(() =>
+export const UseSprite = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory<typeof args>({
+            context: ctx,
+            init: (view) =>
             {
-                const items = [];
-
-                for (let i = 0; i < amount; i++)
-                {
-                    items.push(
-                        new CheckBox({
-                            text: `${text} ${i + 1}`,
-                            style: {
-                                unchecked: 'radio.png',
-                                checked: 'radio_checked.png',
-                                text: {
-                                    ...defaultTextStyle,
-                                    fontSize: 22,
-                                    fill: textColor,
-                                },
-                            },
-                        }),
-                    );
-                }
-
-                // Component usage
-                const radioGroup = new RadioGroup({
-                    selectedItem: 0,
-                    items,
+                const { amount, text, textColor, onChange } = args;
+                const list = new List({
                     type: 'vertical',
-                    elementsMargin: 10,
+                    elementsMargin: 20,
                 });
 
-                radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-                    onChange({ id: selectedItemID, val: selectedVal }),
-                );
+                const assets = [`radio.png`, `radio_checked.png`];
 
-                if (radioGroup.innerView)
+                preload(assets).then(() =>
                 {
-                    list.addChild(radioGroup.innerView);
-                }
+                    const items = [];
 
-                centerElement(list);
-            });
-            view.addChild(list);
-        },
-        resize: (view) => centerElement(view.children[0]),
-    });
+                    for (let i = 0; i < amount; i++)
+                    {
+                        items.push(
+                            new CheckBox({
+                                text: `${text} ${i + 1}`,
+                                style: {
+                                    unchecked: 'radio.png',
+                                    checked: 'radio_checked.png',
+                                    text: {
+                                        ...defaultTextStyle,
+                                        fontSize: 22,
+                                        fill: textColor,
+                                    },
+                                },
+                            }),
+                        );
+                    }
+
+                    // Component usage
+                    const radioGroup = new RadioGroup({
+                        selectedItem: 0,
+                        items,
+                        type: 'vertical',
+                        elementsMargin: 10,
+                    });
+
+                    radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
+                        onChange({ id: selectedItemID, val: selectedVal }),
+                    );
+
+                    if (radioGroup.innerView)
+                    {
+                        list.addChild(radioGroup.innerView);
+                    }
+
+                    centerElement(list);
+                });
+                view.addChild(list);
+            },
+            resize: (view) => centerElement(view.children[0]),
+        }),
+};
 
 export default {
     title: 'Components/RadioGroup/Use Sprite',

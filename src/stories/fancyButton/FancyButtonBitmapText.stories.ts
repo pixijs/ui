@@ -1,11 +1,13 @@
 import { BitmapFontManager, BitmapText } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { Args, StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -23,100 +25,100 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const UsingSpriteAndBitmapText: StoryFn<typeof args> = (
-    {
-        text,
-        textColor,
-        disabled,
-        onPress,
-        padding,
-        textOffsetX,
-        textOffsetY,
-        defaultTextScale,
-        defaultTextAnchorX,
-        defaultTextAnchorY,
-        anchorX,
-        anchorY,
-        animationDuration,
-    },
-    context,
-) =>
-    new PixiStory({
-        context,
-        init: async (view) =>
-        {
-            const assets = [
-                `button.png`,
-                `button_hover.png`,
-                `button_pressed.png`,
-                `button_disabled.png`,
-            ];
-
-            await preload(assets);
-
-            BitmapFontManager.install({
-                name: 'TitleFont',
-                style: {
-                    ...defaultTextStyle,
-                    fill: textColor || defaultTextStyle.fill,
-                },
-            });
-
-            const title = new BitmapText({
-                text,
-                style: {
-                    fontFamily: 'TitleFont',
-                    fontSize: defaultTextStyle.fontSize,
-                },
-            });
-
-            // Component usage !!!
-            const button = new FancyButton({
-                defaultView: `button.png`,
-                hoverView: `button_hover.png`,
-                pressedView: `button_pressed.png`,
-                disabledView: `button_disabled.png`,
-                text: title,
-                padding,
-                textOffset: { x: textOffsetX, y: textOffsetY },
-                defaultTextScale,
-                defaultTextAnchor: {
-                    x: defaultTextAnchorX,
-                    y: defaultTextAnchorY,
-                },
-                animations: {
-                    hover: {
-                        props: {
-                            scale: { x: 1.03, y: 1.03 },
-                            y: 0,
-                        },
-                        duration: animationDuration,
-                    },
-                    pressed: {
-                        props: {
-                            scale: { x: 0.9, y: 0.9 },
-                            y: 10,
-                        },
-                        duration: animationDuration,
-                    },
-                },
-            });
-
-            button.anchor.set(anchorX, anchorY);
-
-            if (disabled)
+export const UsingSpriteAndBitmapText = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory({
+            context: ctx,
+            init: async (view) =>
             {
-                button.enabled = false;
-            }
+                const {
+                    text,
+                    textColor,
+                    disabled,
+                    onPress,
+                    padding,
+                    textOffsetX,
+                    textOffsetY,
+                    defaultTextScale,
+                    defaultTextAnchorX,
+                    defaultTextAnchorY,
+                    anchorX,
+                    anchorY,
+                    animationDuration,
+                } = args;
+                const assets = [
+                    `button.png`,
+                    `button_hover.png`,
+                    `button_pressed.png`,
+                    `button_disabled.png`,
+                ];
 
-            button.onPress.connect(onPress);
+                await preload(assets);
 
-            centerView(view);
+                BitmapFontManager.install({
+                    name: 'TitleFont',
+                    style: {
+                        ...defaultTextStyle,
+                        fill: textColor || defaultTextStyle.fill,
+                    },
+                });
 
-            view.addChild(button);
-        },
-        resize: centerView,
-    });
+                const title = new BitmapText({
+                    text,
+                    style: {
+                        fontFamily: 'TitleFont',
+                        fontSize: defaultTextStyle.fontSize,
+                    },
+                });
+
+                // Component usage !!!
+                const button = new FancyButton({
+                    defaultView: `button.png`,
+                    hoverView: `button_hover.png`,
+                    pressedView: `button_pressed.png`,
+                    disabledView: `button_disabled.png`,
+                    text: title,
+                    padding,
+                    textOffset: { x: textOffsetX, y: textOffsetY },
+                    defaultTextScale,
+                    defaultTextAnchor: {
+                        x: defaultTextAnchorX,
+                        y: defaultTextAnchorY,
+                    },
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.03, y: 1.03 },
+                                y: 0,
+                            },
+                            duration: animationDuration,
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.9, y: 0.9 },
+                                y: 10,
+                            },
+                            duration: animationDuration,
+                        },
+                    },
+                });
+
+                button.anchor.set(anchorX, anchorY);
+
+                if (disabled)
+                {
+                    button.enabled = false;
+                }
+
+                button.onPress.connect(onPress);
+
+                centerView(view);
+
+                view.addChild(button);
+            },
+            resize: centerView,
+        }),
+};
 
 export default {
     title: 'Components/FancyButton/Using Sprite And BitmapText',
