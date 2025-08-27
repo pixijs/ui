@@ -6,7 +6,7 @@ import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -16,9 +16,11 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
+type Args = typeof args;
+
 export const TextLink = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: (view) =>
             {

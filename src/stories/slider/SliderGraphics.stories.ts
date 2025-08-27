@@ -7,7 +7,7 @@ import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     meshColor: colors.color,
@@ -28,6 +28,8 @@ const args = {
     showValue: true,
     onChange: action('Slider'),
 };
+
+type Args = typeof args;
 
 export const Single = {
     render: (args: Args, ctx: StoryContext) =>
@@ -52,7 +54,7 @@ export const Single = {
             showValue,
         } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

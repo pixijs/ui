@@ -7,7 +7,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     dropDownHoverColor: colors.hoverColor,
@@ -16,12 +16,14 @@ const args = {
     onSelect: action('Item selected'),
 };
 
+type Args = typeof args;
+
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>
     {
         const { fontColor, itemsAmount, dropDownHoverColor, onSelect } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

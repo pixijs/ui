@@ -9,7 +9,7 @@ import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -39,9 +39,11 @@ const args = {
     action: action('Button'),
 };
 
+type Args = typeof args;
+
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: async (view) =>
             {

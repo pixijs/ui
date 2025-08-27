@@ -7,7 +7,7 @@ import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: 'Radio',
@@ -22,6 +22,8 @@ const args = {
 
     onChange: action('Radio changed'),
 };
+
+type Args = typeof args;
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
@@ -42,7 +44,7 @@ export const UseGraphics = {
             onChange,
         } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

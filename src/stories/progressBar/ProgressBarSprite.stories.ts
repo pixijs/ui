@@ -6,7 +6,7 @@ import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     value: 50,
@@ -16,6 +16,8 @@ const args = {
     vertical: false,
 };
 
+type Args = typeof args;
+
 export const Sprite = {
     render: (args: Args, ctx: StoryContext) =>
     {
@@ -24,7 +26,7 @@ export const Sprite = {
         let progressBar: ProgressBar;
         let value = initialValue;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

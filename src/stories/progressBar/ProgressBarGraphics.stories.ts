@@ -6,7 +6,7 @@ import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fillColor: colors.color,
@@ -20,6 +20,8 @@ const args = {
     animate: true,
     vertical: false,
 };
+
+type Args = typeof args;
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
@@ -41,7 +43,7 @@ export const UseGraphics = {
 
         let value = initialValue;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

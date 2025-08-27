@@ -7,13 +7,13 @@ import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: ['center', 'left', 'right'],
+    align: 'center' as const,
     textColor: colors.textColor,
     backgroundColor: colors.color,
     borderColor: colors.pressedColor,
@@ -33,9 +33,11 @@ const args = {
     onChange: action('Change'),
 };
 
+type Args = typeof args;
+
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: (view) =>
             {

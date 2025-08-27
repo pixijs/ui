@@ -4,11 +4,10 @@ import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
-import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     proximityRange: 100,
@@ -21,9 +20,11 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: [null, ...LIST_TYPE],
+    type: 'vertical' as 'vertical' | 'horizontal' | 'bidirectional',
     fadeSpeed: 0.5,
 };
+
+type Args = typeof args;
 
 const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
@@ -46,7 +47,7 @@ export const ProximityEvent = {
             fadeSpeed,
         } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

@@ -1,23 +1,24 @@
 import { PixiStory } from '@pixi/storybook-renderer';
 import { Switcher } from '../../Switcher';
 import { centerElement } from '../../utils/helpers/resize';
-import { BUTTON_EVENTS } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
-    triggerEvent1: BUTTON_EVENTS,
-    triggerEvent2: ['onHover', ...BUTTON_EVENTS],
-    triggerEvent3: ['onOut', ...BUTTON_EVENTS],
+    triggerEvent1: 'onPress' as const,
+    triggerEvent2: 'onHover' as const,
+    triggerEvent3: 'onOut' as const,
     action: action('swich: '),
 };
 
+type Args = typeof args;
+
 export const Sprites = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: (view) =>
             {

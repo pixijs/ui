@@ -4,11 +4,10 @@ import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
-import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fontColor: colors.textColor,
@@ -28,10 +27,12 @@ const args = {
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: [null, ...LIST_TYPE],
+    type: 'vertical' as 'vertical' | 'horizontal' | 'bidirectional',
     innerListWidth: 1000,
     onPress: action('Button pressed'),
 };
+
+type Args = typeof args;
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
@@ -58,7 +59,7 @@ export const UseGraphics = {
             pressedButtonColor,
         } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

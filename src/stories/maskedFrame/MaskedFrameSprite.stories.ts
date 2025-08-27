@@ -4,16 +4,18 @@ import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     borderColor: '#FFFFFF',
     borderWidth: 10,
 };
 
+type Args = typeof args;
+
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: (view) =>
             {

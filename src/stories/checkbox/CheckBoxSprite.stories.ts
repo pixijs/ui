@@ -7,7 +7,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: 'Checkbox',
@@ -15,6 +15,8 @@ const args = {
     amount: 3,
     onChange: action('Checkbox'),
 };
+
+type Args = typeof args;
 
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>

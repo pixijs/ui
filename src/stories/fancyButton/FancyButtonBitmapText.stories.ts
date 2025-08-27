@@ -7,7 +7,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -24,6 +24,8 @@ const args = {
     disabled: false,
     onPress: action('button was pressed! (tap or click!)'),
 };
+
+type Args = typeof args;
 
 export const UsingSpriteAndBitmapText = {
     render: (args: Args, ctx: StoryContext) =>

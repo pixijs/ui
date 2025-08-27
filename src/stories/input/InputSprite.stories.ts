@@ -8,13 +8,13 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: ['center', 'left', 'right'],
+    align: 'center' as const,
     textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,
@@ -27,6 +27,8 @@ const args = {
     maxTextLength: 10,
     onChange: action('Input'),
 };
+
+type Args = typeof args;
 
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>

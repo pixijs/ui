@@ -5,7 +5,7 @@ import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     borderColor: '#FFFFFF',
@@ -13,10 +13,12 @@ const args = {
     radius: 250,
 };
 
+type Args = typeof args;
+
 // TODO: implement preloading
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
-        new PixiStory<typeof args>({
+        new PixiStory({
             context: ctx,
             init: (view) =>
             {

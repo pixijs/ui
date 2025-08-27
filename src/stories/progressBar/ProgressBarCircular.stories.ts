@@ -4,7 +4,7 @@ import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     backgroundColor: colors.pannelBorderColor,
@@ -15,8 +15,10 @@ const args = {
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
     animate: true,
-    cap: ['round', 'butt', 'square'],
+    cap: 'round' as const,
 };
+
+type Args = typeof args;
 
 export const circular = {
     render: (args: Args, ctx: StoryContext) =>
@@ -36,7 +38,7 @@ export const circular = {
         let progressBar1: CircularProgressBar;
         let value = initialValue;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {

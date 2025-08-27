@@ -5,7 +5,7 @@ import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { Args, StoryContext } from '@pixi/storybook-renderer';
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     fontColor: '#FFFFFF',
@@ -18,12 +18,14 @@ const args = {
     onChange: action('Slider'),
 };
 
+type Args = typeof args;
+
 export const Double = {
     render: (args: Args, ctx: StoryContext) =>
     {
         const { min, max, value1, value2, fontSize, fontColor, showValue, onChange } = args;
 
-        return new PixiStory<typeof args>({
+        return new PixiStory({
             context: ctx,
             init: (view) =>
             {
