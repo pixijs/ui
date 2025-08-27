@@ -20,13 +20,5 @@ module.exports = {
     features: {
         buildStoriesJson: true,
     },
-    framework: '@pixi/storybook-webpack5',
-    typescript: {
-        check: false,
-        reactDocgen: 'react-docgen-typescript',
-        reactDocgenTypescriptOptions: {
-            shouldExtractLiteralValuesFromEnum: true,
-            propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
-        },
-    },
+    framework: '@pixi/storybook-webpack5'
 };
