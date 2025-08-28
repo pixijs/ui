@@ -4,13 +4,14 @@ import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
-    type: 'vertical' as ListType,
+    type: [null, ...LIST_TYPE],
     fontColor: colors.textColor,
     bgColor: colors.pannelColor,
     bgBorderColor: colors.pannelBorderColor,
@@ -30,7 +31,9 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: ListType;
+};
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>

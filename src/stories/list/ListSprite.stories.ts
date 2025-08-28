@@ -4,6 +4,7 @@ import { FancyButton } from '../../FancyButton';
 import { List, ListType } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
@@ -12,7 +13,7 @@ import { action } from '@storybook/addon-actions';
 import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
-    type: 'vertical' as ListType,
+    type: [null, ...LIST_TYPE],
     width: 430,
     height: 330,
     radius: 20,
@@ -27,7 +28,9 @@ const args = {
     onPress: action('Button pressed'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: ListType;
+};
 
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>
