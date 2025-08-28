@@ -20,13 +20,15 @@ const args = {
     elementsMargin: 6,
     itemsAmount: 100,
     disableEasing: false,
-    type: 'vertical' as 'vertical' | 'horizontal' | 'bidirectional',
+    type: ['vertical', 'horizontal', 'bidirectional'],
     onPress: action('Button pressed'),
     globalScroll: true,
     shiftScroll: false,
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: 'vertical' | 'horizontal' | 'bidirectional';
+};
 
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>
@@ -159,5 +161,5 @@ function createItems(
 export default {
     title: 'Components/ScrollBox/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), type: 'vertical' },
 };

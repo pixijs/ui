@@ -27,12 +27,14 @@ const args = {
     disableEasing: false,
     globalScroll: true,
     shiftScroll: false,
-    type: 'vertical' as 'vertical' | 'horizontal' | 'bidirectional',
+    type: ['vertical', 'horizontal', 'bidirectional'],
     innerListWidth: 1000,
     onPress: action('Button pressed'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: 'vertical' | 'horizontal' | 'bidirectional';
+};
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
@@ -123,5 +125,5 @@ export const UseGraphics = {
 export default {
     title: 'Components/ScrollBox/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), type: 'vertical' },
 };

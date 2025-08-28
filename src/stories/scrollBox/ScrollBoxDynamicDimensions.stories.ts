@@ -1,7 +1,6 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
-import { ListType } from '../../List';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
@@ -17,10 +16,12 @@ const args = {
     hoverButtonColor: colors.hoverColor,
     pressedButtonColor: colors.pressedColor,
     itemsAmount: 100,
-    type: 'vertical' as ListType,
+    type: ['vertical', 'horizontal', 'bidirectional'],
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: 'vertical' | 'horizontal' | 'bidirectional';
+};
 
 export const UseDynamicDimensions = {
     render: (args: Args, ctx: StoryContext) =>
@@ -108,5 +109,5 @@ export const UseDynamicDimensions = {
 export default {
     title: 'Components/ScrollBox/Use Dynamic Dimensions',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), type: 'vertical' },
 };

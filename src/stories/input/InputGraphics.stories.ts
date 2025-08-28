@@ -14,7 +14,7 @@ const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: 'center' as InputAlign,
+    align: ['left', 'center', 'right'],
     textColor: colors.textColor,
     backgroundColor: colors.color,
     borderColor: colors.pressedColor,
@@ -34,7 +34,9 @@ const args = {
     onChange: action('Change'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    align: InputAlign;
+};
 
 export const UseGraphics = {
     render: (args: Args, ctx: StoryContext) =>
@@ -107,5 +109,5 @@ export const UseGraphics = {
 export default {
     title: 'Components/Input/Use Graphics',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), align: 'center' },
 };

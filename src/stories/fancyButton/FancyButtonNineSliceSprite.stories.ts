@@ -27,11 +27,13 @@ const args = {
     anchorY: 0.5,
     animationDuration: 100,
     disabled: false,
-    contentFittingMode: 'default' as ContentFittingMode,
+    contentFittingMode: ['default', 'fill', 'none'],
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    contentFittingMode: ContentFittingMode;
+};
 
 export const UseNineSliceSprite = {
     render: (args: Args, ctx: StoryContext) =>
@@ -170,5 +172,5 @@ export const UseNineSliceSprite = {
 export default {
     title: 'Components/FancyButton/Use NineSliceSprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), contentFittingMode: 'default' },
 };

@@ -15,7 +15,7 @@ const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: 'center' as InputAlign,
+    align: ['left', 'center', 'right'],
     textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,
@@ -29,7 +29,9 @@ const args = {
     onChange: action('Input'),
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    align: InputAlign;
+};
 
 export const UseSprite = {
     render: (args: Args, ctx: StoryContext) =>
@@ -94,5 +96,5 @@ export const UseSprite = {
 export default {
     title: 'Components/Input/Use Sprite',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), align: 'center' },
 };

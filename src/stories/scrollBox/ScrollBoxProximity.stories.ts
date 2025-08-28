@@ -20,11 +20,13 @@ const args = {
     elementsWidth: 300,
     elementsHeight: 80,
     itemsAmount: 100,
-    type: 'vertical' as 'vertical' | 'horizontal' | 'bidirectional',
+    type: ['vertical', 'horizontal', 'bidirectional'],
     fadeSpeed: 0.5,
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    type: 'vertical' | 'horizontal' | 'bidirectional';
+};
 
 const items: FancyButton[] = [];
 const inRangeCache: boolean[] = [];
@@ -131,5 +133,5 @@ export const ProximityEvent = {
 export default {
     title: 'Components/ScrollBox/Proximity Event',
     argTypes: argTypes(args),
-    args: getDefaultArgs(args),
+    args: { ...getDefaultArgs(args), type: 'vertical' },
 };
