@@ -16,10 +16,12 @@ const args = {
     backgroundAlpha: 0.5,
     fillAlpha: 0.8,
     animate: true,
-    cap: 'round' as LineCap,
+    cap: ['round', 'butt', 'square'],
 };
 
-type Args = typeof args;
+type Args = typeof args & {
+    cap: LineCap;
+};
 
 export const circular = {
     render: (args: Args, ctx: StoryContext) =>
