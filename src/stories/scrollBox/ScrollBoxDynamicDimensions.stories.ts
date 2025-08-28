@@ -4,6 +4,7 @@ import { FancyButton } from '../../FancyButton';
 import { ScrollBox } from '../../ScrollBox';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { LIST_TYPE } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
@@ -16,7 +17,7 @@ const args = {
     hoverButtonColor: colors.hoverColor,
     pressedButtonColor: colors.pressedColor,
     itemsAmount: 100,
-    type: ['vertical', 'horizontal', 'bidirectional'],
+    type: [null, ...LIST_TYPE],
 };
 
 type Args = typeof args & {

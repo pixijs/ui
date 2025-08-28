@@ -14,7 +14,7 @@ const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: ['left', 'center', 'right'],
+    align: [null, 'left', 'center', 'right'],
     textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,
