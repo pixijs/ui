@@ -26,4 +26,4 @@ export type Padding =
     };
 
 export const LIST_TYPE = ['vertical', 'horizontal', 'bidirectional'] as const;
-
+export const ALIGN = ['left', 'center', 'right'] as const;

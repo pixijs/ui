@@ -15,11 +15,11 @@ import {
 import { Signal } from 'typed-signals';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView } from './utils/helpers/view';
-import { Padding } from './utils/HelpTypes';
+import { ALIGN, type Padding } from './utils/HelpTypes';
 
 type ViewType = Sprite | Graphics | Texture | string;
 
-export type InputAlign = 'left' | 'center' | 'right';
+export type InputAlign = typeof ALIGN[number];
 
 export type InputOptions = {
     bg: ViewType;
@@ -782,7 +782,7 @@ export class Input extends Container
         this.inputMask.position.set(this.paddingLeft, this.paddingTop);
     }
 
-    protected onPaste(e: any)
+    protected onPaste(e: ClipboardEvent)
     {
         e.preventDefault();
 

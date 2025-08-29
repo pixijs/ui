@@ -4,6 +4,7 @@ import { Input } from '../../Input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
+import { ALIGN } from '../../utils/HelpTypes';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
@@ -15,7 +16,7 @@ const args = {
     text: '',
     placeholder: 'Enter text',
     secure: false,
-    align: [null, 'left', 'center', 'right'],
+    align: [null, ...ALIGN],
     textColor: colors.textColor,
     maxLength: 20,
     fontSize: 24,
