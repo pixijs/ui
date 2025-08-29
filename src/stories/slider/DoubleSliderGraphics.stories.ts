@@ -1,11 +1,13 @@
 import { Graphics } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { DoubleSlider } from '../../DoubleSlider';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     meshColor: colors.color,
@@ -27,84 +29,89 @@ const args = {
     onChange: action('Slider'),
 };
 
-export const Double: StoryFn<typeof args> = (
+type Args = typeof args;
+
+export const Double = {
+    render: (args: Args, ctx: StoryContext) =>
     {
-        min,
-        max,
-        value1,
-        value2,
-        meshColor,
-        borderColor,
-        backgroundColor,
-        fillColor,
-        width,
-        height,
-        radius,
-        fontSize,
-        fontColor,
-        border,
-        handleBorder,
-        showValue,
-        onChange,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const list = new List({ type: 'vertical', elementsMargin: 10 });
+        const {
+            min,
+            max,
+            value1,
+            value2,
+            meshColor,
+            borderColor,
+            backgroundColor,
+            fillColor,
+            width,
+            height,
+            radius,
+            fontSize,
+            fontColor,
+            border,
+            handleBorder,
+            showValue,
+            onChange,
+        } = args;
 
-            const bg = new Graphics()
-                .roundRect(0, 0, width, height, radius)
-                .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
-                .fill(backgroundColor);
-
-            const fill = new Graphics()
-                .roundRect(0, 0, width, height, radius)
-                .fill(borderColor)
-                .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
-                .fill(fillColor);
-
-            const slider1 = new Graphics()
-                .circle(0, 0, 20 + handleBorder)
-                .fill(borderColor)
-                .circle(0, 0, 20)
-                .fill(meshColor);
-
-            const slider2 = new Graphics()
-                .circle(0, 0, 20 + handleBorder)
-                .fill(borderColor)
-                .circle(0, 0, 20)
-                .fill(meshColor);
-
-            const doubleSlider = new DoubleSlider({
-                bg,
-                fill,
-                slider1,
-                slider2,
-                min,
-                max,
-                value1,
-                value2,
-                valueTextStyle: {
-                    fill: fontColor,
-                    fontSize,
-                },
-                showValue,
-            });
-
-            doubleSlider.onChange.connect((value1, value2) =>
+        return new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                onChange(`${value1} - ${value2}`);
-            });
+                const list = new List({ type: 'vertical', elementsMargin: 10 });
 
-            list.addChild(doubleSlider);
-            view.addChild(list);
-        },
-        resize: (view) => centerElement(view.children[0]),
-    });
+                const bg = new Graphics()
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(borderColor)
+                    .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                    .fill(backgroundColor);
+
+                const fill = new Graphics()
+                    .roundRect(0, 0, width, height, radius)
+                    .fill(borderColor)
+                    .roundRect(border, border, width - (border * 2), height - (border * 2), radius)
+                    .fill(fillColor);
+
+                const slider1 = new Graphics()
+                    .circle(0, 0, 20 + handleBorder)
+                    .fill(borderColor)
+                    .circle(0, 0, 20)
+                    .fill(meshColor);
+
+                const slider2 = new Graphics()
+                    .circle(0, 0, 20 + handleBorder)
+                    .fill(borderColor)
+                    .circle(0, 0, 20)
+                    .fill(meshColor);
+
+                const doubleSlider = new DoubleSlider({
+                    bg,
+                    fill,
+                    slider1,
+                    slider2,
+                    min,
+                    max,
+                    value1,
+                    value2,
+                    valueTextStyle: {
+                        fill: fontColor,
+                        fontSize,
+                    },
+                    showValue,
+                });
+
+                doubleSlider.onChange.connect((value1, value2) =>
+                {
+                    onChange(`${value1} - ${value2}`);
+                });
+
+                list.addChild(doubleSlider);
+                view.addChild(list);
+            },
+            resize: (view) => centerElement(view.children[0]),
+        });
+    },
+};
 
 export default {
     title: 'Components/Slider/Graphics',

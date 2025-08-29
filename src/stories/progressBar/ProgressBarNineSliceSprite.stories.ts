@@ -1,10 +1,12 @@
 import { Sprite } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { List } from '../../List';
 import { ProgressBar } from '../../ProgressBar';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     value: 50,
@@ -16,92 +18,95 @@ const args = {
     vertical: false,
 };
 
-export const NineSliceSprite: StoryFn<typeof args> = (
-    { value, animate, vertical, width, height, fillPaddingsVertical, fillPaddingsHorizontal },
-    context,
-) =>
-{
-    let isFilling = true;
-    let progressBar: ProgressBar;
+type Args = typeof args;
 
-    return new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const list = new List({ type: 'vertical', elementsMargin: 10 });
+export const NineSliceSprite = {
+    render: (args: Args, ctx: StoryContext) =>
+    {
+        const { value: initialValue, animate, vertical, width, height, fillPaddingsVertical, fillPaddingsHorizontal } = args;
+        let isFilling = true;
+        let progressBar: ProgressBar;
+        let value = initialValue;
 
-            const assets = ['slider_bg.png', 'slider_progress.png'];
-
-            preload(assets).then(() =>
+        return new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                // Component usage !!!
-                progressBar = new ProgressBar({
-                    bg: Sprite.from('slider_bg.png'),
-                    fill: 'slider_progress.png',
-                    nineSliceSprite: {
-                        bg: [44, 20, 44, 19],
-                        fill: [34, 16, 34, 15],
-                    },
-                    progress: value,
-                    fillPaddings: {
-                        top: fillPaddingsVertical,
-                        right: fillPaddingsHorizontal,
-                        bottom: fillPaddingsVertical,
-                        left: fillPaddingsHorizontal,
-                    },
+                const list = new List({ type: 'vertical', elementsMargin: 10 });
+
+                const assets = ['slider_bg.png', 'slider_progress.png'];
+
+                preload(assets).then(() =>
+                {
+                    // Component usage !!!
+                    progressBar = new ProgressBar({
+                        bg: Sprite.from('slider_bg.png'),
+                        fill: 'slider_progress.png',
+                        nineSliceSprite: {
+                            bg: [44, 20, 44, 19],
+                            fill: [34, 16, 34, 15],
+                        },
+                        progress: value,
+                        fillPaddings: {
+                            top: fillPaddingsVertical,
+                            right: fillPaddingsHorizontal,
+                            bottom: fillPaddingsVertical,
+                            left: fillPaddingsHorizontal,
+                        },
+                    });
+
+                    progressBar.width = width;
+                    progressBar.height = height;
+
+                    list.addChild(progressBar);
+
+                    if (vertical)
+                    {
+                        progressBar.rotation = -Math.PI / 2;
+                        list.y += list.height / 2;
+                    }
+                    else
+                    {
+                        list.x += -list.width / 2;
+                    }
                 });
 
-                progressBar.width = width;
-                progressBar.height = height;
+                view.addChild(list);
+            },
 
-                list.addChild(progressBar);
-
+            resize: (view) =>
+            {
+                centerElement(view);
                 if (vertical)
                 {
-                    progressBar.rotation = -Math.PI / 2;
-                    list.y += list.height / 2;
+                    view.y += view.height;
                 }
-                else
+            },
+            update: () =>
+            {
+                if (!animate || !progressBar)
                 {
-                    list.x += -list.width / 2;
+                    return;
                 }
-            });
 
-            view.addChild(list);
-        },
+                isFilling ? value++ : value--;
 
-        resize: (view) =>
-        {
-            centerElement(view);
-            if (vertical)
-            {
-                view.y += view.height;
-            }
-        },
-        update: () =>
-        {
-            if (!animate || !progressBar)
-            {
-                return;
-            }
+                if (value > 150)
+                {
+                    isFilling = false;
+                }
+                else if (value < -50)
+                {
+                    isFilling = true;
+                }
 
-            isFilling ? value++ : value--;
-
-            if (value > 150)
-            {
-                isFilling = false;
-            }
-            else if (value < -50)
-            {
-                isFilling = true;
-            }
-
-            if (progressBar)
-            {
-                progressBar.progress = value;
-            }
-        },
-    });
+                if (progressBar)
+                {
+                    progressBar.progress = value;
+                }
+            },
+        });
+    },
 };
 
 export default {

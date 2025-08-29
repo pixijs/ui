@@ -1,11 +1,13 @@
 import { TextStyle } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { Select } from '../../Select';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     dropDownHoverColor: colors.hoverColor,
@@ -14,66 +16,71 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const UseSprite: StoryFn<typeof args> = (
-    { fontColor, itemsAmount, dropDownHoverColor, onSelect },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = [`select.png`, `select_open.png`];
+type Args = typeof args;
 
-            let select: Select;
+export const UseSprite = {
+    render: (args: Args, ctx: StoryContext) =>
+    {
+        const { fontColor, itemsAmount, dropDownHoverColor, onSelect } = args;
 
-            preload(assets).then(() =>
+        return new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                const textStyle = {
-                    ...defaultTextStyle,
-                    fill: fontColor,
-                } as TextStyle;
+                const assets = [`select.png`, `select_open.png`];
 
-                const items = getItems(itemsAmount, 'Item');
+                let select: Select;
 
-                // Component usage !!!
-                // Important: in order scroll to work, you have to call update() method in your game loop.
-                select = new Select({
-                    closedBG: `select.png`,
-                    openBG: `select_open.png`,
-                    textStyle,
-                    items: {
-                        items,
-                        backgroundColor: colors.color,
-                        hoverColor: dropDownHoverColor,
-                        width: 297,
-                        height: 50,
-                        textStyle,
-                        radius: 15,
-                    },
-                    scrollBox: {
-                        width: 300,
-                        height: 300,
-                    },
-                });
-
-                select.y = 10;
-
-                select.onSelect.connect((_, text) =>
+                preload(assets).then(() =>
                 {
-                    onSelect({
-                        id: select.value,
-                        text,
+                    const textStyle = {
+                        ...defaultTextStyle,
+                        fill: fontColor,
+                    } as TextStyle;
+
+                    const items = getItems(itemsAmount, 'Item');
+
+                    // Component usage !!!
+                    // Important: in order scroll to work, you have to call update() method in your game loop.
+                    select = new Select({
+                        closedBG: `select.png`,
+                        openBG: `select_open.png`,
+                        textStyle,
+                        items: {
+                            items,
+                            backgroundColor: colors.color,
+                            hoverColor: dropDownHoverColor,
+                            width: 297,
+                            height: 50,
+                            textStyle,
+                            radius: 15,
+                        },
+                        scrollBox: {
+                            width: 300,
+                            height: 300,
+                        },
                     });
+
+                    select.y = 10;
+
+                    select.onSelect.connect((_, text) =>
+                    {
+                        onSelect({
+                            id: select.value,
+                            text,
+                        });
+                    });
+
+                    view.addChild(select);
+
+                    centerElement(view, 0.5, 0);
                 });
+            },
 
-                view.addChild(select);
-
-                centerElement(view, 0.5, 0);
-            });
-        },
-
-        resize: (view) => centerElement(view, 0.5, 0),
-    });
+            resize: (view) => centerElement(view, 0.5, 0),
+        });
+    },
+};
 
 function getItems(itemsAmount: number, text: string): string[]
 {

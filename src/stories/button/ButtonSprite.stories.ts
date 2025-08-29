@@ -1,11 +1,13 @@
 import { Container, isMobile, Sprite, Text, Texture } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { Button } from '../../Button';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -14,7 +16,9 @@ const args = {
     action: action('Button'),
 };
 
-export class SpriteButton extends Button
+type Args = typeof args;
+
+class SpriteButton extends Button
 {
     private buttonView = new Container();
     private textView: Text;
@@ -106,20 +110,23 @@ export class SpriteButton extends Button
     }
 }
 
-export const UseSprite: StoryFn<typeof args> = (params, context) =>
-    new PixiStory({
-        context,
-        init: (view) =>
-        {
-            const buttonView = new SpriteButton(params);
-
-            if (buttonView.view)
+export const UseSprite = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                view.addChild(buttonView.view);
-            }
-        },
-        resize: centerView,
-    });
+                const { text, textColor, disabled, action } = args;
+                const buttonView = new SpriteButton({ text, textColor, disabled, action });
+
+                if (buttonView.view)
+                {
+                    view.addChild(buttonView.view);
+                }
+            },
+            resize: centerView,
+        }),
+};
 
 export default {
     title: 'Components/Button/Use Sprite',

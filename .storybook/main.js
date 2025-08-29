@@ -4,6 +4,7 @@ module.exports = {
     output: '../docs/',
     logLevel: 'debug',
     addons: [
+        '@storybook/addon-webpack5-compiler-babel',
         '@storybook/addon-actions',
         '@storybook/addon-backgrounds',
         '@storybook/addon-controls',
@@ -18,8 +19,6 @@ module.exports = {
     },
     features: {
         buildStoriesJson: true,
-        breakingChangesV7: true,
-        babelModeV7: true,
     },
-    framework: '@pixi/storybook-webpack5',
+    framework: '@pixi/storybook-webpack5'
 };

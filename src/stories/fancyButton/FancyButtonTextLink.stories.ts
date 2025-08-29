@@ -1,10 +1,12 @@
 import { Text } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { action } from '@storybook/addon-actions';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     text: '👉 Click me 👈',
@@ -14,53 +16,55 @@ const args = {
     onPress: action('button was pressed! (tap or click!)'),
 };
 
-export const TextLink: StoryFn<typeof args> = (
-    { text, textColor, disabled, onPress, animationDuration },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const button = new FancyButton({
-                text: new Text({
-                    text,
-                    style: {
-                        ...defaultTextStyle,
-                        fill: textColor || defaultTextStyle.fill,
-                    },
-                }),
-                animations: {
-                    hover: {
-                        props: {
-                            scale: { x: 1.03, y: 1.03 },
-                            y: 0,
-                        },
-                        duration: animationDuration,
-                    },
-                    pressed: {
-                        props: {
-                            scale: { x: 0.9, y: 0.9 },
-                            y: 10,
-                        },
-                        duration: animationDuration,
-                    },
-                },
-            });
+type Args = typeof args;
 
-            if (disabled)
+export const TextLink = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                button.enabled = false;
-            }
+                const { text, textColor, disabled, onPress, animationDuration } = args;
+                const button = new FancyButton({
+                    text: new Text({
+                        text,
+                        style: {
+                            ...defaultTextStyle,
+                            fill: textColor || defaultTextStyle.fill,
+                        },
+                    }),
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.03, y: 1.03 },
+                                y: 0,
+                            },
+                            duration: animationDuration,
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.9, y: 0.9 },
+                                y: 10,
+                            },
+                            duration: animationDuration,
+                        },
+                    },
+                });
 
-            button.onPress.connect(onPress);
+                if (disabled)
+                {
+                    button.enabled = false;
+                }
 
-            centerView(view);
+                button.onPress.connect(onPress);
 
-            view.addChild(button);
-        },
-        resize: centerView,
-    });
+                centerView(view);
+
+                view.addChild(button);
+            },
+            resize: centerView,
+        }),
+};
 
 export default {
     title: 'Components/FancyButton/Text Link',

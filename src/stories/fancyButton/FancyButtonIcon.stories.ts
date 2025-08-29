@@ -1,5 +1,5 @@
 import { Graphics, Sprite } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { FancyButton } from '../../FancyButton';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerView } from '../../utils/helpers/resize';
@@ -7,6 +7,8 @@ import { colors } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     ...colors,
@@ -30,140 +32,142 @@ const args = {
     action: action('Button'),
 };
 
-export const UseIcon: StoryFn<typeof args> = (
-    {
-        width,
-        height,
-        radius,
-        color,
-        hoverColor,
-        pressedColor,
-        disabledColor,
-        disabled,
-        padding,
-        iconOffsetX,
-        iconOffsetY,
-        defaultIconScale,
-        defaultIconAnchorX,
-        defaultIconAnchorY,
-        defaultOffset,
-        hoverOffset,
-        pressedOffset,
-        disabledOffset,
-        action,
-        anchorX,
-        anchorY,
-        animationDuration,
-    },
-    context,
-) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = [`avatar-01.png`];
+type Args = typeof args;
 
-            preload(assets).then(() =>
+export const UseIcon = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                const target = Sprite.from(`avatar-01.png`);
-
-                const icon = new MaskedFrame({
-                    target,
-                    mask: new Graphics()
-                        .circle(target.width / 2, target.height / 2, target.width / 2)
-                        .fill(0x000000),
-                    borderWidth: 5,
-                    borderColor: 0xffffff,
-                });
-
-                // Component usage !!!
-                const button = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(color)
-                        .roundRect(6, 6, width, height, radius)
-                        .stroke({
-                            color,
-                            width: 3,
-                        }),
-                    hoverView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(hoverColor)
-                        .roundRect(6, 6, width, height, radius)
-                        .stroke({
-                            color: hoverColor,
-                            width: 3,
-                        }),
-                    pressedView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(pressedColor)
-                        .roundRect(3, 3, width, height, radius)
-                        .stroke({
-                            color: pressedColor,
-                            width: 3,
-                        }),
-                    disabledView: new Graphics()
-                        .roundRect(0, 0, width, height, radius)
-                        .fill(disabledColor)
-                        .roundRect(6, 6, width, height, radius)
-                        .stroke({
-                            color: disabledColor,
-                            width: 3,
-                        }),
-                    icon,
+                const {
+                    width,
+                    height,
+                    radius,
+                    color,
+                    hoverColor,
+                    pressedColor,
+                    disabledColor,
+                    disabled,
                     padding,
-                    offset: {
-                        default: { y: defaultOffset },
-                        disabled: { y: disabledOffset },
-                    },
-                    iconOffset: {
-                        x: iconOffsetX,
-                        y: iconOffsetY,
-                    },
+                    iconOffsetX,
+                    iconOffsetY,
                     defaultIconScale,
-                    defaultIconAnchor: {
-                        x: defaultIconAnchorX,
-                        y: defaultIconAnchorY,
-                    },
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: { x: 1.03, y: 1.03 },
-                                y: hoverOffset,
-                            },
-                            duration: animationDuration,
-                        },
-                        pressed: {
-                            props: {
-                                scale: { x: 0.9, y: 0.9 },
-                                y: pressedOffset,
-                            },
-                            duration: animationDuration,
-                        },
-                    },
-                });
+                    defaultIconAnchorX,
+                    defaultIconAnchorY,
+                    defaultOffset,
+                    hoverOffset,
+                    pressedOffset,
+                    disabledOffset,
+                    action,
+                    anchorX,
+                    anchorY,
+                    animationDuration,
+                } = args;
+                const assets = [`avatar-01.png`];
 
-                button.anchor.set(anchorX, anchorY);
-
-                if (disabled)
+                preload(assets).then(() =>
                 {
-                    button.enabled = false;
-                }
+                    const target = Sprite.from(`avatar-01.png`);
 
-                button.onPress.connect(() => action('onPress'));
-                button.onDown.connect(() => action('onDown'));
-                button.onUp.connect(() => action('onUp'));
-                button.onHover.connect(() => action('onHover'));
-                button.onOut.connect(() => action('onOut'));
-                button.onUpOut.connect(() => action('onUpOut'));
+                    const icon = new MaskedFrame({
+                        target,
+                        mask: new Graphics()
+                            .circle(target.width / 2, target.height / 2, target.width / 2)
+                            .fill(0x000000),
+                        borderWidth: 5,
+                        borderColor: 0xffffff,
+                    });
 
-                view.addChild(button);
+                    // Component usage !!!
+                    const button = new FancyButton({
+                        defaultView: new Graphics()
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(color)
+                            .roundRect(6, 6, width, height, radius)
+                            .stroke({
+                                color,
+                                width: 3,
+                            }),
+                        hoverView: new Graphics()
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(hoverColor)
+                            .roundRect(6, 6, width, height, radius)
+                            .stroke({
+                                color: hoverColor,
+                                width: 3,
+                            }),
+                        pressedView: new Graphics()
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(pressedColor)
+                            .roundRect(3, 3, width, height, radius)
+                            .stroke({
+                                color: pressedColor,
+                                width: 3,
+                            }),
+                        disabledView: new Graphics()
+                            .roundRect(0, 0, width, height, radius)
+                            .fill(disabledColor)
+                            .roundRect(6, 6, width, height, radius)
+                            .stroke({
+                                color: disabledColor,
+                                width: 3,
+                            }),
+                        icon,
+                        padding,
+                        offset: {
+                            default: { y: defaultOffset },
+                            disabled: { y: disabledOffset },
+                        },
+                        iconOffset: {
+                            x: iconOffsetX,
+                            y: iconOffsetY,
+                        },
+                        defaultIconScale,
+                        defaultIconAnchor: {
+                            x: defaultIconAnchorX,
+                            y: defaultIconAnchorY,
+                        },
+                        animations: {
+                            hover: {
+                                props: {
+                                    scale: { x: 1.03, y: 1.03 },
+                                    y: hoverOffset,
+                                },
+                                duration: animationDuration,
+                            },
+                            pressed: {
+                                props: {
+                                    scale: { x: 0.9, y: 0.9 },
+                                    y: pressedOffset,
+                                },
+                                duration: animationDuration,
+                            },
+                        },
+                    });
 
-                centerView(view);
-            });
-        },
-        resize: centerView,
-    });
+                    button.anchor.set(anchorX, anchorY);
+
+                    if (disabled)
+                    {
+                        button.enabled = false;
+                    }
+
+                    button.onPress.connect(() => action('onPress'));
+                    button.onDown.connect(() => action('onDown'));
+                    button.onUp.connect(() => action('onUp'));
+                    button.onHover.connect(() => action('onHover'));
+                    button.onOut.connect(() => action('onOut'));
+                    button.onUpOut.connect(() => action('onUpOut'));
+
+                    view.addChild(button);
+
+                    centerView(view);
+                });
+            },
+            resize: centerView,
+        }),
+};
 
 export default {
     title: 'Components/FancyButton/Use Icon',

@@ -19,6 +19,8 @@ import { Padding } from './utils/HelpTypes';
 
 type ViewType = Sprite | Graphics | Texture | string;
 
+export type InputAlign = 'left' | 'center' | 'right';
+
 export type InputOptions = {
     bg: ViewType;
     textStyle?: PixiTextStyle;
@@ -27,7 +29,7 @@ export type InputOptions = {
     value?: string;
     maxLength?: number;
     secure?: boolean;
-    align?: 'left' | 'center' | 'right';
+    align?: InputAlign;
     padding?: Padding;
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];

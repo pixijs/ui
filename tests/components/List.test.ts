@@ -1,4 +1,4 @@
-import { List } from '../../src/List';
+import { List, ListType } from '../../src/List';
 import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
 describe('List Component', () =>
@@ -106,7 +106,7 @@ describe('List Component', () =>
         it('should handle all valid list types', () =>
         {
             // Test all supported list types
-            const types = ['vertical', 'horizontal', 'bidirectional'] as const;
+            const types: ListType[] = ['vertical', 'horizontal', 'bidirectional'];
 
             types.forEach((type) =>
             {
@@ -263,7 +263,7 @@ describe('List Component', () =>
             // Test items option during creation
             const items = createTestItems(3);
             const options = {
-                type: 'vertical' as const,
+                type: 'vertical' as ListType,
                 items,
             };
 
@@ -327,7 +327,7 @@ describe('List Component', () =>
             // Test children option during creation
             const children = createTestItems(4);
             const options = {
-                type: 'horizontal' as const,
+                type: 'horizontal' as ListType,
                 children,
             };
 
@@ -343,7 +343,7 @@ describe('List Component', () =>
         {
             // Test with empty items array
             const options = {
-                type: 'vertical' as const,
+                type: 'vertical' as ListType,
                 items: [],
             };
 
@@ -400,7 +400,7 @@ describe('List Component', () =>
         {
             // Test maxWidth option during creation
             const options = {
-                type: 'bidirectional' as const,
+                type: 'bidirectional' as ListType,
                 maxWidth: 400,
             };
 
@@ -510,7 +510,7 @@ describe('List Component', () =>
         it('should handle different type configurations', () =>
         {
             // Test all type configurations with various options
-            const types = ['vertical', 'horizontal', 'bidirectional'] as const;
+            const types: ListType[] = ['vertical', 'horizontal', 'bidirectional'];
 
             types.forEach((type) =>
             {
@@ -553,7 +553,7 @@ describe('List Component', () =>
             paddingConfigurations.forEach((paddingConfig) =>
             {
                 const options = {
-                    type: 'vertical' as const,
+                    type: 'vertical' as ListType,
                     elementsMargin: 3,
                     ...paddingConfig,
                 };
@@ -606,19 +606,19 @@ describe('List Component', () =>
             // Test edge cases
             const edgeCases = [
                 {
-                    type: 'vertical' as const,
+                    type: 'vertical' as ListType,
                     elementsMargin: 0,
                     padding: 0,
                     items: [], // Empty items
                 },
                 {
-                    type: 'horizontal' as const,
+                    type: 'horizontal' as ListType,
                     elementsMargin: -5, // Negative margin
                     padding: -2, // Negative padding
                     items: createTestItems(1), // Single item
                 },
                 {
-                    type: 'bidirectional' as const,
+                    type: 'bidirectional' as ListType,
                     elementsMargin: 100, // Large margin
                     maxWidth: 50, // Small max width
                     items: createTestItems(10, 20), // Many items
@@ -640,7 +640,7 @@ describe('List Component', () =>
         {
             // Test complex option combinations
             const comprehensiveOptions = {
-                type: 'bidirectional' as const,
+                type: 'bidirectional' as ListType,
                 elementsMargin: 8,
                 maxWidth: 300,
                 padding: 12,

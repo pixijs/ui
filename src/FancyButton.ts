@@ -59,7 +59,7 @@ type ViewsInput = BasicViewsInput & {
     icon?: GetViewSettings;
 };
 
-type ContentFittingMode =
+export type ContentFittingMode =
     // Fits the text/icon content inside the button.
     | 'default'
     // Fill the button with the text/icon content, scaling it up to fill the view space with padding accounted for.

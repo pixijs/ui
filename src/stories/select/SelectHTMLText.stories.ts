@@ -7,8 +7,6 @@ import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { StoryFn } from '@storybook/types';
-
 const args = {
     backgroundColor: colors.color,
     dropDownBackgroundColor: colors.color,
@@ -22,69 +20,73 @@ const args = {
     onSelect: action('Item selected'),
 };
 
-export const UseHTMLText: StoryFn = ({
-    fontColor,
-    fontSize,
-    width,
-    height,
-    radius,
-    itemsAmount,
-    backgroundColor,
-    dropDownBackgroundColor,
-    dropDownHoverColor,
-    onSelect,
-}: any) =>
-{
-    const view = new Container();
-
-    backgroundColor = getColor(backgroundColor);
-    fontColor = getColor(fontColor);
-    dropDownBackgroundColor = getColor(dropDownBackgroundColor);
-    const hoverColor = getColor(dropDownHoverColor);
-    const textStyle = { ...defaultTextStyle, fill: fontColor, fontSize };
-
-    const items = getItems(itemsAmount, 'Item');
-
-    // Component usage !!!
-    // Important: in order scroll to work, you have to call update() method in your game loop.
-    const select = new Select({
-        closedBG: getClosedBG(backgroundColor, width, height, radius),
-        openBG: getOpenBG(dropDownBackgroundColor, width, height, radius),
-        textStyle,
-        TextClass: HTMLText,
-        items: {
-            items,
-            backgroundColor,
-            hoverColor,
+export const UseHTMLText = {
+    render: (args: any) =>
+    {
+        const {
+            fontColor,
+            fontSize,
             width,
             height,
+            radius,
+            itemsAmount,
+            backgroundColor,
+            dropDownBackgroundColor,
+            dropDownHoverColor,
+            onSelect,
+        } = args;
+
+        const view = new Container();
+
+        const bgColor = getColor(backgroundColor) ?? 0x000000;
+        const fColor = getColor(fontColor) ?? 0xffffff;
+        const ddBgColor = getColor(dropDownBackgroundColor) ?? 0x000000;
+        const hoverColor = getColor(dropDownHoverColor) ?? 0x333333;
+        const textStyle = { ...defaultTextStyle, fill: fColor, fontSize };
+
+        const items = getItems(itemsAmount, 'Item');
+
+        // Component usage !!!
+        // Important: in order scroll to work, you have to call update() method in your game loop.
+        const select = new Select({
+            closedBG: getClosedBG(bgColor, width, height, radius),
+            openBG: getOpenBG(ddBgColor, width, height, radius),
             textStyle,
             TextClass: HTMLText,
-            radius,
-        },
-        scrollBox: {
-            width,
-            height: height * 5,
-            radius,
-        },
-    });
-
-    select.y = 10;
-
-    select.onSelect.connect((_, text) =>
-    {
-        onSelect({
-            id: select.value,
-            text,
+            items: {
+                items,
+                backgroundColor: bgColor,
+                hoverColor,
+                width,
+                height,
+                textStyle,
+                TextClass: HTMLText,
+                radius,
+            },
+            scrollBox: {
+                width,
+                height: height * 5,
+                radius,
+            },
         });
-    });
 
-    view.addChild(select);
+        select.y = 10;
 
-    return {
-        view,
-        resize: () => centerElement(view, 0.5, 0),
-    };
+        select.onSelect.connect((_, text) =>
+        {
+            onSelect({
+                id: select.value,
+                text,
+            });
+        });
+
+        view.addChild(select);
+
+        return {
+            view,
+            resize: () => centerElement(view, 0.5, 0),
+        };
+    },
 };
 
 function getClosedBG(backgroundColor: number, width: number, height: number, radius: number)

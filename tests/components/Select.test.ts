@@ -1,4 +1,5 @@
 import { Graphics } from 'pixi.js';
+import { ListType } from '../../src/List';
 import { Select } from '../../src/Select';
 import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
@@ -504,7 +505,7 @@ describe('Select Component', () =>
                     width: 180,
                     height: 200,
                     radius: 8,
-                    type: 'vertical' as const,
+                    type: 'vertical' as ListType,
                 },
             ];
 
@@ -677,7 +678,7 @@ describe('Select Component', () =>
                     width: 250,
                     height: 180,
                     radius: 8,
-                    type: 'vertical' as const,
+                    type: 'vertical' as ListType,
                     offset: { x: 0, y: 5 },
                 },
                 visibleItems: 4,

@@ -1,9 +1,11 @@
 import { Graphics, Sprite } from 'pixi.js';
-import { PixiStory, StoryFn } from '@pixi/storybook-renderer';
+import { PixiStory } from '@pixi/storybook-renderer';
 import { MaskedFrame } from '../../MaskedFrame';
 import { centerElement } from '../../utils/helpers/resize';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { preload } from '../utils/loader';
+
+import type { StoryContext } from '@pixi/storybook-renderer';
 
 const args = {
     borderColor: '#FFFFFF',
@@ -11,33 +13,38 @@ const args = {
     radius: 250,
 };
 
+type Args = typeof args;
+
 // TODO: implement preloading
-export const UseGraphics: StoryFn<typeof args> = ({ borderColor, radius, borderWidth }, context) =>
-    new PixiStory<typeof args>({
-        context,
-        init: (view) =>
-        {
-            const assets = [`avatar-01.png`];
-
-            preload(assets).then(() =>
+export const UseGraphics = {
+    render: (args: Args, ctx: StoryContext) =>
+        new PixiStory({
+            context: ctx,
+            init: (view) =>
             {
-                const target = Sprite.from(`avatar-01.png`);
+                const { borderColor, radius, borderWidth } = args;
+                const assets = [`avatar-01.png`];
 
-                // Component usage !!!
-                const frame = new MaskedFrame({
-                    target,
-                    mask: getMask(target.width, target.height, radius),
-                    borderWidth,
-                    borderColor,
+                preload(assets).then(() =>
+                {
+                    const target = Sprite.from(`avatar-01.png`);
+
+                    // Component usage !!!
+                    const frame = new MaskedFrame({
+                        target,
+                        mask: getMask(target.width, target.height, radius),
+                        borderWidth,
+                        borderColor,
+                    });
+
+                    view.addChild(frame);
+
+                    centerElement(view);
                 });
-
-                view.addChild(frame);
-
-                centerElement(view);
-            });
-        },
-        resize: centerElement,
-    });
+            },
+            resize: centerElement,
+        }),
+};
 
 function getMask(width: number, height: number, radius: number): Graphics
 {
