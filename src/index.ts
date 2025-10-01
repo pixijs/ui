@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './CheckBox';
 export * from './CircularProgressBar';
+export * from './Dialog';
 export * from './DoubleSlider';
 export * from './FancyButton';
 export * from './Input';
