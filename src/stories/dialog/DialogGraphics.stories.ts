@@ -197,8 +197,8 @@ export const ThreeButtons = {
                         },
                     }),
                     buttons: [
-                        { text: 'Save' },
-                        { text: 'Delete' },
+                        { text: 'Yes' },
+                        { text: 'No' },
                         { text: 'Cancel' },
                     ],
                     width,

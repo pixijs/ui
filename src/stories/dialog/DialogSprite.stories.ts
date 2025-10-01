@@ -35,7 +35,7 @@ export const SpriteBackground = {
                     contentColor,
                 } = args;
 
-                await preload(['input.png']);
+                await preload(['button_white.png']);
 
                 const backdrop = new Sprite(Texture.WHITE);
 
@@ -47,7 +47,7 @@ export const SpriteBackground = {
                 backdrop.y = -5000;
 
                 const dialog = new Dialog({
-                    background: Texture.from('input.png'),
+                    background: Texture.from('button_white.png'),
                     backdrop,
                     title: new Text({
                         text: 'Sprite Dialog',
@@ -96,12 +96,10 @@ export const SpriteButtons = {
                     height,
                     padding,
                     backdropAlpha,
-                    titleColor,
-                    contentColor,
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['select.png']);
+                await preload(['button.png']);
 
                 const backdrop = new Sprite(Texture.WHITE);
 
@@ -113,7 +111,7 @@ export const SpriteButtons = {
                 backdrop.y = -5000;
 
                 const dialog = new Dialog({
-                    background: Texture.from('select.png'),
+                    background: Texture.from('button.png'),
                     backdrop,
                     title: new Text({
                         text: 'Confirm',
@@ -121,7 +119,7 @@ export const SpriteButtons = {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     content: new Text({
@@ -129,7 +127,7 @@ export const SpriteButtons = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: contentColor,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     buttons: [

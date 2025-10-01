@@ -31,8 +31,6 @@ export const NineSliceBackground = {
                     height,
                     padding,
                     backdropAlpha,
-                    titleColor,
-                    contentColor,
                 } = args;
 
                 await preload(['button_blue.png']);
@@ -46,17 +44,17 @@ export const NineSliceBackground = {
                         text: 'Fancy Dialog',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 28,
+                            fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     content: new Text({
-                        text: 'This dialog has a scalable fancy border using NineSliceSprite!',
+                        text: 'This dialog has a scalable border!',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 18,
-                            fill: contentColor,
+                            fontSize: 16,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     buttons: [{ text: 'Amazing!' }],
@@ -89,8 +87,6 @@ export const NineSliceConfirm = {
                     height,
                     padding,
                     backdropAlpha,
-                    titleColor,
-                    contentColor,
                     closeOnBackdropClick,
                 } = args;
 
@@ -102,25 +98,25 @@ export const NineSliceConfirm = {
                     backdropColor: 0x000000,
                     backdropAlpha,
                     title: new Text({
-                        text: 'Confirm Purchase',
+                        text: 'Confirm Action',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 28,
+                            fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     content: new Text({
-                        text: 'Are you sure you want to buy this item?',
+                        text: 'Are you sure you want to proceed?',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 18,
-                            fill: contentColor,
+                            fontSize: 16,
+                            fill: 0xFFFFFF,
                         },
                     }),
                     buttons: [
                         { text: 'Cancel' },
-                        { text: 'Buy Now' },
+                        { text: 'Confirm' },
                     ],
                     width,
                     height,

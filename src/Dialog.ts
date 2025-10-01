@@ -169,16 +169,16 @@ export class Dialog extends Container
             }
         }
 
+        const dialogWidth = this.options.width ?? this.dialogContainer.width;
+        const dialogHeight = this.options.height ?? this.dialogContainer.height;
+
         if ('anchor' in this.dialogContainer)
         {
             (this.dialogContainer.anchor as ObservablePoint).set(0.5, 0.5);
         }
         else
         {
-            const width = this.options.width ?? this.dialogContainer.width;
-            const height = this.options.height ?? this.dialogContainer.height;
-
-            this.dialogContainer.pivot.set(width / 2, height / 2);
+            this.dialogContainer.pivot.set(dialogWidth / 2, dialogHeight / 2);
         }
 
         this.addChild(this.dialogContainer);
@@ -190,15 +190,16 @@ export class Dialog extends Container
     {
         if (!this.options.title) return;
 
+        const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
+        const padding = this.options.padding ?? 20;
+
         this.titleText = getTextView(this.options.title);
         if ('anchor' in this.titleText)
         {
             (this.titleText.anchor as ObservablePoint).set(0.5, 0);
         }
 
-        const padding = this.options.padding ?? 20;
-
-        this.titleText.x = (this.options.width ?? this.dialogContainer?.width ?? 0) / 2;
+        this.titleText.x = dialogWidth / 2;
         this.titleText.y = padding;
 
         this.contentContainer.addChild(this.titleText);
@@ -241,12 +242,14 @@ export class Dialog extends Container
         {
             if (typeof this.options.content === 'string' || typeof this.options.content === 'number')
             {
+                const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
+
                 this.contentView = getTextView(this.options.content);
                 if ('anchor' in this.contentView)
                 {
                     (this.contentView.anchor as ObservablePoint).set(0.5, 0);
                 }
-                this.contentView.x = (this.options.width ?? this.dialogContainer?.width ?? 0) / 2;
+                this.contentView.x = dialogWidth / 2;
             }
             else
             {
@@ -302,17 +305,34 @@ export class Dialog extends Container
         });
 
         const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
-        let currentX = (dialogWidth - totalButtonWidth) / 2;
+        const dialogHeight = this.options.height ?? this.dialogContainer?.height ?? 0;
 
-        this.buttons.forEach((btn) =>
+        let currentX = -(totalButtonWidth / 2);
+
+        // eslint-disable-next-line no-console
+        console.log('[Dialog] Button positioning:', {
+            dialogWidth,
+            dialogHeight,
+            totalButtonWidth,
+            centerX: dialogWidth / 2,
+            buttonStartX: currentX,
+            buttonCount: this.buttons.length,
+            buttonWidths: this.buttons.map((b) => b.width),
+            contentContainerOffset: { x: this.contentContainer.x, y: this.contentContainer.y },
+        });
+
+        this.buttons.forEach((btn, i) =>
         {
             btn.x = currentX;
+            // eslint-disable-next-line no-console
+            console.log(`[Dialog] Button ${i} positioned at x=${btn.x}, width=${btn.width}`);
             currentX += btn.width + buttonSpacing;
         });
 
-        const dialogHeight = this.options.height ?? this.dialogContainer?.height ?? 0;
-
+        this.buttonsContainer.x = dialogWidth / 2;
         this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
+        // eslint-disable-next-line no-console
+        console.log('[Dialog] ButtonsContainer positioned at:', { x: this.buttonsContainer.x, y: this.buttonsContainer.y });
 
         this.contentContainer.addChild(this.buttonsContainer);
     }
