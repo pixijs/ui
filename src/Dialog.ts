@@ -310,28 +310,14 @@ export class Dialog extends Container
         const startX = (dialogWidth - totalButtonWidth) / 2;
         let currentX = 0;
 
-        // eslint-disable-next-line no-console
-        console.log('[Dialog] Button positioning:', {
-            dialogWidth,
-            dialogHeight,
-            totalButtonWidth,
-            startX,
-            buttonCount: this.buttons.length,
-            buttonWidths: this.buttons.map((b) => b.width),
-        });
-
-        this.buttons.forEach((btn, i) =>
+        this.buttons.forEach((btn) =>
         {
             btn.x = currentX;
-            // eslint-disable-next-line no-console
-            console.log(`[Dialog] Button ${i} positioned at x=${btn.x}, width=${btn.width}`);
             currentX += btn.width + buttonSpacing;
         });
 
         this.buttonsContainer.x = startX;
         this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
-        // eslint-disable-next-line no-console
-        console.log('[Dialog] ButtonsContainer positioned at:', { x: this.buttonsContainer.x, y: this.buttonsContainer.y });
 
         this.contentContainer.addChild(this.buttonsContainer);
     }

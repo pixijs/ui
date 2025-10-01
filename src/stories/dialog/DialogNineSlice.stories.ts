@@ -170,7 +170,7 @@ export const NineSliceDifferentSizes = {
                         },
                     }),
                     content: new Text({
-                        text: 'Try changing the width and height to see how the border scales properly!',
+                        text: 'Try changing the width and height!',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 18,
@@ -190,6 +190,7 @@ export const NineSliceDifferentSizes = {
                 dialog.onSelect.connect((index, text) =>
                 {
                     action('onSelect')(`Button ${index}: ${text}`);
+                    setTimeout(() => dialog.open(), 300);
                 });
 
                 view.addChild(dialog);

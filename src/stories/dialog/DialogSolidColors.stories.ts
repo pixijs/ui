@@ -19,7 +19,7 @@ const defaultArgs = {
 
 type Args = typeof defaultArgs;
 
-export const SpriteBackground = {
+export const WhiteBackground = {
     render: (args: Args, ctx: StoryContext) =>
         new PixiStory({
             context: ctx,
@@ -51,7 +51,7 @@ export const SpriteBackground = {
                     background: bg,
                     backdrop,
                     title: new Text({
-                        text: 'Sprite Dialog',
+                        text: 'Simple Dialog',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
@@ -60,7 +60,7 @@ export const SpriteBackground = {
                         },
                     }),
                     content: new Text({
-                        text: 'This dialog uses a sprite texture!',
+                        text: 'This dialog uses solid colors!',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
@@ -86,7 +86,7 @@ export const SpriteBackground = {
     args: defaultArgs,
 };
 
-export const SpriteButtons = {
+export const BlueBackground = {
     render: (args: Args, ctx: StoryContext) =>
         new PixiStory({
             context: ctx,
@@ -160,7 +160,7 @@ export const SpriteButtons = {
 };
 
 export default {
-    title: 'Components/Dialog/Use Sprite',
+    title: 'Components/Dialog/Use Solid Colors',
     argTypes: {
         width: { control: { type: 'range', min: 200, max: 800, step: 10 } },
         height: { control: { type: 'range', min: 150, max: 600, step: 10 } },
