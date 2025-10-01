@@ -169,6 +169,18 @@ export class Dialog extends Container
             }
         }
 
+        if ('anchor' in this.dialogContainer)
+        {
+            (this.dialogContainer.anchor as ObservablePoint).set(0.5, 0.5);
+        }
+        else
+        {
+            const width = this.options.width ?? this.dialogContainer.width;
+            const height = this.options.height ?? this.dialogContainer.height;
+
+            this.dialogContainer.pivot.set(width / 2, height / 2);
+        }
+
         this.addChild(this.dialogContainer);
         this.dialogContainer.addChild(this.contentContainer);
     }
