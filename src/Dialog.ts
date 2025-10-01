@@ -307,18 +307,17 @@ export class Dialog extends Container
         const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
         const dialogHeight = this.options.height ?? this.dialogContainer?.height ?? 0;
 
-        let currentX = -(totalButtonWidth / 2);
+        const startX = (dialogWidth - totalButtonWidth) / 2;
+        let currentX = 0;
 
         // eslint-disable-next-line no-console
         console.log('[Dialog] Button positioning:', {
             dialogWidth,
             dialogHeight,
             totalButtonWidth,
-            centerX: dialogWidth / 2,
-            buttonStartX: currentX,
+            startX,
             buttonCount: this.buttons.length,
             buttonWidths: this.buttons.map((b) => b.width),
-            contentContainerOffset: { x: this.contentContainer.x, y: this.contentContainer.y },
         });
 
         this.buttons.forEach((btn, i) =>
@@ -329,7 +328,7 @@ export class Dialog extends Container
             currentX += btn.width + buttonSpacing;
         });
 
-        this.buttonsContainer.x = dialogWidth / 2;
+        this.buttonsContainer.x = startX;
         this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
         // eslint-disable-next-line no-console
         console.log('[Dialog] ButtonsContainer positioned at:', { x: this.buttonsContainer.x, y: this.buttonsContainer.y });

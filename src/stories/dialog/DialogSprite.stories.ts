@@ -1,9 +1,8 @@
-import { Sprite, Text, Texture } from 'pixi.js';
+import { Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
-import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
@@ -35,8 +34,6 @@ export const SpriteBackground = {
                     contentColor,
                 } = args;
 
-                await preload(['button_white.png']);
-
                 const backdrop = new Sprite(Texture.WHITE);
 
                 backdrop.tint = 0x000000;
@@ -46,8 +43,12 @@ export const SpriteBackground = {
                 backdrop.x = -5000;
                 backdrop.y = -5000;
 
+                const bg = new Graphics()
+                    .rect(0, 0, width, height)
+                    .fill(0xFFFFFF);
+
                 const dialog = new Dialog({
-                    background: Texture.from('button_white.png'),
+                    background: bg,
                     backdrop,
                     title: new Text({
                         text: 'Sprite Dialog',
@@ -99,8 +100,6 @@ export const SpriteButtons = {
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['button.png']);
-
                 const backdrop = new Sprite(Texture.WHITE);
 
                 backdrop.tint = 0x000000;
@@ -110,8 +109,12 @@ export const SpriteButtons = {
                 backdrop.x = -5000;
                 backdrop.y = -5000;
 
+                const bg = new Graphics()
+                    .rect(0, 0, width, height)
+                    .fill(0x4A90E2);
+
                 const dialog = new Dialog({
-                    background: Texture.from('button.png'),
+                    background: bg,
                     backdrop,
                     title: new Text({
                         text: 'Confirm',
