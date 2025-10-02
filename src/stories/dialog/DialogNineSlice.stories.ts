@@ -14,37 +14,39 @@ function createBunnyBackdrop(width: number = 10000, height: number = 10000): Con
     const bunnyTexture = Texture.from('bunny.png');
     const bunnies: Sprite[] = [];
 
-    const bunnyCount = 25;
+    const cols = 50;
+    const rows = 50;
+    const bunnySize = 52;
+    const spacingX = width / cols;
+    const spacingY = height / rows;
 
-    for (let i = 0; i < bunnyCount; i++)
+    for (let row = 0; row < rows; row++)
     {
-        const bunny = new Sprite(bunnyTexture);
+        for (let col = 0; col < cols; col++)
+        {
+            const bunny = new Sprite(bunnyTexture);
 
-        bunny.x = (i / bunnyCount) * width;
-        bunny.y = (i / bunnyCount) * height;
+            bunny.x = col * spacingX;
+            bunny.y = row * spacingY;
+            bunny.width = bunnySize;
+            bunny.height = bunnySize;
 
-        const scale = 0.5 + (Math.random() * 1.5);
-
-        bunny.scale.set(scale);
-
-        (bunny as any).vx = (Math.random() - 0.5) * 2;
-        (bunny as any).vy = (Math.random() - 0.5) * 2;
-
-        bunnies.push(bunny);
-        container.addChild(bunny);
+            bunnies.push(bunny);
+            container.addChild(bunny);
+        }
     }
+
+    const scrollSpeed = 2;
 
     Ticker.shared.add(() =>
     {
         bunnies.forEach((bunny) =>
         {
-            bunny.x += (bunny as any).vx;
-            bunny.y += (bunny as any).vy;
+            bunny.x -= scrollSpeed;
+            bunny.y += scrollSpeed;
 
-            if (bunny.x < -bunny.width) bunny.x = width;
-            if (bunny.x > width) bunny.x = -bunny.width;
-            if (bunny.y < -bunny.height) bunny.y = height;
-            if (bunny.y > height) bunny.y = -bunny.height;
+            if (bunny.x < -bunnySize) bunny.x += width + spacingX;
+            if (bunny.y > height) bunny.y -= height + spacingY;
         });
     });
 
