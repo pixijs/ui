@@ -144,6 +144,7 @@ export const CheckboxSwapDialog = {
                         style: {
                             unchecked: new Graphics()
                                 .roundRect(0, 0, 30, 30, 5)
+                                .fill(0xFFFFFF)
                                 .stroke({ color: 0x000000, width: 2 }),
                             checked: new Graphics()
                                 .roundRect(0, 0, 30, 30, 5)
@@ -201,7 +202,7 @@ export const CheckboxSwapDialog = {
                     padding,
                     scrollBox: {
                         width: width - (padding * 4),
-                        height: 300,
+                        height: 380,
                     },
                 });
 
