@@ -1,4 +1,4 @@
-import { Text, Texture } from 'pixi.js';
+import { Container, Sprite, Text, Texture, Ticker } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
@@ -7,6 +7,57 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
+
+function createBunnyBackdrop(width: number = 10000, height: number = 10000): Container
+{
+    const container = new Container();
+    const bunnyTexture = Texture.from('bunny.png');
+    const bunnies: Sprite[] = [];
+
+    const bunnyCount = 25;
+
+    for (let i = 0; i < bunnyCount; i++)
+    {
+        const bunny = new Sprite(bunnyTexture);
+
+        bunny.x = (i / bunnyCount) * width;
+        bunny.y = (i / bunnyCount) * height;
+
+        const scale = 0.5 + (Math.random() * 1.5);
+
+        bunny.scale.set(scale);
+
+        (bunny as any).vx = (Math.random() - 0.5) * 2;
+        (bunny as any).vy = (Math.random() - 0.5) * 2;
+
+        bunnies.push(bunny);
+        container.addChild(bunny);
+    }
+
+    Ticker.shared.add(() =>
+    {
+        bunnies.forEach((bunny) =>
+        {
+            bunny.x += (bunny as any).vx;
+            bunny.y += (bunny as any).vy;
+
+            if (bunny.x < -bunny.width) bunny.x = width;
+            if (bunny.x > width) bunny.x = -bunny.width;
+            if (bunny.y < -bunny.height) bunny.y = height;
+            if (bunny.y > height) bunny.y = -bunny.height;
+        });
+    });
+
+    const overlay = new Sprite(Texture.WHITE);
+
+    overlay.tint = 0x000000;
+    overlay.alpha = 0.5;
+    overlay.width = width;
+    overlay.height = height;
+    container.addChildAt(overlay, 0);
+
+    return container;
+}
 
 const defaultArgs = {
     width: 500,
@@ -150,16 +201,16 @@ export const NineSliceDifferentSizes = {
                     width,
                     height,
                     padding,
-                    backdropAlpha,
                 } = args;
 
-                await preload(['button_white.png']);
+                await preload(['button_white.png', 'bunny.png']);
+
+                const bunnyBackdrop = createBunnyBackdrop();
 
                 const dialog = new Dialog({
                     background: Texture.from('button_white.png'),
                     nineSliceSprite: [25, 20, 25, 20],
-                    backdropColor: 0x000000,
-                    backdropAlpha,
+                    backdrop: bunnyBackdrop,
                     title: new Text({
                         text: 'Scalable',
                         style: {

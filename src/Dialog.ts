@@ -1,4 +1,4 @@
-import { Container, Graphics, NineSliceSprite, ObservablePoint, Texture, Ticker } from 'pixi.js';
+import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
@@ -94,14 +94,13 @@ export class Dialog extends Container
         }
         else
         {
-            const backdropGraphics = new Graphics();
+            const backdropSprite = new Sprite(Texture.WHITE);
 
-            backdropGraphics.rect(0, 0, 10000, 10000);
-            backdropGraphics.fill({
-                color: this.options.backdropColor ?? 0x000000,
-                alpha: this.options.backdropAlpha ?? 0.5,
-            });
-            this.backdrop = backdropGraphics;
+            backdropSprite.tint = this.options.backdropColor ?? 0x000000;
+            backdropSprite.alpha = this.options.backdropAlpha ?? 0.5;
+            backdropSprite.width = 10000;
+            backdropSprite.height = 10000;
+            this.backdrop = backdropSprite;
         }
 
         this.backdrop.eventMode = 'static';
@@ -264,7 +263,12 @@ export class Dialog extends Container
     /** Creates the buttons at the bottom of the dialog. */
     protected createButtons(): void
     {
-        const buttonConfigs = this.options.buttons ?? [{ text: 'OK' }];
+        if (!this.options.buttons || this.options.buttons.length === 0)
+        {
+            return;
+        }
+
+        const buttonConfigs = this.options.buttons;
         const padding = this.options.padding ?? 20;
         const buttonSpacing = 10;
 
@@ -317,9 +321,16 @@ export class Dialog extends Container
         });
 
         this.buttonsContainer.x = startX;
-        this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
 
-        this.contentContainer.addChild(this.buttonsContainer);
+        if (this.buttons.length > 0)
+        {
+            this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
+        }
+
+        if (this.buttons.length > 0)
+        {
+            this.contentContainer.addChild(this.buttonsContainer);
+        }
     }
 
     /** Opens the dialog with animation. */
