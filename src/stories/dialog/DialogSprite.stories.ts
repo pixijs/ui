@@ -117,7 +117,7 @@ export const LetterGridSelector = {
 
 const swapDialogArgs = {
     width: 450,
-    height: 550,
+    height: 400,
     padding: 20,
     backgroundColor: 0xFFFFFF,
     backdropAlpha: 0.7,
@@ -202,7 +202,7 @@ export const CheckboxSwapDialog = {
                     padding,
                     scrollBox: {
                         width: width - (padding * 4),
-                        height: 380,
+                        height: 230,
                     },
                 });
 
