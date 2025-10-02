@@ -1,4 +1,4 @@
-import { Container, Sprite, Text, Texture, Ticker } from 'pixi.js';
+import { Text, Texture } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
@@ -7,59 +7,6 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
-
-function createBunnyBackdrop(width: number = 10000, height: number = 10000): Container
-{
-    const container = new Container();
-    const bunnyTexture = Texture.from('bunny.png');
-    const bunnies: Sprite[] = [];
-
-    const cols = 50;
-    const rows = 50;
-    const bunnySize = 52;
-    const spacingX = width / cols;
-    const spacingY = height / rows;
-
-    for (let row = 0; row < rows; row++)
-    {
-        for (let col = 0; col < cols; col++)
-        {
-            const bunny = new Sprite(bunnyTexture);
-
-            bunny.x = col * spacingX;
-            bunny.y = row * spacingY;
-            bunny.width = bunnySize;
-            bunny.height = bunnySize;
-
-            bunnies.push(bunny);
-            container.addChild(bunny);
-        }
-    }
-
-    const scrollSpeed = 2;
-
-    Ticker.shared.add(() =>
-    {
-        bunnies.forEach((bunny) =>
-        {
-            bunny.x -= scrollSpeed;
-            bunny.y += scrollSpeed;
-
-            if (bunny.x < -bunnySize) bunny.x += width + spacingX;
-            if (bunny.y > height) bunny.y -= height + spacingY;
-        });
-    });
-
-    const overlay = new Sprite(Texture.WHITE);
-
-    overlay.tint = 0x000000;
-    overlay.alpha = 0.5;
-    overlay.width = width;
-    overlay.height = height;
-    container.addChildAt(overlay, 0);
-
-    return container;
-}
 
 const defaultArgs = {
     width: 500,
@@ -191,67 +138,6 @@ export const NineSliceConfirm = {
         ...defaultArgs,
         closeOnBackdropClick: true,
     },
-};
-
-export const NineSliceDifferentSizes = {
-    render: (args: Args, ctx: StoryContext) =>
-        new PixiStory({
-            context: ctx,
-            init: async (view) =>
-            {
-                const {
-                    width,
-                    height,
-                    padding,
-                } = args;
-
-                await preload(['button_white.png', 'bunny.png']);
-
-                const bunnyBackdrop = createBunnyBackdrop();
-
-                const dialog = new Dialog({
-                    background: Texture.from('button_white.png'),
-                    nineSliceSprite: [25, 20, 25, 20],
-                    backdrop: bunnyBackdrop,
-                    title: new Text({
-                        text: 'Scalable',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 28,
-                            fontWeight: 'bold',
-                            fill: 0x000000,
-                        },
-                    }),
-                    content: new Text({
-                        text: 'Try changing the width and height!',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 18,
-                            fill: 0x333333,
-                        },
-                    }),
-                    buttons: [
-                        { text: 'Small' },
-                        { text: 'Medium' },
-                        { text: 'Large' },
-                    ],
-                    width,
-                    height,
-                    padding,
-                });
-
-                dialog.onSelect.connect((index, text) =>
-                {
-                    action('onSelect')(`Button ${index}: ${text}`);
-                    setTimeout(() => dialog.open(), 300);
-                });
-
-                view.addChild(dialog);
-                dialog.open();
-            },
-            resize: centerView,
-        }),
-    args: defaultArgs,
 };
 
 export default {
