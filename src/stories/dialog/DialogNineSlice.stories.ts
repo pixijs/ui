@@ -3,6 +3,7 @@ import { PixiStory } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
 import { defaultTextStyle } from '../../utils/helpers/styles';
+import { createBunnyBackdrop } from '../utils/backdrop';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
@@ -30,16 +31,16 @@ export const NineSliceBackground = {
                     width,
                     height,
                     padding,
-                    backdropAlpha,
                 } = args;
 
-                await preload(['button_blue.png']);
+                await preload(['button_blue.png', 'bunny.png']);
+
+                const bunnyBackdrop = createBunnyBackdrop(2);
 
                 const dialog = new Dialog({
                     background: Texture.from('button_blue.png'),
                     nineSliceSprite: [25, 20, 25, 20],
-                    backdropColor: 0x000000,
-                    backdropAlpha,
+                    backdrop: bunnyBackdrop,
                     title: new Text({
                         text: 'Fancy Dialog',
                         style: {
@@ -86,17 +87,17 @@ export const NineSliceConfirm = {
                     width,
                     height,
                     padding,
-                    backdropAlpha,
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['button_green.png']);
+                await preload(['button_green.png', 'bunny.png']);
+
+                const bunnyBackdrop = createBunnyBackdrop(-2);
 
                 const dialog = new Dialog({
                     background: Texture.from('button_green.png'),
                     nineSliceSprite: [25, 20, 25, 20],
-                    backdropColor: 0x000000,
-                    backdropAlpha,
+                    backdrop: bunnyBackdrop,
                     title: new Text({
                         text: 'Confirm Action',
                         style: {
