@@ -32,29 +32,7 @@ export const LetterGridSelector = {
                 const cols = 5;
                 const buttonSize = 60;
                 const spacing = 10;
-
-                const dialog = new Dialog({
-                    background: new Graphics()
-                        .roundRect(0, 0, width, height, 20)
-                        .fill(backgroundColor),
-                    backdropColor: 0x000000,
-                    backdropAlpha,
-                    title: new Text({
-                        text: 'Select a letter',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 24,
-                            fontWeight: 'bold',
-                            fill: 0x000000,
-                        },
-                    }),
-                    content: letterGrid,
-                    width,
-                    height,
-                    padding,
-                    closeOnBackdropClick: true,
-                    buttons: undefined,
-                });
+                const letterButtons: Array<{ button: FancyButton; letter: string }> = [];
 
                 letters.forEach((letter, index) =>
                 {
@@ -85,18 +63,49 @@ export const LetterGridSelector = {
                     letterButton.x = col * (buttonSize + spacing);
                     letterButton.y = row * (buttonSize + spacing);
 
-                    letterButton.onPress.connect(() =>
-                    {
-                        action('letterSelected')(letter);
-                        dialog.close();
-                    });
-
+                    letterButtons.push({ button: letterButton, letter });
                     letterGrid.addChild(letterButton);
                 });
 
                 const gridWidth = (cols * buttonSize) + ((cols - 1) * spacing);
 
                 letterGrid.x = (width - gridWidth) / 2;
+
+                const dialog = new Dialog({
+                    background: new Graphics()
+                        .roundRect(0, 0, width, height, 20)
+                        .fill(backgroundColor),
+                    backdropColor: 0x000000,
+                    backdropAlpha,
+                    title: new Text({
+                        text: 'Select a letter',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fill: 0x000000,
+                        },
+                    }),
+                    content: letterGrid,
+                    width,
+                    height,
+                    padding,
+                    closeOnBackdropClick: true,
+                    buttons: undefined,
+                    scrollBox: {
+                        width: width - (padding * 4),
+                        height: 280,
+                    },
+                });
+
+                letterButtons.forEach(({ button, letter }) =>
+                {
+                    button.onPress.connect(() =>
+                    {
+                        action('letterSelected')(letter);
+                        dialog.close();
+                    });
+                });
 
                 view.addChild(dialog);
                 dialog.open();

@@ -58,7 +58,7 @@ export const NineSliceBackground = {
                             fill: 0xFFFFFF,
                         },
                     }),
-                    buttons: [{ text: 'Amazing!' }],
+                    buttons: [{ text: '👍Amazing!' }],
                     width,
                     height,
                     padding,
