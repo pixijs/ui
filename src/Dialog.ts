@@ -47,20 +47,22 @@ export type DialogOptions = {
  */
 export class Dialog extends Container
 {
+    protected backdrop: Container;
+    protected innerView?: Container | NineSliceSprite;
+    protected contentView: Container;
+    protected titleText?: PixiText;
+    protected contentBody?: Container;
+    protected scrollBox?: ScrollBox;
+    protected buttonContainer: Container;
+    protected buttons: FancyButton[] = [];
+
+    protected readonly options: DialogOptions;
+
+    protected _isOpen: boolean = false;
+    protected _animationDuration: number = 300;
+
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
-
-    protected backdrop: Container;
-    protected dialogContainer?: Container | NineSliceSprite;
-    protected contentContainer: Container;
-    protected titleText?: PixiText;
-    protected contentView?: Container;
-    protected scrollBox?: ScrollBox;
-    protected buttonsContainer: Container;
-    protected buttons: FancyButton[] = [];
-    protected options: DialogOptions;
-    protected isOpen: boolean = false;
-    protected animationDuration: number = 300;
 
     constructor(options: DialogOptions)
     {
@@ -68,25 +70,50 @@ export class Dialog extends Container
 
         this.options = options;
         this.onSelect = new Signal();
-        this.animationDuration = options.animationDuration ?? 300;
+        this._animationDuration = options.animationDuration ?? 300;
 
         this.backdrop = new Container();
-        this.contentContainer = new Container();
-        this.buttonsContainer = new Container();
+        this.contentView = new Container();
+        this.buttonContainer = new Container();
 
-        this.createBackdrop();
-        this.createDialogContainer();
-        this.createTitle();
-        this.createContent();
-        this.createButtons();
+        this.initBackdrop();
+        this.initInnerView();
+        this.initTitle();
+        this.initContent();
+        this.initButtons();
 
         this.visible = false;
 
+        // Setup ticker for tween animations
         Ticker.shared.add(() => Group.shared.update());
     }
 
-    /** Creates the backdrop (semi-transparent background). */
-    protected createBackdrop(): void
+    /** Gets the dialog width from options or innerView. */
+    protected get dialogWidth(): number
+    {
+        return this.options.width ?? this.innerView?.width ?? 0;
+    }
+
+    /** Gets the dialog height from options or innerView. */
+    protected get dialogHeight(): number
+    {
+        return this.options.height ?? this.innerView?.height ?? 0;
+    }
+
+    /** Gets the dialog padding from options. */
+    protected get dialogPadding(): number
+    {
+        return this.options.padding ?? 20;
+    }
+
+    /** Gets the open state of the dialog. */
+    get isOpen(): boolean
+    {
+        return this._isOpen;
+    }
+
+    /** Initializes the backdrop (semi-transparent background). */
+    protected initBackdrop(): void
     {
         if (this.options.backdrop)
         {
@@ -115,8 +142,8 @@ export class Dialog extends Container
         this.addChild(this.backdrop);
     }
 
-    /** Creates the dialog container (background panel). */
-    protected createDialogContainer(): void
+    /** Initializes the inner view (background panel). */
+    protected initInnerView(): void
     {
         const { background, nineSliceSprite } = this.options;
 
@@ -124,7 +151,7 @@ export class Dialog extends Container
         {
             if (typeof background === 'string')
             {
-                this.dialogContainer = new NineSliceSprite({
+                this.innerView = new NineSliceSprite({
                     texture: Texture.from(background),
                     leftWidth: nineSliceSprite[0],
                     topHeight: nineSliceSprite[1],
@@ -134,7 +161,7 @@ export class Dialog extends Container
             }
             else if (background instanceof Texture)
             {
-                this.dialogContainer = new NineSliceSprite({
+                this.innerView = new NineSliceSprite({
                     texture: background,
                     leftWidth: nineSliceSprite[0],
                     topHeight: nineSliceSprite[1],
@@ -144,53 +171,49 @@ export class Dialog extends Container
             }
             else
             {
-                console.warn(`NineSliceSprite can not be used with views set as Container.
-                    Pass the texture or texture name instead of the Container extended instance.`);
-                this.dialogContainer = getView(background);
+                console.warn(
+                    'NineSliceSprite can not be used with views set as Container. '
+                    + 'Pass the texture or texture name as instead of the Container extended instance.',
+                );
+                this.innerView = getView(background);
             }
         }
         else
         {
-            this.dialogContainer = getView(background);
+            this.innerView = getView(background);
         }
 
         if (this.options.width && this.options.height)
         {
-            if (this.dialogContainer instanceof NineSliceSprite)
+            if (this.innerView instanceof NineSliceSprite)
             {
-                this.dialogContainer.width = this.options.width;
-                this.dialogContainer.height = this.options.height;
+                this.innerView.width = this.options.width;
+                this.innerView.height = this.options.height;
             }
-            else if (this.dialogContainer instanceof Graphics)
+            else if (this.innerView instanceof Graphics)
             {
-                this.dialogContainer.width = this.options.width;
-                this.dialogContainer.height = this.options.height;
+                this.innerView.width = this.options.width;
+                this.innerView.height = this.options.height;
             }
         }
 
-        const dialogWidth = this.options.width ?? this.dialogContainer.width;
-        const dialogHeight = this.options.height ?? this.dialogContainer.height;
-
-        if ('anchor' in this.dialogContainer)
+        if ('anchor' in this.innerView)
         {
-            (this.dialogContainer.anchor as ObservablePoint).set(0.5, 0.5);
+            (this.innerView.anchor as ObservablePoint).set(0.5, 0.5);
         }
         else
         {
-            this.dialogContainer.pivot.set(dialogWidth / 2, dialogHeight / 2);
+            this.innerView.pivot.set(this.dialogWidth / 2, this.dialogHeight / 2);
         }
 
-        this.addChild(this.dialogContainer);
-        this.dialogContainer.addChild(this.contentContainer);
+        this.addChild(this.innerView);
+        this.innerView.addChild(this.contentView);
     }
 
-    /** Creates the title text if provided. */
-    protected createTitle(): void
+    /** Initializes the title text if provided. */
+    protected initTitle(): void
     {
         if (!this.options.title) return;
-
-        const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
-        const padding = this.options.padding ?? 20;
 
         this.titleText = getTextView(this.options.title);
         if ('anchor' in this.titleText)
@@ -198,23 +221,22 @@ export class Dialog extends Container
             (this.titleText.anchor as ObservablePoint).set(0.5, 0);
         }
 
-        this.titleText.x = dialogWidth / 2;
-        this.titleText.y = padding;
+        this.titleText.x = this.dialogWidth / 2;
+        this.titleText.y = this.dialogPadding;
 
-        this.contentContainer.addChild(this.titleText);
+        this.contentView.addChild(this.titleText);
     }
 
-    /** Creates the content area, optionally wrapped in ScrollBox. */
-    protected createContent(): void
+    /** Initializes the content area, optionally wrapped in ScrollBox. */
+    protected initContent(): void
     {
         if (!this.options.content) return;
 
-        const padding = this.options.padding ?? 20;
-        let yOffset = padding;
+        let yOffset = this.dialogPadding;
 
         if (this.titleText)
         {
-            yOffset += this.titleText.height + padding;
+            yOffset += this.titleText.height + this.dialogPadding;
         }
 
         if (this.options.scrollBox)
@@ -232,36 +254,34 @@ export class Dialog extends Container
                 this.scrollBox.addItem(this.options.content);
             }
 
-            this.scrollBox.x = padding;
+            this.scrollBox.x = this.dialogPadding;
             this.scrollBox.y = yOffset;
 
-            this.contentContainer.addChild(this.scrollBox);
+            this.contentView.addChild(this.scrollBox);
         }
         else
         {
             if (typeof this.options.content === 'string' || typeof this.options.content === 'number')
             {
-                const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
-
-                this.contentView = getTextView(this.options.content);
-                if ('anchor' in this.contentView)
+                this.contentBody = getTextView(this.options.content);
+                if ('anchor' in this.contentBody)
                 {
-                    (this.contentView.anchor as ObservablePoint).set(0.5, 0);
+                    (this.contentBody.anchor as ObservablePoint).set(0.5, 0);
                 }
-                this.contentView.x = dialogWidth / 2;
+                this.contentBody.x = this.dialogWidth / 2;
             }
             else
             {
-                this.contentView = this.options.content;
+                this.contentBody = this.options.content;
             }
 
-            this.contentView.y = yOffset;
-            this.contentContainer.addChild(this.contentView);
+            this.contentBody.y = yOffset;
+            this.contentView.addChild(this.contentBody);
         }
     }
 
-    /** Creates the buttons at the bottom of the dialog. */
-    protected createButtons(): void
+    /** Initializes the buttons at the bottom of the dialog. */
+    protected initButtons(): void
     {
         if (!this.options.buttons || this.options.buttons.length === 0)
         {
@@ -269,7 +289,6 @@ export class Dialog extends Container
         }
 
         const buttonConfigs = this.options.buttons;
-        const padding = this.options.padding ?? 20;
         const buttonSpacing = 10;
 
         buttonConfigs.forEach((btnConfig, index) =>
@@ -294,7 +313,7 @@ export class Dialog extends Container
             });
 
             this.buttons.push(button);
-            this.buttonsContainer.addChild(button);
+            this.buttonContainer.addChild(button);
         });
 
         let totalButtonWidth = 0;
@@ -308,10 +327,7 @@ export class Dialog extends Container
             }
         });
 
-        const dialogWidth = this.options.width ?? this.dialogContainer?.width ?? 0;
-        const dialogHeight = this.options.height ?? this.dialogContainer?.height ?? 0;
-
-        const startX = (dialogWidth - totalButtonWidth) / 2;
+        const buttonStartX = (this.dialogWidth - totalButtonWidth) / 2;
         let currentX = 0;
 
         this.buttons.forEach((btn) =>
@@ -320,54 +336,47 @@ export class Dialog extends Container
             currentX += btn.width + buttonSpacing;
         });
 
-        this.buttonsContainer.x = startX;
+        this.buttonContainer.x = buttonStartX;
+        this.buttonContainer.y = this.dialogHeight - this.buttons[0].height - this.dialogPadding;
 
-        if (this.buttons.length > 0)
-        {
-            this.buttonsContainer.y = dialogHeight - this.buttons[0].height - padding;
-        }
-
-        if (this.buttons.length > 0)
-        {
-            this.contentContainer.addChild(this.buttonsContainer);
-        }
+        this.contentView.addChild(this.buttonContainer);
     }
 
     /** Opens the dialog with animation. */
     open(): void
     {
-        if (!this.dialogContainer) return;
+        if (!this.innerView) return;
 
         this.visible = true;
-        this.isOpen = true;
+        this._isOpen = true;
 
         this.backdrop.alpha = 0;
-        this.dialogContainer.scale.set(0.8);
+        this.innerView.scale.set(0.8);
 
         new Tween(this.backdrop)
-            .to({ alpha: this.options.backdropAlpha ?? 0.5 }, this.animationDuration)
+            .to({ alpha: this.options.backdropAlpha ?? 0.5 }, this._animationDuration)
             .start();
 
-        new Tween(this.dialogContainer.scale)
-            .to({ x: 1, y: 1 }, this.animationDuration)
+        new Tween(this.innerView.scale)
+            .to({ x: 1, y: 1 }, this._animationDuration)
             .start();
     }
 
     /** Closes the dialog with animation. */
     close(): void
     {
-        if (!this.dialogContainer) return;
+        if (!this.innerView) return;
 
         new Tween(this.backdrop)
-            .to({ alpha: 0 }, this.animationDuration)
+            .to({ alpha: 0 }, this._animationDuration)
             .start();
 
-        new Tween(this.dialogContainer.scale)
-            .to({ x: 0.8, y: 0.8 }, this.animationDuration)
+        new Tween(this.innerView.scale)
+            .to({ x: 0.8, y: 0.8 }, this._animationDuration)
             .onComplete(() =>
             {
                 this.visible = false;
-                this.isOpen = false;
+                this._isOpen = false;
             })
             .start();
     }
