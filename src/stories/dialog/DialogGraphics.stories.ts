@@ -1,26 +1,32 @@
 import { Graphics, Text } from 'pixi.js';
-import { PixiStory } from '@pixi/storybook-renderer';
+import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
+import { getColor } from '../utils/color';
 import { action } from '@storybook/addon-actions';
 
-import type { StoryContext } from '@pixi/storybook-renderer';
-
-const defaultArgs = {
+const args = {
     width: 400,
     height: 300,
     radius: 20,
     padding: 20,
-    backgroundColor: 0xFFFFFF,
-    backdropColor: 0x000000,
+    backgroundColor: colors.pannelColor,
+    backgroundBorderColor: colors.pannelBorderColor,
+    backdropColor: '#000000',
     backdropAlpha: 0.5,
-    titleColor: 0x000000,
-    contentColor: 0x333333,
+    titleColor: colors.textColor,
+    contentColor: colors.textColor,
+    buttonColor: colors.color,
+    buttonHoverColor: colors.hoverColor,
+    buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
+    animationDuration: 300,
+    disableAnimations: false,
 };
 
-type Args = typeof defaultArgs;
+type Args = typeof args;
 
 export const SimpleAlert = {
     render: (args: Args, ctx: StoryContext) =>
@@ -34,26 +40,35 @@ export const SimpleAlert = {
                     radius,
                     padding,
                     backgroundColor,
+                    backgroundBorderColor,
                     backdropColor,
                     backdropAlpha,
                     titleColor,
                     contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(backgroundColor),
-                    backdrop: new Graphics()
-                        .rect(0, 0, 10000, 10000)
-                        .fill({ color: backdropColor, alpha: backdropAlpha }),
+                        .fill(backgroundColor)
+                        .stroke({
+                            color: backgroundBorderColor,
+                            width: 1,
+                        }),
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Alert',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -61,7 +76,7 @@ export const SimpleAlert = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: contentColor,
+                            fill: getColor(contentColor),
                         },
                     }),
                     buttons: [{ text: 'OK' }],
@@ -69,6 +84,11 @@ export const SimpleAlert = {
                     height,
                     padding,
                     radius,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -81,7 +101,7 @@ export const SimpleAlert = {
             },
             resize: centerView,
         }),
-    args: defaultArgs,
+    args: getDefaultArgs(args),
 };
 
 export const ConfirmDialog = {
@@ -96,27 +116,36 @@ export const ConfirmDialog = {
                     radius,
                     padding,
                     backgroundColor,
+                    backgroundBorderColor,
                     backdropColor,
                     backdropAlpha,
                     titleColor,
                     contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(backgroundColor),
-                    backdrop: new Graphics()
-                        .rect(0, 0, 10000, 10000)
-                        .fill({ color: backdropColor, alpha: backdropAlpha }),
+                        .fill(backgroundColor)
+                        .stroke({
+                            color: backgroundBorderColor,
+                            width: 1,
+                        }),
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Confirm Action',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -124,18 +153,20 @@ export const ConfirmDialog = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: contentColor,
+                            fill: getColor(contentColor),
                         },
                     }),
-                    buttons: [
-                        { text: 'Cancel' },
-                        { text: 'Confirm' },
-                    ],
+                    buttons: [{ text: 'Cancel' }, { text: 'Confirm' }],
                     width,
                     height,
                     padding,
                     radius,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -149,7 +180,7 @@ export const ConfirmDialog = {
             resize: centerView,
         }),
     args: {
-        ...defaultArgs,
+        ...getDefaultArgs(args),
         closeOnBackdropClick: true,
     },
 };
@@ -166,26 +197,35 @@ export const ThreeButtons = {
                     radius,
                     padding,
                     backgroundColor,
+                    backgroundBorderColor,
                     backdropColor,
                     backdropAlpha,
                     titleColor,
                     contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, radius)
-                        .fill(backgroundColor),
-                    backdrop: new Graphics()
-                        .rect(0, 0, 10000, 10000)
-                        .fill({ color: backdropColor, alpha: backdropAlpha }),
+                        .fill(backgroundColor)
+                        .stroke({
+                            color: backgroundBorderColor,
+                            width: 1,
+                        }),
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Choose Action',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -193,18 +233,19 @@ export const ThreeButtons = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: contentColor,
+                            fill: getColor(contentColor),
                         },
                     }),
-                    buttons: [
-                        { text: 'Yes' },
-                        { text: 'No' },
-                        { text: 'Cancel' },
-                    ],
+                    buttons: [{ text: 'Yes' }, { text: 'No' }, { text: 'Cancel' }],
                     width,
                     height,
                     padding,
                     radius,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -217,22 +258,11 @@ export const ThreeButtons = {
             },
             resize: centerView,
         }),
-    args: defaultArgs,
+    args: getDefaultArgs(args),
 };
 
 export default {
     title: 'Components/Dialog/Use Graphics',
-    argTypes: {
-        width: { control: { type: 'range', min: 200, max: 800, step: 10 } },
-        height: { control: { type: 'range', min: 150, max: 600, step: 10 } },
-        radius: { control: { type: 'range', min: 0, max: 50, step: 5 } },
-        padding: { control: { type: 'range', min: 10, max: 50, step: 5 } },
-        backgroundColor: { control: 'color' },
-        backdropColor: { control: 'color' },
-        backdropAlpha: { control: { type: 'range', min: 0, max: 1, step: 0.1 } },
-        titleColor: { control: 'color' },
-        contentColor: { control: 'color' },
-        closeOnBackdropClick: { control: 'boolean' },
-    },
-    args: defaultArgs,
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args),
 };

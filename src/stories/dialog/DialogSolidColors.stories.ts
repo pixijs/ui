@@ -1,25 +1,31 @@
 import { Graphics, Text } from 'pixi.js';
-import { PixiStory } from '@pixi/storybook-renderer';
+import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { createBunnyBackdrop } from '../utils/backdrop';
+import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { StoryContext } from '@pixi/storybook-renderer';
-
-const defaultArgs = {
+const args = {
     width: 400,
     height: 300,
     padding: 20,
     backdropAlpha: 0.7,
-    titleColor: 0x000000,
-    contentColor: 0x333333,
+    backgroundColor: colors.pannelColor,
+    titleColor: colors.textColor,
+    contentColor: colors.textColor,
+    buttonColor: colors.color,
+    buttonHoverColor: colors.hoverColor,
+    buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
+    animationDuration: 300,
+    disableAnimations: false,
 };
 
-type Args = typeof defaultArgs;
+type Args = typeof args;
 
 export const WhiteBackground = {
     render: (args: Args, ctx: StoryContext) =>
@@ -31,17 +37,21 @@ export const WhiteBackground = {
                     width,
                     height,
                     padding,
+                    backgroundColor,
                     titleColor,
                     contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 await preload(['bunny.png']);
 
                 const bunnyBackdrop = createBunnyBackdrop(2);
 
-                const bg = new Graphics()
-                    .rect(0, 0, width, height)
-                    .fill(0xFFFFFF);
+                const bg = new Graphics().rect(0, 0, width, height).fill(backgroundColor);
 
                 const dialog = new Dialog({
                     background: bg,
@@ -52,7 +62,7 @@ export const WhiteBackground = {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: titleColor,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -60,13 +70,18 @@ export const WhiteBackground = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: contentColor,
+                            fill: getColor(contentColor),
                         },
                     }),
                     buttons: [{ text: 'OK' }],
                     width,
                     height,
                     padding,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -79,7 +94,7 @@ export const WhiteBackground = {
             },
             resize: centerView,
         }),
-    args: defaultArgs,
+    args: getDefaultArgs(args),
 };
 
 export const BlueBackground = {
@@ -92,45 +107,56 @@ export const BlueBackground = {
                     width,
                     height,
                     padding,
+                    backgroundColor,
+                    titleColor,
+                    contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 await preload(['bunny.png']);
 
                 const bunnyBackdrop = createBunnyBackdrop(-2);
 
-                const bg = new Graphics()
-                    .rect(0, 0, width, height)
-                    .fill(0x4A90E2);
+                const bg = new Graphics().rect(0, 0, width, height).fill(backgroundColor);
 
                 const dialog = new Dialog({
                     background: bg,
                     backdrop: bunnyBackdrop,
                     title: new Text({
-                        text: 'Confirm',
+                        text: 'Confirm Action',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: 0xFFFFFF,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
-                        text: 'Do you want to save your changes?',
+                        text: 'Are you sure you want to proceed?',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: 0xFFFFFF,
+                            fill: getColor(contentColor),
                         },
                     }),
                     buttons: [
                         { text: 'Cancel' },
-                        { text: 'Save' },
+                        { text: 'Confirm' },
                     ],
                     width,
                     height,
                     padding,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -144,21 +170,13 @@ export const BlueBackground = {
             resize: centerView,
         }),
     args: {
-        ...defaultArgs,
+        ...getDefaultArgs(args),
         closeOnBackdropClick: true,
     },
 };
 
 export default {
     title: 'Components/Dialog/Use Solid Colors',
-    argTypes: {
-        width: { control: { type: 'range', min: 200, max: 800, step: 10 } },
-        height: { control: { type: 'range', min: 150, max: 600, step: 10 } },
-        padding: { control: { type: 'range', min: 10, max: 50, step: 5 } },
-        backdropAlpha: { control: { type: 'range', min: 0, max: 1, step: 0.1 } },
-        titleColor: { control: 'color' },
-        contentColor: { control: 'color' },
-        closeOnBackdropClick: { control: 'boolean' },
-    },
-    args: defaultArgs,
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args),
 };

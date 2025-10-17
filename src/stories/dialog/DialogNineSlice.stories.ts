@@ -1,25 +1,30 @@
 import { Text, Texture } from 'pixi.js';
-import { PixiStory } from '@pixi/storybook-renderer';
+import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
-import { defaultTextStyle } from '../../utils/helpers/styles';
+import { colors, defaultTextStyle } from '../../utils/helpers/styles';
+import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { createBunnyBackdrop } from '../utils/backdrop';
+import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
-import type { StoryContext } from '@pixi/storybook-renderer';
-
-const defaultArgs = {
+const args = {
     width: 500,
     height: 350,
     padding: 30,
     backdropAlpha: 0.7,
-    titleColor: 0xFFFFFF,
-    contentColor: 0xEEEEEE,
+    titleColor: colors.textColor,
+    contentColor: colors.textColor,
+    buttonColor: colors.color,
+    buttonHoverColor: colors.hoverColor,
+    buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
+    animationDuration: 300,
+    disableAnimations: false,
 };
 
-type Args = typeof defaultArgs;
+type Args = typeof args;
 
 export const NineSliceBackground = {
     render: (args: Args, ctx: StoryContext) =>
@@ -31,6 +36,13 @@ export const NineSliceBackground = {
                     width,
                     height,
                     padding,
+                    titleColor,
+                    contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 await preload(['button_blue.png', 'bunny.png']);
@@ -47,7 +59,7 @@ export const NineSliceBackground = {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: 0xFFFFFF,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -55,13 +67,18 @@ export const NineSliceBackground = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: 0xFFFFFF,
+                            fill: getColor(contentColor),
                         },
                     }),
-                    buttons: [{ text: '👍Amazing!' }],
+                    buttons: [{ text: '👍 Amazing!' }],
                     width,
                     height,
                     padding,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -74,7 +91,7 @@ export const NineSliceBackground = {
             },
             resize: centerView,
         }),
-    args: defaultArgs,
+    args: getDefaultArgs(args),
 };
 
 export const NineSliceConfirm = {
@@ -87,7 +104,14 @@ export const NineSliceConfirm = {
                     width,
                     height,
                     padding,
+                    titleColor,
+                    contentColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 } = args;
 
                 await preload(['button_green.png', 'bunny.png']);
@@ -104,7 +128,7 @@ export const NineSliceConfirm = {
                             ...defaultTextStyle,
                             fontSize: 24,
                             fontWeight: 'bold',
-                            fill: 0xFFFFFF,
+                            fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
@@ -112,7 +136,7 @@ export const NineSliceConfirm = {
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
-                            fill: 0xFFFFFF,
+                            fill: getColor(contentColor),
                         },
                     }),
                     buttons: [
@@ -122,7 +146,12 @@ export const NineSliceConfirm = {
                     width,
                     height,
                     padding,
+                    buttonColor: getColor(buttonColor),
+                    buttonHoverColor: getColor(buttonHoverColor),
+                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
+                    animationDuration,
+                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -136,21 +165,13 @@ export const NineSliceConfirm = {
             resize: centerView,
         }),
     args: {
-        ...defaultArgs,
+        ...getDefaultArgs(args),
         closeOnBackdropClick: true,
     },
 };
 
 export default {
     title: 'Components/Dialog/Use NineSliceSprite',
-    argTypes: {
-        width: { control: { type: 'range', min: 300, max: 800, step: 10 } },
-        height: { control: { type: 'range', min: 200, max: 600, step: 10 } },
-        padding: { control: { type: 'range', min: 10, max: 50, step: 5 } },
-        backdropAlpha: { control: { type: 'range', min: 0, max: 1, step: 0.1 } },
-        titleColor: { control: 'color' },
-        contentColor: { control: 'color' },
-        closeOnBackdropClick: { control: 'boolean' },
-    },
-    args: defaultArgs,
+    argTypes: argTypes(args),
+    args: getDefaultArgs(args),
 };
