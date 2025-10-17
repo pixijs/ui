@@ -1,4 +1,4 @@
-import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
+import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, TextStyleOptions, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
@@ -8,6 +8,7 @@ import { getView, type GetViewSettings } from './utils/helpers/view';
 
 export type DialogButton = {
     text: AnyText;
+    button?: FancyButton;
 };
 
 export type DialogOptions = {
@@ -24,8 +25,15 @@ export type DialogOptions = {
     buttons?: DialogButton[];
     scrollBox?: ScrollBoxOptions;
     animationDuration?: number;
+    disableAnimations?: boolean;
     closeOnBackdropClick?: boolean;
     nineSliceSprite?: [number, number, number, number];
+    buttonWidth?: number;
+    buttonHeight?: number;
+    buttonColor?: number;
+    buttonHoverColor?: number;
+    buttonPressedColor?: number;
+    buttonTextStyle?: TextStyleOptions;
 };
 
 /**
@@ -290,15 +298,48 @@ export class Dialog extends Container
 
         const buttonConfigs = this.options.buttons;
         const buttonSpacing = 10;
+        const defaultButtonWidth = this.options.buttonWidth ?? 100;
+        const defaultButtonHeight = this.options.buttonHeight ?? 40;
+        const defaultButtonColor = this.options.buttonColor ?? 0xA5E24D;
+        const defaultButtonHoverColor = this.options.buttonHoverColor;
+        const defaultButtonPressedColor = this.options.buttonPressedColor;
 
         buttonConfigs.forEach((btnConfig, index) =>
         {
-            const button = new FancyButton({
-                defaultView: new Graphics()
-                    .roundRect(0, 0, 100, 40, this.options.radius ?? 10)
-                    .fill(0xA5E24D),
-                text: btnConfig.text,
-            });
+            let button: FancyButton;
+
+            // Use provided button instance or create a new one
+            if (btnConfig.button)
+            {
+                button = btnConfig.button;
+            }
+            else
+            {
+                const buttonOptions: any = {
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
+                        .fill(defaultButtonColor),
+                    text: btnConfig.text,
+                };
+
+                // Add hover view if color is specified
+                if (defaultButtonHoverColor)
+                {
+                    buttonOptions.hoverView = new Graphics()
+                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
+                        .fill(defaultButtonHoverColor);
+                }
+
+                // Add pressed view if color is specified
+                if (defaultButtonPressedColor)
+                {
+                    buttonOptions.pressedView = new Graphics()
+                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
+                        .fill(defaultButtonPressedColor);
+                }
+
+                button = new FancyButton(buttonOptions);
+            }
 
             button.anchor.set(0);
 
@@ -350,6 +391,14 @@ export class Dialog extends Container
         this.visible = true;
         this._isOpen = true;
 
+        if (this.options.disableAnimations)
+        {
+            this.backdrop.alpha = this.options.backdropAlpha ?? 0.5;
+            this.innerView.scale.set(1);
+
+            return;
+        }
+
         this.backdrop.alpha = 0;
         this.innerView.scale.set(0.8);
 
@@ -366,6 +415,14 @@ export class Dialog extends Container
     close(): void
     {
         if (!this.innerView) return;
+
+        if (this.options.disableAnimations)
+        {
+            this.visible = false;
+            this._isOpen = false;
+
+            return;
+        }
 
         new Tween(this.backdrop)
             .to({ alpha: 0 }, this._animationDuration)
