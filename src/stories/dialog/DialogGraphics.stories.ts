@@ -1,6 +1,7 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
+import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -121,6 +122,47 @@ export const ConfirmDialog = {
                     closeOnBackdropClick,
                 } = args;
 
+                // Create custom FancyButtons
+                const cancelButton = new FancyButton({
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(0xCCCCCC),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(0xDDDDDD),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(0xAAAAAA),
+                    text: new Text({
+                        text: 'Cancel',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 16,
+                            fill: 0x000000,
+                        },
+                    }),
+                });
+
+                const confirmButton = new FancyButton({
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(getColor(buttonColor)),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(getColor(buttonHoverColor)),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, 100, 40, radius)
+                        .fill(getColor(buttonPressedColor)),
+                    text: new Text({
+                        text: 'Confirm',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 16,
+                            fill: getColor(colors.textColor),
+                        },
+                    }),
+                });
+
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, radius)
@@ -148,14 +190,14 @@ export const ConfirmDialog = {
                             fill: getColor(contentColor),
                         },
                     }),
-                    buttons: [{ text: 'Cancel' }, { text: 'Confirm' }],
+                    buttons: [
+                        { text: 'Cancel', button: cancelButton },
+                        { text: 'Confirm', button: confirmButton },
+                    ],
                     width,
                     height,
                     padding,
                     radius,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
                     animations: {
                         open: { props: {}, duration: 300 },
