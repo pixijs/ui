@@ -21,8 +21,6 @@ const args = {
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
-    animationDuration: 300,
-    disableAnimations: false,
 };
 
 type Args = typeof args;
@@ -43,8 +41,6 @@ export const WhiteBackground = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 await preload(['bunny.png']);
@@ -80,8 +76,6 @@ export const WhiteBackground = {
                     buttonColor: getColor(buttonColor),
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
-                    animationDuration,
-                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -114,8 +108,6 @@ export const BlueBackground = {
                     buttonHoverColor,
                     buttonPressedColor,
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 await preload(['bunny.png']);
@@ -155,8 +147,10 @@ export const BlueBackground = {
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>

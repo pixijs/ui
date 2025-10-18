@@ -11,6 +11,11 @@ export type DialogButton = {
     button?: FancyButton;
 };
 
+type Animation = {
+    props: Record<string, any>;
+    duration?: number;
+};
+
 export type DialogOptions = {
     backdrop?: GetViewSettings;
     backdropColor?: number;
@@ -24,8 +29,10 @@ export type DialogOptions = {
     radius?: number;
     buttons?: DialogButton[];
     scrollBox?: ScrollBoxOptions;
-    animationDuration?: number;
-    disableAnimations?: boolean;
+    animations?: {
+        open?: Animation;
+        close?: Animation;
+    };
     closeOnBackdropClick?: boolean;
     nineSliceSprite?: [number, number, number, number];
     buttonWidth?: number;
@@ -67,7 +74,6 @@ export class Dialog extends Container
     protected readonly options: DialogOptions;
 
     protected _isOpen: boolean = false;
-    protected _animationDuration: number = 300;
 
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
@@ -78,7 +84,6 @@ export class Dialog extends Container
 
         this.options = options;
         this.onSelect = new Signal();
-        this._animationDuration = options.animationDuration ?? 300;
 
         this.backdrop = new Container();
         this.contentView = new Container();
@@ -391,23 +396,29 @@ export class Dialog extends Container
         this.visible = true;
         this._isOpen = true;
 
-        if (this.options.disableAnimations)
+        const openAnimation = this.options.animations?.open;
+
+        if (!openAnimation)
         {
+            // No animation - set immediately
             this.backdrop.alpha = this.options.backdropAlpha ?? 0.5;
             this.innerView.scale.set(1);
 
             return;
         }
 
+        // Use animation
         this.backdrop.alpha = 0;
         this.innerView.scale.set(0.8);
 
+        const duration = openAnimation.duration ?? 300;
+
         new Tween(this.backdrop)
-            .to({ alpha: this.options.backdropAlpha ?? 0.5 }, this._animationDuration)
+            .to({ alpha: this.options.backdropAlpha ?? 0.5 }, duration)
             .start();
 
         new Tween(this.innerView.scale)
-            .to({ x: 1, y: 1 }, this._animationDuration)
+            .to({ x: 1, y: 1 }, duration)
             .start();
     }
 
@@ -416,20 +427,26 @@ export class Dialog extends Container
     {
         if (!this.innerView) return;
 
-        if (this.options.disableAnimations)
+        const closeAnimation = this.options.animations?.close;
+
+        if (!closeAnimation)
         {
+            // No animation - set immediately
             this.visible = false;
             this._isOpen = false;
 
             return;
         }
 
+        // Use animation
+        const duration = closeAnimation.duration ?? 300;
+
         new Tween(this.backdrop)
-            .to({ alpha: 0 }, this._animationDuration)
+            .to({ alpha: 0 }, duration)
             .start();
 
         new Tween(this.innerView.scale)
-            .to({ x: 0.8, y: 0.8 }, this._animationDuration)
+            .to({ x: 0.8, y: 0.8 }, duration)
             .onComplete(() =>
             {
                 this.visible = false;

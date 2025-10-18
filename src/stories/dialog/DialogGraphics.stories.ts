@@ -22,8 +22,6 @@ const args = {
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
-    animationDuration: 300,
-    disableAnimations: false,
 };
 
 type Args = typeof args;
@@ -48,8 +46,6 @@ export const SimpleAlert = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
@@ -87,8 +83,6 @@ export const SimpleAlert = {
                     buttonColor: getColor(buttonColor),
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
-                    animationDuration,
-                    disableAnimations,
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -125,8 +119,6 @@ export const ConfirmDialog = {
                     buttonHoverColor,
                     buttonPressedColor,
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
@@ -165,8 +157,10 @@ export const ConfirmDialog = {
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -205,8 +199,6 @@ export const ThreeButtons = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 const dialog = new Dialog({
@@ -244,8 +236,10 @@ export const ThreeButtons = {
                     buttonColor: getColor(buttonColor),
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>

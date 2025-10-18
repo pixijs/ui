@@ -21,8 +21,6 @@ const args = {
     buttonColor: colors.color,
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
-    animationDuration: 300,
-    disableAnimations: false,
 };
 
 type Args = typeof args;
@@ -44,8 +42,6 @@ export const LetterGridSelector = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 const letterGrid = new Container();
@@ -117,8 +113,10 @@ export const LetterGridSelector = {
                         width: width - (padding * 4),
                         height: 280,
                     },
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 letterButtons.forEach(({ button, letter }) =>
@@ -152,8 +150,6 @@ const swapDialogArgs = {
     buttonColor: colors.color,
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
-    animationDuration: 300,
-    disableAnimations: false,
 };
 
 type SwapArgs = typeof swapDialogArgs;
@@ -178,8 +174,6 @@ export const CheckboxSwapDialog = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 const selectedLetters = new Set<string>();
@@ -256,8 +250,10 @@ export const CheckboxSwapDialog = {
                         width: width - (padding * 4),
                         height: 230,
                     },
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 const swapButton = (dialog as any).buttons[1];

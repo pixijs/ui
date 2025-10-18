@@ -20,8 +20,6 @@ const args = {
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
     closeOnBackdropClick: false,
-    animationDuration: 300,
-    disableAnimations: false,
 };
 
 type Args = typeof args;
@@ -41,8 +39,6 @@ export const NineSliceBackground = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 await preload(['button_blue.png', 'bunny.png']);
@@ -77,8 +73,10 @@ export const NineSliceBackground = {
                     buttonColor: getColor(buttonColor),
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -110,8 +108,6 @@ export const NineSliceConfirm = {
                     buttonHoverColor,
                     buttonPressedColor,
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
                 } = args;
 
                 await preload(['button_green.png', 'bunny.png']);
@@ -150,8 +146,10 @@ export const NineSliceConfirm = {
                     buttonHoverColor: getColor(buttonHoverColor),
                     buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
-                    animationDuration,
-                    disableAnimations,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>
