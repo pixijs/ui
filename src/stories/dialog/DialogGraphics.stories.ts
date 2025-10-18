@@ -122,45 +122,89 @@ export const ConfirmDialog = {
                     closeOnBackdropClick,
                 } = args;
 
-                // Create custom FancyButtons
+                // Create custom FancyButtons with animations
                 const cancelButton = new FancyButton({
                     defaultView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
-                        .fill(0xCCCCCC),
+                        .roundRect(0, 0, 120, 50, radius)
+                        .fill(0x6C757D),
                     hoverView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
-                        .fill(0xDDDDDD),
+                        .roundRect(0, 0, 120, 50, radius)
+                        .fill(0x5A6268),
                     pressedView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
-                        .fill(0xAAAAAA),
+                        .roundRect(0, 0, 120, 50, radius)
+                        .fill(0x545B62),
                     text: new Text({
-                        text: 'Cancel',
+                        text: '✖ Cancel',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 16,
-                            fill: 0x000000,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            fill: 0xFFFFFF,
                         },
                     }),
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: {
+                                    x: 1.03,
+                                    y: 1.03,
+                                },
+                                y: -2,
+                            },
+                            duration: 100,
+                        },
+                        pressed: {
+                            props: {
+                                scale: {
+                                    x: 0.95,
+                                    y: 0.95,
+                                },
+                            },
+                            duration: 100,
+                        },
+                    },
                 });
 
                 const confirmButton = new FancyButton({
                     defaultView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
+                        .roundRect(0, 0, 120, 50, radius)
                         .fill(getColor(buttonColor)),
                     hoverView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
+                        .roundRect(0, 0, 120, 50, radius)
                         .fill(getColor(buttonHoverColor)),
                     pressedView: new Graphics()
-                        .roundRect(0, 0, 100, 40, radius)
+                        .roundRect(0, 0, 120, 50, radius)
                         .fill(getColor(buttonPressedColor)),
                     text: new Text({
-                        text: 'Confirm',
+                        text: '✓ Confirm',
                         style: {
                             ...defaultTextStyle,
-                            fontSize: 16,
+                            fontSize: 18,
+                            fontWeight: 'bold',
                             fill: getColor(colors.textColor),
                         },
                     }),
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: {
+                                    x: 1.03,
+                                    y: 1.03,
+                                },
+                                y: -2,
+                            },
+                            duration: 100,
+                        },
+                        pressed: {
+                            props: {
+                                scale: {
+                                    x: 0.95,
+                                    y: 0.95,
+                                },
+                            },
+                            duration: 100,
+                        },
+                    },
                 });
 
                 const dialog = new Dialog({
