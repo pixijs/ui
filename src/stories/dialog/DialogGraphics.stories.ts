@@ -47,6 +47,7 @@ export const SimpleAlert = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
+                    closeOnBackdropClick
                 } = args;
 
                 const dialog = new Dialog({
@@ -76,6 +77,7 @@ export const SimpleAlert = {
                             fill: getColor(contentColor),
                         },
                     }),
+                    closeOnBackdropClick,
                     buttons: [{ text: 'OK' }],
                     width,
                     height,
@@ -285,6 +287,7 @@ export const ThreeButtons = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
+                    closeOnBackdropClick
                 } = args;
 
                 const dialog = new Dialog({
@@ -314,6 +317,7 @@ export const ThreeButtons = {
                             fill: getColor(contentColor),
                         },
                     }),
+                    closeOnBackdropClick,
                     buttons: [{ text: 'Yes' }, { text: 'No' }, { text: 'Cancel' }],
                     width,
                     height,
