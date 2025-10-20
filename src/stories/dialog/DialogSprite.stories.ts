@@ -171,9 +171,6 @@ export const CheckboxSwapDialog = {
                     checkboxUncheckedColor,
                     checkboxCheckedColor,
                     checkboxTextColor,
-                    buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                 } = args;
 
                 const selectedLetters = new Set<string>();
@@ -243,9 +240,6 @@ export const CheckboxSwapDialog = {
                     width,
                     height,
                     padding,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     scrollBox: {
                         width: width - (padding * 4),
                         height: 230,

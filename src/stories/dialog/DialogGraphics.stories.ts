@@ -1,7 +1,7 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
+import { Button } from '../../Button';
 import { Dialog } from '../../Dialog';
-import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -45,10 +45,31 @@ export const SimpleAlert = {
                     titleColor,
                     contentColor,
                     buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                     closeOnBackdropClick
                 } = args;
+
+                const buttonBg = new Graphics();
+                const button = new Button(buttonBg);
+
+                const textInstance = new Text({
+                    text: 'OK',
+                    style: {
+                        ...defaultTextStyle,
+                        fill: defaultTextStyle.fill,
+                        fontSize: 22,
+                    },
+                });
+
+                buttonBg
+                    .clear()
+                    .roundRect(0, 0, 150, 40, radius)
+                    .fill(buttonColor);
+
+                textInstance.x = buttonBg.width / 2;
+                textInstance.y = buttonBg.height / 2;
+                textInstance.anchor.set(0.5);
+
+                buttonBg.addChild(textInstance);
 
                 const dialog = new Dialog({
                     background: new Graphics()
@@ -60,6 +81,7 @@ export const SimpleAlert = {
                         }),
                     backdropColor: getColor(backdropColor),
                     backdropAlpha,
+                    padding,
                     title: new Text({
                         text: 'Alert',
                         style: {
@@ -78,14 +100,9 @@ export const SimpleAlert = {
                         },
                     }),
                     closeOnBackdropClick,
-                    buttons: [{ text: 'OK' }],
-                    width,
-                    height,
-                    padding,
-                    radius,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
+                    buttons: [
+                        button
+                    ]
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -124,91 +141,6 @@ export const ConfirmDialog = {
                     closeOnBackdropClick,
                 } = args;
 
-                // Create custom FancyButtons with animations
-                const cancelButton = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(0x6C757D),
-                    hoverView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(0x5A6268),
-                    pressedView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(0x545B62),
-                    text: new Text({
-                        text: '✖ Cancel',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            fill: 0xFFFFFF,
-                        },
-                    }),
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: {
-                                    x: 1.03,
-                                    y: 1.03,
-                                },
-                                y: -2,
-                            },
-                            duration: 100,
-                        },
-                        pressed: {
-                            props: {
-                                scale: {
-                                    x: 0.95,
-                                    y: 0.95,
-                                },
-                            },
-                            duration: 100,
-                        },
-                    },
-                });
-
-                const confirmButton = new FancyButton({
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(getColor(buttonColor)),
-                    hoverView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(getColor(buttonHoverColor)),
-                    pressedView: new Graphics()
-                        .roundRect(0, 0, 120, 50, radius)
-                        .fill(getColor(buttonPressedColor)),
-                    text: new Text({
-                        text: '✓ Confirm',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            fill: getColor(colors.textColor),
-                        },
-                    }),
-                    animations: {
-                        hover: {
-                            props: {
-                                scale: {
-                                    x: 1.03,
-                                    y: 1.03,
-                                },
-                                y: -2,
-                            },
-                            duration: 100,
-                        },
-                        pressed: {
-                            props: {
-                                scale: {
-                                    x: 0.95,
-                                    y: 0.95,
-                                },
-                            },
-                            duration: 100,
-                        },
-                    },
-                });
-
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, radius)
@@ -237,13 +169,95 @@ export const ConfirmDialog = {
                         },
                     }),
                     buttons: [
-                        { text: 'Cancel', button: cancelButton },
-                        { text: 'Confirm', button: confirmButton },
+                        {
+                            text: new Text({
+                                text: '✖ Cancel',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonColor)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonHoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonPressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        },
+                        {
+                            text: new Text({
+                                text: '✓ Confirm',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonColor)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonHoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonPressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        }
                     ],
+                    buttonList: {
+                        elementsMargin: 40,
+                    },
                     width,
                     height,
                     padding,
-                    radius,
                     closeOnBackdropClick,
                     animations: {
                         open: { props: {}, duration: 300 },
@@ -318,14 +332,137 @@ export const ThreeButtons = {
                         },
                     }),
                     closeOnBackdropClick,
-                    buttons: [{ text: 'Yes' }, { text: 'No' }, { text: 'Cancel' }],
+                    buttons: [
+                        {
+                            text: new Text({
+                                text: 'Yes',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonColor)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonHoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonPressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        },
+                        {
+                            text: new Text({
+                                text: 'No',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonColor)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonHoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonPressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        },
+                        {
+                            text: new Text({
+                                text: 'Cancel',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonColor)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonHoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 90, 50, radius)
+                                .fill(getColor(buttonPressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        }
+                    ],
+                    buttonList: {
+                        elementsMargin: 40,
+                    },
                     width,
                     height,
                     padding,
-                    radius,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     animations: {
                         open: { props: {}, duration: 300 },
                         close: { props: {}, duration: 300 },

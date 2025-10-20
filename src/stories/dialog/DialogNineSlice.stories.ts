@@ -36,9 +36,6 @@ export const NineSliceBackground = {
                     padding,
                     titleColor,
                     contentColor,
-                    buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                 } = args;
 
                 await preload(['button_blue.png', 'bunny.png']);
@@ -70,9 +67,6 @@ export const NineSliceBackground = {
                     width,
                     height,
                     padding,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     animations: {
                         open: { props: {}, duration: 300 },
                         close: { props: {}, duration: 300 },
@@ -104,9 +98,6 @@ export const NineSliceConfirm = {
                     padding,
                     titleColor,
                     contentColor,
-                    buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                     closeOnBackdropClick,
                 } = args;
 
@@ -142,9 +133,6 @@ export const NineSliceConfirm = {
                     width,
                     height,
                     padding,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
                     animations: {
                         open: { props: {}, duration: 300 },

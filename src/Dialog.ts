@@ -1,15 +1,12 @@
-import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, TextStyleOptions, Texture, Ticker } from 'pixi.js';
+import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
-import { FancyButton } from './FancyButton';
+import { Button } from './Button';
+import { type ButtonOptions, FancyButton } from './FancyButton';
+import { List, type ListOptions } from './List';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
-
-export type DialogButton = {
-    text: AnyText;
-    button?: FancyButton;
-};
 
 type Animation = {
     props: Record<string, any>;
@@ -26,8 +23,8 @@ export type DialogOptions = {
     width?: number;
     height?: number;
     padding?: number;
-    radius?: number;
-    buttons?: DialogButton[];
+    buttons?: (ButtonOptions | FancyButton | Button)[];
+    buttonList?: ListOptions<Container>;
     scrollBox?: ScrollBoxOptions;
     animations?: {
         open?: Animation;
@@ -35,12 +32,6 @@ export type DialogOptions = {
     };
     closeOnBackdropClick?: boolean;
     nineSliceSprite?: [number, number, number, number];
-    buttonWidth?: number;
-    buttonHeight?: number;
-    buttonColor?: number;
-    buttonHoverColor?: number;
-    buttonPressedColor?: number;
-    buttonTextStyle?: TextStyleOptions;
 };
 
 /**
@@ -68,8 +59,7 @@ export class Dialog extends Container
     protected titleText?: PixiText;
     protected contentBody?: Container;
     protected scrollBox?: ScrollBox;
-    protected buttonContainer: Container;
-    protected buttons: FancyButton[] = [];
+    protected buttonContainer: List;
 
     protected readonly options: DialogOptions;
 
@@ -87,7 +77,10 @@ export class Dialog extends Container
 
         this.backdrop = new Container();
         this.contentView = new Container();
-        this.buttonContainer = new Container();
+        this.buttonContainer = new List({
+            type: 'horizontal',
+            ...options.buttonList,
+        });
 
         this.initBackdrop();
         this.initInnerView();
@@ -303,88 +296,49 @@ export class Dialog extends Container
         }
 
         const buttonConfigs = this.options.buttons;
-        const buttonSpacing = 10;
-        const defaultButtonWidth = this.options.buttonWidth ?? 100;
-        const defaultButtonHeight = this.options.buttonHeight ?? 40;
-        const defaultButtonColor = this.options.buttonColor ?? 0xA5E24D;
-        const defaultButtonHoverColor = this.options.buttonHoverColor;
-        const defaultButtonPressedColor = this.options.buttonPressedColor;
 
-        buttonConfigs.forEach((btnConfig, index) =>
+        buttonConfigs.forEach((btn, index) =>
         {
-            let button: FancyButton;
+            let button: Button | FancyButton;
 
-            // Use provided button instance or create a new one
-            if (btnConfig.button)
+            switch (true)
             {
-                button = btnConfig.button;
-            }
-            else
-            {
-                const buttonOptions: any = {
-                    defaultView: new Graphics()
-                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
-                        .fill(defaultButtonColor),
-                    text: btnConfig.text,
-                };
+                case btn instanceof Button:
+                    btn.onPress.connect(() =>
+                    {
+                        this.onSelect.emit(index, '');
+                        this.close();
+                    });
 
-                // Add hover view if color is specified
-                if (defaultButtonHoverColor !== undefined)
-                {
-                    buttonOptions.hoverView = new Graphics()
-                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
-                        .fill(defaultButtonHoverColor);
-                }
+                    if (btn.view)
+                    {
+                        this.buttonContainer.addChild(btn.view);
+                    }
+                    break;
+                case btn instanceof FancyButton:
+                    btn.onPress.connect(() =>
+                    {
+                        this.onSelect.emit(index, (btn as FancyButton).text ?? '');
+                        this.close();
+                    });
+                    this.buttonContainer.addChild(btn);
+                    break;
 
-                // Add pressed view if color is specified
-                if (defaultButtonPressedColor !== undefined)
-                {
-                    buttonOptions.pressedView = new Graphics()
-                        .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
-                        .fill(defaultButtonPressedColor);
-                }
+                default:
+                    button = new FancyButton(btn);
 
-                button = new FancyButton(buttonOptions);
-            }
-
-            button.anchor.set(0);
-
-            button.onPress.connect(() =>
-            {
-                const buttonText = typeof btnConfig.text === 'string'
-                    ? btnConfig.text
-                    : btnConfig.text.toString();
-
-                this.onSelect.emit(index, buttonText);
-                this.close();
-            });
-
-            this.buttons.push(button);
-            this.buttonContainer.addChild(button);
-        });
-
-        let totalButtonWidth = 0;
-
-        this.buttons.forEach((btn, i) =>
-        {
-            totalButtonWidth += btn.width;
-            if (i < this.buttons.length - 1)
-            {
-                totalButtonWidth += buttonSpacing;
+                    button.onPress.connect(() =>
+                    {
+                        this.onSelect.emit(index, (button as FancyButton).text ?? '');
+                        this.close();
+                    });
+                    this.buttonContainer.addChild(button);
+                    break;
             }
         });
 
-        const buttonStartX = (this.dialogWidth - totalButtonWidth) / 2;
-        let currentX = 0;
-
-        this.buttons.forEach((btn) =>
-        {
-            btn.x = currentX;
-            currentX += btn.width + buttonSpacing;
-        });
-
-        this.buttonContainer.x = buttonStartX;
-        this.buttonContainer.y = this.dialogHeight - this.buttons[0].height - this.dialogPadding;
+        this.buttonContainer.x = (this.dialogWidth / 2) - (this.buttonContainer.width / 2);
+        this.buttonContainer.y = this.dialogHeight - this.dialogPadding - this.buttonContainer.height;
 
         this.contentView.addChild(this.buttonContainer);
     }

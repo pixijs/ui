@@ -38,9 +38,6 @@ export const WhiteBackground = {
                     backgroundColor,
                     titleColor,
                     contentColor,
-                    buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                 } = args;
 
                 await preload(['bunny.png']);
@@ -73,9 +70,6 @@ export const WhiteBackground = {
                     width,
                     height,
                     padding,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -104,9 +98,6 @@ export const BlueBackground = {
                     backgroundColor,
                     titleColor,
                     contentColor,
-                    buttonColor,
-                    buttonHoverColor,
-                    buttonPressedColor,
                     closeOnBackdropClick,
                 } = args;
 
@@ -143,9 +134,6 @@ export const BlueBackground = {
                     width,
                     height,
                     padding,
-                    buttonColor: getColor(buttonColor),
-                    buttonHoverColor: getColor(buttonHoverColor),
-                    buttonPressedColor: getColor(buttonPressedColor),
                     closeOnBackdropClick,
                     animations: {
                         open: { props: {}, duration: 300 },
