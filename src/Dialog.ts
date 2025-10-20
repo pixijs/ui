@@ -329,7 +329,7 @@ export class Dialog extends Container
                 };
 
                 // Add hover view if color is specified
-                if (defaultButtonHoverColor)
+                if (defaultButtonHoverColor !== undefined)
                 {
                     buttonOptions.hoverView = new Graphics()
                         .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
@@ -337,7 +337,7 @@ export class Dialog extends Container
                 }
 
                 // Add pressed view if color is specified
-                if (defaultButtonPressedColor)
+                if (defaultButtonPressedColor !== undefined)
                 {
                     buttonOptions.pressedView = new Graphics()
                         .roundRect(0, 0, defaultButtonWidth, defaultButtonHeight, this.options.radius ?? 10)
