@@ -38,7 +38,7 @@
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
-        "test": "npx jest --silent",
+        "test": "npx jest --silent --passWithNoTests",
         "test:coverage": "npx jest --coverage",
         "types": "xs types",
         "watch": "xs watch"
@@ -54,10 +54,10 @@
             "npm run types"
         ],
         "src/*.{ts,js,mjs}": [
-            "npm run test --silent --passWithNoTests"
+            "npm run test"
         ],
         "tests/components/*.test.ts": [
-            "npm run test --silent --passWithNoTests"
+            "npm run test"
         ]
     },
     "extensionConfig": {

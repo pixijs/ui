@@ -289,6 +289,7 @@ export class Dialog extends Container
             }
 
             this.contentBody.y = yOffset;
+            this.contentBody.x = this.dialogPadding;
             this.contentView.addChild(this.contentBody);
         }
     }
