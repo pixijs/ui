@@ -249,7 +249,7 @@ export class Dialog extends Container
 
         if (this.titleText)
         {
-            yOffset += this.titleText.height + this.dialogPadding;
+            yOffset += this.titleText.height;
         }
 
         if (this.options.scrollBox)
