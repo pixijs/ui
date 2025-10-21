@@ -79,6 +79,7 @@ export class Dialog extends Container
         this.contentView = new Container();
         this.buttonContainer = new List({
             type: 'horizontal',
+            elementsMargin: 10,
             ...options.buttonList,
         });
 
