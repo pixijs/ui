@@ -4,16 +4,15 @@ import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { createBunnyBackdrop } from '../utils/backdrop';
 import { getColor } from '../utils/color';
-import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 const args = {
     width: 400,
     height: 300,
     padding: 20,
-    backdropAlpha: 0.7,
+    backdropColor: '#000000',
+    backdropAlpha: 0.5,
     backgroundColor: colors.pannelColor,
     titleColor: colors.textColor,
     contentColor: colors.textColor,
@@ -29,26 +28,25 @@ export const WhiteBackground = {
     render: (args: Args, ctx: StoryContext) =>
         new PixiStory({
             context: ctx,
-            init: async (view) =>
+            init: (view) =>
             {
                 const {
                     width,
                     height,
                     padding,
+                    backdropColor,
+                    backdropAlpha,
                     backgroundColor,
                     titleColor,
                     contentColor,
                 } = args;
 
-                await preload(['bunny.png']);
-
-                const bunnyBackdrop = createBunnyBackdrop(2);
-
                 const bg = new Graphics().rect(0, 0, width, height).fill(backgroundColor);
 
                 const dialog = new Dialog({
                     background: bg,
-                    backdrop: bunnyBackdrop,
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Simple Dialog',
                         style: {
@@ -89,27 +87,26 @@ export const BlueBackground = {
     render: (args: Args, ctx: StoryContext) =>
         new PixiStory({
             context: ctx,
-            init: async (view) =>
+            init: (view) =>
             {
                 const {
                     width,
                     height,
                     padding,
+                    backdropColor,
+                    backdropAlpha,
                     backgroundColor,
                     titleColor,
                     contentColor,
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['bunny.png']);
-
-                const bunnyBackdrop = createBunnyBackdrop(-2);
-
                 const bg = new Graphics().rect(0, 0, width, height).fill(backgroundColor);
 
                 const dialog = new Dialog({
                     background: bg,
-                    backdrop: bunnyBackdrop,
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Confirm Action',
                         style: {

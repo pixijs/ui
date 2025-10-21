@@ -4,7 +4,6 @@ import { Dialog } from '../../Dialog';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
-import { createBunnyBackdrop } from '../utils/backdrop';
 import { getColor } from '../utils/color';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
@@ -13,7 +12,8 @@ const args = {
     width: 500,
     height: 350,
     padding: 30,
-    backdropAlpha: 0.7,
+    backdropColor: '#000000',
+    backdropAlpha: 0.5,
     titleColor: colors.textColor,
     contentColor: colors.textColor,
     buttonColor: colors.color,
@@ -34,18 +34,19 @@ export const NineSliceBackground = {
                     width,
                     height,
                     padding,
+                    backdropColor,
+                    backdropAlpha,
                     titleColor,
                     contentColor,
                 } = args;
 
-                await preload(['button_blue.png', 'bunny.png']);
-
-                const bunnyBackdrop = createBunnyBackdrop(2);
+                await preload(['button_blue.png']);
 
                 const dialog = new Dialog({
                     background: Texture.from('button_blue.png'),
                     nineSliceSprite: [25, 20, 25, 20],
-                    backdrop: bunnyBackdrop,
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Fancy Dialog',
                         style: {
@@ -96,19 +97,20 @@ export const NineSliceConfirm = {
                     width,
                     height,
                     padding,
+                    backdropColor,
+                    backdropAlpha,
                     titleColor,
                     contentColor,
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['button_green.png', 'bunny.png']);
-
-                const bunnyBackdrop = createBunnyBackdrop(-2);
+                await preload(['button_green.png']);
 
                 const dialog = new Dialog({
                     background: Texture.from('button_green.png'),
                     nineSliceSprite: [25, 20, 25, 20],
-                    backdrop: bunnyBackdrop,
+                    backdropColor: getColor(backdropColor),
+                    backdropAlpha,
                     title: new Text({
                         text: 'Confirm Action',
                         style: {
