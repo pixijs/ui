@@ -167,6 +167,9 @@ export const CheckboxSwapDialog = {
                     checkboxUncheckedColor,
                     checkboxCheckedColor,
                     checkboxTextColor,
+                    buttonColor,
+                    buttonHoverColor,
+                    buttonPressedColor,
                 } = args;
 
                 const selectedLetters = new Set<string>();
@@ -213,8 +216,31 @@ export const CheckboxSwapDialog = {
                     checkboxContainer.addChild(checkbox);
                 });
 
-                const cancelButton = new FancyButton({ text: 'Cancel' });
-                const swapButton = new FancyButton({ text: 'Swap' });
+                const cancelButton = new FancyButton({
+                    text: 'Cancel',
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonColor),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonHoverColor),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonPressedColor),
+                });
+
+                const swapButton = new FancyButton({
+                    text: 'Swap',
+                    defaultView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonColor),
+                    hoverView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonHoverColor),
+                    pressedView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonPressedColor),
+                });
 
                 const dialog = new Dialog({
                     background: new Graphics()
@@ -236,6 +262,9 @@ export const CheckboxSwapDialog = {
                         cancelButton,
                         swapButton,
                     ],
+                    buttonList: {
+                        elementsMargin: 10,
+                    },
                     width,
                     height,
                     padding,
