@@ -1,5 +1,9 @@
-// From a very good answer about pseudo random numbers on stack overflow
-// https://stackoverflow.com/a/47593316
+/**
+ * Creates a hash function from a string seed (xmur3 algorithm)
+ * From a very good answer about pseudo random numbers: https://stackoverflow.com/a/47593316
+ * @param str - The seed string
+ * @returns A function that returns deterministic hash values
+ */
 function xmur3(str: string): () => number
 {
     let h = 1779033703 ^ str.length;
@@ -19,6 +23,12 @@ function xmur3(str: string): () => number
     };
 }
 
+/**
+ * Creates a pseudo-random number generator (mulberry32 algorithm)
+ * From a very good answer about pseudo random numbers: https://stackoverflow.com/a/47593316
+ * @param a - The seed number
+ * @returns A function that returns pseudo-random numbers between 0 and 1
+ */
 function mulberry32(a: number): () => number
 {
     return (): number =>

@@ -1,5 +1,6 @@
 type Types = { [name: string]: object | number | string | boolean };
 
+/** Predefined Storybook control types */
 const controls = {
     select: {
         control: {
@@ -38,6 +39,11 @@ const controls = {
     },
 };
 
+/**
+ * Generates Storybook argTypes configuration based on argument values
+ * @param args - Object containing default argument values
+ * @returns Object with Storybook argTypes configuration
+ */
 export const argTypes = (args: Types) =>
 {
     const exportArgTypes: any = {};
@@ -177,6 +183,11 @@ export const argTypes = (args: Types) =>
     return exportArgTypes;
 };
 
+/**
+ * Gets the appropriate control type based on the argument name
+ * @param type - The argument name to check
+ * @returns The matching control configuration or undefined
+ */
 function getArgType(type: string)
 {
     for (const control in controls)
@@ -191,6 +202,11 @@ function getArgType(type: string)
     return undefined;
 }
 
+/**
+ * Extracts default values from arguments for Storybook
+ * @param args - Object containing argument values
+ * @returns Object with default values for each argument
+ */
 export const getDefaultArgs = (args: Types) =>
 {
     const exportArgs: any = {};
