@@ -84,10 +84,6 @@ export const LetterGridSelector = {
                     letterGrid.addChild(letterButton);
                 });
 
-                const gridWidth = (cols * buttonSize) + ((cols - 1) * spacing);
-
-                letterGrid.x = (width - gridWidth) / 2;
-
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, 20)
@@ -217,6 +213,9 @@ export const CheckboxSwapDialog = {
                     checkboxContainer.addChild(checkbox);
                 });
 
+                const cancelButton = new FancyButton({ text: 'Cancel' });
+                const swapButton = new FancyButton({ text: 'Swap' });
+
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, 20)
@@ -234,8 +233,8 @@ export const CheckboxSwapDialog = {
                     }),
                     content: checkboxContainer,
                     buttons: [
-                        { text: 'Cancel' },
-                        { text: 'Swap' },
+                        cancelButton,
+                        swapButton,
                     ],
                     width,
                     height,
@@ -249,8 +248,6 @@ export const CheckboxSwapDialog = {
                         close: { props: {}, duration: 300 },
                     },
                 });
-
-                const swapButton = (dialog as any).buttons[1];
 
                 function updateSwapButton()
                 {
