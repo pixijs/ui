@@ -212,6 +212,8 @@ export class Dialog extends Container
             this.innerView.pivot.set(this.dialogWidth / 2, this.dialogHeight / 2);
         }
 
+        this.innerView.eventMode = 'static';
+
         this.addChild(this.innerView);
         this.innerView.addChild(this.contentView);
     }
