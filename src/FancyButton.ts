@@ -128,8 +128,8 @@ export type ButtonOptions = ViewsInput & {
  */
 export class FancyButton extends ButtonContainer
 {
-    protected animations: StateAnimations = {};
-    protected originalInnerViewState: AnimationData = {};
+    protected animations!: StateAnimations;
+    protected originalInnerViewState!: AnimationData;
     protected defaultDuration = 100;
 
     /** FancyButton options. */
@@ -253,6 +253,7 @@ export class FancyButton extends ButtonContainer
         if (animations)
         {
             this.animations = animations;
+            this.setOriginalInnerViewState();
             Ticker.shared.add(() => Group.shared.update());
         }
 
@@ -831,40 +832,6 @@ export class FancyButton extends ButtonContainer
     {
         if (!this.animations) return;
 
-        if (state === 'default' && !this.originalInnerViewState)
-        {
-            this.originalInnerViewState = {
-                x: this.innerView.x,
-                y: this.innerView.y,
-                width: this.innerView.width,
-                height: this.innerView.height,
-                scale: {
-                    x: this.innerView.scale.x,
-                    y: this.innerView.scale.y,
-                },
-            };
-
-            // first animation state is default, so we don't need to animate it
-            // this part will run only once, during initialization
-            const defaultStateAnimation = this.animations?.default;
-
-            if (defaultStateAnimation)
-            {
-                this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x ?? 0;
-                this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y ?? 0;
-                this.innerView.width
-                    = defaultStateAnimation.props.width ?? this.originalInnerViewState.width ?? 0;
-                this.innerView.height
-                    = defaultStateAnimation.props.height ?? this.originalInnerViewState.height ?? 0;
-                this.innerView.scale.x
-                    = defaultStateAnimation.props.scale?.x ?? this.originalInnerViewState.scale?.x ?? 1;
-                this.innerView.scale.y
-                    = defaultStateAnimation.props.scale?.y ?? this.originalInnerViewState.scale?.y ?? 1;
-
-                return;
-            }
-        }
-
         const stateAnimation = this.animations[state] ?? this.animations.default;
 
         if (stateAnimation)
@@ -882,6 +849,38 @@ export class FancyButton extends ButtonContainer
         new Tween(this.innerView).to(this.originalInnerViewState, this.defaultDuration).start();
     }
 
+    protected setOriginalInnerViewState()
+    {
+        this.originalInnerViewState = {
+            x: this.innerView.x,
+            y: this.innerView.y,
+            width: this.innerView.width,
+            height: this.innerView.height,
+            scale: {
+                x: this.innerView.scale.x,
+                y: this.innerView.scale.y,
+            },
+        };
+
+        // first animation state is default, so we don't need to animate it
+        // this part will run only once, during initialization
+        const defaultStateAnimation = this.animations?.default;
+
+        if (defaultStateAnimation)
+        {
+            this.innerView.x = defaultStateAnimation.props.x ?? this.originalInnerViewState.x ?? 0;
+            this.innerView.y = defaultStateAnimation.props.y ?? this.originalInnerViewState.y ?? 0;
+            this.innerView.width
+                = defaultStateAnimation.props.width ?? this.originalInnerViewState.width ?? 0;
+            this.innerView.height
+                = defaultStateAnimation.props.height ?? this.originalInnerViewState.height ?? 0;
+            this.innerView.scale.x
+                = defaultStateAnimation.props.scale?.x ?? this.originalInnerViewState.scale?.x ?? 1;
+            this.innerView.scale.y
+                = defaultStateAnimation.props.scale?.y ?? this.originalInnerViewState.scale?.y ?? 1;
+        }
+    }
+
     protected initStateControl()
     {
         this.onDown.connect(() =>
@@ -891,7 +890,7 @@ export class FancyButton extends ButtonContainer
 
         this.onUp.connect(() =>
         {
-            isMobile.any ? this.setState('default') : this.setState('hover');
+            this.setState(isMobile.any ? 'default' : 'hover');
         });
 
         this.onUpOut.connect(() =>
@@ -909,14 +908,14 @@ export class FancyButton extends ButtonContainer
 
         this.onPress.connect(() =>
         {
-            isMobile.any ? this.setState('default') : this.setState('hover');
+            this.setState(isMobile.any ? 'default' : 'hover');
         });
 
         this.onHover.connect(() =>
         {
             if (!this.button.isDown)
             {
-                isMobile.any ? this.setState('default') : this.setState('hover');
+                this.setState(isMobile.any ? 'default' : 'hover');
             }
         });
     }
