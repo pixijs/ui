@@ -1,4 +1,4 @@
-import { Container, Graphics, Text } from 'pixi.js';
+import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { Dialog } from '../../Dialog';
@@ -11,16 +11,15 @@ import { action } from '@storybook/addon-actions';
 
 const args = {
     width: 500,
-    height: 400,
-    padding: 20,
+    height: 420,
+    padding: 35,
     backgroundColor: colors.pannelColor,
-    backdropColor: '#000000',
-    backdropAlpha: 0.7,
     titleColor: colors.textColor,
     contentColor: colors.textColor,
     buttonColor: colors.color,
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
+    buttonDisabledColor: colors.disabledColor,
 };
 
 type Args = typeof args;
@@ -36,27 +35,29 @@ export const LetterGridSelector = {
                     height,
                     padding,
                     backgroundColor,
-                    backdropColor,
-                    backdropAlpha,
                     titleColor,
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
                 } = args;
 
-                const letterGrid = new Container();
                 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-                const cols = 5;
                 const buttonSize = 60;
-                const spacing = 10;
-                const letterButtons: Array<{ button: FancyButton; letter: string }> = [];
 
-                letters.forEach((letter, index) =>
+                const title = new Text({
+                    text: 'Select a letter',
+                    style: {
+                        ...defaultTextStyle,
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                        fill: getColor(titleColor),
+                        lineHeight: 44,
+                    },
+                });
+
+                const letterButtons: FancyButton[] = letters.map((letter) =>
                 {
-                    const col = index % cols;
-                    const row = Math.floor(index / cols);
-
-                    const letterButton = new FancyButton({
+                    const button = new FancyButton({
                         defaultView: new Graphics()
                             .roundRect(0, 0, buttonSize, buttonSize, 8)
                             .fill(buttonColor),
@@ -74,54 +75,23 @@ export const LetterGridSelector = {
                                 fontWeight: 'bold',
                                 fill: getColor(colors.textColor),
                             },
-                        }),
+                        })
                     });
 
-                    letterButton.x = col * (buttonSize + spacing);
-                    letterButton.y = row * (buttonSize + spacing);
+                    button.onPress.connect(() => action('letterSelected')(letter));
 
-                    letterButtons.push({ button: letterButton, letter });
-                    letterGrid.addChild(letterButton);
+                    return button;
                 });
 
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, 20)
                         .fill(backgroundColor),
-                    backdropColor: getColor(backdropColor),
-                    backdropAlpha,
-                    title: new Text({
-                        text: 'Select a letter',
-                        style: {
-                            ...defaultTextStyle,
-                            fontSize: 24,
-                            fontWeight: 'bold',
-                            fill: getColor(titleColor),
-                        },
-                    }),
-                    content: letterGrid,
+                    title,
+                    content: letterButtons,
                     width,
                     height,
                     padding,
-                    closeOnBackdropClick: true,
-                    buttons: undefined,
-                    scrollBox: {
-                        width: width - (padding * 4),
-                        height: 280,
-                    },
-                    animations: {
-                        open: { props: {}, duration: 300 },
-                        close: { props: {}, duration: 300 },
-                    },
-                });
-
-                letterButtons.forEach(({ button, letter }) =>
-                {
-                    button.onPress.connect(() =>
-                    {
-                        action('letterSelected')(letter);
-                        dialog.close();
-                    });
                 });
 
                 view.addChild(dialog);
@@ -136,9 +106,8 @@ const swapDialogArgs = {
     width: 450,
     height: 400,
     padding: 20,
+    verticalList: false,
     backgroundColor: colors.pannelColor,
-    backdropColor: '#000000',
-    backdropAlpha: 0.7,
     titleColor: colors.textColor,
     checkboxUncheckedColor: colors.pannelBorderColor,
     checkboxCheckedColor: colors.color,
@@ -146,6 +115,7 @@ const swapDialogArgs = {
     buttonColor: colors.color,
     buttonHoverColor: colors.hoverColor,
     buttonPressedColor: colors.pressedColor,
+    buttonDisabledColor: colors.disabledColor,
 };
 
 type SwapArgs = typeof swapDialogArgs;
@@ -160,9 +130,8 @@ export const CheckboxSwapDialog = {
                     width,
                     height,
                     padding,
+                    verticalList,
                     backgroundColor,
-                    backdropColor,
-                    backdropAlpha,
                     titleColor,
                     checkboxUncheckedColor,
                     checkboxCheckedColor,
@@ -170,14 +139,13 @@ export const CheckboxSwapDialog = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
+                    buttonDisabledColor,
                 } = args;
 
                 const selectedLetters = new Set<string>();
 
-                const checkboxContainer = new Container();
                 const letters = 'ABCDEFGHIJ'.split('');
-
-                letters.forEach((letter, index) =>
+                const checkboxes: CheckBox[] = letters.map((letter) =>
                 {
                     const checkbox = new CheckBox({
                         style: {
@@ -197,8 +165,6 @@ export const CheckboxSwapDialog = {
                         text: letter,
                     });
 
-                    checkbox.y = index * 50;
-
                     checkbox.onCheck.connect((checked) =>
                     {
                         if (checked)
@@ -213,11 +179,19 @@ export const CheckboxSwapDialog = {
                         updateSwapButton();
                     });
 
-                    checkboxContainer.addChild(checkbox);
+                    return checkbox;
                 });
 
                 const cancelButton = new FancyButton({
-                    text: 'Cancel',
+                    text: new Text({
+                        text: 'Cancel',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            fill: getColor(titleColor),
+                        },
+                    }),
                     defaultView: new Graphics()
                         .roundRect(0, 0, 100, 40, 10)
                         .fill(buttonColor),
@@ -229,8 +203,21 @@ export const CheckboxSwapDialog = {
                         .fill(buttonPressedColor),
                 });
 
+                cancelButton.onPress.connect(() =>
+                {
+                    checkboxes.forEach((cb) => cb.checked = false);
+                });
+
                 const swapButton = new FancyButton({
-                    text: 'Swap',
+                    text: new Text({
+                        text: 'Swap',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            fill: getColor(titleColor),
+                        },
+                    }),
                     defaultView: new Graphics()
                         .roundRect(0, 0, 100, 40, 10)
                         .fill(buttonColor),
@@ -240,14 +227,15 @@ export const CheckboxSwapDialog = {
                     pressedView: new Graphics()
                         .roundRect(0, 0, 100, 40, 10)
                         .fill(buttonPressedColor),
+                    disabledView: new Graphics()
+                        .roundRect(0, 0, 100, 40, 10)
+                        .fill(buttonDisabledColor),
                 });
 
                 const dialog = new Dialog({
                     background: new Graphics()
                         .roundRect(0, 0, width, height, 20)
                         .fill(backgroundColor),
-                    backdropColor: getColor(backdropColor),
-                    backdropAlpha,
                     title: new Text({
                         text: 'Swap letters',
                         style: {
@@ -257,37 +245,27 @@ export const CheckboxSwapDialog = {
                             fill: getColor(titleColor),
                         },
                     }),
-                    content: checkboxContainer,
+                    content: checkboxes,
                     buttons: [
                         cancelButton,
                         swapButton,
                     ],
+                    scrollBox: {
+                        type: verticalList ? 'vertical' : 'bidirectional',
+                        elementsMargin: verticalList ? 5 : 50,
+                        vertPadding: 30,
+                    },
                     buttonList: {
                         elementsMargin: 10,
                     },
                     width,
                     height,
                     padding,
-                    scrollBox: {
-                        width: width - (padding * 4),
-                        height: 230,
-                    },
-                    animations: {
-                        open: { props: {}, duration: 300 },
-                        close: { props: {}, duration: 300 },
-                    },
                 });
 
                 function updateSwapButton()
                 {
-                    if (selectedLetters.size === 0)
-                    {
-                        swapButton.enabled = false;
-                    }
-                    else
-                    {
-                        swapButton.enabled = true;
-                    }
+                    swapButton.enabled = selectedLetters.size !== 0;
                 }
 
                 updateSwapButton();

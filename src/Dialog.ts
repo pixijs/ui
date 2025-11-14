@@ -19,7 +19,7 @@ export type DialogOptions = {
     backdropAlpha?: number;
     background: GetViewSettings;
     title?: AnyText;
-    content?: AnyText | Container;
+    content?: AnyText | Container | Container[];
     width?: number;
     height?: number;
     padding?: number;
@@ -58,7 +58,7 @@ export class Dialog extends Container
     protected contentView: Container;
     protected titleText?: PixiText;
     protected contentBody?: Container;
-    protected scrollBox?: ScrollBox;
+    protected scrollBox: ScrollBox;
     protected buttonContainer: List;
 
     protected readonly options: DialogOptions;
@@ -86,10 +86,38 @@ export class Dialog extends Container
         this.initBackdrop();
         this.initInnerView();
         this.initTitle();
-        this.initContent();
         this.initButtons();
 
+        const offset = this.dialogPadding;
+        const { width } = this.options;
+        let { height } = this.options;
+
+        if (height)
+        {
+            height = height - (offset * 2) - this.buttonContainer.height;
+
+            if (this.titleText?.height)
+            {
+                height -= this.titleText.height;
+            }
+        }
+
+        this.scrollBox = new ScrollBox({
+            background: 0x000000,
+            elementsMargin: 10,
+            radius: 0,
+            type: 'bidirectional',
+            padding: 10,
+            ...this.options.scrollBox,
+            width: width ? width - (offset * 2) : 0,
+            height,
+        });
+
+        this.innerView?.addChild(this.scrollBox);
+
         this.visible = false;
+
+        this.initContent();
 
         // Setup ticker for tween animations
         Ticker.shared.add(() => Group.shared.update());
@@ -248,46 +276,26 @@ export class Dialog extends Container
             yOffset += this.titleText.height;
         }
 
-        if (this.options.scrollBox)
+        if (typeof this.options.content === 'string' || typeof this.options.content === 'number')
         {
-            this.scrollBox = new ScrollBox(this.options.scrollBox);
+            const textView = getTextView(this.options.content);
 
-            if (typeof this.options.content === 'string' || typeof this.options.content === 'number')
+            this.scrollBox.addItem(textView);
+        }
+        else
+            if (Array.isArray(this.options.content))
             {
-                const textView = getTextView(this.options.content);
-
-                this.scrollBox.addItem(textView);
+                this.options.content.forEach((item) => this.scrollBox.addItem(item));
             }
             else
             {
                 this.scrollBox.addItem(this.options.content);
             }
 
-            this.scrollBox.x = this.dialogPadding;
-            this.scrollBox.y = yOffset;
+        this.scrollBox.x = this.dialogPadding;
+        this.scrollBox.y = yOffset;
 
-            this.contentView.addChild(this.scrollBox);
-        }
-        else
-        {
-            if (typeof this.options.content === 'string' || typeof this.options.content === 'number')
-            {
-                this.contentBody = getTextView(this.options.content);
-                if ('anchor' in this.contentBody)
-                {
-                    (this.contentBody.anchor as ObservablePoint).set(0.5, 0);
-                }
-                this.contentBody.x = this.dialogWidth / 2;
-            }
-            else
-            {
-                this.contentBody = this.options.content;
-            }
-
-            this.contentBody.y = yOffset;
-            this.contentBody.x = this.dialogPadding;
-            this.contentView.addChild(this.contentBody);
-        }
+        this.contentView.addChild(this.scrollBox);
     }
 
     /** Initializes the buttons at the bottom of the dialog. */
@@ -310,7 +318,6 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, '');
-                        this.close();
                     });
 
                     if (btn.view)
@@ -322,7 +329,6 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, (btn as FancyButton).text ?? '');
-                        this.close();
                     });
                     this.buttonContainer.addChild(btn);
                     break;

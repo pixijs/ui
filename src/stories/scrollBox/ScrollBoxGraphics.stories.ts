@@ -38,6 +38,9 @@ type Args = typeof args & {
 };
 
 export const UseGraphics = {
+    args: {
+        type: null,
+    },
     render: (args: Args, ctx: StoryContext) =>
     {
         const {

@@ -1,6 +1,7 @@
-import { Text, Texture } from 'pixi.js';
+import { Graphics, Text, Texture } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Dialog } from '../../Dialog';
+import { FancyButton } from '../../FancyButton';
 import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
@@ -40,10 +41,44 @@ export const NineSliceBackground = {
                     contentColor,
                 } = args;
 
-                await preload(['button_blue.png']);
+                await preload(['button_gray.png', 'button.png', 'button_hover.png', 'button_pressed.png']);
+
+                const button = new FancyButton({
+                    text: new Text({
+                        text: '👍 Amazing!',
+                        style: {
+                            ...defaultTextStyle,
+                            fontSize: 28,
+                            fontWeight: 'bold',
+                            fill: getColor(colors.textColor),
+                        },
+                    }),
+                    defaultView: 'button.png',
+                    hoverView: 'button_hover.png',
+                    pressedView: 'button_pressed.png',
+                    nineSliceSprite: [25, 20, 25, 20],
+                    animations: {
+                        hover: {
+                            props: {
+                                scale: { x: 1.01, y: 1.01 },
+                                x: -2,
+                                y: 0,
+                            },
+                            duration: 100,
+                        },
+                        pressed: {
+                            props: {
+                                scale: { x: 0.99, y: 0.99 },
+                                x: 6,
+                                y: 8,
+                            },
+                            duration: 100,
+                        },
+                    },
+                });
 
                 const dialog = new Dialog({
-                    background: Texture.from('button_blue.png'),
+                    background: Texture.from('button_gray.png'),
                     nineSliceSprite: [25, 20, 25, 20],
                     backdropColor: getColor(backdropColor),
                     backdropAlpha,
@@ -64,7 +99,7 @@ export const NineSliceBackground = {
                             fill: getColor(contentColor),
                         },
                     }),
-                    buttons: [{ text: '👍 Amazing!' }],
+                    buttons: [button],
                     width,
                     height,
                     padding,
@@ -104,10 +139,10 @@ export const NineSliceConfirm = {
                     closeOnBackdropClick,
                 } = args;
 
-                await preload(['button_green.png']);
+                await preload(['button_gray.png', 'button.png', 'button_hover.png', 'button_pressed.png']);
 
                 const dialog = new Dialog({
-                    background: Texture.from('button_green.png'),
+                    background: Texture.from('button_gray.png'),
                     nineSliceSprite: [25, 20, 25, 20],
                     backdropColor: getColor(backdropColor),
                     backdropAlpha,
@@ -129,8 +164,94 @@ export const NineSliceConfirm = {
                         },
                     }),
                     buttons: [
-                        { text: 'Cancel' },
-                        { text: 'Confirm' },
+                        {
+                            text: new Text({
+                                text: '✖ Cancel',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.color)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.hoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.pressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        x: -2,
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                        x: 2,
+                                        y: 2,
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        },
+                        {
+                            text: new Text({
+                                text: '✓ Confirm',
+                                style: {
+                                    ...defaultTextStyle,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    fill: getColor(colors.textColor),
+                                },
+                            }),
+                            defaultView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.color)),
+                            hoverView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.hoverColor)),
+                            pressedView: new Graphics()
+                                .roundRect(0, 0, 110, 50, 50)
+                                .fill(getColor(colors.pressedColor)),
+                            animations: {
+                                hover: {
+                                    props: {
+                                        scale: {
+                                            x: 1.03,
+                                            y: 1.03,
+                                        },
+                                        x: -2,
+                                        y: -2,
+                                    },
+                                    duration: 100,
+                                },
+                                pressed: {
+                                    props: {
+                                        scale: {
+                                            x: 0.95,
+                                            y: 0.95,
+                                        },
+                                        x: 2,
+                                        y: 2,
+                                    },
+                                    duration: 100,
+                                },
+                            },
+                        },
                     ],
                     width,
                     height,

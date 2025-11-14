@@ -45,7 +45,7 @@ export const SimpleAlert = {
                     titleColor,
                     contentColor,
                     buttonColor,
-                    closeOnBackdropClick
+                    closeOnBackdropClick,
                 } = args;
 
                 const buttonBg = new Graphics();
@@ -60,10 +60,7 @@ export const SimpleAlert = {
                     },
                 });
 
-                buttonBg
-                    .clear()
-                    .roundRect(0, 0, 150, 40, radius)
-                    .fill(buttonColor);
+                buttonBg.clear().roundRect(0, 0, 150, 40, radius).fill(buttonColor);
 
                 textInstance.x = buttonBg.width / 2;
                 textInstance.y = buttonBg.height / 2;
@@ -83,26 +80,29 @@ export const SimpleAlert = {
                     backdropAlpha,
                     padding,
                     title: new Text({
-                        text: 'Alert',
+                        text: 'Title',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
+                            lineHeight: 44,
                             fontWeight: 'bold',
                             fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
-                        text: 'This is an alert message!',
+                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
+                            align: 'center',
+                            wordWrapWidth: width - (2 * padding),
+                            wordWrap: true,
+                            lineHeight: 24,
                             fill: getColor(contentColor),
                         },
                     }),
                     closeOnBackdropClick,
-                    buttons: [
-                        button
-                    ]
+                    buttons: [button],
                 });
 
                 dialog.onSelect.connect((index, text) =>
@@ -158,13 +158,18 @@ export const ConfirmDialog = {
                             fontSize: 24,
                             fontWeight: 'bold',
                             fill: getColor(titleColor),
+                            lineHeight: 44,
                         },
                     }),
                     content: new Text({
-                        text: 'Are you sure you want to proceed?',
+                        text: `Are you sure you want to proceed?`,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
+                            align: 'center',
+                            wordWrapWidth: width - (2 * padding),
+                            wordWrap: true,
+                            lineHeight: 24,
                             fill: getColor(contentColor),
                         },
                     }),
@@ -180,13 +185,13 @@ export const ConfirmDialog = {
                                 },
                             }),
                             defaultView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonColor)),
                             hoverView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonHoverColor)),
                             pressedView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonPressedColor)),
                             animations: {
                                 hover: {
@@ -221,13 +226,13 @@ export const ConfirmDialog = {
                                 },
                             }),
                             defaultView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonColor)),
                             hoverView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonHoverColor)),
                             pressedView: new Graphics()
-                                .roundRect(0, 0, 90, 50, radius)
+                                .roundRect(0, 0, 110, 50, radius)
                                 .fill(getColor(buttonPressedColor)),
                             animations: {
                                 hover: {
@@ -250,7 +255,7 @@ export const ConfirmDialog = {
                                     duration: 100,
                                 },
                             },
-                        }
+                        },
                     ],
                     buttonList: {
                         elementsMargin: 40,
@@ -301,7 +306,7 @@ export const ThreeButtons = {
                     buttonColor,
                     buttonHoverColor,
                     buttonPressedColor,
-                    closeOnBackdropClick
+                    closeOnBackdropClick,
                 } = args;
 
                 const dialog = new Dialog({
@@ -321,6 +326,7 @@ export const ThreeButtons = {
                             fontSize: 24,
                             fontWeight: 'bold',
                             fill: getColor(titleColor),
+                            lineHeight: 44,
                         },
                     }),
                     content: new Text({
@@ -455,7 +461,7 @@ export const ThreeButtons = {
                                     duration: 100,
                                 },
                             },
-                        }
+                        },
                     ],
                     buttonList: {
                         elementsMargin: 40,
