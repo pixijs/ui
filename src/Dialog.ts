@@ -318,6 +318,7 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, '');
+                        this.close();
                     });
 
                     if (btn.view)
@@ -329,6 +330,7 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, (btn as FancyButton).text ?? '');
+                        this.close();
                     });
                     this.buttonContainer.addChild(btn);
                     break;

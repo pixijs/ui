@@ -78,8 +78,6 @@ export const LetterGridSelector = {
                         })
                     });
 
-                    button.onPress.connect(() => action('letterSelected')(letter));
-
                     return button;
                 });
 
@@ -92,6 +90,15 @@ export const LetterGridSelector = {
                     width,
                     height,
                     padding,
+                });
+
+                letterButtons.forEach((button, index) =>
+                {
+                    button.onPress.connect(() =>
+                    {
+                        action('letterSelected')(letters[index]);
+                        dialog.close();
+                    });
                 });
 
                 view.addChild(dialog);
