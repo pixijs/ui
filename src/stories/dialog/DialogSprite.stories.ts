@@ -203,7 +203,7 @@ export const CheckboxSwapDialog = {
                         .fill(buttonPressedColor),
                 });
 
-                cancelButton.onPress.connect(() => checkboxes.forEach((cb) => cb.checked = false));
+                cancelButton.onPress.connect(() => checkboxes.forEach((cb) => { cb.checked = false; }));
 
                 const swapButton = new FancyButton({
                     text: new Text({

@@ -90,7 +90,8 @@ export const SimpleAlert = {
                         },
                     }),
                     content: new Text({
-                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, `
+                            + `consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
