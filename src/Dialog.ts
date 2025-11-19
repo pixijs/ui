@@ -76,9 +76,12 @@ export class Dialog extends Container
      * @param {string | Texture | Container | Sprite | Graphics} options.backdrop - Backdrop view or settings.
      * @param {number} options.backdropColor - Color of the backdrop (if backdrop is not provided).
      * @param {number} options.backdropAlpha - Alpha of the backdrop (if backdrop is not provided).
-     * @param {string | Texture | Container | Sprite | Graphics} options.background - Background view or settings for the dialog.
-     * @param {string | Texture | Container | Sprite | Graphics} options.title - Title text or settings for the dialog.
-     * @param {string | Texture | Container | Sprite | Graphics | Container[]} options.content - Content text, view, or array of views for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics} options.background -
+     * Background view or settings for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics} options.title -
+     * Title text or settings for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics | Container[]} options.content -
+     * Content text, view, or array of views for the dialog.
      * @param {number} options.width - Width of the dialog.
      * @param {number} options.height - Height of the dialog.
      * @param {number} options.padding - Padding around the dialog content.

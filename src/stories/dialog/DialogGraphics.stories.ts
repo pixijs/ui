@@ -6,6 +6,7 @@ import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { loremText } from '../utils/loremText';
 import { action } from '@storybook/addon-actions';
 
 const args = {
@@ -89,7 +90,7 @@ export const SimpleAlert = {
                         },
                     }),
                     content: new Text({
-                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porttitor aliquam purus, sit amet blandit erat tincidunt nec. Ut consequat, leo vel efficitur fringilla, lacus odio cursus arcu, sed cursus sem leo quis risus. Ut et est non nunc dignissim ullamcorper. Maecenas dictum faucibus quam. Nam orci augue, convallis a neque sit amet, malesuada gravida lacus. Sed malesuada, mi non posuere porta, lorem nisl pharetra orci, eget semper nulla sem non elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse eu pretium metus. Maecenas consectetur laoreet odio, sit amet consectetur velit cursus id.`,
+                        text: loremText,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
