@@ -67,8 +67,30 @@ export class Dialog extends Container
 
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
+    /** Signal emitted when the dialog is closed. */
     onClose: Signal<() => void>;
 
+    /**
+     * Modal dialog component for asking users questions.
+     * @param {DialogOptions} options - Configuration options for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics} options.backdrop - Backdrop view or settings.
+     * @param {number} options.backdropColor - Color of the backdrop (if backdrop is not provided).
+     * @param {number} options.backdropAlpha - Alpha of the backdrop (if backdrop is not provided).
+     * @param {string | Texture | Container | Sprite | Graphics} options.background - Background view or settings for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics} options.title - Title text or settings for the dialog.
+     * @param {string | Texture | Container | Sprite | Graphics | Container[]} options.content - Content text, view, or array of views for the dialog.
+     * @param {number} options.width - Width of the dialog.
+     * @param {number} options.height - Height of the dialog.
+     * @param {number} options.padding - Padding around the dialog content.
+     * @param {(ButtonOptions | FancyButton | Button)[]} options.buttons - Array of button configurations or instances.
+     * @param {ListOptions<Container>} options.buttonList - Configuration options for the button list layout.
+     * @param {ScrollBoxOptions} options.scrollBox - Configuration options for the scroll box containing the content.
+     * @param {object} options.animations - Animation settings for opening and closing the dialog.
+     * @param {Animation} options.animations.open - Animation settings for opening the dialog.
+     * @param {Animation} options.animations.close - Animation settings for closing the dialog.
+     * @param {boolean} options.closeOnBackdropClick - Whether to close the dialog when clicking on the backdrop.
+     * @param {[number, number, number, number]} options.nineSliceSprite - Nine-slice scaling settings for the background.
+     */
     constructor(options: DialogOptions)
     {
         super();
