@@ -422,6 +422,8 @@ export class Dialog extends Container
             this.visible = false;
             this._isOpen = false;
 
+            this.onClose.emit();
+
             return;
         }
 

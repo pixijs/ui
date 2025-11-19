@@ -101,6 +101,11 @@ export const LetterGridSelector = {
                     });
                 });
 
+                dialog.onClose.connect(() =>
+                {
+                    setTimeout(() => dialog.open(), 2000);
+                });
+
                 view.addChild(dialog);
                 dialog.open();
             },
