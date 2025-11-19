@@ -1387,7 +1387,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="ButtonContainer.html">Class: ButtonContainer</h1>
+        <h1 class="page-title" data-filename="Dialog.html">Class: Dialog</h1>
         
 
 
@@ -1396,15 +1396,14 @@
 <header>
   <div class="header content-size">
       <h2>
-        ButtonContainer
+        Dialog
 
         
       </h2>
 
       
       
-          <div class="class-description"><p>Button based on container. You can use it same <a href=Button.html>Button</a>
-but without need to pre create a container and interact with it through <code>.view</code> accessor.</p></div>
+          <div class="class-description"><p>Modal dialog component for asking users questions.</p></div>
       
   </div>
 </header>
@@ -1412,6 +1411,501 @@ but without need to pre create a container and interact with it through <code>.v
 <article class="content-size">
     <div class="container-overview">
         
+              
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new Dialog
+              
+            </span>
+            <span class="signature">(options)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Modal dialog component for asking users questions.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                DialogOptions
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Configuration options for the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.backdrop</code></td>
+            
+
+            <td class="type">
+            
+                string | Texture | Container | Sprite | Graphics
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Backdrop view or settings.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.backdropColor</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Color of the backdrop (if backdrop is not provided).</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.backdropAlpha</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Alpha of the backdrop (if backdrop is not provided).</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.background</code></td>
+            
+
+            <td class="type">
+            
+                string | Texture | Container | Sprite | Graphics
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Background view or settings for the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.title</code></td>
+            
+
+            <td class="type">
+            
+                string | Texture | Container | Sprite | Graphics
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Title text or settings for the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.content</code></td>
+            
+
+            <td class="type">
+            
+                string | Texture | Container | Sprite | Graphics | Array&lt;Container&gt;
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Content text, view, or array of views for the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.width</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Width of the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.height</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Height of the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.padding</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Padding around the dialog content.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.buttons</code></td>
+            
+
+            <td class="type">
+            
+                unknown
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Array of button configurations or instances.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.buttonList</code></td>
+            
+
+            <td class="type">
+            
+                ListOptions&lt;Container&gt;
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Configuration options for the button list layout.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.scrollBox</code></td>
+            
+
+            <td class="type">
+            
+                ScrollBoxOptions
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Configuration options for the scroll box containing the content.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.animations</code></td>
+            
+
+            <td class="type">
+            
+                object
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Animation settings for opening and closing the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.animations.open</code></td>
+            
+
+            <td class="type">
+            
+                Animation
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Animation settings for opening the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.animations.close</code></td>
+            
+
+            <td class="type">
+            
+                Animation
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Animation settings for closing the dialog.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.closeOnBackdropClick</code></td>
+            
+
+            <td class="type">
+            
+                boolean
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Whether to close the dialog when clicking on the backdrop.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>options.nineSliceSprite</code></td>
+            
+
+            <td class="type">
+            
+                unknown
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Nine-slice scaling settings for the background.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
         
 
         
@@ -1443,15 +1937,19 @@ but without need to pre create a container and interact with it through <code>.v
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code> const button = new ButtonContainer(
-      new Graphics()
-          .fill(0xFFFFFF)
-          .roundRect(0, 0, 100, 50, 15)
- );
-
- button.onPress.connect(() => console.log('onPress'));
-
- container.addChild(button);</code></pre>
+    <pre class="prettyprint"><code>const dialog = new Dialog({
+    background: new Graphics().roundRect(0, 0, 400, 200, 20).fill(0xFFFFFF),
+    title: 'Confirm',
+    content: 'Are you sure?',
+    buttons: [
+        { text: 'Cancel' },
+        { text: 'OK' }
+    ]
+});
+dialog.onSelect.connect((index, text) => {
+    console.log(`Button ${index} clicked: ${text}`);
+});
+dialog.open();</code></pre>
 
         
     </div>
@@ -1482,11 +1980,967 @@ but without need to pre create a container and interact with it through <code>.v
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="isOpen">
+            <a class="share-icon" href="#isOpen"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">isOpen</span>
+            <span class="type-signature type">boolean</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Gets the open state of the dialog.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onClose">
+            <a class="share-icon" href="#onClose"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onClose</span>
+            <span class="type-signature type">Signal&lt;() =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Signal emitted when the dialog is closed.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onSelect">
+            <a class="share-icon" href="#onSelect"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">onSelect</span>
+            <span class="type-signature type">Signal&lt;(buttonIndex: number, buttonText: string) =&gt; void&gt;</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Signal emitted when a button is selected.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dialogHeight">
+            <a class="share-icon" href="#dialogHeight"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">dialogHeight</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Gets the dialog height from options or innerView.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dialogPadding">
+            <a class="share-icon" href="#dialogPadding"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">dialogPadding</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Gets the dialog padding from options.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dialogWidth">
+            <a class="share-icon" href="#dialogWidth"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">dialogWidth</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Gets the dialog width from options or innerView.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="close">
+            <a class="share-icon" href="#close"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  close
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Closes the dialog with animation.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="hide">
+            <a class="share-icon" href="#hide"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  hide
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Hides the dialog (alias for close).</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="open">
+            <a class="share-icon" href="#open"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  open
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Opens the dialog with animation.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="show">
+            <a class="share-icon" href="#show"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  show
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Shows the dialog (alias for open).</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="initBackdrop">
+            <a class="share-icon" href="#initBackdrop"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  initBackdrop
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Initializes the backdrop (semi-transparent background).</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="initButtons">
+            <a class="share-icon" href="#initButtons"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  initButtons
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Initializes the buttons at the bottom of the dialog.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="initContent">
+            <a class="share-icon" href="#initContent"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  initContent
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Initializes the content area, optionally wrapped in ScrollBox.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="initInnerView">
+            <a class="share-icon" href="#initInnerView"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  initInnerView
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Initializes the inner view (background panel).</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="initTitle">
+            <a class="share-icon" href="#initTitle"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  initTitle
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Initializes the title text if provided.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
     
 
     
