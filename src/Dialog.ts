@@ -67,6 +67,7 @@ export class Dialog extends Container
 
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
+    onClose: Signal<() => void>;
 
     constructor(options: DialogOptions)
     {
@@ -74,6 +75,7 @@ export class Dialog extends Container
 
         this.options = options;
         this.onSelect = new Signal();
+        this.onClose = new Signal();
 
         this.backdrop = new Container();
         this.contentView = new Container();
@@ -318,7 +320,6 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, '');
-                        this.close();
                     });
 
                     if (btn.view)
@@ -330,7 +331,6 @@ export class Dialog extends Container
                     btn.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, (btn as FancyButton).text ?? '');
-                        this.close();
                     });
                     this.buttonContainer.addChild(btn);
                     break;
@@ -341,7 +341,6 @@ export class Dialog extends Container
                     button.onPress.connect(() =>
                     {
                         this.onSelect.emit(index, (button as FancyButton).text ?? '');
-                        this.close();
                     });
                     this.buttonContainer.addChild(button);
                     break;
@@ -417,6 +416,7 @@ export class Dialog extends Container
             {
                 this.visible = false;
                 this._isOpen = false;
+                this.onClose.emit();
             })
             .start();
     }

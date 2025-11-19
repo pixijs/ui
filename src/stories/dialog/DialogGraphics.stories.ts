@@ -118,6 +118,12 @@ export const SimpleAlert = {
                 dialog.onSelect.connect((index, text) =>
                 {
                     action('onSelect')(`Button ${index}: ${text}`);
+                    dialog.close();
+                });
+
+                dialog.onClose.connect(() =>
+                {
+                    setTimeout(() => dialog.open(), 1000);
                 });
 
                 view.addChild(dialog);
@@ -283,6 +289,8 @@ export const ConfirmDialog = {
                 dialog.onSelect.connect((index, text) =>
                 {
                     action('onSelect')(`Button ${index}: ${text}`);
+                    dialog.close();
+                    setTimeout(() => dialog.open(), 2000);
                 });
 
                 view.addChild(dialog);
