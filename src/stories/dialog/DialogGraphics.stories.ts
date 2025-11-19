@@ -78,32 +78,41 @@ export const SimpleAlert = {
                         }),
                     backdropColor: getColor(backdropColor),
                     backdropAlpha,
-                    padding,
                     title: new Text({
                         text: 'Title',
                         style: {
                             ...defaultTextStyle,
                             fontSize: 24,
-                            lineHeight: 44,
+                            // lineHeight: 14,
                             fontWeight: 'bold',
                             fill: getColor(titleColor),
                         },
                     }),
                     content: new Text({
-                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, `
-                            + `consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+                        text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porttitor aliquam purus, sit amet blandit erat tincidunt nec. Ut consequat, leo vel efficitur fringilla, lacus odio cursus arcu, sed cursus sem leo quis risus. Ut et est non nunc dignissim ullamcorper. Maecenas dictum faucibus quam. Nam orci augue, convallis a neque sit amet, malesuada gravida lacus. Sed malesuada, mi non posuere porta, lorem nisl pharetra orci, eget semper nulla sem non elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse eu pretium metus. Maecenas consectetur laoreet odio, sit amet consectetur velit cursus id.`,
                         style: {
                             ...defaultTextStyle,
                             fontSize: 16,
                             align: 'center',
-                            wordWrapWidth: width - (2 * padding),
+                            fontWeight: 'normal',
+                            wordWrapWidth: width - (2 * padding) - padding,
                             wordWrap: true,
-                            lineHeight: 24,
+                            lineHeight: 20,
                             fill: getColor(contentColor),
                         },
                     }),
-                    closeOnBackdropClick,
                     buttons: [button],
+                    buttonList: {
+                        elementsMargin: 40,
+                    },
+                    width,
+                    height,
+                    padding,
+                    closeOnBackdropClick,
+                    animations: {
+                        open: { props: {}, duration: 300 },
+                        close: { props: {}, duration: 300 },
+                    },
                 });
 
                 dialog.onSelect.connect((index, text) =>
