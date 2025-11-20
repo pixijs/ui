@@ -170,6 +170,21 @@ export class Drawer extends Container
     {
         this._screenWidth = width;
         this._screenHeight = height;
+
+        // Resize innerView to span full edge
+        if (this.innerView)
+        {
+            if (this.drawerPosition === 'bottom' || this.drawerPosition === 'top')
+            {
+                // Full width for top/bottom drawers
+                this.innerView.width = width;
+            }
+            else
+            {
+                // Full height for left/right drawers
+                this.innerView.height = height;
+            }
+        }
     }
 
     /** Initializes the backdrop (semi-transparent background). */
@@ -333,19 +348,21 @@ export class Drawer extends Container
     protected getClosedPosition(): { x: number; y: number }
     {
         const openPos = this.getOpenPosition();
+        const effectiveHeight = this.getEffectiveHeight();
+        const effectiveWidth = this.getEffectiveWidth();
 
         switch (this.drawerPosition)
         {
             case 'bottom':
-                return { x: openPos.x, y: openPos.y + this.drawerHeight };
+                return { x: openPos.x, y: openPos.y + effectiveHeight };
             case 'top':
-                return { x: openPos.x, y: openPos.y - this.drawerHeight };
+                return { x: openPos.x, y: openPos.y - effectiveHeight };
             case 'left':
-                return { x: openPos.x - this.drawerWidth, y: openPos.y };
+                return { x: openPos.x - effectiveWidth, y: openPos.y };
             case 'right':
-                return { x: openPos.x + this.drawerWidth, y: openPos.y };
+                return { x: openPos.x + effectiveWidth, y: openPos.y };
             default:
-                return { x: openPos.x, y: openPos.y + this.drawerHeight };
+                return { x: openPos.x, y: openPos.y + effectiveHeight };
         }
     }
 
@@ -361,20 +378,44 @@ export class Drawer extends Container
         switch (this.drawerPosition)
         {
             case 'bottom':
-                // Attached to bottom edge of screen
-                return { x: -this.drawerWidth / 2, y: halfHeight - this.drawerHeight };
+                // Attached to bottom edge of screen, full width
+                return { x: -halfWidth, y: halfHeight - this.drawerHeight };
             case 'top':
-                // Attached to top edge of screen
-                return { x: -this.drawerWidth / 2, y: -halfHeight };
+                // Attached to top edge of screen, full width
+                return { x: -halfWidth, y: -halfHeight };
             case 'left':
-                // Attached to left edge of screen
-                return { x: -halfWidth, y: -this.drawerHeight / 2 };
+                // Attached to left edge of screen, full height
+                return { x: -halfWidth, y: -halfHeight };
             case 'right':
-                // Attached to right edge of screen
-                return { x: halfWidth - this.drawerWidth, y: -this.drawerHeight / 2 };
+                // Attached to right edge of screen, full height
+                return { x: halfWidth - this.drawerWidth, y: -halfHeight };
             default:
-                return { x: -this.drawerWidth / 2, y: halfHeight - this.drawerHeight };
+                return { x: -halfWidth, y: halfHeight - this.drawerHeight };
         }
+    }
+
+    /** Gets the effective width of the drawer based on position. */
+    protected getEffectiveWidth(): number
+    {
+        // Bottom/top drawers span full screen width
+        if (this.drawerPosition === 'bottom' || this.drawerPosition === 'top')
+        {
+            return this._screenWidth;
+        }
+
+        return this.drawerWidth;
+    }
+
+    /** Gets the effective height of the drawer based on position. */
+    protected getEffectiveHeight(): number
+    {
+        // Left/right drawers span full screen height
+        if (this.drawerPosition === 'left' || this.drawerPosition === 'right')
+        {
+            return this._screenHeight;
+        }
+
+        return this.drawerHeight;
     }
 
     /** Opens the drawer with animation. */
