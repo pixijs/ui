@@ -74,6 +74,14 @@ export const NineSliceBottom = {
                     setTimeout(() => drawer.open(), 1000);
                 });
 
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
+
                 view.addChild(drawer);
                 drawer.open();
             },
@@ -134,6 +142,14 @@ export const NineSliceLeft = {
                     action('onClose')('Drawer closed');
                     setTimeout(() => drawer.open(), 1000);
                 });
+
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
 
                 view.addChild(drawer);
                 drawer.open();
@@ -196,6 +212,14 @@ export const NineSliceRight = {
                     setTimeout(() => drawer.open(), 1000);
                 });
 
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
+
                 view.addChild(drawer);
                 drawer.open();
             },
@@ -256,6 +280,14 @@ export const NineSliceTop = {
                     action('onClose')('Drawer closed');
                     setTimeout(() => drawer.open(), 1000);
                 });
+
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
 
                 view.addChild(drawer);
                 drawer.open();

@@ -332,25 +332,49 @@ export class Drawer extends Container
     /** Gets the closed position for the drawer based on its position setting. */
     protected getClosedPosition(): { x: number; y: number }
     {
+        const openPos = this.getOpenPosition();
+
         switch (this.drawerPosition)
         {
             case 'bottom':
-                return { x: 0, y: this.drawerHeight };
+                return { x: openPos.x, y: openPos.y + this.drawerHeight };
             case 'top':
-                return { x: 0, y: -this.drawerHeight };
+                return { x: openPos.x, y: openPos.y - this.drawerHeight };
             case 'left':
-                return { x: -this.drawerWidth, y: 0 };
+                return { x: openPos.x - this.drawerWidth, y: openPos.y };
             case 'right':
-                return { x: this.drawerWidth, y: 0 };
+                return { x: openPos.x + this.drawerWidth, y: openPos.y };
             default:
-                return { x: 0, y: this.drawerHeight };
+                return { x: openPos.x, y: openPos.y + this.drawerHeight };
         }
     }
 
     /** Gets the open position for the drawer based on its position setting. */
     protected getOpenPosition(): { x: number; y: number }
     {
-        return { x: 0, y: 0 };
+        // Position the drawer at the correct edge, assuming container is at screen center
+        // Screen center is (0,0) relative to the drawer container
+        // So top of screen is at -screenHeight/2, bottom at +screenHeight/2
+        const halfWidth = this._screenWidth / 2;
+        const halfHeight = this._screenHeight / 2;
+
+        switch (this.drawerPosition)
+        {
+            case 'bottom':
+                // Attached to bottom edge of screen
+                return { x: -this.drawerWidth / 2, y: halfHeight - this.drawerHeight };
+            case 'top':
+                // Attached to top edge of screen
+                return { x: -this.drawerWidth / 2, y: -halfHeight };
+            case 'left':
+                // Attached to left edge of screen
+                return { x: -halfWidth, y: -this.drawerHeight / 2 };
+            case 'right':
+                // Attached to right edge of screen
+                return { x: halfWidth - this.drawerWidth, y: -this.drawerHeight / 2 };
+            default:
+                return { x: -this.drawerWidth / 2, y: halfHeight - this.drawerHeight };
+        }
     }
 
     /** Opens the drawer with animation. */

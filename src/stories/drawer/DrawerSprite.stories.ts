@@ -115,6 +115,14 @@ export const LetterGridSelector = {
                     setTimeout(() => drawer.open(), 2000);
                 });
 
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
+
                 view.addChild(drawer);
                 drawer.open();
             },
@@ -308,6 +316,14 @@ export const CheckboxSwapDrawer = {
                 {
                     setTimeout(() => drawer.open(), 2000);
                 });
+
+                // Set screen size for proper positioning
+                const canvas = document.getElementById('storybook-root');
+
+                if (canvas)
+                {
+                    drawer.setScreenSize(canvas.offsetWidth, canvas.offsetHeight);
+                }
 
                 view.addChild(drawer);
                 drawer.open();
