@@ -47,7 +47,8 @@ export type DrawerOptions = {
 export class Drawer extends Container
 {
     protected backdrop: Container;
-    protected innerView?: Container | NineSliceSprite;
+    protected innerView: Container;
+    protected backgroundView?: Container | NineSliceSprite;
     protected contentView: Container;
     protected scrollBox: ScrollBox;
 
@@ -95,6 +96,7 @@ export class Drawer extends Container
         this.onClose = new Signal();
 
         this.backdrop = new Container();
+        this.innerView = new Container();
         this.contentView = new Container();
 
         this.initBackdrop();
@@ -120,7 +122,7 @@ export class Drawer extends Container
             height,
         });
 
-        this.innerView?.addChild(this.scrollBox);
+        this.innerView.addChild(this.scrollBox);
 
         this.visible = false;
 
@@ -163,6 +165,9 @@ export class Drawer extends Container
 
     /**
      * Sets the screen dimensions for positioning the drawer.
+     * The drawer automatically spans the full edge:
+     * - Bottom/Top drawers: full screen width
+     * - Left/Right drawers: full screen height
      * @param {number} width - Screen width.
      * @param {number} height - Screen height.
      */
@@ -171,18 +176,18 @@ export class Drawer extends Container
         this._screenWidth = width;
         this._screenHeight = height;
 
-        // Resize innerView to span full edge
-        if (this.innerView)
+        // Resize only the background to span full edge (not the content)
+        if (this.backgroundView)
         {
             if (this.drawerPosition === 'bottom' || this.drawerPosition === 'top')
             {
                 // Full width for top/bottom drawers
-                this.innerView.width = width;
+                this.backgroundView.width = width;
             }
             else
             {
                 // Full height for left/right drawers
-                this.innerView.height = height;
+                this.backgroundView.height = height;
             }
         }
     }
@@ -226,7 +231,7 @@ export class Drawer extends Container
         {
             if (typeof background === 'string')
             {
-                this.innerView = new NineSliceSprite({
+                this.backgroundView = new NineSliceSprite({
                     texture: Texture.from(background),
                     leftWidth: nineSliceSprite[0],
                     topHeight: nineSliceSprite[1],
@@ -236,7 +241,7 @@ export class Drawer extends Container
             }
             else if (background instanceof Texture)
             {
-                this.innerView = new NineSliceSprite({
+                this.backgroundView = new NineSliceSprite({
                     texture: background,
                     leftWidth: nineSliceSprite[0],
                     topHeight: nineSliceSprite[1],
@@ -250,32 +255,34 @@ export class Drawer extends Container
                     'NineSliceSprite can not be used with views set as Container. '
                     + 'Pass the texture or texture name as instead of the Container extended instance.',
                 );
-                this.innerView = getView(background);
+                this.backgroundView = getView(background);
             }
         }
         else
         {
-            this.innerView = getView(background);
+            this.backgroundView = getView(background);
         }
 
         if (this.options.width && this.options.height)
         {
-            if (this.innerView instanceof NineSliceSprite)
+            if (this.backgroundView instanceof NineSliceSprite)
             {
-                this.innerView.width = this.options.width;
-                this.innerView.height = this.options.height;
+                this.backgroundView.width = this.options.width;
+                this.backgroundView.height = this.options.height;
             }
-            else if (this.innerView instanceof Graphics)
+            else if (this.backgroundView instanceof Graphics)
             {
-                this.innerView.width = this.options.width;
-                this.innerView.height = this.options.height;
+                this.backgroundView.width = this.options.width;
+                this.backgroundView.height = this.options.height;
             }
         }
 
         this.innerView.eventMode = 'static';
 
-        this.addChild(this.innerView);
+        // Add background first, then content on top
+        this.innerView.addChild(this.backgroundView);
         this.innerView.addChild(this.contentView);
+        this.addChild(this.innerView);
     }
 
     /** Initializes the content area. */
@@ -348,21 +355,19 @@ export class Drawer extends Container
     protected getClosedPosition(): { x: number; y: number }
     {
         const openPos = this.getOpenPosition();
-        const effectiveHeight = this.getEffectiveHeight();
-        const effectiveWidth = this.getEffectiveWidth();
 
         switch (this.drawerPosition)
         {
             case 'bottom':
-                return { x: openPos.x, y: openPos.y + effectiveHeight };
+                return { x: openPos.x, y: openPos.y + this.drawerHeight };
             case 'top':
-                return { x: openPos.x, y: openPos.y - effectiveHeight };
+                return { x: openPos.x, y: openPos.y - this.drawerHeight };
             case 'left':
-                return { x: openPos.x - effectiveWidth, y: openPos.y };
+                return { x: openPos.x - this.drawerWidth, y: openPos.y };
             case 'right':
-                return { x: openPos.x + effectiveWidth, y: openPos.y };
+                return { x: openPos.x + this.drawerWidth, y: openPos.y };
             default:
-                return { x: openPos.x, y: openPos.y + effectiveHeight };
+                return { x: openPos.x, y: openPos.y + this.drawerHeight };
         }
     }
 
@@ -394,35 +399,9 @@ export class Drawer extends Container
         }
     }
 
-    /** Gets the effective width of the drawer based on position. */
-    protected getEffectiveWidth(): number
-    {
-        // Bottom/top drawers span full screen width
-        if (this.drawerPosition === 'bottom' || this.drawerPosition === 'top')
-        {
-            return this._screenWidth;
-        }
-
-        return this.drawerWidth;
-    }
-
-    /** Gets the effective height of the drawer based on position. */
-    protected getEffectiveHeight(): number
-    {
-        // Left/right drawers span full screen height
-        if (this.drawerPosition === 'left' || this.drawerPosition === 'right')
-        {
-            return this._screenHeight;
-        }
-
-        return this.drawerHeight;
-    }
-
     /** Opens the drawer with animation. */
     open(): void
     {
-        if (!this.innerView) return;
-
         this.visible = true;
         this._isOpen = true;
 
@@ -459,8 +438,6 @@ export class Drawer extends Container
     /** Closes the drawer with animation. */
     close(): void
     {
-        if (!this.innerView) return;
-
         const closeAnimation = this.options.animations?.close;
 
         if (!closeAnimation)
