@@ -89,6 +89,9 @@ export const LetterGridSelector = {
                         .roundRect(0, 0, width, height, 20)
                         .fill(backgroundColor),
                     content,
+                    scrollBox: {
+                        type: 'bidirectional',
+                    },
                     width,
                     height,
                     padding,
