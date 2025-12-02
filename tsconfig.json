@@ -18,7 +18,8 @@
         "noImplicitReturns": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "noImplicitOverride": true
+        "noImplicitOverride": true,
+        "rootDir": "./src",
     },
-    "include": ["./src", "./typings", "./tests", "./docs-source"]
+    "include": ["./src", "./typings", "./docs-source"]
 }
