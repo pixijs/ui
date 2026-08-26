@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ESNext", "DOM"],
+        // A consumer's ambient types are their own business, so assume none. And unlike
+        // the build tsconfig, check the declarations instead of skipping them - see the
+        // note in check.mjs, which is what filters the resulting upstream noise.
+        "types": [],
+        "skipLibCheck": false,
+        "strict": true,
+        "noEmit": true,
+        // Point at the declarations `xs build` emits, so this has to run after a build.
+        "paths": { "@pixi/ui": ["../../lib/index.d.ts"] }
+    },
+    "include": ["./consumer.ts"]
+}

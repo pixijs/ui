@@ -88,7 +88,7 @@ export class ScrollBox extends Container
     protected pressedChild: Container | undefined;
     protected ticker = Ticker.shared;
     protected options: ScrollBoxOptions = {};
-    protected stopRenderHiddenItemsTimeout: NodeJS.Timeout | undefined;
+    protected stopRenderHiddenItemsTimeout: ReturnType<typeof setTimeout> | undefined;
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: PointData | undefined;
     protected isOver = false;

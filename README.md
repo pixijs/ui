@@ -21,6 +21,10 @@ Depending on your version of PixiJS, you'll need to figure out which major versi
 | v7.x   | v1.x   |
 | v8.x   | v2.x   |
 
+The published declarations are checked against both TypeScript 5.x and TypeScript 7.x.
+TypeScript 7 removed `moduleResolution: "node"` (node10), so a project using it needs
+`"bundler"`, `"node16"` or `"nodenext"` to resolve this package.
+
 ## Install
 
 ```sh
@@ -74,3 +78,8 @@ This content is released under the (http://opensource.org/licenses/MIT) MIT Lice
 
 This library requires Pixi `v7.1.1` or higher as this is when the `globalpointermove` event was added
 See [here](https://github.com/pixijs/pixijs/pull/9067) for details
+
+On TypeScript 7 with `skipLibCheck` turned off, `pixi.js` v8 reports `Duplicate identifier 'GPU...'`
+errors: it references `@webgpu/types`, which collides with the WebGPU types now built into
+TypeScript's own `lib.dom.d.ts`. That comes from `pixi.js` rather than from this package, so leave
+`skipLibCheck` on until it is fixed upstream.
