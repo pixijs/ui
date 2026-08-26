@@ -2,12 +2,14 @@ import { Container } from 'pixi.js';
 
 export function fitToView(parent: Container, child: Container, padding = 0, uniformScaling = true)
 {
-    let scaleX = child.scale.x;
-    let scaleY = child.scale.y;
-
     if (!parent)
     {
         throw new Error('Parent is not defined');
+    }
+
+    if (!child)
+    {
+        throw new Error('Child is not defined');
     }
 
     const maxWidth = parent.width - (padding * 2);
@@ -15,6 +17,9 @@ export function fitToView(parent: Container, child: Container, padding = 0, unif
 
     const widthOverflow = maxWidth - Math.round(child.width);
     const heightOverflow = maxHeight - Math.round(child.height);
+
+    let scaleX = child.scale.x;
+    let scaleY = child.scale.y;
 
     if (widthOverflow < 0)
     {
