@@ -684,7 +684,7 @@ export class FancyButton extends ButtonContainer
      */
     protected updateView(viewType: ButtonViewType, view: GetViewSettings | undefined)
     {
-        if (view === undefined) return;
+        if (view === undefined || view === null) return;
 
         this.removeView(viewType);
 
