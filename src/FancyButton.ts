@@ -684,9 +684,11 @@ export class FancyButton extends ButtonContainer
      */
     protected updateView(viewType: ButtonViewType, view: GetViewSettings | undefined)
     {
-        if (view === undefined || view === null) return;
+        if (view === undefined) return;
 
         this.removeView(viewType);
+
+        if (view === null) return;
 
         if (this.options?.nineSliceSprite)
         {
