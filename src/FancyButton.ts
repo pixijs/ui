@@ -86,7 +86,7 @@ export type ButtonOptions = ViewsInput & {
 
     /** @deprecated refer to contentFittingMode instead */
     ignoreRefitting?: boolean;
-} & ContainerOptions;
+} & Omit<ContainerOptions, 'scale'>;
 
 /**
  * Button component with a lot of tweaks.
