@@ -1,4 +1,4 @@
-import { Container, ContainerChild } from 'pixi.js';
+import { Container, ContainerChild, ContainerOptions } from 'pixi.js';
 import { LIST_TYPE } from './utils/HelpTypes';
 
 export type ListType = (typeof LIST_TYPE)[number];
@@ -16,7 +16,7 @@ export type ListOptions<C extends ContainerChild = ContainerChild> = {
     items?: C[];
     maxWidth?: number;
     maxHeight?: number;
-};
+} & ContainerOptions;
 
 /**
  * Container-based component for arranging Pixi containers one after another based on their sizes.
@@ -55,19 +55,39 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
     constructor(options?: { type?: ListType } & ListOptions<C>)
     {
-        super();
-
         if (options)
         {
+            const {
+                elementsMargin: _0,
+                children: _1,
+                padding: _2,
+                vertPadding: _3,
+                horPadding: _4,
+                topPadding: _5,
+                bottomPadding: _6,
+                leftPadding: _7,
+                rightPadding: _8,
+                items: _9,
+                maxWidth: _10,
+                maxHeight: _11,
+                ...rest
+            } = options;
+
+            super(rest);
+
             if (options.maxWidth)
             {
                 this._maxWidth = options.maxWidth;
             }
 
             this.init(options);
-        }
 
-        options?.items?.forEach((item) => this.addChild(item));
+            options.items?.forEach((item) => this.addChild(item));
+        }
+        else
+        {
+            super();
+        }
 
         this.on('added', () => this.arrangeChildren());
         this.on('childAdded', () => this.arrangeChildren());

@@ -1,4 +1,4 @@
-import { Container, FillStyleInputs, Graphics, Text } from 'pixi.js';
+import { Container, ContainerOptions, FillStyleInputs, Graphics, Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
@@ -43,7 +43,7 @@ export type SelectOptions = {
     scrollBox?: ScrollBoxOptions & {
         offset?: Offset;
     };
-};
+} & ContainerOptions;
 
 /**
  * Container-based component that gives us a selection dropdown.
@@ -85,7 +85,31 @@ export class Select extends Container
 
     constructor(options?: SelectOptions)
     {
-        super();
+        if (options)
+        {
+            const {
+                closedBG: _0,
+                openBG: _1,
+                textStyle: _2,
+                TextClass: _3,
+                selected: _4,
+                selectedTextOffset: _5,
+                items: _6,
+                scrollBoxOffset: _7,
+                scrollBoxWidth: _8,
+                scrollBoxHeight: _9,
+                scrollBoxRadius: _10,
+                visibleItems: _11,
+                scrollBox: _12,
+                ...rest
+            } = options;
+
+            super(rest);
+        }
+        else
+        {
+            super();
+        }
 
         this.addChild(this.view);
         this.onSelect = new Signal();

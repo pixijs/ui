@@ -18,6 +18,9 @@
             1,
             { "allowShortCircuit": true, "allowTernary": true }
         ],
+        "@typescript-eslint/no-unused-vars": ["warn", {
+            "varsIgnorePattern": "^_"
+        }],
         "no-mixed-operators": "off",
         "no-mixed-operators/no-mixed-operators": 1,
         "@typescript-eslint/type-annotation-spacing": 1,

@@ -38,10 +38,17 @@ export class Slider extends SliderBase
 
     constructor(options: SliderOptions)
     {
+        const {
+            slider,
+            value,
+            step: _a,
+            ...rest
+        } = options;
+
         super({
-            slider1: options.slider,
-            value1: options.value,
-            ...options,
+            slider1: slider,
+            value1: value,
+            ...rest,
         });
 
         this.sliderOptions = options;
