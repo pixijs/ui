@@ -41,7 +41,7 @@ export class Slider extends SliderBase
         const {
             slider,
             value,
-            step: _a,
+            step: _0,
             ...rest
         } = options;
 
