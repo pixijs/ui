@@ -41,7 +41,7 @@ export class Slider extends SliderBase
         const {
             slider,
             value,
-            step: _0,
+            step,
             ...rest
         } = options;
 
@@ -54,7 +54,7 @@ export class Slider extends SliderBase
         this.sliderOptions = options;
 
         // Avoid zero value
-        this.step = options.step || 1;
+        this.step = step || 1;
 
         this.value = options.value ?? this.min;
         this.updateSlider();
