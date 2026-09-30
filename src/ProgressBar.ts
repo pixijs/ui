@@ -266,6 +266,11 @@ export class ProgressBar extends Container
 
     protected validate(progress: number): number
     {
+        if (Number.isNaN(progress))
+        {
+            return 0;
+        }
+
         progress = Math.round(progress);
 
         if (progress < 0)

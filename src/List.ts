@@ -313,7 +313,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        let maxWidth = this.maxWidth || this.parent?.width;
+        let maxWidth = this.maxWidth || this.parent?.width || Infinity;
 
         if (this.rightPadding)
         {
