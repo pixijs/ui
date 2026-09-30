@@ -11,6 +11,34 @@ describe('Drawer Component', () =>
 
     describe('Drawer Creation and Basic Properties', () =>
     {
+        it('should apply container options', () =>
+        {
+            const drawer = new Drawer({
+                background: createTestGraphics(400, 300, 0xFFFFFF),
+                x: 10,
+                y: 20,
+                alpha: 0.5,
+                label: 'my-drawer',
+            });
+
+            expect(drawer.x).toBe(10);
+            expect(drawer.y).toBe(20);
+            expect(drawer.alpha).toBe(0.5);
+            expect(drawer.label).toBe('my-drawer');
+        });
+
+        it('should not pass width and height to the container', () =>
+        {
+            const drawer = new Drawer({
+                background: createTestGraphics(400, 300, 0xFFFFFF),
+                width: 400,
+                height: 300,
+            });
+
+            expect(drawer.scale.x).toBe(1);
+            expect(drawer.scale.y).toBe(1);
+        });
+
         it('should create Drawer without errors', () =>
         {
             expect(() =>
