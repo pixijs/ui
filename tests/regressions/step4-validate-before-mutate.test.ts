@@ -119,17 +119,19 @@ describe('DoubleSlider.validateValues', () =>
     });
 });
 
-describe('Input.onPaste', () =>
+describe('Input paste', () =>
 {
     it('truncates pasted text to maxLength', () =>
     {
         const input = new Input({ bg: g(), maxLength: 5 });
 
         (input as any)._startEditing();
-        (input as any).onPaste({
-            preventDefault: () => undefined,
-            clipboardData: { getData: () => '0123456789' },
-        });
+
+        // Pasting is handled by the hidden native field, which reports it through `input`.
+        const native = (input as any).input as HTMLInputElement;
+
+        native.value = '0123456789';
+        native.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
 
         expect(input.value.length).toBeLessThanOrEqual(5);
     });

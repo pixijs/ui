@@ -71,10 +71,9 @@ export class Input extends Container
     protected input: HTMLInputElement | undefined;
 
     protected handleActivationBinding = this.handleActivation.bind(this);
-    protected onKeyUpBinding = this.onKeyUp.bind(this);
+    protected onKeyDownBinding = this.onKeyDown.bind(this);
     protected stopEditingBinding = this.stopEditing.bind(this);
     protected onInputBinding = this.onInput.bind(this);
-    protected onPasteBinding = this.onPaste.bind(this);
 
     /**
      * Kept as a field so destroy() can detach it from the shared ticker.
@@ -192,49 +191,54 @@ export class Input extends Container
         }
     }
 
+    /**
+     * Mirrors the hidden native input, which is the only thing that knows what the text
+     * actually is. Reconstructing it from `keydown` cannot work on mobile: on-screen
+     * keyboards report `Unidentified` there and only send the real characters on `input`,
+     * and composition, autocorrect and suggestions have no `keydown` representation at all.
+     * @param e - the native input event.
+     */
     protected onInput(e: InputEvent)
     {
         this.lastInputData = e.data ?? '';
-    }
 
-    protected onKeyUp(e: KeyboardEvent)
-    {
-        const key = e.key;
+        if (!this.input) return;
 
-        const keysToSkip = [
-            'Shift', 'Control', 'Alt', 'Meta',
-            'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-            'CapsLock', 'AltGraph', 'Tab', 'ContextMenu',
-            'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
-            'ScrollLock', 'Pause', 'Insert', 'Delete', 'Home',
-            'End', 'PageUp', 'PageDown', 'NumLock', 'Dead'
-        ];
-
-        if (keysToSkip.includes(key)) return;
-
-        if (e.metaKey) return;
-        if (e.ctrlKey) return;
-
-        if (key === 'Backspace')
-        {
-            this._delete();
-        }
-        else if (key === 'Escape' || key === 'Enter')
-        {
-            this.stopEditing();
-        }
-        else if (key.length === 1)
-        {
-            this._add(key);
-        }
-        else if (this.lastInputData && this.lastInputData.length === 1)
-        {
-            this._add(this.lastInputData);
-        }
-
-        if (this.input)
+        if (!this.editing)
         {
             this.input.value = '';
+
+            return;
+        }
+
+        const { maxLength } = this.options;
+        let text = this.input.value;
+
+        if (maxLength && text.length > maxLength)
+        {
+            text = text.substring(0, maxLength);
+            this.input.value = text;
+        }
+
+        if (text === this.value) return;
+
+        this.value = text;
+
+        this.onChange.emit(this.value);
+    }
+
+    /**
+     * Handles the keys that control the editing session itself. Text content is handled by
+     * {@link Input.onInput}, so this deliberately does not insert or delete characters.
+     * @param e - the native keyboard event.
+     */
+    protected onKeyDown(e: KeyboardEvent)
+    {
+        if (e.metaKey || e.ctrlKey) return;
+
+        if (e.key === 'Escape' || e.key === 'Enter')
+        {
+            this.stopEditing();
         }
     }
 
@@ -420,6 +424,15 @@ export class Input extends Container
         input.style.outline = 'none';
         input.style.background = 'white';
 
+        // Seed the field with the current text so the browser edits the real string:
+        // backspace, caret movement, autocorrect and suggestions all need it to be there.
+        input.value = this.value;
+
+        if (this.options.maxLength)
+        {
+            input.maxLength = this.options.maxLength;
+        }
+
         // This hack fixes instant hiding keyboard on mobile after showing it
         if (isMobile.android.device)
         {
@@ -436,9 +449,8 @@ export class Input extends Container
         }
 
         input.addEventListener('blur', this.stopEditingBinding);
-        input.addEventListener('keydown', this.onKeyUpBinding);
+        input.addEventListener('keydown', this.onKeyDownBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
-        input.addEventListener('paste', this.onPasteBinding);
 
         this.input = input;
 
@@ -669,9 +681,8 @@ export class Input extends Container
         if (!this.input) return;
 
         this.input.removeEventListener('blur', this.stopEditingBinding);
-        this.input.removeEventListener('keydown', this.onKeyUpBinding);
+        this.input.removeEventListener('keydown', this.onKeyDownBinding);
         this.input.removeEventListener('input', this.onInputBinding as EventListener);
-        this.input.removeEventListener('paste', this.onPasteBinding);
 
         this.input.blur();
         this.input.remove();
@@ -821,16 +832,5 @@ export class Input extends Container
         );
 
         this.inputMask.position.set(this.paddingLeft, this.paddingTop);
-    }
-
-    protected onPaste(e: ClipboardEvent)
-    {
-        e.preventDefault();
-
-        const text = (e.clipboardData || (window as any).clipboardData).getData('text');
-
-        if (!text) return;
-
-        this._add(text);
     }
 }

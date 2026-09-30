@@ -512,4 +512,151 @@ describe('Input Component', () =>
             }).not.toThrow();
         });
     });
+
+    describe('Input Native Event Handling', () =>
+    {
+        // Regression tests for #257, #253 and #219. Text used to be reconstructed from
+        // `keydown`, which on-screen keyboards do not populate: they report `Unidentified`
+        // and only send the real character on the following `input` event. The component
+        // fell back to the previously captured `input` data, so every key press inserted
+        // the character before it.
+        const startEditing = (input: Input) =>
+        {
+            (input as any)._startEditing();
+
+            return (input as any).input as HTMLInputElement;
+        };
+
+        // Mirrors how a browser reports typing: the field updates, then `input` fires.
+        const type = (native: HTMLInputElement, text: string, inputType = 'insertText') =>
+        {
+            native.value += text;
+            native.dispatchEvent(new InputEvent('input', { data: text, inputType }));
+        };
+
+        it('should insert a character as soon as the input event fires', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            type(native, 'H');
+
+            expect(input.value).toBe('H');
+        });
+
+        it('should not lag behind when keydown reports no usable key', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            // The Android sequence: keydown carries no character, `input` carries it.
+            for (const char of 'Hello')
+            {
+                native.dispatchEvent(new KeyboardEvent('keydown', { key: 'Unidentified' }));
+                type(native, char);
+            }
+
+            expect(input.value).toBe('Hello');
+        });
+
+        it('should not insert anything on keydown alone', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            native.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+
+            expect(input.value).toBe('');
+        });
+
+        it('should follow deletions made in the native field', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            type(native, 'Hi');
+            expect(input.value).toBe('Hi');
+
+            native.value = 'H';
+            native.dispatchEvent(new InputEvent('input', { inputType: 'deleteContentBackward' }));
+
+            expect(input.value).toBe('H');
+        });
+
+        it('should apply a keyboard suggestion as a replacement, not an append', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            type(native, 'Hel');
+
+            // Picking a suggestion replaces the word being typed.
+            native.value = 'Hello';
+            native.dispatchEvent(new InputEvent('input', {
+                data: 'Hello',
+                inputType: 'insertReplacementText',
+            }));
+
+            expect(input.value).toBe('Hello');
+        });
+
+        it('should seed the native field with the current value', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'existing' });
+            const native = startEditing(input);
+
+            expect(native.value).toBe('existing');
+        });
+
+        it('should keep editing an existing value instead of restarting it', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'ab' });
+            const native = startEditing(input);
+
+            type(native, 'c');
+
+            expect(input.value).toBe('abc');
+        });
+
+        it('should respect maxLength', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), maxLength: 3 });
+            const native = startEditing(input);
+
+            expect(native.maxLength).toBe(3);
+
+            // Bypass the native limit the way a paste or suggestion can.
+            native.value = 'abcdef';
+            native.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+
+            expect(input.value).toBe('abc');
+        });
+
+        it('should emit onChange once per change', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+            const changes: string[] = [];
+
+            input.onChange.connect((value) => changes.push(value));
+
+            type(native, 'a');
+            type(native, 'b');
+
+            expect(changes).toEqual(['a', 'ab']);
+        });
+
+        it('should stop editing on Enter and Escape', () =>
+        {
+            for (const key of ['Enter', 'Escape'])
+            {
+                const input = new Input({ bg: createTestGraphics(200, 50) });
+                const native = startEditing(input);
+
+                native.dispatchEvent(new KeyboardEvent('keydown', { key }));
+
+                expect((input as any).editing).toBe(false);
+            }
+        });
+    });
 });
