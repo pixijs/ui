@@ -1,5 +1,6 @@
 import {
     Container,
+    ContainerOptions,
     Graphics,
     NineSliceSprite as PixiNineSliceSprite,
     Optional,
@@ -28,7 +29,7 @@ export type ProgressBarOptions = {
     fillPaddings?: FillPaddings;
     nineSliceSprite?: NineSliceSprite;
     progress?: number;
-};
+} & ContainerOptions;
 
 /**
  * Creates a ProgressBar.
@@ -77,7 +78,23 @@ export class ProgressBar extends Container
      */
     constructor(options?: ProgressBarOptions)
     {
-        super();
+        if (options)
+        {
+            const {
+                bg: _0,
+                fill: _1,
+                fillPaddings: _2,
+                nineSliceSprite: _3,
+                progress: _4,
+                ...rest
+            } = options;
+
+            super(rest);
+        }
+        else
+        {
+            super();
+        }
 
         const defaultOptions: ProgressBarOptions = {
             bg: Texture.WHITE,

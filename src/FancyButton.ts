@@ -14,7 +14,7 @@ import { fitToView } from './utils/helpers/fit';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 
-import type { Optional, Size, Sprite } from 'pixi.js';
+import type { ContainerOptions, Optional, Size, Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -86,7 +86,7 @@ export type ButtonOptions = ViewsInput & {
 
     /** @deprecated refer to contentFittingMode instead */
     ignoreRefitting?: boolean;
-};
+} & Omit<ContainerOptions, 'scale'>;
 
 /**
  * Button component with a lot of tweaks.
@@ -207,9 +207,7 @@ export class FancyButton extends ButtonContainer
      */
     constructor(options?: ButtonOptions)
     {
-        super();
-
-        this.options = options ?? {};
+        options ??= {};
 
         const {
             defaultView,
@@ -221,17 +219,25 @@ export class FancyButton extends ButtonContainer
             offset,
             textOffset,
             iconOffset,
-            defaultTextScale: textScale,
-            defaultIconScale: iconScale,
-            defaultTextAnchor: textAnchor,
-            defaultIconAnchor: iconAnchor,
+            defaultTextScale,
+            defaultIconScale,
+            defaultTextAnchor,
+            defaultIconAnchor,
             scale,
             anchor,
             anchorX,
             anchorY,
             icon,
             animations,
-        } = options ?? {};
+            nineSliceSprite: _0,
+            contentFittingMode: _1,
+            ignoreRefitting: _2,
+            ...rest
+        } = options;
+
+        super(undefined, rest);
+
+        this.options = options;
 
         this.addChild(this.innerView);
 
@@ -244,10 +250,10 @@ export class FancyButton extends ButtonContainer
         this.offset = offset ?? {};
         this.textOffset = textOffset ?? {};
         this.iconOffset = iconOffset ?? {};
-        this.defaultTextScale = textScale ?? { x: 1, y: 1 };
-        this.defaultIconScale = iconScale ?? { x: 1, y: 1 };
-        this.defaultTextAnchor = textAnchor ?? { x: 0.5, y: 0.5 };
-        this.defaultIconAnchor = iconAnchor ?? { x: 0.5, y: 0.5 };
+        this.defaultTextScale = defaultTextScale ?? { x: 1, y: 1 };
+        this.defaultIconScale = defaultIconScale ?? { x: 1, y: 1 };
+        this.defaultTextAnchor = defaultTextAnchor ?? { x: 0.5, y: 0.5 };
+        this.defaultIconAnchor = defaultIconAnchor ?? { x: 0.5, y: 0.5 };
         this.scale.set(scale ?? 1);
 
         if (animations)

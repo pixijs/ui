@@ -1,4 +1,4 @@
-import { Container, FillStyleInputs, Graphics, Sprite } from 'pixi.js';
+import { Container, ContainerOptions, FillStyleInputs, Graphics, Sprite } from 'pixi.js';
 import { getView } from './utils/helpers/view';
 
 export type MaskedFrameOptions = {
@@ -6,7 +6,7 @@ export type MaskedFrameOptions = {
     mask?: string | Graphics;
     borderWidth?: number;
     borderColor?: FillStyleInputs;
-};
+} & Omit<ContainerOptions, 'mask'>;
 
 /**
  * Draws a border or apply a mask of any shape to a container.
@@ -30,11 +30,26 @@ export class MaskedFrame extends Container
 
     constructor(options?: MaskedFrameOptions)
     {
-        super();
-
-        if (options?.target)
+        if (options)
         {
-            this.init(options);
+            const {
+                target,
+                mask: _0,
+                borderWidth: _1,
+                borderColor: _2,
+                ...rest
+            } = options;
+
+            super(rest);
+
+            if (target)
+            {
+                this.init(options);
+            }
+        }
+        else
+        {
+            super();
         }
     }
 
