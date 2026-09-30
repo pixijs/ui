@@ -17,7 +17,7 @@ const g = (w = 200, h = 20) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 
 describe('Ticker callbacks are released on destroy', () =>
 {
-    it.failing('Dialog removes its shared-ticker callback', () =>
+    it('Dialog removes its shared-ticker callback', () =>
     {
         const before = Ticker.shared.count;
         const dialog = new Dialog({ background: g(300, 200), title: 'T' });
@@ -27,7 +27,7 @@ describe('Ticker callbacks are released on destroy', () =>
         expect(Ticker.shared.count).toBe(before);
     });
 
-    it.failing('FancyButton with animations removes its shared-ticker callback', () =>
+    it('FancyButton with animations removes its shared-ticker callback', () =>
     {
         const before = Ticker.shared.count;
         const button = new FancyButton({
@@ -41,7 +41,7 @@ describe('Ticker callbacks are released on destroy', () =>
         expect(Ticker.shared.count).toBe(before);
     });
 
-    it.failing('Input removes its shared-ticker callback', () =>
+    it('Input removes its shared-ticker callback', () =>
     {
         const before = Ticker.shared.count;
         const input = new Input({ bg: g() });
@@ -54,7 +54,7 @@ describe('Ticker callbacks are released on destroy', () =>
 
 describe('Input DOM cleanup', () =>
 {
-    it.failing('removes the hidden input element when destroyed mid-edit', () =>
+    it('removes the hidden input element when destroyed mid-edit', () =>
     {
         const input = new Input({ bg: g() });
 
@@ -88,7 +88,7 @@ describe('ScrollBox cleanup', () =>
         }
     });
 
-    it.failing('does not stack pointer listeners when init() is called twice', () =>
+    it('does not stack pointer listeners when init() is called twice', () =>
     {
         const box = new ScrollBox({ width: 200, height: 200 });
         const after1 = box.listenerCount('pointerdown');
@@ -101,7 +101,7 @@ describe('ScrollBox cleanup', () =>
 
 describe('RadioGroup re-initialisation', () =>
 {
-    it.failing('does not duplicate items when init() is called twice', () =>
+    it('does not duplicate items when init() is called twice', () =>
     {
         const items = [
             new CheckBox({ style: { checked: g(), unchecked: g() }, text: 'A' }),

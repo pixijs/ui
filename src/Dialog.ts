@@ -1,4 +1,14 @@
-import { Container, ContainerOptions, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
+import {
+    Container,
+    ContainerOptions,
+    DestroyOptions,
+    Graphics,
+    NineSliceSprite,
+    ObservablePoint,
+    Sprite,
+    Texture,
+    Ticker,
+} from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
@@ -64,6 +74,9 @@ export class Dialog extends Container
     protected readonly options: DialogOptions;
 
     protected _isOpen: boolean = false;
+
+    /** Kept as a field so destroy() can detach it from the shared ticker. */
+    protected readonly updateAnimations = () => Group.shared.update();
 
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
@@ -165,7 +178,22 @@ export class Dialog extends Container
         this.initContent();
 
         // Setup ticker for tween animations
-        Ticker.shared.add(() => Group.shared.update());
+        Ticker.shared.add(this.updateAnimations);
+    }
+
+    /**
+     * Destroys the component, detaching it from the shared ticker.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
+     */
+    override destroy(options?: DestroyOptions | boolean)
+    {
+        Ticker.shared.remove(this.updateAnimations);
+
+        // Dialog constructs this ScrollBox itself, and ScrollBox.destroy is what
+        // releases its ticker callback and document wheel listener.
+        this.scrollBox?.destroy();
+
+        super.destroy(options);
     }
 
     /** Gets the dialog width from options or innerView. */

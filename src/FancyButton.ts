@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import {
     Container,
+    DestroyOptions,
     isMobile,
     NineSliceSprite,
     ObservablePoint,
@@ -132,6 +133,9 @@ export class FancyButton extends ButtonContainer
     protected originalInnerViewState!: AnimationData;
     protected defaultDuration = 100;
 
+    /** Kept as a field so destroy() can detach it from the shared ticker. */
+    protected readonly updateAnimations = () => Group.shared.update();
+
     /** FancyButton options. */
     protected readonly options: ButtonOptions;
 
@@ -260,7 +264,7 @@ export class FancyButton extends ButtonContainer
         {
             this.animations = animations;
             this.setOriginalInnerViewState();
-            Ticker.shared.add(() => Group.shared.update());
+            Ticker.shared.add(this.updateAnimations);
         }
 
         this.setState('default');
@@ -1162,6 +1166,17 @@ export class FancyButton extends ButtonContainer
     override get height(): number
     {
         return super.height;
+    }
+
+    /**
+     * Destroys the component, detaching it from the shared ticker.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
+     */
+    override destroy(options?: DestroyOptions | boolean)
+    {
+        Ticker.shared.remove(this.updateAnimations);
+
+        super.destroy(options);
     }
 
     override setSize(value: number | Optional<Size, 'height'>, height?: number): void
