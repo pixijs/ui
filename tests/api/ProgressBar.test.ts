@@ -1,8 +1,10 @@
 import { Graphics, NineSliceSprite, Sprite, Texture } from 'pixi.js';
 import { ProgressBar } from '../../src/ProgressBar';
 
+type Slice = [number, number, number, number];
+
 const g = (w = 200, h = 20) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
-const nineSlice = { bg: [2, 2, 2, 2] as [number, number, number, number], fill: [2, 2, 2, 2] as [number, number, number, number] };
+const nineSlice = { bg: [2, 2, 2, 2] as Slice, fill: [2, 2, 2, 2] as Slice };
 
 describe('ProgressBar defaults', () =>
 {
