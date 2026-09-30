@@ -26,7 +26,7 @@ export class Trackpad
     protected _dirty: boolean = false;
     protected disableEasing = false;
 
-    constructor(options: TrackpadOptions)
+    constructor(options: TrackpadOptions = {})
     {
         this.xAxis = new SlidingNumber({
             ease: options.xEase,

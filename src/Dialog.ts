@@ -209,6 +209,11 @@ export class Dialog extends Container
     {
         const { background, nineSliceSprite } = this.options;
 
+        if (!background)
+        {
+            throw new Error('Dialog background is not defined. Please provide options.background.');
+        }
+
         if (nineSliceSprite)
         {
             if (typeof background === 'string')

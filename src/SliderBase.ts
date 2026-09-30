@@ -171,6 +171,8 @@ export class SliderBase extends ProgressBar
 
     protected activateBG()
     {
+        if (!this.bg) return;
+
         this.bg.eventMode = 'static';
         this.bg
             .on('pointerdown', this.startUpdate, this)

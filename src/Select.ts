@@ -230,6 +230,8 @@ export class Select extends Container
      */
     addItems(items: SelectItemsOptions, selected = 0)
     {
+        if (!items?.items?.length) return;
+
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
             const text = button.text;
@@ -264,9 +266,20 @@ export class Select extends Container
         this.scrollBox.removeItem(itemID);
     }
 
+    /** Throws if the component is used before {@link Select.init} has run. */
+    protected assertInitiated()
+    {
+        if (!this.openButton)
+        {
+            throw new Error('Select has not been initiated!');
+        }
+    }
+
     /** Toggle the select state (open if closed, closes - id open). */
     toggle()
     {
+        this.assertInitiated();
+
         this.view.visible = !this.view.visible;
         this.openButton.visible = !this.openButton.visible;
     }
@@ -274,6 +287,8 @@ export class Select extends Container
     /** Show dropdown. */
     open()
     {
+        this.assertInitiated();
+
         this.view.visible = true;
         this.openButton.visible = false;
     }
@@ -281,6 +296,8 @@ export class Select extends Container
     /** Hide dropdown. */
     close()
     {
+        this.assertInitiated();
+
         this.view.visible = false;
         this.openButton.visible = true;
     }

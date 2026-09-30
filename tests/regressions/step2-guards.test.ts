@@ -21,7 +21,7 @@ const g = () => new Graphics().rect(0, 0, 100, 50).fill(0xffffff);
 
 describe('Button.view setter', () =>
 {
-    it.failing('ignores an undefined view instead of throwing', () =>
+    it('ignores an undefined view instead of throwing', () =>
     {
         const view = new Sprite(Texture.WHITE);
         const button = new Button(view);
@@ -33,14 +33,14 @@ describe('Button.view setter', () =>
 
 describe('Switcher', () =>
 {
-    it.failing('ignores an undefined views array instead of throwing', () =>
+    it('ignores an undefined views array instead of throwing', () =>
     {
         const switcher = new Switcher([g(), g()]);
 
         expect(() => { (switcher as any).views = undefined; }).not.toThrow();
     });
 
-    it.failing('ignores an undefined view passed to add() instead of throwing', () =>
+    it('ignores an undefined view passed to add() instead of throwing', () =>
     {
         const switcher = new Switcher([g()]);
 
@@ -50,7 +50,7 @@ describe('Switcher', () =>
 
 describe('RadioGroup.selectItem', () =>
 {
-    it.failing('ignores an out-of-range id instead of throwing', () =>
+    it('ignores an out-of-range id instead of throwing', () =>
     {
         const items = [
             new CheckBox({ style: { checked: g(), unchecked: g() }, text: 'A' }),
@@ -65,7 +65,7 @@ describe('RadioGroup.selectItem', () =>
 
 describe('ScrollBox.addItem', () =>
 {
-    it.failing('tolerates being called with no arguments', () =>
+    it('tolerates being called with no arguments', () =>
     {
         const box = new ScrollBox({ width: 200, height: 200 });
 
@@ -75,14 +75,14 @@ describe('ScrollBox.addItem', () =>
 
 describe('Select', () =>
 {
-    it.failing('reports a clear error when toggled before init', () =>
+    it('reports a clear error when toggled before init', () =>
     {
         const select = new Select();
 
         expect(() => select.toggle()).toThrow(/has not been initiated/i);
     });
 
-    it.failing('reports a clear error when opened before init', () =>
+    it('reports a clear error when opened before init', () =>
     {
         const select = new Select();
 
@@ -92,7 +92,7 @@ describe('Select', () =>
 
 describe('Dialog', () =>
 {
-    it.failing('reports a clear error when constructed without a background', () =>
+    it('reports a clear error when constructed without a background', () =>
     {
         expect(() => new Dialog({} as any)).toThrow(/background/i);
     });
@@ -100,7 +100,7 @@ describe('Dialog', () =>
 
 describe('Input.value setter', () =>
 {
-    it.failing('treats an undefined value as an empty string instead of throwing', () =>
+    it('treats an undefined value as an empty string instead of throwing', () =>
     {
         const input = new Input({ bg: g() });
 
@@ -111,7 +111,7 @@ describe('Input.value setter', () =>
 
 describe('Trackpad', () =>
 {
-    it.failing('can be constructed with no options, like Spring and SlidingNumber', () =>
+    it('can be constructed with no options, like Spring and SlidingNumber', () =>
     {
         expect(() => new Trackpad(undefined as any)).not.toThrow();
     });
@@ -119,7 +119,7 @@ describe('Trackpad', () =>
 
 describe('ScrollBox.disableDynamicRendering', () =>
 {
-    it.failing('is honoured by updateVisibleItems, as it already is by renderAllItems', () =>
+    it('is honoured by updateVisibleItems, as it already is by renderAllItems', () =>
     {
         const box = new ScrollBox({
             width: 200,
@@ -136,7 +136,7 @@ describe('ScrollBox.disableDynamicRendering', () =>
 
 describe('RadioGroup with no options', () =>
 {
-    it.failing('constructs without items instead of throwing', () =>
+    it('constructs without items instead of throwing', () =>
     {
         expect(() => new RadioGroup()).not.toThrow();
     });

@@ -90,6 +90,8 @@ export class Switcher extends Container
     /** Sets the list of instances for switching. */
     set views(views: Array<Container | string>)
     {
+        if (!views) return;
+
         this.innerView.removeChildren();
         views.forEach((stateView) => this.add(stateView));
     }
@@ -106,6 +108,8 @@ export class Switcher extends Container
      */
     add(view: GetViewSettings): void
     {
+        if (!view) return;
+
         const viewInstance = getView(view);
 
         this.innerView.addChild(viewInstance);

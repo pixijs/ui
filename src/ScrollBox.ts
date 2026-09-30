@@ -228,6 +228,8 @@ export class ScrollBox extends Container
      */
     addItem<T extends Container[]>(...items: T): T[0]
     {
+        if (!items.length) return items[0];
+
         if (items.length > 1)
         {
             items.forEach((item) => this.addItem(item));
@@ -721,9 +723,15 @@ export class ScrollBox extends Container
     {
         this.visibleItems.length = 0;
 
+        const dynamicRendering = !this.options.disableDynamicRendering;
+
         this.items.forEach((child) =>
         {
-            child.renderable = this.isItemVisible(child);
+            if (dynamicRendering)
+            {
+                child.renderable = this.isItemVisible(child);
+            }
+
             this.visibleItems.push(child);
         });
     }
