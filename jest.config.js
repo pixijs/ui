@@ -9,9 +9,13 @@ module.exports = {
         '^.+\\.tsx?$': 'ts-jest',
     },
 
-    testMatch: ['<rootDir>/tests/components/*.test.ts'],
+    testMatch: ['<rootDir>/tests/**/*.test.ts'],
 
-    collectCoverageFrom: ['<rootDir>/src/*.ts'],
+    collectCoverageFrom: [
+        '<rootDir>/src/**/*.ts',
+        '!<rootDir>/src/index.ts',
+        '!<rootDir>/src/stories/**',
+    ],
     coverageDirectory: '<rootDir>/coverage',
 
     testTimeout: 5000,
