@@ -308,7 +308,9 @@ export class SliderBase extends ProgressBar
      */
     set step(value: number)
     {
-        this._step = value;
+        // Matches the constructor's `options.step || 1`: a zero or non-finite
+        // step makes the drag-snap arithmetic produce NaN.
+        this._step = Number.isFinite(value) && value !== 0 ? value : 1;
     }
 
     /** Get step value. */

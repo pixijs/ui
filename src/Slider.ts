@@ -139,7 +139,9 @@ export class Slider extends SliderBase
     {
         if (!this._slider1) return;
 
-        this.progress = (((this.value ?? this.min) - this.min) / (this.max - this.min)) * 100;
+        const range = this.max - this.min;
+
+        this.progress = range === 0 ? 0 : (((this.value ?? this.min) - this.min) / range) * 100;
 
         this._slider1.x = ((this.bg?.width ?? 0) / 100 * this.progress) - (this._slider1.width / 2);
         this._slider1.y = (this.bg?.height ?? 0) / 2;

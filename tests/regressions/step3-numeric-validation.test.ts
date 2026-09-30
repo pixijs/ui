@@ -28,7 +28,7 @@ const drag = (slider: any, x: number) =>
 
 describe('Slider.step', () =>
 {
-    it.failing('coerces a zero step to 1, as the constructor already does', () =>
+    it('coerces a zero step to 1, as the constructor already does', () =>
     {
         const slider = makeSlider();
 
@@ -37,7 +37,7 @@ describe('Slider.step', () =>
         expect(slider.step).toBe(1);
     });
 
-    it.failing('keeps value finite when dragged after step was set to 0', () =>
+    it('keeps value finite when dragged after step was set to 0', () =>
     {
         const slider = makeSlider();
 
@@ -47,7 +47,7 @@ describe('Slider.step', () =>
         expect(Number.isFinite(slider.value)).toBe(true);
     });
 
-    it.failing('rejects a non-finite step', () =>
+    it('rejects a non-finite step', () =>
     {
         const slider = makeSlider();
 
@@ -59,7 +59,7 @@ describe('Slider.step', () =>
 
 describe('Slider with a collapsed range (min === max)', () =>
 {
-    it.failing('keeps progress finite when min, max and value all coincide', () =>
+    it('keeps progress finite when min, max and value all coincide', () =>
     {
         const slider = makeSlider({ value: 50 });
 
@@ -72,7 +72,7 @@ describe('Slider with a collapsed range (min === max)', () =>
 
 describe('ProgressBar.progress', () =>
 {
-    it.failing('clamps a NaN progress instead of storing it', () =>
+    it('clamps a NaN progress instead of storing it', () =>
     {
         const bar = new ProgressBar({ bg: g(), fill: g(), progress: 50 });
 
@@ -93,7 +93,7 @@ describe('ProgressBar.progress', () =>
 
 describe('CircularProgressBar.progress', () =>
 {
-    it.failing('clamps a NaN progress instead of storing it', () =>
+    it('clamps a NaN progress instead of storing it', () =>
     {
         const bar = new CircularProgressBar({ backgroundColor: 0x000000, radius: 50, lineWidth: 5, value: 50 });
 
@@ -105,7 +105,7 @@ describe('CircularProgressBar.progress', () =>
 
 describe('FancyButton contentFittingMode: "fill"', () =>
 {
-    it.failing('keeps icon scale finite when the icon has no size', () =>
+    it('keeps icon scale finite when the icon has no size', () =>
     {
         const button = new FancyButton({
             defaultView: g(100, 100),
