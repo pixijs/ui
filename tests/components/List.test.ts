@@ -774,4 +774,49 @@ describe('List Component', () =>
             expect(list.children.every((child) => child.x === 10)).toBe(true);
         });
     });
+
+    describe('List Bulk Adding', () =>
+    {
+        it('should arrange once for the whole batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+            const arrangeSpy = jest.spyOn(list, 'arrangeChildren');
+
+            list.addItems(createTestItems(25, 40));
+
+            expect(arrangeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should arrange items the same as adding them one by one', () =>
+        {
+            const batched = new List({ type: 'vertical', elementsMargin: 5 });
+            const individual = new List({ type: 'vertical', elementsMargin: 5 });
+
+            batched.addItems(createTestItems(10, 40));
+            createTestItems(10, 40).forEach((item) => individual.addChild(item));
+
+            expect(batched.children.map((child) => child.y)).toEqual(individual.children.map((child) => child.y));
+        });
+
+        it('should ignore an empty batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+
+            expect(() => list.addItems([])).not.toThrow();
+            expect(list.children.length).toBe(0);
+        });
+
+        it('should resume arranging after a batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+
+            list.addItems(createTestItems(5, 40));
+
+            const arrangeSpy = jest.spyOn(list, 'arrangeChildren');
+
+            list.addChild(createTestItems(1, 40)[0]);
+
+            expect(arrangeSpy).toHaveBeenCalled();
+        });
+    });
 });

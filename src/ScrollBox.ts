@@ -245,7 +245,23 @@ export class ScrollBox extends Container
     {
         if (!items?.length) return;
 
-        items.forEach((item) => this.addItem(item));
+        items.forEach((item) =>
+        {
+            if (!item.width || !item.height)
+            {
+                console.error('ScrollBox item should have size');
+            }
+
+            item.eventMode = 'static';
+            this.proximityStatusCache.push(false);
+        });
+
+        // Added and arranged in one pass, then measured once. Adding them one at a time
+        // re-arranged the whole list and re-measured the ScrollBox for every item, which
+        // made filling a large list quadratic.
+        this.list?.addItems(items);
+
+        this.resize();
     }
 
     /** Remove all items from a scrollable list. */
@@ -253,6 +269,7 @@ export class ScrollBox extends Container
     {
         this.proximityStatusCache.length = 0;
         this.list?.removeChildren();
+        this.resize();
     }
 
     /**
@@ -261,33 +278,7 @@ export class ScrollBox extends Container
      */
     addItem<T extends Container[]>(...items: T): T[0]
     {
-        if (!items.length) return items[0];
-
-        if (items.length > 1)
-        {
-            items.forEach((item) => this.addItem(item));
-        }
-        else
-        {
-            const child = items[0];
-
-            if (!child.width || !child.height)
-            {
-                console.error('ScrollBox item should have size');
-            }
-
-            child.eventMode = 'static';
-
-            this.list?.addChild(child);
-            this.proximityStatusCache.push(false);
-
-            if (!this.options.disableDynamicRendering)
-            {
-                child.renderable = this.isItemVisible(child);
-            }
-        }
-
-        this.resize();
+        this.addItems(items);
 
         return items[0];
     }
