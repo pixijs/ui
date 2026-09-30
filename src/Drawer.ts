@@ -1,4 +1,13 @@
-import { Container, FederatedPointerEvent, Graphics, NineSliceSprite, Sprite, Texture, Ticker } from 'pixi.js';
+import {
+    Container,
+    ContainerOptions,
+    FederatedPointerEvent,
+    Graphics,
+    NineSliceSprite,
+    Sprite,
+    Texture,
+    Ticker,
+} from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
@@ -29,7 +38,7 @@ export type DrawerOptions = {
     closeOnBackdropClick?: boolean;
     swipeToClose?: boolean;
     nineSliceSprite?: [number, number, number, number];
-};
+} & Omit<ContainerOptions, 'position'>;
 
 /**
  * Drawer component that slides in from the edge of the screen.
@@ -87,10 +96,30 @@ export class Drawer extends Container
      * @param {boolean} options.closeOnBackdropClick - Whether to close the drawer when clicking on the backdrop.
      * @param {boolean} options.swipeToClose - Whether to enable swipe gesture to close the drawer.
      * @param {[number, number, number, number]} options.nineSliceSprite - Nine-slice scaling settings for the background.
+     * Any other option is treated as a `Container` option and passed to the `Container` constructor
+     * (except `position`, which is the drawer edge here; use `x`/`y` to move the drawer).
      */
     constructor(options: DrawerOptions)
     {
-        super();
+        const {
+            position: _0,
+            backdrop: _1,
+            backdropColor: _2,
+            backdropAlpha: _3,
+            background: _4,
+            content: _5,
+            width,
+            height,
+            padding: _6,
+            scrollBox: _7,
+            animations: _8,
+            closeOnBackdropClick: _9,
+            swipeToClose: _10,
+            nineSliceSprite: _11,
+            ...rest
+        } = options;
+
+        super(rest);
 
         this.options = options;
         this.onClose = new Signal();
@@ -103,13 +132,7 @@ export class Drawer extends Container
         this.initInnerView();
 
         const offset = this.drawerPadding;
-        const { width } = this.options;
-        let { height } = this.options;
-
-        if (height)
-        {
-            height = height - (offset * 2);
-        }
+        const computedHeight = height ? height - (offset * 2) : height;
 
         this.scrollBox = new ScrollBox({
             background: 0x000000,
@@ -119,7 +142,7 @@ export class Drawer extends Container
             padding: 10,
             ...this.options.scrollBox,
             width: width ? width - (offset * 2) : 0,
-            height,
+            height: computedHeight,
         });
 
         this.innerView.addChild(this.scrollBox);
