@@ -112,6 +112,11 @@ export class CircularProgressBar extends Container
      */
     set progress(value: number)
     {
+        if (Number.isNaN(value))
+        {
+            value = 0;
+        }
+
         if (value > 100)
         {
             value = 100;

@@ -474,8 +474,12 @@ export class FancyButton extends ButtonContainer
 
                 const availableWidth = activeView.width - (this.padding * 2);
                 const availableHeight = activeView.height - (this.padding * 2);
-                const targetScaleX = availableWidth / this._views.textView.width;
-                const targetScaleY = availableHeight / this._views.textView.height;
+                const targetScaleX = this._views.textView.width > 0
+                    ? availableWidth / this._views.textView.width
+                    : 1;
+                const targetScaleY = this._views.textView.height > 0
+                    ? availableHeight / this._views.textView.height
+                    : 1;
                 const scale = Math.min(targetScaleX, targetScaleY);
 
                 this._views.textView.scale.set(
@@ -527,8 +531,12 @@ export class FancyButton extends ButtonContainer
 
             const availableWidth = activeView.width - (this.padding * 2);
             const availableHeight = activeView.height - (this.padding * 2);
-            const targetScaleX = availableWidth / this._views.iconView.width;
-            const targetScaleY = availableHeight / this._views.iconView.height;
+            const targetScaleX = this._views.iconView.width > 0
+                ? availableWidth / this._views.iconView.width
+                : 1;
+            const targetScaleY = this._views.iconView.height > 0
+                ? availableHeight / this._views.iconView.height
+                : 1;
             const scale = Math.min(targetScaleX, targetScaleY);
 
             this._views.iconView.scale.set(

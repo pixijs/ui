@@ -53,8 +53,18 @@ export class DoubleSlider extends SliderBase
 
     protected updateProgress(value1 = this.value1, value2 = this.value2)
     {
-        this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
-        this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
+        const range = this.max - this.min;
+
+        if (range === 0)
+        {
+            this.progressStart = 0;
+            this.progress = 0;
+
+            return;
+        }
+
+        this.progressStart = ((value1 - this.min) / range) * 100;
+        this.progress = ((value2 - this.min) / range) * 100;
     }
 
     protected validateValues()
@@ -172,7 +182,7 @@ export class DoubleSlider extends SliderBase
             }
         }
 
-        const progress = this.validate((x / this.bg?.width) * 100);
+        const progress = this.validate((x / (this.bg?.width || 1)) * 100);
 
         if (this.activeValue === 'value1')
         {
