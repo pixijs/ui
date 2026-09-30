@@ -56,7 +56,21 @@ export class SliderBase extends ProgressBar
 
     constructor(options: DoubleSliderOptions)
     {
-        super(options);
+        const {
+            min: _0,
+            max: _1,
+            valueTextStyle: _2,
+            valueTextClass: _3,
+            showValue: _4,
+            valueTextOffset: _5,
+            slider1: _6,
+            slider2: _7,
+            value1: _8,
+            value2: _9,
+            ...rest
+        } = options;
+
+        super(rest);
 
         this.settings = options;
 

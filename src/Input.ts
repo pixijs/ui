@@ -1,6 +1,7 @@
 import {
     Color,
     Container,
+    ContainerOptions,
     DestroyOptions,
     Graphics,
     isMobile,
@@ -34,7 +35,7 @@ export type InputOptions = {
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
-};
+} & ContainerOptions;
 
 const SECURE_CHARACTER = '*';
 
@@ -117,7 +118,23 @@ export class Input extends Container
      */
     constructor(options: InputOptions)
     {
-        super();
+        const {
+            bg,
+            textStyle: _0,
+            TextClass: _1,
+            placeholder: _2,
+            value: _3,
+            maxLength: _4,
+            secure: _5,
+            align: _6,
+            padding: _7,
+            cleanOnFocus: _8,
+            nineSliceSprite: _9,
+            addMask: _10,
+            ...rest
+        } = options;
+
+        super(rest);
 
         // Establish sensible defaults for all input options
         // to avoid null checks throughout the component
@@ -140,10 +157,8 @@ export class Input extends Container
 
         this.options = { ...defaultOptions, ...options };
 
-        const { padding = 0, secure = false } = this.options;
-
-        this.padding = padding;
-        this._secure = secure;
+        this.padding = this.options.padding ?? 0;
+        this._secure = this.options.secure ?? false;
 
         this.cursor = 'text';
         this.interactive = true;
@@ -161,9 +176,9 @@ export class Input extends Container
 
         Ticker.shared.add((ticker) => this.update(ticker.deltaTime));
 
-        if (options.bg)
+        if (bg)
         {
-            this.bg = options.bg;
+            this.bg = bg;
         }
         else
         {

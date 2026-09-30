@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container, ContainerOptions } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';
@@ -35,14 +35,16 @@ export class Switcher extends Container
      * @param {Array<Container | string>} views - Array of views or textures that will be switching.
      * @param triggerEvents - Button events, to switch views (can be one event or an array of events).
      * @param activeViewID - The id of the view, visible by default.
+     * @param options - The container options.
      */
     constructor(
         views?: Array<Container | string>,
         triggerEvents?: ButtonEvent | ButtonEvent[],
         activeViewID?: number,
+        options?: ContainerOptions
     )
     {
-        super();
+        super(options);
 
         this.innerView = new Container();
         this.addChild(this.innerView);

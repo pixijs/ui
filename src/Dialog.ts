@@ -1,4 +1,4 @@
-import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
+import { Container, ContainerOptions, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
 import { Signal } from 'typed-signals';
 import { Button } from './Button';
@@ -32,7 +32,7 @@ export type DialogOptions = {
     };
     closeOnBackdropClick?: boolean;
     nineSliceSprite?: [number, number, number, number];
-};
+} & ContainerOptions;
 
 /**
  * Modal dialog component for asking users questions.
@@ -96,7 +96,26 @@ export class Dialog extends Container
      */
     constructor(options: DialogOptions)
     {
-        super();
+        const {
+            backdrop: _0,
+            backdropColor: _1,
+            backdropAlpha: _2,
+            background: _3,
+            title: _4,
+            content: _5,
+            width,
+            height,
+            padding: _6,
+            buttons: _7,
+            buttonList,
+            scrollBox: _8,
+            animations: _9,
+            closeOnBackdropClick: _10,
+            nineSliceSprite: _11,
+            ...rest
+        } = options;
+
+        super(rest);
 
         this.options = options;
         this.onSelect = new Signal();
@@ -107,7 +126,7 @@ export class Dialog extends Container
         this.buttonContainer = new List({
             type: 'horizontal',
             elementsMargin: 10,
-            ...options.buttonList,
+            ...buttonList,
         });
 
         this.initBackdrop();
@@ -116,16 +135,15 @@ export class Dialog extends Container
         this.initButtons();
 
         const offset = this.dialogPadding;
-        const { width } = this.options;
-        let { height } = this.options;
+        let computedHeight = height;
 
-        if (height)
+        if (computedHeight)
         {
-            height = height - (offset * 2) - this.buttonContainer.height;
+            computedHeight = computedHeight - (offset * 2) - this.buttonContainer.height;
 
             if (this.titleText?.height)
             {
-                height -= this.titleText.height;
+                computedHeight -= this.titleText.height;
             }
         }
 
@@ -137,7 +155,7 @@ export class Dialog extends Container
             padding: 10,
             ...this.options.scrollBox,
             width: width ? width - (offset * 2) : 0,
-            height,
+            height: computedHeight,
         });
 
         this.innerView?.addChild(this.scrollBox);
