@@ -73,10 +73,10 @@ export class Trackpad
             this._dirty = false;
 
             this.xAxis.min = this._bounds.left;
-            this.xAxis.min = this._bounds.right - this._frame.width;
+            this.xAxis.max = this._bounds.right - this._frame.width;
 
-            this.xAxis.min = this._bounds.top;
-            this.xAxis.min = this._bounds.bottom - this._frame.height;
+            this.yAxis.min = this._bounds.top;
+            this.yAxis.max = this._bounds.bottom - this._frame.height;
         }
 
         if (this._isDown && this._globalPosition)

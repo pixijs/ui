@@ -99,7 +99,9 @@ export class CircularProgressBar extends Container
 
         this.bgCircle.circle(0, 0, radius).stroke({
             width: lineWidth,
-            color: backgroundColor,
+            // A colour is always required; `alpha` above is what hides the
+            // background when the caller did not ask for one.
+            color: backgroundColor ?? 0x000000,
             alpha,
         });
     }

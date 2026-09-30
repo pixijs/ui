@@ -136,16 +136,6 @@ export class SlidingNumber
                 this.value = 0;
             }
 
-            if (this.value > 0)
-            {
-                this.value = 0;
-            }
-
-            if (this.value < this.max)
-            {
-                this.value = this.max;
-            }
-
             if (this.value < this.max)
             {
                 this.value = this.max;

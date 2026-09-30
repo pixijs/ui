@@ -19,28 +19,28 @@ const makeCheckBox = (text: string) =>
 
 describe('FancyButton: base scale/anchor getters must not recurse', () =>
 {
-    it.failing('defaultTextScale returns the configured scale', () =>
+    it('defaultTextScale returns the configured scale', () =>
     {
         const button = new FancyButton({ defaultView: g(), text: 'hi', defaultTextScale: 0.5 });
 
         expect(button.defaultTextScale).toEqual({ x: 0.5, y: 0.5 });
     });
 
-    it.failing('defaultIconScale returns the configured scale', () =>
+    it('defaultIconScale returns the configured scale', () =>
     {
         const button = new FancyButton({ defaultView: g(), icon: g(), defaultIconScale: 0.25 });
 
         expect(button.defaultIconScale).toEqual({ x: 0.25, y: 0.25 });
     });
 
-    it.failing('defaultTextAnchor returns the configured anchor', () =>
+    it('defaultTextAnchor returns the configured anchor', () =>
     {
         const button = new FancyButton({ defaultView: g(), text: 'hi', defaultTextAnchor: 0.25 });
 
         expect(button.defaultTextAnchor).toEqual({ x: 0.25, y: 0.25 });
     });
 
-    it.failing('defaultIconAnchor returns the configured anchor', () =>
+    it('defaultIconAnchor returns the configured anchor', () =>
     {
         const button = new FancyButton({ defaultView: g(), icon: g(), defaultIconAnchor: 0.25 });
 
@@ -50,7 +50,7 @@ describe('FancyButton: base scale/anchor getters must not recurse', () =>
 
 describe('Trackpad: update() must set both axes, min and max', () =>
 {
-    it.failing('maps bounds and frame onto xAxis/yAxis min and max', () =>
+    it('maps bounds and frame onto xAxis/yAxis min and max', () =>
     {
         const trackpad = new Trackpad({});
 
@@ -67,7 +67,7 @@ describe('Trackpad: update() must set both axes, min and max', () =>
 
 describe('RadioGroup: removeItems must not shift indices mid-iteration', () =>
 {
-    it.failing('removing ids [0, 1] leaves the third item', () =>
+    it('removing ids [0, 1] leaves the third item', () =>
     {
         const items = [makeCheckBox('A'), makeCheckBox('B'), makeCheckBox('C')];
         const group = new RadioGroup({ items, type: 'vertical', elementsMargin: 0 });
@@ -82,12 +82,12 @@ describe('RadioGroup: removeItems must not shift indices mid-iteration', () =>
 
 describe('CircularProgressBar: omitting backgroundColor must not throw', () =>
 {
-    it.failing('constructs with no backgroundColor (invisible background)', () =>
+    it('constructs with no backgroundColor (invisible background)', () =>
     {
         expect(() => new CircularProgressBar({ radius: 50, lineWidth: 5 })).not.toThrow();
     });
 
-    it.failing('constructs with no options at all', () =>
+    it('constructs with no options at all', () =>
     {
         expect(() => new CircularProgressBar()).not.toThrow();
     });
