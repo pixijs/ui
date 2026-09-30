@@ -995,7 +995,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the text view base scale. */
     get defaultTextScale(): Pos
     {
-        return this.defaultTextScale;
+        return this._defaultTextScale;
     }
 
     /**
@@ -1017,7 +1017,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the icon view base scale. */
     get defaultIconScale(): Pos
     {
-        return this.defaultIconScale;
+        return this._defaultIconScale;
     }
 
     /**
@@ -1039,7 +1039,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the text view base anchor. */
     get defaultTextAnchor(): Pos
     {
-        return this.defaultTextAnchor;
+        return this._defaultTextAnchor;
     }
 
     /**
@@ -1061,7 +1061,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the icon view base anchor. */
     get defaultIconAnchor(): Pos
     {
-        return this.defaultIconAnchor;
+        return this._defaultIconAnchor;
     }
 
     /**

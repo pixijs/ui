@@ -130,7 +130,8 @@ export class RadioGroup extends Container
      */
     removeItems(ids: number[])
     {
-        ids.forEach((id) =>
+        // Descending, so each splice cannot shift an index that is still pending.
+        [...ids].sort((a, b) => b - a).forEach((id) =>
         {
             const item = this.items[id];
 
