@@ -182,14 +182,14 @@ export class Switcher extends Container
     {
         if (id !== undefined && id === this.active) return;
 
-        if (this.activeView)
-        {
-            this.activeView.visible = false;
-        }
-
         if (id !== undefined && !this.views[id])
         {
             throw new Error(`View with id ${id} does not exist.`);
+        }
+
+        if (this.activeView)
+        {
+            this.activeView.visible = false;
         }
 
         this._active = id === undefined ? this.nextActive : id;
