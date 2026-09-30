@@ -575,4 +575,91 @@ describe('ScrollBox Component', () =>
             }).not.toThrow();
         });
     });
+
+    describe('ScrollBox Visibility After Resize', () =>
+    {
+        // Regression tests for #227, #226 and #241: visibility and scroll limits used to be
+        // measured against the options passed to the constructor, which setSize() and the
+        // width/height setters never update. Anything below the original height was culled.
+        const makeScrollBox = () => new ScrollBox({
+            width: 200,
+            height: 100,
+            items: createTestItems(10, 40),
+        });
+
+        it('should treat items below the original height as visible after setSize', () =>
+        {
+            const scrollBox = makeScrollBox();
+            // The 4th item sits at y=120, outside the initial 100px height.
+            const item = scrollBox.items[3];
+
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+
+            scrollBox.setSize(200, 500);
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should treat items below the original height as visible after setting height', () =>
+        {
+            const scrollBox = makeScrollBox();
+            const item = scrollBox.items[3];
+
+            scrollBox.height = 500;
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should cull items again when the height shrinks', () =>
+        {
+            const scrollBox = makeScrollBox();
+            const item = scrollBox.items[3];
+
+            scrollBox.setSize(200, 500);
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+
+            scrollBox.setSize(200, 100);
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+        });
+
+        it('should respect the current width on the horizontal axis', () =>
+        {
+            const scrollBox = new ScrollBox({
+                width: 100,
+                height: 200,
+                type: 'horizontal',
+                items: createTestItems(10, 40),
+            });
+            const item = scrollBox.items[3];
+
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+
+            scrollBox.setSize(2000, 200);
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should not allow dragging content that fits inside the view', () =>
+        {
+            // Content shorter than the view has no scrollable range. The limit used to be
+            // negated unconditionally, which let a drag pull the content out of view.
+            const scrollBox = new ScrollBox({
+                width: 200,
+                height: 500,
+                items: createTestItems(2, 40),
+            });
+
+            expect((scrollBox as any)._trackpad.yAxis.max).toBe(0);
+        });
+
+        it('should expose a scrollable range that matches the current height', () =>
+        {
+            const scrollBox = makeScrollBox();
+
+            scrollBox.setSize(200, 300);
+
+            // 10 items of 40px = 400px of content inside a 300px view.
+            expect((scrollBox as any)._trackpad.yAxis.max).toBe(300 - scrollBox.scrollHeight);
+        });
+    });
 });
