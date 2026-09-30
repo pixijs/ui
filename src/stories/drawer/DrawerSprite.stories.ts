@@ -334,6 +334,7 @@ export const CheckboxSwapDrawer = {
             resize: centerView,
         }),
     args: getDefaultArgs(swapDrawerArgs),
+    argTypes: argTypes(swapDrawerArgs),
 };
 
 export default {

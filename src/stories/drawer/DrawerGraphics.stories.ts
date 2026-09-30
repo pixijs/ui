@@ -13,7 +13,6 @@ const args = {
     height: 300,
     radius: 20,
     padding: 20,
-    position: 'bottom',
     backgroundColor: colors.pannelColor,
     backgroundBorderColor: colors.pannelBorderColor,
     backdropColor: '#000000',

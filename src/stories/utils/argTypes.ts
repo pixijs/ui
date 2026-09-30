@@ -190,6 +190,12 @@ export const argTypes = (args: Types) =>
  */
 function getArgType(type: string)
 {
+    // Names like `checkboxCheckedColor` are colors, even though they contain another control name.
+    if (type.toLowerCase().endsWith('color'))
+    {
+        return controls.color;
+    }
+
     for (const control in controls)
     {
         if (type.toLowerCase().indexOf(control) > -1)
