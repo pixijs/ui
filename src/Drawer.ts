@@ -14,7 +14,9 @@ import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 
 type Animation = {
+    /** Currently unused. The drawer always slides between its closed and open positions. */
     props: Record<string, any>;
+    /** Animation duration in milliseconds. Defaults to 300. */
     duration?: number;
 };
 
@@ -41,16 +43,27 @@ export type DrawerOptions = {
 } & Omit<ContainerOptions, 'position'>;
 
 /**
- * Drawer component that slides in from the edge of the screen.
+ * Modal drawer component: a panel that slides in from an edge of the screen,
+ * with an optional backdrop, swipe-to-close and a scrollable content area.
+ *
+ * The drawer is laid out relative to the screen centre, so add it to a container centred on the screen
+ * and tell it the screen size with {@link Drawer.setScreenSize}. The default size is 800x600.
  * @example
  * const drawer = new Drawer({
  *     background: new Graphics().roundRect(0, 0, 400, 300, 20).fill(0xFFFFFF),
  *     content: myContent,
  *     position: 'bottom',
+ *     width: 400,
+ *     height: 300,
+ *     animations: { open: { props: {}, duration: 300 }, close: { props: {}, duration: 300 } },
  * });
+ *
+ * drawer.setScreenSize(app.screen.width, app.screen.height);
  * drawer.onClose.connect(() => {
  *     console.log('Drawer closed');
  * });
+ *
+ * view.addChild(drawer);
  * drawer.open();
  */
 export class Drawer extends Container
@@ -76,26 +89,33 @@ export class Drawer extends Container
     onClose: Signal<() => void>;
 
     /**
-     * Drawer component that slides in from the edge of the screen.
+     * Modal drawer component that slides in from the edge of the screen.
      * @param {DrawerOptions} options - Configuration options for the drawer.
-     * @param {DrawerPosition} options.position - Position of the drawer (bottom, left, right, top).
-     * @param {string | Texture | Container | Sprite | Graphics} options.backdrop - Backdrop view or settings.
-     * @param {number} options.backdropColor - Color of the backdrop (if backdrop is not provided).
-     * @param {number} options.backdropAlpha - Alpha of the backdrop (if backdrop is not provided).
+     * @param {DrawerPosition} options.position -
+     * Screen edge the drawer is attached to (bottom, left, right, top). Defaults to `bottom`.
+     * @param {string | Texture | Container | Sprite | Graphics} options.backdrop -
+     * Backdrop view or settings. If omitted, a large tinted sprite covering the screen is used.
+     * @param {number} options.backdropColor - Color of the backdrop (if backdrop is not provided). Defaults to black.
+     * @param {number} options.backdropAlpha - Alpha of the backdrop when the drawer is open. Defaults to 0.5.
      * @param {string | Texture | Container | Sprite | Graphics} options.background -
      * Background view or settings for the drawer.
      * @param {Container | Container[]} options.content -
      * Content view or array of views for the drawer.
-     * @param {number} options.width - Width of the drawer.
-     * @param {number} options.height - Height of the drawer.
-     * @param {number} options.padding - Padding around the drawer content.
+     * @param {number} options.width -
+     * Width of the drawer panel. For left/right drawers it is the visible width.
+     * @param {number} options.height -
+     * Height of the drawer panel. For top/bottom drawers it is the visible height.
+     * @param {number} options.padding - Padding around the drawer content. Defaults to 20.
      * @param {ScrollBoxOptions} options.scrollBox - Configuration options for the scroll box containing the content.
-     * @param {object} options.animations - Animation settings for opening and closing the drawer.
+     * @param {object} options.animations -
+     * Animation settings for opening and closing the drawer. Without them the drawer opens and closes instantly.
      * @param {Animation} options.animations.open - Animation settings for opening the drawer.
      * @param {Animation} options.animations.close - Animation settings for closing the drawer.
-     * @param {boolean} options.closeOnBackdropClick - Whether to close the drawer when clicking on the backdrop.
-     * @param {boolean} options.swipeToClose - Whether to enable swipe gesture to close the drawer.
-     * @param {[number, number, number, number]} options.nineSliceSprite - Nine-slice scaling settings for the background.
+     * @param {boolean} options.closeOnBackdropClick -
+     * Whether to close the drawer when clicking on the backdrop. Defaults to true.
+     * @param {boolean} options.swipeToClose - Whether to enable swipe gesture to close the drawer. Defaults to true.
+     * @param {[number, number, number, number]} options.nineSliceSprite - Nine-slice scaling settings for the background
+     * (left, top, right, bottom). Used when `background` is a texture or texture name.
      * Any other option is treated as a `Container` option and passed to the `Container` constructor
      * (except `position`, which is the drawer edge here; use `x`/`y` to move the drawer).
      */
@@ -180,7 +200,7 @@ export class Drawer extends Container
         return this.options.padding ?? 20;
     }
 
-    /** Gets the open state of the drawer. */
+    /** Whether the drawer is open. Becomes false only after the close animation has finished. */
     get isOpen(): boolean
     {
         return this._isOpen;
@@ -422,7 +442,7 @@ export class Drawer extends Container
         }
     }
 
-    /** Opens the drawer with animation. */
+    /** Shows the drawer and slides it in (instantly if no open animation is set). */
     open(): void
     {
         this.visible = true;
@@ -458,7 +478,7 @@ export class Drawer extends Container
             .start();
     }
 
-    /** Closes the drawer with animation. */
+    /** Slides the drawer out, hides it and emits `onClose` (instantly if no close animation is set). */
     close(): void
     {
         const closeAnimation = this.options.animations?.close;
