@@ -688,6 +688,8 @@ export class FancyButton extends ButtonContainer
 
         this.removeView(viewType);
 
+        if (view === null) return;
+
         if (this.options?.nineSliceSprite)
         {
             if (typeof view === 'string')
