@@ -1476,7 +1476,10 @@
 
       
       
-          <div class="class-description"><p>Drawer component that slides in from the edge of the screen.</p></div>
+          <div class="class-description"><p>Modal drawer component: a panel that slides in from an edge of the screen,
+with an optional backdrop, swipe-to-close and a scrollable content area.</p>
+<p>The drawer is laid out relative to the screen centre, so add it to a container centred on the screen
+and tell it the screen size with <a href=Drawer.html#setScreenSize>Drawer.setScreenSize</a>. The default size is 800x600.</p></div>
       
   </div>
 </header>
@@ -1508,7 +1511,7 @@
     
     
     <div class="description">
-        <p>Drawer component that slides in from the edge of the screen.</p>
+        <p>Modal drawer component that slides in from the edge of the screen.</p>
     </div>
     
 
@@ -1577,7 +1580,7 @@
             
 
             <td class="description last">
-                <p>Position of the drawer (bottom, left, right, top).</p>
+                <p>Screen edge the drawer is attached to (bottom, left, right, top). Defaults to <code>bottom</code>.</p>
                 
             </td>
         </tr>
@@ -1599,7 +1602,7 @@
             
 
             <td class="description last">
-                <p>Backdrop view or settings.</p>
+                <p>Backdrop view or settings. If omitted, a large tinted sprite covering the screen is used.</p>
                 
             </td>
         </tr>
@@ -1621,7 +1624,7 @@
             
 
             <td class="description last">
-                <p>Color of the backdrop (if backdrop is not provided).</p>
+                <p>Color of the backdrop (if backdrop is not provided). Defaults to black.</p>
                 
             </td>
         </tr>
@@ -1643,7 +1646,7 @@
             
 
             <td class="description last">
-                <p>Alpha of the backdrop (if backdrop is not provided).</p>
+                <p>Alpha of the backdrop when the drawer is open. Defaults to 0.5.</p>
                 
             </td>
         </tr>
@@ -1709,7 +1712,7 @@
             
 
             <td class="description last">
-                <p>Width of the drawer.</p>
+                <p>Width of the drawer panel. For left/right drawers it is the visible width.</p>
                 
             </td>
         </tr>
@@ -1731,7 +1734,7 @@
             
 
             <td class="description last">
-                <p>Height of the drawer.</p>
+                <p>Height of the drawer panel. For top/bottom drawers it is the visible height.</p>
                 
             </td>
         </tr>
@@ -1753,7 +1756,7 @@
             
 
             <td class="description last">
-                <p>Padding around the drawer content.</p>
+                <p>Padding around the drawer content. Defaults to 20.</p>
                 
             </td>
         </tr>
@@ -1797,7 +1800,7 @@
             
 
             <td class="description last">
-                <p>Animation settings for opening and closing the drawer.</p>
+                <p>Animation settings for opening and closing the drawer. Without them the drawer opens and closes instantly.</p>
                 
             </td>
         </tr>
@@ -1863,7 +1866,7 @@
             
 
             <td class="description last">
-                <p>Whether to close the drawer when clicking on the backdrop.</p>
+                <p>Whether to close the drawer when clicking on the backdrop. Defaults to true.</p>
                 
             </td>
         </tr>
@@ -1885,7 +1888,7 @@
             
 
             <td class="description last">
-                <p>Whether to enable swipe gesture to close the drawer.</p>
+                <p>Whether to enable swipe gesture to close the drawer. Defaults to true.</p>
                 
             </td>
         </tr>
@@ -1907,7 +1910,8 @@
             
 
             <td class="description last">
-                <p>Nine-slice scaling settings for the background.
+                <p>Nine-slice scaling settings for the background
+(left, top, right, bottom). Used when <code>background</code> is a texture or texture name.
 Any other option is treated as a <code>Container</code> option and passed to the <code>Container</code> constructor
 (except <code>position</code>, which is the drawer edge here; use <code>x</code>/<code>y</code> to move the drawer).</p>
                 
@@ -1990,15 +1994,22 @@ Any other option is treated as a <code>Container</code> option and passed to the
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>const drawer = new Drawer({
-    background: new Graphics().roundRect(0, 0, 400, 300, 20).fill(0xFFFFFF),
-    content: myContent,
-    position: 'bottom',
-});
-drawer.onClose.connect(() => {
-    console.log('Drawer closed');
-});
-drawer.open();</code></pre>
+    <pre class="prettyprint"><code> const drawer = new Drawer({
+     background: new Graphics().roundRect(0, 0, 400, 300, 20).fill(0xFFFFFF),
+     content: myContent,
+     position: 'bottom',
+     width: 400,
+     height: 300,
+     animations: { open: { props: {}, duration: 300 }, close: { props: {}, duration: 300 } },
+ });
+
+ drawer.setScreenSize(app.screen.width, app.screen.height);
+ drawer.onClose.connect(() => {
+     console.log('Drawer closed');
+ });
+
+ view.addChild(drawer);
+ drawer.open();</code></pre>
 
         
     </div>
@@ -2048,7 +2059,7 @@ drawer.open();</code></pre>
 </dt>
 <dd>
     
-      <p class="description"><p>Gets the open state of the drawer.</p></p>
+      <p class="description"><p>Whether the drawer is open. Becomes false only after the close animation has finished.</p></p>
     
     
 
@@ -2364,7 +2375,7 @@ drawer.open();</code></pre>
 </dt>
 <dd>
     
-      <p class="description"><p>Closes the drawer with animation.</p></p>
+      <p class="description"><p>Slides the drawer out, hides it and emits <code>onClose</code> (instantly if no close animation is set).</p></p>
     
     
 
@@ -2508,7 +2519,7 @@ drawer.open();</code></pre>
 </dt>
 <dd>
     
-      <p class="description"><p>Opens the drawer with animation.</p></p>
+      <p class="description"><p>Shows the drawer and slides it in (instantly if no open animation is set).</p></p>
     
     
 
@@ -3289,7 +3300,7 @@ The drawer automatically spans the full edge:</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Wed Sep 30 2026 16:29:48 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Wed Sep 30 2026 16:36:31 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
