@@ -563,13 +563,14 @@ export class Input extends Container
     /** Sets the input text. */
     set value(text: string)
     {
-        const textLength = text.length;
+        const value = text ?? '';
+        const textLength = value.length;
 
-        this._value = text;
+        this._value = value;
 
         if (this.inputField)
         {
-            this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : text;
+            this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : value;
         }
 
         if (this.placeholder)

@@ -166,17 +166,23 @@ export class RadioGroup extends Container
      */
     selectItem(id: number)
     {
+        const target = this.items[id];
+
+        if (!target) return;
+
         this.items.forEach((item, key) =>
         {
             item.forceCheck(key === id);
         });
 
+        const value = target.labelText?.text ?? '';
+
         if (this.selected !== id)
         {
-            this.onChange.emit(id, this.items[id].labelText?.text ?? '');
+            this.onChange.emit(id, value);
         }
 
-        this.value = this.options.items[id].labelText?.text ?? '';
+        this.value = value;
         this.selected = id;
     }
 }
