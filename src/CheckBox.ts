@@ -1,4 +1,4 @@
-import { Text } from 'pixi.js';
+import { ContainerOptions, Text } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
@@ -20,7 +20,7 @@ export type CheckBoxOptions = {
     text?: string;
     TextClass?: PixiTextClass;
     checked?: boolean;
-};
+} & ContainerOptions;
 
 /**
  * Creates a container-based checkbox element.
@@ -45,14 +45,22 @@ export class CheckBox extends Switcher
 
     constructor(options: CheckBoxOptions)
     {
-        super();
+        const {
+            style,
+            text,
+            TextClass,
+            checked,
+            ...rest
+        } = options;
 
-        this._textClass = options.TextClass ?? Text;
-        this.text = options.text ?? '';
+        super(undefined, undefined, undefined, rest);
 
-        this.style = options.style;
+        this._textClass = TextClass ?? Text;
+        this.text = text ?? '';
 
-        this.checked = options.checked ?? false;
+        this.style = style;
+
+        this.checked = checked ?? false;
 
         this.triggerEvents = ['onPress'];
 

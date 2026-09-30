@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container, ContainerOptions } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { CheckBox } from './CheckBox';
 import { List, ListType } from './List';
@@ -8,7 +8,7 @@ export type RadioBoxOptions = {
     type: ListType;
     elementsMargin: number;
     selectedItem?: number;
-};
+} & ContainerOptions;
 
 /**
  * Creates a container-based controlling wrapper for checkbox elements,
@@ -62,7 +62,22 @@ export class RadioGroup extends Container
 
     constructor(options?: RadioBoxOptions)
     {
-        super();
+        if (options)
+        {
+            const {
+                items: _0,
+                type: _1,
+                elementsMargin: _2,
+                selectedItem: _3,
+                ...rest
+            } = options;
+
+            super(rest);
+        }
+        else
+        {
+            super();
+        }
 
         const defaultOptions: RadioBoxOptions = {
             items: [],

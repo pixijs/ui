@@ -3,6 +3,7 @@ export * from './CheckBox';
 export * from './CircularProgressBar';
 export * from './Dialog';
 export * from './DoubleSlider';
+export * from './Drawer';
 export * from './FancyButton';
 export * from './Input';
 export * from './List';

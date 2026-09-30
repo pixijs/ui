@@ -119,11 +119,43 @@ export class ScrollBox extends Container
      */
     constructor(options?: ScrollBoxOptions)
     {
-        super();
-
         if (options)
         {
+            const {
+                width: _0,
+                height: _1,
+                background: _2,
+                type: _3,
+                radius: _4,
+                disableDynamicRendering: _5,
+                disableEasing: _6,
+                dragTrashHold: _7,
+                globalScroll: _8,
+                shiftScroll: _9,
+                proximityRange: _10,
+                proximityDebounce: _11,
+                disableProximityCheck: _12,
+                elementsMargin: _13,
+                padding: _14,
+                vertPadding: _15,
+                horPadding: _16,
+                topPadding: _17,
+                bottomPadding: _18,
+                leftPadding: _19,
+                rightPadding: _20,
+                items: _21,
+                maxWidth: _22,
+                maxHeight: _23,
+                ...rest
+            } = options;
+
+            super(rest);
+
             this.init(options);
+        }
+        else
+        {
+            super();
         }
 
         this.ticker.add(this.update, this);

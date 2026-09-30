@@ -1,4 +1,4 @@
-import { Container, FederatedPointerEvent } from 'pixi.js';
+import { Container, ContainerOptions, FederatedPointerEvent } from 'pixi.js';
 import { Signal } from 'typed-signals';
 import { ButtonEvents } from './ButtonEvents';
 
@@ -109,12 +109,11 @@ export class ButtonContainer extends Container
     onPress: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
     onHover: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
 
-    constructor(view?: Container)
+    constructor(view?: Container, options?: ContainerOptions)
     {
-        super();
+        super(options);
 
         this.button = new Button(this);
-
         this.button.enabled = true;
 
         if (view)
