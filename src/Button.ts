@@ -41,9 +41,9 @@ export class Button extends ButtonEvents
     /** Set button view, that all the interaction events are applied to. */
     set view(view: Container)
     {
-        const wasItInitiated = !!this._view;
+        if (!view) return;
 
-        if (wasItInitiated && this._view) this.disconnectEvents(this._view);
+        if (this._view) this.disconnectEvents(this._view);
 
         this._view = view;
         this.connectEvents(this._view);
