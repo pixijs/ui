@@ -131,12 +131,14 @@ describe('Select', () =>
     {
         const select = new Select(options() as any);
 
-        select.init(options({ items: {
+        const items = {
             items: ['alpha', 'beta'],
             backgroundColor: 0x111111,
             width: 200,
             height: 40,
-        } }) as any);
+        };
+
+        select.init(options({ items }) as any);
 
         expect((select as any).scrollBox.items.length).toBe(2);
         expect((select as any).openButton.text).toBe('alpha');

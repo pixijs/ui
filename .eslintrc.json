@@ -1,6 +1,12 @@
 {
-    "extends": ["@pixi/eslint-config"],
-    "plugins": ["jsdoc", "no-mixed-operators"],
+    "root": true,
+    "extends": [
+        "@pixi/eslint-config"
+    ],
+    "plugins": [
+        "jsdoc",
+        "no-mixed-operators"
+    ],
     "settings": {
         "jsdoc": {
             "mode": "typescript",
@@ -16,18 +22,27 @@
     "rules": {
         "@typescript-eslint/no-unused-expressions": [
             1,
-            { "allowShortCircuit": true, "allowTernary": true }
+            {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
         ],
-        "@typescript-eslint/no-unused-vars": ["warn", {
-            "argsIgnorePattern": "^_",
-            "varsIgnorePattern": "^_"
-        }],
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
+        ],
         "no-mixed-operators": "off",
         "no-mixed-operators/no-mixed-operators": 1,
         "@typescript-eslint/type-annotation-spacing": 1,
         "jsdoc/multiline-blocks": [
             1,
-            { "noMultilineBlocks": true, "minimumLengthForMultiline": 115 }
+            {
+                "noMultilineBlocks": true,
+                "minimumLengthForMultiline": 115
+            }
         ],
         "jsdoc/check-access": 1,
         "jsdoc/check-alignment": 1,
@@ -38,11 +53,23 @@
         "jsdoc/check-values": 1,
         "jsdoc/empty-tags": 1,
         "jsdoc/implements-on-classes": 1,
-        "jsdoc/no-multi-asterisks": [1, { "allowWhitespace": true }],
+        "jsdoc/no-multi-asterisks": [
+            1,
+            {
+                "allowWhitespace": true
+            }
+        ],
         "jsdoc/require-param": 1,
         "jsdoc/require-param-description": 0,
         "jsdoc/require-param-name": 1,
-        "jsdoc/require-param-type": ["warn", { "contexts": ["TSMethodSignature"] }],
+        "jsdoc/require-param-type": [
+            "warn",
+            {
+                "contexts": [
+                    "TSMethodSignature"
+                ]
+            }
+        ],
         "jsdoc/require-property": 1,
         "jsdoc/require-property-description": 1,
         "jsdoc/require-property-name": 1,

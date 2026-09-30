@@ -18,7 +18,11 @@ const g = (w = 200, h = 20) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 const makeSlider = (opts: Record<string, unknown> = {}) =>
     new Slider({ bg: g(), fill: g(), slider: g(20, 20), min: 0, max: 100, value: 50, ...opts });
 
-/** Drives the protected drag handler the way a pointer would. */
+/**
+ * Drives the protected drag handler the way a pointer would.
+ * @param slider - the slider under test.
+ * @param x - local x position of the simulated pointer.
+ */
 const drag = (slider: any, x: number) =>
 {
     const event = { currentTarget: slider.bg, global: new Point(x, 5) } as unknown as FederatedPointerEvent;
