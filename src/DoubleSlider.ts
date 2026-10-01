@@ -72,40 +72,18 @@ export class DoubleSlider extends SliderBase
         const min = this.sliderOptions.min ?? this.min;
         const max = this.sliderOptions.max ?? this.max;
 
-        // Initialize missing values with safe defaults
-        if (!this.sliderOptions.value1)
-        {
-            this.sliderOptions.value1 = min;
-        }
-
-        if (!this.sliderOptions.value2)
-        {
-            this.sliderOptions.value2 = max;
-        }
-
+        // `??`, not a falsy check: 0 is a legitimate value.
         let value1 = this.sliderOptions.value1 ?? min;
         let value2 = this.sliderOptions.value2 ?? max;
 
-        // Ensure value2 is not less than value1
+        // Clamp into range BEFORE restoring the ordering, so the result always
+        // satisfies min <= value1 <= value2 <= max.
+        value1 = Math.min(Math.max(value1, min), max);
+        value2 = Math.min(Math.max(value2, min), max);
+
         if (value2 < value1)
         {
             value2 = value1;
-        }
-
-        // Clamp values to min/max bounds
-        if (value1 < min)
-        {
-            value1 = min;
-        }
-
-        if (value1 > max)
-        {
-            value1 = max;
-        }
-
-        if (value2 > max)
-        {
-            value2 = max;
         }
 
         this.sliderOptions.value1 = value1;

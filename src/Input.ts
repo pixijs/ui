@@ -272,19 +272,17 @@ export class Input extends Container
 
     set bg(bg: ViewType)
     {
-        if (this._bg)
-        {
-            this._bg.destroy();
-        }
+        const previous = this._bg;
 
         // Use Texture.WHITE as fallback if bg is undefined
         const bgValue = bg ?? Texture.WHITE;
+        let view: Container | NineSliceSprite | Graphics | undefined;
 
         if (this.options?.nineSliceSprite)
         {
             if (typeof bgValue === 'string')
             {
-                this._bg = new NineSliceSprite({
+                view = new NineSliceSprite({
                     texture: Texture.from(bgValue),
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
@@ -294,7 +292,7 @@ export class Input extends Container
             }
             else if (bgValue instanceof Texture)
             {
-                this._bg = new NineSliceSprite({
+                view = new NineSliceSprite({
                     texture: bgValue,
                     leftWidth: this.options.nineSliceSprite[0],
                     topHeight: this.options.nineSliceSprite[1],
@@ -309,11 +307,14 @@ export class Input extends Container
             }
         }
 
-        if (!this._bg)
+        if (!view)
         {
-            this._bg = getView(bgValue);
+            view = getView(bgValue);
         }
 
+        previous?.destroy();
+
+        this._bg = view;
         this._bg.cursor = 'text';
         this._bg.interactive = true;
 
@@ -342,12 +343,21 @@ export class Input extends Container
             return;
         }
 
-        if (this.options.maxLength && this.value.length >= this.options.maxLength)
+        let addition = key;
+
+        if (this.options.maxLength)
         {
-            return;
+            const room = this.options.maxLength - this.value.length;
+
+            if (room <= 0)
+            {
+                return;
+            }
+
+            addition = key.substring(0, room);
         }
 
-        this.value = this.value + key;
+        this.value = this.value + addition;
 
         this.onChange.emit(this.value);
     }

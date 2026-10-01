@@ -139,16 +139,14 @@ export class ProgressBar extends Container
      */
     setBackground(bg: ProgressBarViewType)
     {
-        if (this.bg)
-        {
-            this.bg.destroy();
-        }
+        const previous = this.bg;
+        let view: Sprite | PixiNineSliceSprite | Graphics | undefined;
 
         if (this.options?.nineSliceSprite)
         {
             if (typeof bg === 'string')
             {
-                this.bg = new PixiNineSliceSprite({
+                view = new PixiNineSliceSprite({
                     texture: Texture.from(bg),
                     leftWidth: this.options.nineSliceSprite.bg[0],
                     topHeight: this.options.nineSliceSprite.bg[1],
@@ -158,7 +156,7 @@ export class ProgressBar extends Container
             }
             else if (bg instanceof Texture)
             {
-                this.bg = new PixiNineSliceSprite({
+                view = new PixiNineSliceSprite({
                     texture: bg,
                     leftWidth: this.options.nineSliceSprite.bg[0],
                     topHeight: this.options.nineSliceSprite.bg[1],
@@ -173,11 +171,14 @@ export class ProgressBar extends Container
             }
         }
 
-        if (!this.bg)
+        if (!view)
         {
-            this.bg = getView(bg) as Sprite | Graphics;
+            view = getView(bg) as Sprite | Graphics;
         }
 
+        previous?.destroy();
+
+        this.bg = view;
         this.innerView.addChildAt(this.bg, 0);
     }
 
@@ -188,17 +189,18 @@ export class ProgressBar extends Container
      */
     setFill(fill: ProgressBarViewType, fillPadding?: FillPaddings)
     {
-        if (this.fill)
-        {
-            this.fill.destroy();
-        }
-
-        // in case if user is trying to use same instance for bg and fill
+        // in case if user is trying to use same instance for bg and fill.
+        // Checked before anything is destroyed, so a rejected call is a no-op.
         if (this.bg instanceof Sprite && fill === this.bg)
         {
             console.warn('Can not use same Sprite instance for bg and fill.');
 
             return;
+        }
+
+        if (this.fill)
+        {
+            this.fill.destroy();
         }
 
         if (this.options?.nineSliceSprite)

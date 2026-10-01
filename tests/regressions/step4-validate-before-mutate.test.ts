@@ -19,7 +19,7 @@ const g = (w = 200, h = 20) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 
 describe('ProgressBar.setBackground', () =>
 {
-    it.failing('adopts the new background on a second call', () =>
+    it('adopts the new background on a second call', () =>
     {
         const bar = new ProgressBar({ bg: g(), fill: g(), progress: 50 });
         const replacement = g(50, 10);
@@ -29,7 +29,7 @@ describe('ProgressBar.setBackground', () =>
         expect((bar as any).bg).toBe(replacement);
     });
 
-    it.failing('does not re-parent a destroyed background', () =>
+    it('does not re-parent a destroyed background', () =>
     {
         const bar = new ProgressBar({ bg: g(), fill: g(), progress: 50 });
 
@@ -41,7 +41,7 @@ describe('ProgressBar.setBackground', () =>
 
 describe('ProgressBar.setFill', () =>
 {
-    it.failing('leaves the existing fill intact when rejecting a shared bg instance', () =>
+    it('leaves the existing fill intact when rejecting a shared bg instance', () =>
     {
         const shared = new Sprite(Texture.WHITE);
         const bar = new ProgressBar({ bg: shared, fill: g(), progress: 50 });
@@ -56,7 +56,7 @@ describe('ProgressBar.setFill', () =>
 
 describe('Input.bg setter', () =>
 {
-    it.failing('adopts the new background on a second assignment', () =>
+    it('adopts the new background on a second assignment', () =>
     {
         const input = new Input({ bg: g() });
         const replacement = g(50, 10);
@@ -66,7 +66,7 @@ describe('Input.bg setter', () =>
         expect(input.bg).toBe(replacement);
     });
 
-    it.failing('does not re-parent a destroyed background', () =>
+    it('does not re-parent a destroyed background', () =>
     {
         const input = new Input({ bg: g() });
 
@@ -78,7 +78,7 @@ describe('Input.bg setter', () =>
 
 describe('Switcher.forceSwitch', () =>
 {
-    it.failing('leaves the visible view untouched when the id is invalid', () =>
+    it('leaves the visible view untouched when the id is invalid', () =>
     {
         const switcher = new Switcher([g(), g()]);
 
@@ -96,14 +96,14 @@ describe('DoubleSlider.validateValues', () =>
         bg: g(), fill: g(), slider1: g(10, 10), slider2: g(10, 10), ...opts,
     });
 
-    it.failing('preserves an explicit value1 of 0 when min is negative', () =>
+    it('preserves an explicit value1 of 0 when min is negative', () =>
     {
         const slider = makeDouble({ min: -50, max: 100, value1: 0, value2: 50 });
 
         expect(slider.value1).toBe(0);
     });
 
-    it.failing('preserves an explicit value2 of 0', () =>
+    it('preserves an explicit value2 of 0', () =>
     {
         const slider = makeDouble({ min: -50, max: 100, value1: -20, value2: 0 });
 
@@ -121,7 +121,7 @@ describe('DoubleSlider.validateValues', () =>
 
 describe('Input.onPaste', () =>
 {
-    it.failing('truncates pasted text to maxLength', () =>
+    it('truncates pasted text to maxLength', () =>
     {
         const input = new Input({ bg: g(), maxLength: 5 });
 
@@ -137,7 +137,7 @@ describe('Input.onPaste', () =>
 
 describe('FancyButton default anchors', () =>
 {
-    it.failing('defaults a missing anchor axis to 0.5, not 1', () =>
+    it('defaults a missing anchor axis to 0.5, not 1', () =>
     {
         const button = new FancyButton({ defaultView: g(100, 100), text: 'hi' });
 
@@ -149,7 +149,7 @@ describe('FancyButton default anchors', () =>
 
 describe('CheckBox.textOffset', () =>
 {
-    it.failing('positions the label even when no text style is supplied', () =>
+    it('positions the label even when no text style is supplied', () =>
     {
         const box = new CheckBox({
             style: { checked: g(), unchecked: g(), textOffset: { x: 5, y: 6 } },

@@ -1045,8 +1045,8 @@ export class FancyButton extends ButtonContainer
         this.options.defaultTextAnchor = anchor;
         const isNumber = typeof anchor === 'number';
 
-        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 1;
-        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 0.5;
+        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 0.5;
         this.adjustTextView(this.state);
     }
 
@@ -1067,8 +1067,8 @@ export class FancyButton extends ButtonContainer
         this.options.defaultIconAnchor = anchor;
         const isNumber = typeof anchor === 'number';
 
-        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 1;
-        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 0.5;
+        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 0.5;
         this.adjustIconView(this.state);
     }
 

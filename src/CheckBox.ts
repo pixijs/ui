@@ -153,8 +153,11 @@ export class CheckBox extends Switcher
         if (this.labelText && style.text)
         {
             this.labelText.style = style.text;
-            this.alignText();
         }
+
+        // Always re-align: the constructor sets `text` before `style`, so the
+        // alignText() inside addLabel() ran while this._style was undefined.
+        this.alignText();
     }
 
     /** Getter, which returns a checkbox style settings. */
