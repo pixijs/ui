@@ -50,6 +50,9 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     /** Width of area to fit elements when arrange. (If not set parent width will be used). */
     protected _maxWidth: number = 0;
 
+    /** Set while a batch of children is being added, so the list is arranged once at the end. */
+    protected arrangeSuspended = false;
+
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
 
@@ -89,8 +92,33 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
             super();
         }
 
-        this.on('added', () => this.arrangeChildren());
-        this.on('childAdded', () => this.arrangeChildren());
+        this.on('added', () => this.arrangeIfNeeded());
+        this.on('childAdded', () => this.arrangeIfNeeded());
+    }
+
+    /**
+     * Adds items to the list, arranging them once instead of once per item.
+     *
+     * `childAdded` arranges the whole list on every single `addChild`, which makes adding
+     * items one by one quadratic. Use this when adding more than one.
+     * @param items - items to add.
+     */
+    addItems(items: C[])
+    {
+        if (!items?.length) return;
+
+        this.arrangeSuspended = true;
+
+        try
+        {
+            items.forEach((item) => this.addChild(item));
+        }
+        finally
+        {
+            this.arrangeSuspended = false;
+        }
+
+        this.arrangeChildren();
     }
 
     /**
@@ -300,6 +328,14 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     get bottomPadding(): number
     {
         return this.options?.bottomPadding ?? this.vertPadding;
+    }
+
+    /** Arranges children unless a batch add is in progress, which arranges once at the end. */
+    protected arrangeIfNeeded()
+    {
+        if (this.arrangeSuspended) return;
+
+        this.arrangeChildren();
     }
 
     /**

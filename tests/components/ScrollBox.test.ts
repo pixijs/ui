@@ -1,3 +1,4 @@
+import { Container } from 'pixi.js';
 import { ScrollBox } from '../../src/ScrollBox';
 import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
@@ -660,6 +661,89 @@ describe('ScrollBox Component', () =>
 
             // 10 items of 40px = 400px of content inside a 300px view.
             expect((scrollBox as any)._trackpad.yAxis.max).toBe(300 - scrollBox.scrollHeight);
+        });
+    });
+
+    describe('ScrollBox Bulk Item Adding', () =>
+    {
+        // Regression tests for #244: addItems() delegated to addItem() per item, and each
+        // call re-arranged the whole list and re-measured the ScrollBox, so filling a list
+        // was quadratic in the number of items.
+        it('should arrange the list once for the whole batch', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const arrangeSpy = jest.spyOn(scrollBox.list as any, 'arrangeChildren');
+
+            scrollBox.addItems(createTestItems(50, 40));
+
+            expect(arrangeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should resize once for the whole batch', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const resizeSpy = jest.spyOn(scrollBox, 'resize');
+
+            scrollBox.addItems(createTestItems(50, 40));
+
+            expect(resizeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should lay items out the same as adding them one by one', () =>
+        {
+            const options = { width: 200, height: 300, elementsMargin: 5 };
+            const batched = new ScrollBox(options);
+            const individual = new ScrollBox(options);
+
+            batched.addItems(createTestItems(10, 40));
+            createTestItems(10, 40).forEach((item) => individual.addItem(item));
+
+            expect(batched.items.map((item) => item.y)).toEqual(individual.items.map((item) => item.y));
+            expect(batched.scrollHeight).toBe(individual.scrollHeight);
+        });
+
+        it('should keep the proximity cache in step with the items', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+
+            scrollBox.addItems(createTestItems(10, 40));
+
+            expect((scrollBox as any).proximityStatusCache.length).toBe(scrollBox.items.length);
+        });
+
+        it('should still report items without a size', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const error = jest.spyOn(console, 'error').mockImplementation(() => { /* silence */ });
+
+            scrollBox.addItems([new Container()]);
+
+            expect(error).toHaveBeenCalledWith('ScrollBox item should have size');
+            error.mockRestore();
+        });
+
+        it('should remeasure after removing every item', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+
+            scrollBox.addItems(createTestItems(10, 40));
+
+            const resizeSpy = jest.spyOn(scrollBox, 'resize');
+
+            scrollBox.removeItems();
+
+            expect(resizeSpy).toHaveBeenCalled();
+            expect((scrollBox as any).proximityStatusCache.length).toBe(0);
+        });
+
+        it('should still add a single item through addItem', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const [item] = createTestItems(1, 40);
+
+            expect(scrollBox.addItem(item)).toBe(item);
+            expect(scrollBox.items.length).toBe(1);
+            expect(item.eventMode).toBe('static');
         });
     });
 });
