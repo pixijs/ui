@@ -41,10 +41,27 @@ export type InputOptions = {
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
+    /**
+     * Attributes set on the hidden native field, merged over the defaults: `autocomplete`,
+     * `autocapitalize` and `autocorrect` off and `spellcheck` false, so keyboards neither
+     * rewrite nor remember what is typed. Pass `inputmode` or `enterkeyhint` here as well.
+     */
+    inputAttributes?: Record<string, string>;
 } & ContainerOptions;
 
 const SECURE_CHARACTER = '*';
 const SELECTION_ALPHA = 0.35;
+
+const DEFAULT_INPUT_ATTRIBUTES: Record<string, string> = {
+    autocomplete: 'off',
+    autocapitalize: 'off',
+    autocorrect: 'off',
+    spellcheck: 'false',
+    // Password managers key on these to leave a field alone.
+    'data-lpignore': 'true',
+    'data-1p-ignore': 'true',
+    'data-bwignore': 'true',
+};
 
 /**
  * How long after a press on the component a blur of the hidden field is still taken to be caused
@@ -135,6 +152,12 @@ export class Input extends Container
     /** Set around the synthetic `click()` on focus so it is not mistaken for a tap on the field. */
     protected clickingField = false;
 
+    /** Selection a right-button press settled on, to put back after the context-menu request collapses it. */
+    protected contextSelection: [number, number, SelectionDirection] | undefined;
+
+    /** Prefix widths of the displayed text at each grapheme boundary, measured once per text and style. */
+    protected metricsCache: { key: string; boundaries: number[]; widths: number[] } | undefined;
+
     protected activation = false;
     protected readonly options: InputOptions;
     protected input: HTMLInputElement | undefined;
@@ -147,6 +170,7 @@ export class Input extends Container
     protected onCompositionEndBinding = this.onCompositionEnd.bind(this);
     protected onFieldClickBinding = this.onFieldClick.bind(this);
     protected onAnyPointerDownBinding = this.onAnyPointerDown.bind(this);
+    protected onContextMenuBinding = this.onContextMenu.bind(this);
 
     /**
      * Kept as a field so destroy() can detach it from the shared ticker.
@@ -190,6 +214,8 @@ export class Input extends Container
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
      * @param { boolean } options.cleanOnFocus - Clean Input on focus.
+     * @param { Record<string, string> } options.inputAttributes - Attributes for the hidden native field,
+     * merged over the defaults that turn off autocomplete, autocapitalize, autocorrect and spellcheck.
      * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
      * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
@@ -209,6 +235,7 @@ export class Input extends Container
             cleanOnFocus: _8,
             nineSliceSprite: _9,
             addMask: _10,
+            inputAttributes: _11,
             ...rest
         } = options;
 
@@ -249,7 +276,8 @@ export class Input extends Container
         {
             // Counted before the editing check so a double click on an idle input, which starts
             // editing on its first tap, still selects a word on its second as a native field does.
-            const clicks = Math.max(e.detail ?? 1, this.countTap(e));
+            // Only the main button selects by multi-click; a right click is a context-menu gesture.
+            const clicks = (e.button ?? 0) === 0 ? Math.max(e.detail ?? 1, this.countTap(e)) : 1;
 
             // A tap during a session is a caret or selection gesture, not an activation; leaving
             // `activation` set here would restart editing on the very click that ends it.
@@ -267,6 +295,7 @@ export class Input extends Container
         window.addEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
         // Capture phase: runs before the component's own pointerdown, which re-marks the press if it was on it.
         window.addEventListener('pointerdown', this.onAnyPointerDownBinding, true);
+        window.addEventListener('contextmenu', this.onContextMenuBinding, true);
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
@@ -440,6 +469,9 @@ export class Input extends Container
 
     protected onPointerDown(e: FederatedPointerEvent): void
     {
+        // A second finger must not move the caret or start a drag of its own.
+        if (e.isPrimary === false) return;
+
         const index = this.indexAt(e);
 
         if (!this.editing || !this.input)
@@ -454,6 +486,24 @@ export class Input extends Container
         // focus to the canvas; onBlur uses the press time to hand it straight back to the field.
         (e.nativeEvent as Event | undefined)?.preventDefault?.();
         this.lastPressTime = performance.now();
+
+        if (e.button === 2)
+        {
+            // A right click inside a selection keeps it, as native fields do; outside, it places the caret.
+            const inside = this.selectionStart !== this.selectionEnd
+                && index >= this.selectionStart && index <= this.selectionEnd;
+
+            if (!inside)
+            {
+                this.setSelection(index, index);
+            }
+
+            // Chromium collapses the focused field's selection when the context menu is requested
+            // outside the document selection; onContextMenu puts this back once that has happened.
+            this.contextSelection = [this.selectionStart, this.selectionEnd, this.selectionDirection];
+
+            return;
+        }
 
         if (e.shiftKey)
         {
@@ -499,6 +549,28 @@ export class Input extends Container
     protected onAnyPointerDown(): void
     {
         this.lastPressTime = -Infinity;
+    }
+
+    /**
+     * Restores the selection a right-button press settled on. The browser adjusts the document
+     * selection as part of showing a context menu, after the press, which collapses the hidden
+     * field's selection; it is put back once the menu request has been processed.
+     */
+    protected onContextMenu(): void
+    {
+        const selection = this.contextSelection;
+
+        this.contextSelection = undefined;
+
+        if (!selection) return;
+
+        setTimeout(() =>
+        {
+            if (this.editing && this.input)
+            {
+                this.setSelection(...selection);
+            }
+        }, 0);
     }
 
     /**
@@ -609,15 +681,47 @@ export class Input extends Container
     /**
      * Horizontal offset from {@link Input.textLeft} to the caret position before `index`.
      * @param index - position in the displayed text.
-     * @param total - measured width of the whole displayed text, if already known.
      */
-    protected offsetAt(index: number, total = this.measureText(this.displayText)): number
+    protected offsetAt(index: number): number
     {
-        if (!this.inputField || total === 0) return 0;
+        const { boundaries, widths } = this.textMetrics();
+        const total = widths[widths.length - 1];
 
-        const prefix = this.measureText(this.displayText.substring(0, index));
+        if (!this.inputField || !total) return 0;
+
+        // Selections sit on grapheme boundaries, so the width is normally already measured.
+        const at = boundaries.indexOf(index);
+        const prefix = at >= 0 ? widths[at] : this.measureText(this.displayText.substring(0, index));
 
         return this.inputField.width * (prefix / total);
+    }
+
+    /**
+     * Widths of every grapheme prefix of the displayed text, in the text's style. Measured once
+     * per text and style rather than on every pointer move, which would be quadratic in the length.
+     */
+    protected textMetrics(): { boundaries: number[]; widths: number[] }
+    {
+        const text = this.displayText;
+        const style = this.inputField?.style as TextStyle | undefined;
+        const key = `${style?.styleKey ?? ''}\u0000${text}`;
+
+        if (this.metricsCache?.key === key) return this.metricsCache;
+
+        const boundaries = [0];
+        const widths = [0];
+        let index = 0;
+
+        for (const grapheme of CanvasTextMetrics.graphemeSegmenter(text))
+        {
+            index += grapheme.length;
+            boundaries.push(index);
+            widths.push(this.measureText(text.substring(0, index)));
+        }
+
+        this.metricsCache = { key, boundaries, widths };
+
+        return this.metricsCache;
     }
 
     /**
@@ -671,23 +775,23 @@ export class Input extends Container
     {
         if (!this.inputField) return 0;
 
-        const text = this.displayText;
         const x = localX - this.textLeft;
-        const total = this.measureText(text);
+        const { boundaries, widths } = this.textMetrics();
+        const total = widths[widths.length - 1];
 
+        if (!total) return 0;
+
+        const scale = this.inputField.width / total;
         let best = 0;
         let bestDistance = Math.abs(x);
-        let index = 0;
 
-        for (const grapheme of CanvasTextMetrics.graphemeSegmenter(text))
+        for (let i = 1; i < boundaries.length; i++)
         {
-            index += grapheme.length;
-
-            const distance = Math.abs(x - this.offsetAt(index, total));
+            const distance = Math.abs(x - (widths[i] * scale));
 
             if (distance < bestDistance)
             {
-                best = index;
+                best = boundaries[i];
                 bestDistance = distance;
             }
         }
@@ -732,6 +836,9 @@ export class Input extends Container
             text: '',
             style: textStyle,
         });
+
+        // An input is one line: a wrapping style would stack it, and the caret is mapped along one line.
+        this.inputField.style.wordWrap = false;
 
         this._cursor = new Sprite(Texture.WHITE);
 
@@ -926,6 +1033,15 @@ export class Input extends Container
         // A password field keeps on-screen keyboards from suggesting, or learning, the value.
         input.type = this._secure ? 'password' : 'text';
 
+        // Keyboards would otherwise capitalise, correct and learn what is typed, and password
+        // managers would offer to fill or save it.
+        const attributes = { ...DEFAULT_INPUT_ATTRIBUTES, ...this.options.inputAttributes };
+
+        for (const [name, value] of Object.entries(attributes))
+        {
+            input.setAttribute(name, value);
+        }
+
         // Seed the field with the current text so the browser edits the real string:
         // backspace, caret movement, autocorrect and suggestions all need it to be there.
         input.value = this.value;
@@ -1072,9 +1188,8 @@ export class Input extends Container
 
         if (!this.editing || this.selectionStart === this.selectionEnd) return;
 
-        const total = this.measureText(this.displayText);
-        const from = this.offsetAt(this.selectionStart, total);
-        const to = this.offsetAt(this.selectionEnd, total);
+        const from = this.offsetAt(this.selectionStart);
+        const to = this.offsetAt(this.selectionEnd);
         const height = this._cursor.height;
 
         this._selection
@@ -1152,9 +1267,15 @@ export class Input extends Container
     {
         this._secure = val;
 
-        if (this.input)
+        const type = val ? 'password' : 'text';
+
+        if (this.input && this.input.type !== type)
         {
-            this.input.type = val ? 'password' : 'text';
+            // Changing the type resets the selection in some browsers; keep the caret where it was.
+            const { selectionStart, selectionEnd, selectionDirection } = this.input;
+
+            this.input.type = type;
+            this.input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? 'none');
         }
 
         // Update text based on secure state (useful for show/hide password implementations)
@@ -1220,6 +1341,7 @@ export class Input extends Container
 
         window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
         window.removeEventListener('pointerdown', this.onAnyPointerDownBinding, true);
+        window.removeEventListener('contextmenu', this.onContextMenuBinding, true);
 
         Ticker.shared.remove(this.tickerUpdate);
 
@@ -1240,6 +1362,8 @@ export class Input extends Container
         this.input.removeEventListener('compositionend', this.onCompositionEndBinding);
         this.input.removeEventListener('click', this.onFieldClickBinding);
 
+        // Empty the field before it leaves the DOM, so a password manager has nothing to offer to save.
+        this.input.value = '';
         this.input.blur();
         this.input.remove();
         this.input = undefined;

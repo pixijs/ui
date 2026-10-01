@@ -1247,6 +1247,166 @@ describe('Input Component', () =>
             expect(native.value).toBe('ab');
         });
 
+        it('should turn off keyboard rewriting and password-manager interest on the field, overridably', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            expect(native.getAttribute('autocomplete')).toBe('off');
+            expect(native.getAttribute('autocapitalize')).toBe('off');
+            expect(native.getAttribute('autocorrect')).toBe('off');
+            expect(native.getAttribute('spellcheck')).toBe('false');
+            expect(native.getAttribute('data-1p-ignore')).toBe('true');
+
+            const custom = new Input({
+                bg: createTestGraphics(200, 50),
+                inputAttributes: { autocapitalize: 'words', inputmode: 'numeric', enterkeyhint: 'done' },
+            });
+            const customNative = startEditing(custom);
+
+            expect(customNative.getAttribute('autocapitalize')).toBe('words');
+            expect(customNative.getAttribute('inputmode')).toBe('numeric');
+            expect(customNative.getAttribute('enterkeyhint')).toBe('done');
+            expect(customNative.getAttribute('autocorrect')).toBe('off');
+        });
+
+        it('should empty the field before removing it, so nothing is offered for saving', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hunter2', secure: true });
+            const native = startEditing(input);
+
+            (input as any).stopEditing();
+
+            expect(native.value).toBe('');
+            expect(native.isConnected).toBe(false);
+            expect(input.value).toBe('hunter2');
+        });
+
+        it('should keep the selection when secure is toggled while editing', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdef' });
+            const native = startEditing(input);
+
+            (input as any).setSelection(1, 3);
+            input.secure = true;
+
+            expect(native.type).toBe('password');
+            expect([native.selectionStart, native.selectionEnd]).toEqual([1, 3]);
+            expect(selection(input)).toEqual([1, 3]);
+        });
+
+        it('should ignore a second finger', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).setSelection(2, 2);
+            (input as any).onPointerDown(pointerAt(input, 0.75, { isPrimary: false }));
+
+            expect(selection(input)).toEqual([2, 2]);
+            expect((input as any).dragAnchor).toBeUndefined();
+        });
+
+        it('should keep a selection on a right click inside it and place the caret outside it', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).setSelection(2, 6);
+
+            const inside = pointerAt(input, 0.5, { button: 2 });
+
+            (input as any).onPointerDown(inside);
+
+            expect(selection(input)).toEqual([2, 6]);
+            expect((input as any).dragAnchor).toBeUndefined();
+            // Focus still moves on a right press, so it is still cancelled and still marks the press.
+            expect(inside.nativeEvent.preventDefault).toHaveBeenCalled();
+
+            (input as any).onPointerDown(pointerAt(input, 0.1, { button: 2 }));
+
+            expect(selection(input)).toEqual([1, 1]);
+        });
+
+        it('should put the selection back after the context menu request collapses it', () =>
+        {
+            jest.useFakeTimers();
+
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+            const native = startEditing(input);
+
+            (input as any).setSelection(2, 6);
+            (input as any).onPointerDown(pointerAt(input, 0.5, { button: 2 }));
+
+            // Chromium adjusts the document selection while showing the menu, after the press.
+            window.dispatchEvent(new Event('contextmenu'));
+            native.setSelectionRange(0, 0);
+            (input as any).update(1);
+            expect(selection(input)).toEqual([0, 0]);
+
+            jest.runAllTimers();
+
+            expect(selection(input)).toEqual([2, 6]);
+            expect([native.selectionStart, native.selectionEnd]).toEqual([2, 6]);
+
+            // A menu request with no press of the component's own leaves the selection alone.
+            native.setSelectionRange(1, 1);
+            window.dispatchEvent(new Event('contextmenu'));
+            jest.runAllTimers();
+            (input as any).update(1);
+
+            expect(selection(input)).toEqual([1, 1]);
+
+            jest.useRealTimers();
+        });
+
+        it('should not count a right click as a multi-click', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+            (input as any).setSelection(3, 3);
+
+            input.emit('pointertap', pointerAt(input, 0.2, { button: 2 }));
+            now.mockReturnValue(1100);
+            input.emit('pointertap', pointerAt(input, 0.2, { button: 2 }));
+
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should measure the text once per change rather than on every pointer move', () =>
+        {
+            // Setting the value draws the caret, which measures the text and fills the cache.
+            const measure = jest.spyOn(Input.prototype as any, 'measureText');
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            expect(measure).toHaveBeenCalled();
+
+            measure.mockClear();
+            (input as any).indexAtLocalX(20);
+            (input as any).indexAtLocalX(30);
+            (input as any).offsetAt(3);
+            expect(measure).not.toHaveBeenCalled();
+
+            input.value = 'abc';
+            (input as any).indexAtLocalX(10);
+            expect(measure).toHaveBeenCalled();
+
+            measure.mockRestore();
+        });
+
+        it('should never wrap the text, whatever the style asks', () =>
+        {
+            const input = new Input({
+                bg: createTestGraphics(200, 50),
+                textStyle: { wordWrap: true, wordWrapWidth: 10 },
+                value: 'a long value that would wrap',
+            });
+
+            expect((input as any).inputField.style.wordWrap).toBe(false);
+        });
+
         describe('on touch devices', () =>
         {
             // The field keeps pointer events there, since its long-press callout is the only
