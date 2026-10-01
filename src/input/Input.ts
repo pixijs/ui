@@ -8,6 +8,7 @@ import { Signal } from 'typed-signals';
 import { PRESS_BLUR_GRACE } from './constants';
 import { createHiddenField } from './hiddenField';
 import { InputTouch } from './InputTouch';
+import { warnLegacyOverrides } from './legacyOverrides';
 import { clampLength } from './text';
 
 import type { InputOptions } from './types';
@@ -342,6 +343,9 @@ export class Input extends InputTouch
 
     protected _startEditing(): void
     {
+        // Here rather than in the constructor: by now overrides declared as class fields exist too.
+        warnLegacyOverrides(this, Input);
+
         if (this.options.cleanOnFocus)
         {
             this.value = '';
