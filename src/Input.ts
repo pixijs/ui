@@ -369,9 +369,10 @@ export class Input extends Container
 
         const { maxLength } = this.options;
         let text = this.input.value;
+        let textLength = text.length;
         let overLimit = false;
 
-        if (maxLength && text.length > maxLength)
+        if (maxLength && textLength > maxLength)
         {
             // Native maxLength does not apply to suggestions, replacements or an over-long seed.
             // Writing the field during a composition would abort it (and confuse Android keyboards,
@@ -386,10 +387,11 @@ export class Input extends Container
                 const { selectionStart, selectionEnd, selectionDirection } = this.input;
 
                 text = clampLength(text, maxLength);
+                textLength = text.length;
                 this.input.value = text;
                 this.input.setSelectionRange(
-                    Math.min(selectionStart ?? text.length, text.length),
-                    Math.min(selectionEnd ?? text.length, text.length),
+                    Math.min(selectionStart ?? textLength, textLength),
+                    Math.min(selectionEnd ?? textLength, textLength),
                     selectionDirection ?? 'none',
                 );
             }
@@ -477,8 +479,9 @@ export class Input extends Container
     protected selectWordAt(index: number): void
     {
         const text = this.displayText;
+        const textLength = text.length;
 
-        if (!text.length) return;
+        if (!textLength) return;
 
         const kind = (ch: string) =>
         {
@@ -487,7 +490,7 @@ export class Input extends Container
             return (/\s/).test(ch) ? 'space' : 'other';
         };
 
-        let pivot = Math.min(index, text.length - 1);
+        let pivot = Math.min(index, textLength - 1);
 
         // A click just past a word belongs to that word, not to the gap after it.
         if (pivot > 0 && kind(text[pivot]) === 'space' && kind(text[pivot - 1]) !== 'space')
@@ -500,7 +503,7 @@ export class Input extends Container
         let end = pivot + 1;
 
         while (start > 0 && kind(text[start - 1]) === target) start--;
-        while (end < text.length && kind(text[end]) === target) end++;
+        while (end < textLength && kind(text[end]) === target) end++;
 
         this.setSelection(start, end);
     }
