@@ -1,5 +1,5 @@
 import { Graphics, NineSliceSprite, Sprite, Texture } from 'pixi.js';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 
 const g = (w = 200, h = 40) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 const slice = [2, 2, 2, 2] as [number, number, number, number];
@@ -103,13 +103,34 @@ describe('Input padding', () =>
 
 describe('Input editing', () =>
 {
+    const edit = (input: Input) =>
+    {
+        (input as any)._startEditing();
+
+        return (input as any).input as HTMLInputElement;
+    };
+
+    // Mirrors how a browser reports an edit: the field changes, then `input` fires.
+    const typeInto = (native: HTMLInputElement, text: string, inputType = 'insertText') =>
+    {
+        native.value += text;
+        native.dispatchEvent(new InputEvent('input', { data: text, inputType }));
+    };
+
+    // An edit that replaces the whole field, as a deletion, paste or suggestion does.
+    const setField = (native: HTMLInputElement, value: string, inputType: string) =>
+    {
+        native.value = value;
+        native.dispatchEvent(new InputEvent('input', { inputType }));
+    };
+
     it('appends typed characters', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('a'));
-        (input as any).onKeyUp(key('b'));
+        typeInto(native, 'a');
+        typeInto(native, 'b');
 
         expect(input.value).toBe('ab');
     });
@@ -117,8 +138,11 @@ describe('Input editing', () =>
     it('ignores typing when not editing', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any).onKeyUp(key('a'));
+        (input as any).stopEditing();
+        // A late event from the field that was just detached.
+        typeInto(native, 'a');
 
         expect(input.value).toBe('');
     });
@@ -126,9 +150,9 @@ describe('Input editing', () =>
     it('deletes on backspace', () =>
     {
         const input = new Input({ bg: g(), value: 'abc' });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('Backspace'));
+        setField(native, 'ab', 'deleteContentBackward');
 
         expect(input.value).toBe('ab');
     });
@@ -136,9 +160,9 @@ describe('Input editing', () =>
     it('ignores backspace on an empty value', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('Backspace'));
+        setField(native, '', 'deleteContentBackward');
 
         expect(input.value).toBe('');
     });
@@ -150,7 +174,7 @@ describe('Input editing', () =>
 
         input.onEnter.connect((t) => seen.push(t));
         (input as any)._startEditing();
-        (input as any).onKeyUp(key('Enter'));
+        (input as any).onKeyDown(key('Enter'));
 
         expect(seen).toEqual(['x']);
     });
@@ -160,7 +184,7 @@ describe('Input editing', () =>
         const input = new Input({ bg: g() });
 
         (input as any)._startEditing();
-        (input as any).onKeyUp(key('Escape'));
+        (input as any).onKeyDown(key('Escape'));
 
         expect((input as any).editing).toBe(false);
     });
@@ -170,7 +194,7 @@ describe('Input editing', () =>
         const input = new Input({ bg: g() });
 
         (input as any)._startEditing();
-        (input as any).onKeyUp(key(k));
+        (input as any).onKeyDown(key(k));
 
         expect(input.value).toBe('');
     });
@@ -180,19 +204,18 @@ describe('Input editing', () =>
         const input = new Input({ bg: g() });
 
         (input as any)._startEditing();
-        (input as any).onKeyUp(key('a', { metaKey: true }));
-        (input as any).onKeyUp(key('c', { ctrlKey: true }));
+        (input as any).onKeyDown(key('a', { metaKey: true }));
+        (input as any).onKeyDown(key('c', { ctrlKey: true }));
 
         expect(input.value).toBe('');
     });
 
-    it('falls back to composed input data', () =>
+    it('applies composed input', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onInput({ data: 'é' } as InputEvent);
-        (input as any).onKeyUp(key('Process'));
+        typeInto(native, 'é', 'insertCompositionText');
 
         expect(input.value).toBe('é');
     });
@@ -200,11 +223,11 @@ describe('Input editing', () =>
     it('respects maxLength', () =>
     {
         const input = new Input({ bg: g(), maxLength: 2 });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('a'));
-        (input as any).onKeyUp(key('b'));
-        (input as any).onKeyUp(key('c'));
+        typeInto(native, 'a');
+        typeInto(native, 'b');
+        typeInto(native, 'c');
 
         expect(input.value).toBe('ab');
     });
@@ -224,8 +247,10 @@ describe('Input editing', () =>
         const seen: string[] = [];
 
         input.onChange.connect((t) => seen.push(t));
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('a'));
+
+        const native = edit(input);
+
+        typeInto(native, 'a');
 
         expect(seen).toEqual(['a']);
     });
@@ -233,9 +258,9 @@ describe('Input editing', () =>
     it('restores the placeholder when emptied', () =>
     {
         const input = new Input({ bg: g(), placeholder: 'ph', value: 'a' });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onKeyUp(key('Backspace'));
+        setField(native, '', 'deleteContentBackward');
         (input as any).stopEditing();
 
         expect((input as any).placeholder.visible).toBe(true);
@@ -278,12 +303,9 @@ describe('Input editing', () =>
     it('pastes clipboard text', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onPaste({
-            preventDefault: () => undefined,
-            clipboardData: { getData: () => 'pasted' },
-        });
+        setField(native, 'pasted', 'insertFromPaste');
 
         expect(input.value).toBe('pasted');
     });
@@ -291,12 +313,9 @@ describe('Input editing', () =>
     it('ignores an empty paste', () =>
     {
         const input = new Input({ bg: g() });
+        const native = edit(input);
 
-        (input as any)._startEditing();
-        (input as any).onPaste({
-            preventDefault: () => undefined,
-            clipboardData: { getData: () => '' },
-        });
+        setField(native, '', 'insertFromPaste');
 
         expect(input.value).toBe('');
     });
@@ -364,13 +383,16 @@ describe('Input presentation', () =>
         expect((overflowing() as any).getAlign()).toBe(0);
     });
 
-    it('right-aligns overflowing text while editing', () =>
+    it('keeps overflowing text left-anchored while editing and scrolls it behind the caret', () =>
     {
         const input = overflowing();
 
-        (input as any).editing = true;
+        (input as any)._startEditing();
 
-        expect((input as any).getAlign()).toBe(1);
+        expect((input as any).getAlign()).toBe(0);
+        // The caret starts at the end, so the text is shifted left until that end is in view.
+        expect((input as any).scrollX).toBe(5000 - 40);
+        expect((input as any).getCursorPosX()).toBe(40);
     });
 
     it.each([0, 0.5, 1])('positions the cursor for align %s', (align) =>

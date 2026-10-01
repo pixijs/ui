@@ -5,7 +5,7 @@ export * from './Dialog';
 export * from './DoubleSlider';
 export * from './Drawer';
 export * from './FancyButton';
-export * from './Input';
+export * from './input';
 export * from './List';
 export * from './MaskedFrame';
 export * from './ProgressBar';
