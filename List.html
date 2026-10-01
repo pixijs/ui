@@ -870,6 +870,8 @@
             
                 <li class="parent " data-name="List._type"><a href=List.html#_type>_type</a></li>
             
+                <li class="parent " data-name="List.arrangeSuspended"><a href=List.html#arrangeSuspended>arrangeSuspended</a></li>
+            
             </ul>
 
             <ul class="enums itemMembers">
@@ -889,11 +891,15 @@
             
             <span class="subtitle">Methods</span>
             
+                <li class="parent  " data-name="List.addItems"><a href=List.html#addItems>addItems</a></li>
+            
                 <li class="parent  " data-name="List.arrangeChildren"><a href=List.html#arrangeChildren>arrangeChildren</a></li>
             
                 <li class="parent  " data-name="List.init"><a href=List.html#init>init</a></li>
             
                 <li class="parent  " data-name="List.removeItem"><a href=List.html#removeItem>removeItem</a></li>
+            
+                <li class="parent  " data-name="List.arrangeIfNeeded"><a href=List.html#arrangeIfNeeded>arrangeIfNeeded</a></li>
             
                 <li class="parent  " data-name="List.getChildOffset"><a href=List.html#getChildOffset>getChildOffset</a></li>
             
@@ -2773,6 +2779,59 @@ https://pixijs.io/ui/storybook/?path=/story/components-scrollbox-use-graphics--u
 </dd>
 
         
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="arrangeSuspended">
+            <a class="share-icon" href="#arrangeSuspended"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">arrangeSuspended</span>
+            <span class="type-signature type">boolean</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Set while a batch of children is being added, so the list is arranged once at the end.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
     
 
     
@@ -2781,6 +2840,130 @@ https://pixijs.io/ui/storybook/?path=/story/components-scrollbox-use-graphics--u
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addItems">
+            <a class="share-icon" href="#addItems"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  addItems
+              
+            </span>
+            <span class="signature">(items)</span><span class="type-signature"></span>
+            
+            
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Adds items to the list, arranging them once instead of once per item.</p></p>
+    
+    
+    <div class="description">
+        <p><code>childAdded</code> arranges the whole list on every single <code>addChild</code>, which makes adding
+items one by one quadratic. Use this when adding more than one.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>items</code></td>
+            
+
+            <td class="type">
+            
+                C[]
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>items to add.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
 
         
             
@@ -3115,6 +3298,78 @@ Can be arranged vertically, horizontally or bidirectional.</p>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="arrangeIfNeeded">
+            <a class="share-icon" href="#arrangeIfNeeded"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  arrangeIfNeeded
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"></span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Arranges children unless a batch add is in progress, which arranges once at the end.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getChildOffset">
             <a class="share-icon" href="#getChildOffset"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
@@ -3286,7 +3541,7 @@ inside itself - an anchored <code>Sprite</code>, or a container with a <code>piv
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Thu Oct 01 2026 09:48:56 GMT+0000 (Coordinated Universal Time)
+                Documentation generated by <a href="https://github.com/webdoc-js/webdoc">Webdoc 1</a> on Thu Oct 01 2026 09:58:10 GMT+0000 (Coordinated Universal Time)
             </div>
         </footer>
     </div>
