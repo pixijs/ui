@@ -46,7 +46,34 @@ export type InputOptions = {
 const SECURE_CHARACTER = '*';
 const SELECTION_ALPHA = 0.35;
 
+/**
+ * How long after a press on the component a blur of the hidden field is still taken to be caused
+ * by that press. Desktop browsers move focus during the press itself, but touch browsers do it on
+ * the tap gesture, which arrives after the pointer has already been released.
+ */
+const PRESS_BLUR_GRACE = 500;
+
+/** Taps closer together than this, in time and in distance, count as one multi-tap sequence. */
+const MULTI_TAP_INTERVAL = 350;
+const MULTI_TAP_DISTANCE = 12;
+
 type SelectionDirection = 'forward' | 'backward' | 'none';
+
+/**
+ * Cuts a string to a length in UTF-16 code units without splitting a surrogate pair, so the
+ * result never holds a lone surrogate.
+ * @param text - string to cut.
+ * @param maxLength - length to cut to.
+ */
+function clampLength(text: string, maxLength: number): string
+{
+    if (text.length <= maxLength) return text;
+
+    const last = text.charCodeAt(maxLength - 1);
+    const end = last >= 0xD800 && last <= 0xDBFF ? maxLength - 1 : maxLength;
+
+    return text.substring(0, end);
+}
 
 /**
  * Container-based component that creates an input to read the user's text.
@@ -90,8 +117,23 @@ export class Input extends Container
     /** Index the pointer went down on while editing; set while a drag-selection is in progress. */
     protected dragAnchor: number | undefined;
 
-    /** True from a press on the component until its release, so a blur it causes can be told apart. */
-    protected pressed = false;
+    /**
+     * `performance.now()` of the last press, drag or release on the component, so a blur of the
+     * hidden field that the press caused can be told apart from focus genuinely leaving.
+     */
+    protected lastPressTime = -Infinity;
+
+    /** True while the browser is composing text in the field (IME, or an Android keyboard composing a word). */
+    protected composing = false;
+
+    /** The component's own multi-tap count: Pixi counts per pointer id, and touch pointers change ids. */
+    protected tapCount = 0;
+    protected lastTapTime = -Infinity;
+    protected lastTapX = 0;
+    protected lastTapY = 0;
+
+    /** Set around the synthetic `click()` on focus so it is not mistaken for a tap on the field. */
+    protected clickingField = false;
 
     protected activation = false;
     protected readonly options: InputOptions;
@@ -101,6 +143,10 @@ export class Input extends Container
     protected onKeyDownBinding = this.onKeyDown.bind(this);
     protected onBlurBinding = this.onBlur.bind(this);
     protected onInputBinding = this.onInput.bind(this);
+    protected onCompositionStartBinding = this.onCompositionStart.bind(this);
+    protected onCompositionEndBinding = this.onCompositionEnd.bind(this);
+    protected onFieldClickBinding = this.onFieldClick.bind(this);
+    protected onAnyPointerDownBinding = this.onAnyPointerDown.bind(this);
 
     /**
      * Kept as a field so destroy() can detach it from the shared ticker.
@@ -201,11 +247,15 @@ export class Input extends Container
         this.on('pointerupoutside', this.onPointerUp, this);
         this.on('pointertap', (e: FederatedPointerEvent) =>
         {
+            // Counted before the editing check so a double click on an idle input, which starts
+            // editing on its first tap, still selects a word on its second as a native field does.
+            const clicks = Math.max(e.detail ?? 1, this.countTap(e));
+
             // A tap during a session is a caret or selection gesture, not an activation; leaving
             // `activation` set here would restart editing on the very click that ends it.
             if (this.editing)
             {
-                this.onPointerTap(e);
+                this.onPointerTap(e, clicks);
 
                 return;
             }
@@ -215,6 +265,8 @@ export class Input extends Container
         });
 
         window.addEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
+        // Capture phase: runs before the component's own pointerdown, which re-marks the press if it was on it.
+        window.addEventListener('pointerdown', this.onAnyPointerDownBinding, true);
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
@@ -250,29 +302,55 @@ export class Input extends Container
 
         const { maxLength } = this.options;
         let text = this.input.value;
+        let overLimit = false;
 
         if (maxLength && text.length > maxLength)
         {
-            // Native maxLength does not apply to pastes, suggestions or an over-long seed.
-            const { selectionStart, selectionEnd, selectionDirection } = this.input;
+            // Native maxLength does not apply to suggestions, replacements or an over-long seed.
+            // Writing the field during a composition would abort it (and confuse Android keyboards,
+            // which compose every word), so the cut waits for compositionend; until then the
+            // over-long text is mirrored but not reported.
+            if (this.composing)
+            {
+                overLimit = true;
+            }
+            else
+            {
+                const { selectionStart, selectionEnd, selectionDirection } = this.input;
 
-            text = text.substring(0, maxLength);
-            this.input.value = text;
-            this.input.setSelectionRange(
-                Math.min(selectionStart ?? maxLength, maxLength),
-                Math.min(selectionEnd ?? maxLength, maxLength),
-                selectionDirection ?? 'none',
-            );
+                text = clampLength(text, maxLength);
+                this.input.value = text;
+                this.input.setSelectionRange(
+                    Math.min(selectionStart ?? text.length, text.length),
+                    Math.min(selectionEnd ?? text.length, text.length),
+                    selectionDirection ?? 'none',
+                );
+            }
         }
 
         if (text !== this.value)
         {
             this.value = text;
 
-            this.onChange.emit(this.value);
+            if (!overLimit)
+            {
+                this.onChange.emit(this.value);
+            }
         }
 
         this.syncSelection();
+    }
+
+    protected onCompositionStart(): void
+    {
+        this.composing = true;
+    }
+
+    /** The composed text is committed; apply anything that had to wait for it, such as the maxLength cut. */
+    protected onCompositionEnd(): void
+    {
+        this.composing = false;
+        this.onInput();
     }
 
     /**
@@ -373,9 +451,9 @@ export class Input extends Container
         }
 
         // Cancelling pointerdown drops the compatibility mouse events, but browsers still move
-        // focus to the canvas; onBlur uses `pressed` to hand it straight back to the field.
+        // focus to the canvas; onBlur uses the press time to hand it straight back to the field.
         (e.nativeEvent as Event | undefined)?.preventDefault?.();
-        this.pressed = true;
+        this.lastPressTime = performance.now();
 
         if (e.shiftKey)
         {
@@ -395,6 +473,8 @@ export class Input extends Container
     {
         if (this.dragAnchor === undefined || !this.editing) return;
 
+        this.lastPressTime = performance.now();
+
         const anchor = this.dragAnchor;
         const index = this.indexAt(e);
 
@@ -403,21 +483,38 @@ export class Input extends Container
 
     protected onPointerUp(): void
     {
+        if (this.dragAnchor !== undefined)
+        {
+            this.lastPressTime = performance.now();
+        }
+
         this.dragAnchor = undefined;
-        this.pressed = false;
+    }
+
+    /**
+     * Any press anywhere on the page forgets the component's own, so a blur that follows a press
+     * elsewhere, however quickly, ends the session. The component's pointerdown runs after this
+     * and marks the press again when it was on the component.
+     */
+    protected onAnyPointerDown(): void
+    {
+        this.lastPressTime = -Infinity;
     }
 
     /**
      * Ends the session when focus genuinely leaves — a click elsewhere, Tab, a dismissed keyboard.
      * A press on the component itself also blurs the hidden field, because the canvas takes
      * focus; that would end and restart editing on every caret move, losing the selection and
-     * emitting onEnter, so focus is handed back instead.
+     * emitting onEnter, so focus is handed back instead. The press is recognised by time rather
+     * than by a held flag: touch browsers move focus on the tap gesture, after the release, and a
+     * cancelled pointer never reports a release at all.
      */
     protected onBlur(): void
     {
         const input = this.input;
+        const pressInduced = performance.now() - this.lastPressTime < PRESS_BLUR_GRACE;
 
-        if (!this.pressed || !input)
+        if (!pressInduced || !input)
         {
             this.stopEditing();
 
@@ -441,11 +538,31 @@ export class Input extends Container
         }
     }
 
-    protected onPointerTap(e: FederatedPointerEvent): void
+    /**
+     * Counts taps in a quick sequence at one spot, as a multi-click. Pixi's `detail` does this
+     * per pointer id, and touch browsers issue a new id for every touch, so it stays at 1 there.
+     * @param e - the tap.
+     */
+    protected countTap(e: FederatedPointerEvent): number
     {
-        // `detail` is the click count: 2 selects a word, 3 the whole value.
-        const clicks = e.detail ?? 1;
+        const now = performance.now();
+        const { x, y } = e.global;
+        const near = Math.hypot(x - this.lastTapX, y - this.lastTapY) <= MULTI_TAP_DISTANCE;
 
+        this.tapCount = near && now - this.lastTapTime <= MULTI_TAP_INTERVAL ? this.tapCount + 1 : 1;
+        this.lastTapTime = now;
+        this.lastTapX = x;
+        this.lastTapY = y;
+
+        return this.tapCount;
+    }
+
+    /**
+     * @param e - the tap.
+     * @param clicks - click count: 2 selects a word, 3 the whole value.
+     */
+    protected onPointerTap(e: FederatedPointerEvent, clicks = e.detail ?? 1): void
+    {
         if (clicks === 2)
         {
             this.selectWordAt(this.indexAt(e));
@@ -510,10 +627,52 @@ export class Input extends Container
      */
     protected indexAt(e: FederatedPointerEvent): number
     {
+        return this.indexAtLocalX(this.toLocal(e.global).x);
+    }
+
+    /**
+     * Whether presses should land on the hidden field itself rather than on the canvas. On touch
+     * devices the field has to stay the touch target: its long-press callout is the only paste
+     * path on iOS. Taps on it are mapped onto the drawn text by {@link Input.onFieldClick}.
+     */
+    protected get fieldTakesPointer(): boolean
+    {
+        return isMobile.any;
+    }
+
+    /**
+     * A tap on the hidden field placed the native caret by the field's own layout, which never
+     * matches the canvas; move it to where the tap landed on the drawn text instead.
+     * @param e - the click on the field.
+     */
+    protected onFieldClick(e: MouseEvent): void
+    {
+        const input = this.input;
+
+        if (!input || !this.editing || this.clickingField) return;
+
+        // A range means a native double or triple tap selected it; keep that.
+        if (input.selectionStart !== input.selectionEnd) return;
+
+        // The field sits at the component's global position, so an offset into it is a global offset.
+        const rect = input.getBoundingClientRect();
+        const origin = this.getGlobalPosition();
+        const local = this.toLocal({ x: origin.x + (e.clientX - rect.left), y: origin.y + (e.clientY - rect.top) });
+        const index = this.indexAtLocalX(local.x);
+
+        this.setSelection(index, index);
+    }
+
+    /**
+     * The caret index nearest to an x in local coordinates, see {@link Input.indexAt}.
+     * @param localX - x in the component's local space.
+     */
+    protected indexAtLocalX(localX: number): number
+    {
         if (!this.inputField) return 0;
 
         const text = this.displayText;
-        const x = this.toLocal(e.global).x - this.textLeft;
+        const x = localX - this.textLeft;
         const total = this.measureText(text);
 
         let best = 0;
@@ -544,6 +703,10 @@ export class Input extends Container
     protected onKeyDown(e: KeyboardEvent)
     {
         if (e.metaKey || e.ctrlKey) return;
+
+        // Enter and Escape confirm or cancel a composition first; Firefox and Safari report the real
+        // key with `isComposing` set, Chrome reports 'Process' with keyCode 229.
+        if (e.isComposing || e.keyCode === 229) return;
 
         if (e.key === 'Escape' || e.key === 'Enter')
         {
@@ -678,7 +841,7 @@ export class Input extends Container
                 return;
             }
 
-            addition = key.substring(0, room);
+            addition = clampLength(key, room);
         }
 
         this.value = this.value + addition;
@@ -750,7 +913,15 @@ export class Input extends Container
         input.style.background = 'white';
         // The field overlays the component; presses must reach the canvas, where the drawn text
         // is, so the caret lands by what the user sees rather than by the invisible field's layout.
-        input.style.pointerEvents = 'none';
+        // Touch devices keep the field as the target, for its paste callout, and map taps instead.
+        if (this.fieldTakesPointer)
+        {
+            input.addEventListener('click', this.onFieldClickBinding);
+        }
+        else
+        {
+            input.style.pointerEvents = 'none';
+        }
 
         // A password field keeps on-screen keyboards from suggesting, or learning, the value.
         input.type = this._secure ? 'password' : 'text';
@@ -772,7 +943,10 @@ export class Input extends Container
         const focus = () =>
         {
             input.focus();
+            // The synthetic click is part of the keyboard hack below, not a tap to place the caret by.
+            this.clickingField = true;
             input.click();
+            this.clickingField = false;
             // After focus: some browsers reset the selection when a field gains focus.
             input.setSelectionRange(Math.min(start, length), Math.min(end, length));
             this.syncSelection();
@@ -781,6 +955,8 @@ export class Input extends Container
         input.addEventListener('blur', this.onBlurBinding);
         input.addEventListener('keydown', this.onKeyDownBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
+        input.addEventListener('compositionstart', this.onCompositionStartBinding);
+        input.addEventListener('compositionend', this.onCompositionEndBinding);
 
         this.input = input;
 
@@ -821,7 +997,7 @@ export class Input extends Container
         }
         this.editing = false;
         this.dragAnchor = undefined;
-        this.pressed = false;
+        this.composing = false;
 
         if (this.placeholder && this.value.length === 0)
         {
@@ -1043,6 +1219,7 @@ export class Input extends Container
         this.off('pointerupoutside', this.onPointerUp, this);
 
         window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
+        window.removeEventListener('pointerdown', this.onAnyPointerDownBinding, true);
 
         Ticker.shared.remove(this.tickerUpdate);
 
@@ -1059,6 +1236,9 @@ export class Input extends Container
         this.input.removeEventListener('blur', this.onBlurBinding);
         this.input.removeEventListener('keydown', this.onKeyDownBinding);
         this.input.removeEventListener('input', this.onInputBinding as EventListener);
+        this.input.removeEventListener('compositionstart', this.onCompositionStartBinding);
+        this.input.removeEventListener('compositionend', this.onCompositionEndBinding);
+        this.input.removeEventListener('click', this.onFieldClickBinding);
 
         this.input.blur();
         this.input.remove();

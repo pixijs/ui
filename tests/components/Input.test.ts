@@ -1021,4 +1021,284 @@ describe('Input Component', () =>
             expect((input as any)._selection.mask).toBe((input as any).inputMask);
         });
     });
+
+    describe('Input Platform Edge Cases', () =>
+    {
+        // Behaviour that differs between desktop and touch browsers, or between keyboards.
+        // Touch browsers move focus on the tap gesture, after the pointer was released; they
+        // issue a new pointer id per touch, so Pixi's click count stays at 1; and IMEs and
+        // Android keyboards compose text, which a write to the field would abort.
+        const startEditing = (input: Input, value?: string) =>
+        {
+            if (value !== undefined) input.value = value;
+            (input as any)._startEditing();
+
+            return (input as any).input as HTMLInputElement;
+        };
+
+        const pointerAt = (input: Input, fraction: number, extra: Record<string, unknown> = {}) =>
+        {
+            const field = (input as any).inputField;
+            const x = (input as any).textLeft + (field.width * fraction);
+            const global = input.toGlobal(new Point(x, field.y));
+
+            return { global, detail: 1, shiftKey: false, nativeEvent: { preventDefault: jest.fn() }, ...extra } as any;
+        };
+
+        const selection = (input: Input) => [(input as any).selectionStart, (input as any).selectionEnd];
+
+        let now: jest.SpyInstance<number, []>;
+
+        beforeEach(() =>
+        {
+            now = jest.spyOn(performance, 'now').mockReturnValue(1000);
+        });
+
+        afterEach(() =>
+        {
+            now.mockRestore();
+        });
+
+        it('should keep editing when the field blurs shortly after the press was released', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+            const onEnter = jest.fn();
+
+            input.onEnter.connect(onEnter);
+
+            // Touch order: pointerdown, pointerup, then the tap gesture moves focus.
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            (input as any).onPointerUp();
+            now.mockReturnValue(1200);
+            native.dispatchEvent(new Event('blur'));
+
+            expect((input as any).editing).toBe(true);
+            expect((input as any).input).toBe(native);
+            expect(document.activeElement).toBe(native);
+            expect(selection(input)).toEqual([2, 2]);
+            expect(onEnter).not.toHaveBeenCalled();
+        });
+
+        it('should end editing when the field blurs long after the last press', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            (input as any).onPointerUp();
+            now.mockReturnValue(2000);
+            native.dispatchEvent(new Event('blur'));
+
+            expect((input as any).editing).toBe(false);
+            expect((input as any).input).toBeUndefined();
+        });
+
+        it('should not trap focus after a press that never reported a release', () =>
+        {
+            // A cancelled pointer (long-press menu, palm, incoming call) gets no pointerup.
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            now.mockReturnValue(5000);
+            native.dispatchEvent(new Event('blur'));
+
+            expect((input as any).editing).toBe(false);
+        });
+
+        it('should end editing when a press elsewhere follows its own press, however quickly', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            (input as any).onPointerUp();
+
+            // A press on anything else on the page; the blur it causes is not the component's.
+            now.mockReturnValue(1100);
+            window.dispatchEvent(new Event('pointerdown'));
+            native.dispatchEvent(new Event('blur'));
+
+            expect((input as any).editing).toBe(false);
+        });
+
+        it('should still recognise its own press after a press elsewhere', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            window.dispatchEvent(new Event('pointerdown'));
+            // The capture listener runs first, then the component's own handler marks the press.
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            now.mockReturnValue(1100);
+            native.dispatchEvent(new Event('blur'));
+
+            expect((input as any).editing).toBe(true);
+        });
+
+        it('should count quick taps itself so a touch double tap selects a word', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+
+            // Touch browsers give every tap a new pointer id, so Pixi reports detail 1 each time.
+            input.emit('pointertap', pointerAt(input, 0.2));
+            now.mockReturnValue(1150);
+            input.emit('pointertap', pointerAt(input, 0.2));
+
+            expect(selection(input)).toEqual([0, 5]);
+        });
+
+        it('should select everything on a touch triple tap', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+
+            input.emit('pointertap', pointerAt(input, 0.2));
+            now.mockReturnValue(1150);
+            input.emit('pointertap', pointerAt(input, 0.2));
+            now.mockReturnValue(1300);
+            input.emit('pointertap', pointerAt(input, 0.2));
+
+            expect(selection(input)).toEqual([0, 11]);
+        });
+
+        it('should start a new tap sequence when taps are far apart in time or place', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+            (input as any).setSelection(3, 3);
+
+            input.emit('pointertap', pointerAt(input, 0.2));
+            now.mockReturnValue(2000);
+            input.emit('pointertap', pointerAt(input, 0.2));
+
+            expect(selection(input)).toEqual([3, 3]);
+
+            // jsdom measures text as a few pixels wide, so place the far tap explicitly.
+            now.mockReturnValue(2100);
+            input.emit('pointertap', pointerAt(input, 0.9, { global: new Point(500, 25) }));
+
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should ignore Enter and Escape while a composition is in progress', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50) });
+            const native = startEditing(input);
+
+            // Firefox and Safari report the real key with isComposing; Chrome reports keyCode 229.
+            native.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true }));
+            expect((input as any).editing).toBe(true);
+
+            native.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true }));
+            expect((input as any).editing).toBe(true);
+
+            native.dispatchEvent(new KeyboardEvent('keydown', { key: 'Process', keyCode: 229 } as any));
+            expect((input as any).editing).toBe(true);
+
+            native.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            expect((input as any).editing).toBe(false);
+        });
+
+        it('should wait for the composition to end before cutting to maxLength', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), maxLength: 3 });
+            const native = startEditing(input);
+            const onChange = jest.fn();
+
+            input.onChange.connect(onChange);
+
+            native.dispatchEvent(new CompositionEvent('compositionstart'));
+            native.value = 'ab';
+            native.dispatchEvent(new InputEvent('input', { inputType: 'insertCompositionText' }));
+
+            expect(onChange).toHaveBeenLastCalledWith('ab');
+
+            // Writing the field here would abort the composition, so the over-long text is only mirrored.
+            native.value = 'abcd';
+            native.dispatchEvent(new InputEvent('input', { inputType: 'insertCompositionText' }));
+
+            expect(native.value).toBe('abcd');
+            expect(input.value).toBe('abcd');
+            expect(onChange).toHaveBeenCalledTimes(1);
+
+            native.dispatchEvent(new CompositionEvent('compositionend'));
+
+            expect(native.value).toBe('abc');
+            expect(input.value).toBe('abc');
+            expect(onChange).toHaveBeenLastCalledWith('abc');
+            expect(onChange).toHaveBeenCalledTimes(2);
+        });
+
+        it('should not split a surrogate pair when cutting to maxLength', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), maxLength: 3 });
+            const native = startEditing(input);
+
+            native.value = 'ab😀';
+            native.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+
+            expect(input.value).toBe('ab');
+            expect(native.value).toBe('ab');
+        });
+
+        describe('on touch devices', () =>
+        {
+            // The field keeps pointer events there, since its long-press callout is the only
+            // paste path on iOS; a tap on it is mapped onto the drawn text from the click.
+            class TouchInput extends Input
+            {
+                protected override get fieldTakesPointer(): boolean
+                {
+                    return true;
+                }
+            }
+
+            const clickAt = (input: Input, native: HTMLInputElement, fraction: number) =>
+            {
+                const field = (input as any).inputField;
+                const x = (input as any).textLeft + (field.width * fraction);
+                const { x: clientX, y: clientY } = input.toGlobal(new Point(x, field.y));
+
+                native.getBoundingClientRect = () => ({ left: 0, top: 0 } as DOMRect);
+                native.dispatchEvent(new MouseEvent('click', { clientX, clientY }));
+            };
+
+            it('should leave the field clickable', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50) });
+                const native = startEditing(input);
+
+                expect(native.style.pointerEvents).not.toBe('none');
+            });
+
+            it('should place the caret where a tap landed on the drawn text', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+                const native = startEditing(input);
+
+                clickAt(input, native, 0.5);
+
+                expect(selection(input)).toEqual([4, 4]);
+                expect(native.selectionStart).toBe(4);
+            });
+
+            it('should keep a range the native field selected on a multi-tap', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+                const native = startEditing(input);
+
+                native.setSelectionRange(0, 3);
+                clickAt(input, native, 0.5);
+
+                expect(native.selectionStart).toBe(0);
+                expect(native.selectionEnd).toBe(3);
+            });
+        });
+    });
 });
