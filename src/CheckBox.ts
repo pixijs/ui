@@ -1,9 +1,9 @@
 import { ContainerOptions, Text } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 type CheckBoxStyle = {
     checked: GetViewSettings;

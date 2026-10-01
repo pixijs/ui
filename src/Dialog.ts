@@ -10,13 +10,13 @@ import {
     Ticker,
 } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
-import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { type ButtonOptions, FancyButton } from './FancyButton';
 import { List, type ListOptions } from './List';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 type Animation = {
     props: Record<string, any>;

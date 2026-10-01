@@ -1,9 +1,9 @@
 import { Container, ContainerOptions, FillStyleInputs, Graphics, Text } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 const defaultVisibleItems = 5;
 

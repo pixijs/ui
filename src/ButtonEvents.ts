@@ -1,5 +1,5 @@
 import { Container, FederatedPointerEvent, isMobile } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Signal } from './utils/Signal';
 
 /** Events controller used for {@link Button}. */
 export class ButtonEvents

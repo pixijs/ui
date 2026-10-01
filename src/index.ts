@@ -14,3 +14,4 @@ export * from './ScrollBox';
 export * from './Select';
 export * from './Slider';
 export * from './Switcher';
+export * from './utils/Signal';
