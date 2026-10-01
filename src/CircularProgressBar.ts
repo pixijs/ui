@@ -75,7 +75,8 @@ export class CircularProgressBar extends Container
 
         this.addBackground();
 
-        if (value)
+        // `!== undefined`, not a falsy check: 0 is a legitimate progress value.
+        if (value !== undefined)
         {
             this.progress = value;
         }
