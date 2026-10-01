@@ -1,7 +1,7 @@
 import { Container, ContainerOptions } from 'pixi.js';
-import { Signal, SignalConnection } from 'typed-signals';
 import { CheckBox } from './CheckBox';
 import { List, ListType } from './List';
+import { Signal, SignalConnection } from './utils/Signal';
 
 export type RadioBoxOptions = {
     items: CheckBox[];

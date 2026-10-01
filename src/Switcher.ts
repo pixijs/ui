@@ -1,7 +1,7 @@
 import { Container, ContainerOptions } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';
+import { Signal } from './utils/Signal';
 
 /**
  * Container based component that switches visibility of a given containers by any of the interaction events.

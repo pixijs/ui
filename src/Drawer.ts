@@ -10,9 +10,9 @@ import {
     Ticker,
 } from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
-import { Signal } from 'typed-signals';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 type Animation = {
     /** Currently unused. The drawer always slides between its closed and open positions. */

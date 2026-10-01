@@ -69,7 +69,6 @@
         "docsDescription": "API Documentation for UI components made with PixiJS",
         "docsKeyword": "PixiJS, UI, components",
         "globals": {
-            "typed-signals": "typedSignals",
             "tweedle.js": "Tweedle"
         }
     },
@@ -77,8 +76,7 @@
         "pixi.js": "^8.6.2"
     },
     "dependencies": {
-        "tweedle.js": "^2.1.0",
-        "typed-signals": "^2.5.0"
+        "tweedle.js": "^2.1.0"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.28.0",

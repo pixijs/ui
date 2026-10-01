@@ -12,8 +12,8 @@ import {
     Size,
     Ticker,
 } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { List } from './List';
+import { Signal } from './utils/Signal';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
 import type { ListOptions, ListType } from './List';

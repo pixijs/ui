@@ -4,7 +4,7 @@ import {
     isMobile,
     Ticker,
 } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Signal } from '../utils/Signal';
 import { PRESS_BLUR_GRACE } from './constants';
 import { createHiddenField } from './hiddenField';
 import { InputTouch } from './InputTouch';
