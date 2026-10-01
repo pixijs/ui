@@ -1001,6 +1001,65 @@ describe('Input Component', () =>
             expect(caretX(input)).toBeCloseTo((input as any).textLeft + ((input as any).inputField.width / 2));
         });
 
+        it('should scroll overflowing text so the caret stays visible', () =>
+        {
+            // jsdom's canvas mock does not measure text, so the drawn width is forced.
+            const input = new Input({ bg: createTestGraphics(100, 40), padding: [0, 10, 0, 10], value: 'abcdefghij' });
+
+            Object.defineProperty((input as any).inputField, 'width', { value: 1000, configurable: true });
+
+            // Idle: the start of the text is shown.
+            (input as any).align();
+            expect((input as any).textLeft).toBe(10);
+            expect((input as any).scrollX).toBe(0);
+
+            // Editing starts with the caret at the end, which is scrolled into view at the right edge.
+            startEditing(input);
+            expect((input as any).scrollX).toBe(1000 - 80);
+            expect(caretX(input)).toBe(90);
+
+            // Home: the caret and the text start come back into view.
+            moveSelection(input, 0);
+            expect((input as any).scrollX).toBe(0);
+            expect(caretX(input)).toBe(10);
+
+            // A caret that is already in view does not scroll.
+            moveSelection(input, 0);
+            const before = (input as any).scrollX;
+
+            moveSelection(input, 0);
+            expect((input as any).scrollX).toBe(before);
+
+            // Past the right edge: scroll only as far as needed to show the caret.
+            const atFive = (input as any).offsetAt(5);
+
+            moveSelection(input, 5);
+            expect(caretX(input)).toBe(90);
+            expect((input as any).scrollX).toBe(atFive - 80);
+
+            // Left of the view now: scroll back only until the caret is at the left edge.
+            moveSelection(input, 3);
+            expect((input as any).scrollX).toBe((input as any).offsetAt(3));
+            expect(caretX(input)).toBe(10);
+
+            // Ending the session shows the start again.
+            (input as any).stopEditing();
+            expect((input as any).scrollX).toBe(0);
+            expect((input as any).textLeft).toBe(10);
+        });
+
+        it('should not scroll text that fits', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), align: 'center', value: 'abc' });
+
+            startEditing(input);
+            moveSelection(input, 0);
+            moveSelection(input, 3);
+
+            expect((input as any).scrollX).toBe(0);
+            expect((input as any).inputField.anchor.x).toBe(0.5);
+        });
+
         it('should not re-activate from a tap made during the session', () =>
         {
             const input = new Input({ bg: createTestGraphics(200, 50), value: 'abc' });

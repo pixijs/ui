@@ -383,13 +383,16 @@ describe('Input presentation', () =>
         expect((overflowing() as any).getAlign()).toBe(0);
     });
 
-    it('right-aligns overflowing text while editing', () =>
+    it('keeps overflowing text left-anchored while editing and scrolls it behind the caret', () =>
     {
         const input = overflowing();
 
-        (input as any).editing = true;
+        (input as any)._startEditing();
 
-        expect((input as any).getAlign()).toBe(1);
+        expect((input as any).getAlign()).toBe(0);
+        // The caret starts at the end, so the text is shifted left until that end is in view.
+        expect((input as any).scrollX).toBe(5000 - 40);
+        expect((input as any).getCursorPosX()).toBe(40);
     });
 
     it.each([0, 0.5, 1])('positions the cursor for align %s', (align) =>

@@ -158,6 +158,12 @@ export class Input extends Container
     /** Selection a right-button press settled on, to put back after the context-menu request collapses it. */
     protected contextSelection: [number, number, SelectionDirection] | undefined;
 
+    /**
+     * How far the text is shifted left, in local units, so the caret stays inside the visible
+     * width when the text is wider than it. Zero while the text fits or the input is idle.
+     */
+    protected scrollX = 0;
+
     /** Prefix widths of the displayed text at each grapheme boundary, measured once per text and style. */
     protected metricsCache: { key: string; boundaries: number[]; widths: number[] } | undefined;
 
@@ -1276,9 +1282,11 @@ export class Input extends Container
 
         if (this.inputField)
         {
+            this.updateScroll();
+
             this.inputField.anchor.set(align, 0.5);
             this.inputField.x
-                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft);
+                = (this._bg.width * align) + (align === 1 ? -this.paddingRight : this.paddingLeft) - this.scrollX;
             this.inputField.y = (this._bg.height / 2) + this.paddingTop - this.paddingBottom;
         }
 
@@ -1317,18 +1325,56 @@ export class Input extends Container
             .fill({ color: this.textColor, alpha: SELECTION_ALPHA });
     }
 
+    /** Width available to the text: the background less the horizontal padding. */
+    protected get viewWidth(): number
+    {
+        return (this._bg?.width ?? 0) - this.paddingLeft - this.paddingRight;
+    }
+
+    /** Whether the drawn text is wider than the space it has. */
+    protected get isOverflowing(): boolean
+    {
+        return !!this.inputField && this.inputField.width > this.viewWidth;
+    }
+
+    /**
+     * Shifts overflowing text so the caret stays inside the visible width, scrolling only as far
+     * as needed in the caret's direction, as a native field does. Idle text shows its start.
+     */
+    protected updateScroll(): void
+    {
+        if (!this.inputField || !this.editing || !this.isOverflowing)
+        {
+            this.scrollX = 0;
+
+            return;
+        }
+
+        const viewWidth = this.viewWidth;
+        const caretIndex = this.selectionDirection === 'backward' ? this.selectionStart : this.selectionEnd;
+        const caret = this.offsetAt(Math.min(caretIndex, this.displayText.length));
+        let scroll = this.scrollX;
+
+        if (caret - scroll > viewWidth)
+        {
+            scroll = caret - viewWidth;
+        }
+        else if (caret - scroll < 0)
+        {
+            scroll = caret;
+        }
+
+        this.scrollX = Math.max(0, Math.min(scroll, this.inputField.width - viewWidth));
+    }
+
     protected getAlign(): 0 | 1 | 0.5
     {
         if (!(this._bg && this.inputField)) return 0;
 
-        const maxWidth = this._bg.width * 0.95;
-        const paddings = this.paddingLeft + this.paddingRight - 10;
-        const isOverflowed = this.inputField.width + paddings > maxWidth;
+        // Overflowing text is anchored at the left and scrolled behind the caret, as a native
+        // field does; idle it shows its start.
+        if (this.isOverflowing) return 0;
 
-        if (isOverflowed)
-        {
-            return this.editing ? 1 : 0;
-        }
         switch (this.options.align)
         {
             case 'left':
