@@ -3,10 +3,10 @@ import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { Drawer } from '../../Drawer';
 import { FancyButton } from '../../FancyButton';
-import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { resizeDrawerStory } from '../utils/drawer';
 import { action } from '@storybook/addon-actions';
 
 const args = {
@@ -129,7 +129,7 @@ export const LetterGridSelector = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -331,7 +331,7 @@ export const CheckboxSwapDrawer = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(swapDrawerArgs),
     argTypes: argTypes(swapDrawerArgs),

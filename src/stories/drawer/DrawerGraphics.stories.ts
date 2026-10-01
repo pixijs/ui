@@ -1,10 +1,10 @@
 import { Graphics, Text } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Drawer } from '../../Drawer';
-import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { resizeDrawerStory } from '../utils/drawer';
 import { loremText } from '../utils/loremText';
 import { action } from '@storybook/addon-actions';
 
@@ -96,7 +96,7 @@ export const BottomDrawer = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -171,7 +171,7 @@ export const TopDrawer = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -246,7 +246,7 @@ export const LeftDrawer = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -321,7 +321,7 @@ export const RightDrawer = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };

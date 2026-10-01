@@ -1,10 +1,10 @@
 import { Text, Texture } from 'pixi.js';
 import { PixiStory, StoryContext } from '@pixi/storybook-renderer';
 import { Drawer } from '../../Drawer';
-import { centerView } from '../../utils/helpers/resize';
 import { colors, defaultTextStyle } from '../../utils/helpers/styles';
 import { argTypes, getDefaultArgs } from '../utils/argTypes';
 import { getColor } from '../utils/color';
+import { resizeDrawerStory } from '../utils/drawer';
 import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
@@ -85,7 +85,7 @@ export const NineSliceBottom = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -154,7 +154,7 @@ export const NineSliceTop = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -223,7 +223,7 @@ export const NineSliceLeft = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
@@ -292,7 +292,7 @@ export const NineSliceRight = {
                 view.addChild(drawer);
                 drawer.open();
             },
-            resize: centerView,
+            resize: resizeDrawerStory,
         }),
     args: getDefaultArgs(args),
 };
