@@ -1,6 +1,7 @@
 import {
     Container,
     ContainerOptions,
+    DestroyOptions,
     FederatedPointerEvent,
     Graphics,
     NineSliceSprite,
@@ -84,6 +85,9 @@ export class Drawer extends Container
     protected _swipeStartX: number = 0;
     protected _swipeStartY: number = 0;
     protected _isSwiping: boolean = false;
+
+    /** Kept as a field so destroy() can detach it from the shared ticker. */
+    protected readonly updateAnimations = () => Group.shared.update();
 
     /** Signal emitted when the drawer is closed. */
     onClose: Signal<() => void>;
@@ -173,7 +177,22 @@ export class Drawer extends Container
         this.initSwipeGesture();
 
         // Setup ticker for tween animations
-        Ticker.shared.add(() => Group.shared.update());
+        Ticker.shared.add(this.updateAnimations);
+    }
+
+    /**
+     * Destroys the component, detaching it from the shared ticker.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
+     */
+    override destroy(options?: DestroyOptions | boolean)
+    {
+        Ticker.shared.remove(this.updateAnimations);
+
+        // Drawer constructs this ScrollBox itself, and ScrollBox.destroy is what
+        // releases its ticker callback and document wheel listener.
+        this.scrollBox?.destroy();
+
+        super.destroy(options);
     }
 
     /** Gets the drawer position from options. */
@@ -233,6 +252,16 @@ export class Drawer extends Container
                 this.backgroundView.height = height;
             }
         }
+
+        // An open drawer is positioned from the screen size, so it has to be
+        // re-anchored here; otherwise it stays glued to the previous edge.
+        if (this._isOpen)
+        {
+            const openPos = this.getOpenPosition();
+
+            this.innerView.x = openPos.x;
+            this.innerView.y = openPos.y;
+        }
     }
 
     /** Initializes the backdrop (semi-transparent background). */
@@ -269,6 +298,11 @@ export class Drawer extends Container
     protected initInnerView(): void
     {
         const { background, nineSliceSprite } = this.options;
+
+        if (!background)
+        {
+            throw new Error('Drawer background is not defined. Please provide options.background.');
+        }
 
         if (nineSliceSprite)
         {
