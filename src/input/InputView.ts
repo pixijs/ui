@@ -112,8 +112,10 @@ export abstract class InputView extends Container
      */
     protected selectionStart = 0;
 
+    /** End of the mirrored selection; equal to {@link InputView#selectionStart} for a plain caret. */
     protected selectionEnd = 0;
 
+    /** Which end of the mirrored selection holds the caret. */
     protected selectionDirection: SelectionDirection = 'none';
 
     protected readonly options: InputOptions;
@@ -138,6 +140,10 @@ export abstract class InputView extends Container
         return this._secure ? SECURE_CHARACTER.repeat(this._value.length) : this._value;
     }
 
+    /**
+     * Sets the background: a texture name, a Texture, a Sprite or a Graphics. A texture name or Texture
+     * becomes a NineSliceSprite when `nineSliceSprite` is set. The previous background is destroyed.
+     */
     set bg(bg: ViewType)
     {
         const previous = this._bg;
@@ -199,6 +205,7 @@ export abstract class InputView extends Container
         }
     }
 
+    /** Background view of the Input. */
     get bg(): Container | NineSliceSprite | Graphics | undefined
     {
         return this._bg;
@@ -248,6 +255,10 @@ export abstract class InputView extends Container
         return this._value;
     }
 
+    /**
+     * Masks the drawn text with `*` and switches the hidden field to `type="password"`. Can be toggled
+     * while editing, e.g. for a show/hide password button; the caret and selection are kept.
+     */
     set secure(val: boolean)
     {
         this._secure = val;
@@ -267,6 +278,7 @@ export abstract class InputView extends Container
         this.value = this._value;
     }
 
+    /** Whether the value is masked. */
     get secure(): boolean
     {
         return this._secure;
@@ -310,7 +322,7 @@ export abstract class InputView extends Container
         }
     }
 
-    // Return array of paddings [top, right, bottom, left]
+    /** Paddings as [top, right, bottom, left]. */
     get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];

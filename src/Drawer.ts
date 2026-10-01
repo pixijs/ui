@@ -85,6 +85,8 @@ export class Drawer extends Container
     protected _swipeStartX: number = 0;
     protected _swipeStartY: number = 0;
     protected _isSwiping: boolean = false;
+    /** Open or close animations in flight; a new animation or a re-anchor stops them first. */
+    protected _tweens: Tween<Container>[] = [];
 
     /** Kept as a field so destroy() can detach it from the shared ticker. */
     protected readonly updateAnimations = () => Group.shared.update();
@@ -187,6 +189,7 @@ export class Drawer extends Container
     override destroy(options?: DestroyOptions | boolean)
     {
         Ticker.shared.remove(this.updateAnimations);
+        this.stopAnimations();
 
         // Drawer constructs this ScrollBox itself, and ScrollBox.destroy is what
         // releases its ticker callback and document wheel listener.
@@ -258,6 +261,13 @@ export class Drawer extends Container
         if (this._isOpen)
         {
             const openPos = this.getOpenPosition();
+
+            // A slide still in flight is heading for the old edge and would overwrite this.
+            if (this._tweens.length)
+            {
+                this.stopAnimations();
+                this.backdrop.alpha = this.options.backdropAlpha ?? 0.5;
+            }
 
             this.innerView.x = openPos.x;
             this.innerView.y = openPos.y;
@@ -395,7 +405,8 @@ export class Drawer extends Container
             this._isSwiping = true;
         });
 
-        this.innerView.on('pointerup', (e: FederatedPointerEvent) =>
+        // A release past the drawer's edge counts too: a flick down a bottom drawer usually ends below it.
+        const onRelease = (e: FederatedPointerEvent) =>
         {
             if (!this._isSwiping) return;
 
@@ -420,12 +431,10 @@ export class Drawer extends Container
             }
 
             this._isSwiping = false;
-        });
+        };
 
-        this.innerView.on('pointerupoutside', () =>
-        {
-            this._isSwiping = false;
-        });
+        this.innerView.on('pointerup', onRelease);
+        this.innerView.on('pointerupoutside', onRelease);
     }
 
     /** Gets the closed position for the drawer based on its position setting. */
@@ -479,6 +488,8 @@ export class Drawer extends Container
     /** Shows the drawer and slides it in (instantly if no open animation is set). */
     open(): void
     {
+        // A close still in flight would hide the drawer when it completes.
+        this.stopAnimations();
         this.visible = true;
         this._isOpen = true;
 
@@ -503,18 +514,22 @@ export class Drawer extends Container
 
         const duration = openAnimation.duration ?? 300;
 
-        new Tween(this.backdrop)
-            .to({ alpha: this.options.backdropAlpha ?? 0.5 }, duration)
-            .start();
-
-        new Tween(this.innerView)
-            .to({ x: openPos.x, y: openPos.y }, duration)
-            .start();
+        this._tweens = [
+            new Tween<Container>(this.backdrop)
+                .to({ alpha: this.options.backdropAlpha ?? 0.5 }, duration)
+                .start(),
+            new Tween<Container>(this.innerView)
+                .to({ x: openPos.x, y: openPos.y }, duration)
+                .onComplete(() => { this._tweens = []; })
+                .start(),
+        ];
     }
 
     /** Slides the drawer out, hides it and emits `onClose` (instantly if no close animation is set). */
     close(): void
     {
+        this.stopAnimations();
+
         const closeAnimation = this.options.animations?.close;
 
         if (!closeAnimation)
@@ -532,19 +547,28 @@ export class Drawer extends Container
         const duration = closeAnimation.duration ?? 300;
         const closedPos = this.getClosedPosition();
 
-        new Tween(this.backdrop)
-            .to({ alpha: 0 }, duration)
-            .start();
+        this._tweens = [
+            new Tween<Container>(this.backdrop)
+                .to({ alpha: 0 }, duration)
+                .start(),
+            new Tween<Container>(this.innerView)
+                .to({ x: closedPos.x, y: closedPos.y }, duration)
+                .onComplete(() =>
+                {
+                    this._tweens = [];
+                    this.visible = false;
+                    this._isOpen = false;
+                    this.onClose.emit();
+                })
+                .start(),
+        ];
+    }
 
-        new Tween(this.innerView)
-            .to({ x: closedPos.x, y: closedPos.y }, duration)
-            .onComplete(() =>
-            {
-                this.visible = false;
-                this._isOpen = false;
-                this.onClose.emit();
-            })
-            .start();
+    /** Stops the open or close animation in flight, if any, where it is. */
+    protected stopAnimations(): void
+    {
+        this._tweens.forEach((tween) => tween.stop());
+        this._tweens = [];
     }
 
     /** Shows the drawer (alias for open). */

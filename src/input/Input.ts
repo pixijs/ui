@@ -38,26 +38,32 @@ export class Input extends InputTouch
 {
     /**
      * Creates an input.
-     * @param { number } options - Options object to use.
+     * @param { InputOptions } options - Options object to use.
      * @param { Sprite | Graphics | Texture | string } options.bg - Background of the Input.
      * <br> Can be a string (name of texture) or an instance of Texture, Sprite or Graphics.
      * <br> If you want to use NineSliceSprite, you have to pass a text (name of texture)
      * or an instance of Texture as a parameter.
      * @param { PixiTextStyle } options.textStyle - Text style of the Input.
      * @param { string } options.placeholder - Placeholder of the Input.
+     * @param { PixiTextClass } [options.TextClass=Text] - Class used to draw the text and the placeholder,
+     * e.g. `BitmapText` or `HTMLText`.
      * @param { string } options.value - Value of the Input.
-     * @param { number } options.maxLength - Max length of the Input.
-     * @param { 'left' | 'center' | 'right' } options.align - Align of the Input.
+     * @param { number } options.maxLength - Max length of the Input, in UTF-16 code units.
+     * Also applied to pasted text and keyboard suggestions, which the native limit does not cover.
+     * @param { boolean } [options.secure=false] - Draws each character as `*` and makes the hidden field
+     * `type="password"`. Can be toggled later with {@link Input#secure}.
+     * @param { 'left' | 'center' | 'right' } [options.align='left'] - Align of the text, when it fits.
      * @param { Padding } options.padding - Padding of the Input.
      * @param { number } options.padding.top - Top padding of the Input.
      * @param { number } options.padding.right - Right padding of the Input.
      * @param { number } options.padding.bottom - Bottom padding of the Input.
      * @param { number } options.padding.left - Left padding of the Input.
-     * @param { boolean } options.cleanOnFocus - Clean Input on focus.
+     * @param { boolean } [options.cleanOnFocus=false] - Clear the value each time editing starts.
      * @param { Record<string, string> } options.inputAttributes - Attributes for the hidden native field,
-     * merged over the defaults that turn off autocomplete, autocapitalize, autocorrect and spellcheck.
-     * @param { boolean } options.addMask - Add mask to the Input text, so it is cut off when it does not fit.
-     * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg and fill ([number, number, number, number]).
+     * merged over the defaults that turn off autocomplete, autocapitalize, autocorrect and spellcheck and
+     * tell password managers to ignore the field. Use it for `inputmode` or `enterkeyhint` as well.
+     * @param { boolean } [options.addMask=false] - Add mask to the Input text, so it is cut off when it does not fit.
+     * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg ([left, top, right, bottom]).
      * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */
     constructor(options: InputOptions)
@@ -128,15 +134,22 @@ export class Input extends InputTouch
     protected onAnyPointerDownBinding = this.onAnyPointerDown.bind(this);
 
     /**
-     * Kept as a field so destroy() can detach it from the shared ticker.
-     * @param ticker - shared ticker, supplying the delta that drives the cursor blink.
+     * Shared ticker callback that drives the caret blink; kept as a field so destroy() can detach it.
+     * @param ticker - the shared ticker, supplying the frame delta.
      */
     protected readonly tickerUpdate = (ticker: Ticker) => this.update(ticker.deltaTime);
 
-    /** Fires when input loses focus. */
+    /**
+     * Fires once when editing ends — Enter, Escape, or focus leaving the input (a press elsewhere,
+     * Tab, a dismissed keyboard) — with the current value.
+     */
     onEnter: Signal<(text: string) => void>;
 
-    /** Fires every time input string is changed. */
+    /**
+     * Fires every time the user changes the text: typing, deleting, pasting, a keyboard suggestion.
+     * Not fired when {@link Input#value} is set from code or cleared by `cleanOnFocus`; during an IME
+     * composition that goes over `maxLength` it waits until the composition is committed and cut.
+     */
     onChange: Signal<(text: string) => void>;
 
     /**

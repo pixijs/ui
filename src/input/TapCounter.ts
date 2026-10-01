@@ -12,6 +12,8 @@ import {
  * The component keeps its own count rather than using Pixi's `detail`, which counts per pointer
  * id — touch browsers issue a new id for every touch, so it stays at 1 there — and counts any
  * quick clicks on the component wherever they land.
+ *
+ * Internal to {@link Input}; not exported from the package.
  */
 export class TapCounter
 {
