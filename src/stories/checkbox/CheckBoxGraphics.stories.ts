@@ -1,4 +1,4 @@
-import { Graphics, HTMLText } from 'pixi.js';
+import { Graphics } from 'pixi.js';
 import { PixiStory } from '@pixi/storybook-renderer';
 import { CheckBox } from '../../CheckBox';
 import { List } from '../../List';
@@ -21,7 +21,6 @@ const args = {
     height: 50,
     radius: 50,
     amount: 3,
-    useHTMLtext: false,
     onPress: action('Checkbox'),
 };
 
@@ -36,7 +35,6 @@ export const UseGraphics = {
                 const {
                     text,
                     amount,
-                    useHTMLtext,
                     textColor,
                     borderColor,
                     fillBorderColor,
@@ -54,7 +52,6 @@ export const UseGraphics = {
                 // Component usage !!!
                     const checkBox = new CheckBox({
                         text: `${text} ${i + 1}`,
-                        TextClass: useHTMLtext ? HTMLText : undefined,
                         checked: i % 2 === 0,
                         style: {
                             unchecked: new Graphics()
