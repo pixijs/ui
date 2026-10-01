@@ -319,7 +319,7 @@ export class ScrollBox extends Container
         {
             const posY = item.y + list.y;
 
-            if (posY + item.height >= -padding && posY <= (this.options.height ?? this._height) + padding)
+            if (posY + item.height >= -padding && posY <= this._height + padding)
             {
                 isVisible = true;
             }
@@ -329,7 +329,7 @@ export class ScrollBox extends Container
         {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= -padding && posX <= (this.options.width ?? this._width) + padding)
+            if (posX + item.width >= -padding && posX <= this._width + padding)
             {
                 isVisible = true;
             }
@@ -590,32 +590,26 @@ export class ScrollBox extends Container
             this.lastHeight = this.listHeight;
         }
 
-        if (this._trackpad && this.borderMask)
+        if (this._trackpad)
         {
-            const maxWidth
-                = this.borderMask.width
-                - (this.list?.width ?? 0)
-                - (this.list?.leftPadding ?? 0)
-                - (this.list?.rightPadding ?? 0);
-
-            const maxHeight
-                = this.borderMask.height
-                - (this.list?.height ?? 0)
-                - (this.list?.topPadding ?? 0)
-                - (this.list?.bottomPadding ?? 0);
+            // Derived from the same values the wheel handler clamps against, so dragging
+            // and scrolling share one definition of the scrollable range. Content that
+            // fits inside the view has a range of 0, which prevents dragging it out of view.
+            const maxWidth = Math.min(0, this._width - this.listWidth);
+            const maxHeight = Math.min(0, this._height - this.listHeight);
 
             if (this.isBidirectional)
             {
-                this._trackpad.yAxis.max = -Math.abs(maxHeight);
-                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+                this._trackpad.yAxis.max = maxHeight;
+                this._trackpad.xAxis.max = maxWidth;
             }
             else if (this.isVertical)
             {
-                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+                this._trackpad.yAxis.max = maxHeight;
             }
             else if (this.isHorizontal)
             {
-                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+                this._trackpad.xAxis.max = maxWidth;
             }
         }
 
