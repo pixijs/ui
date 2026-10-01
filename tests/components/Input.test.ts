@@ -1,4 +1,4 @@
-import { Graphics, Texture } from 'pixi.js';
+import { Graphics, Point, Texture } from 'pixi.js';
 import { Input } from '../../src/Input';
 import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
@@ -657,6 +657,368 @@ describe('Input Component', () =>
 
                 expect((input as any).editing).toBe(false);
             }
+        });
+    });
+
+    describe('Input Selection', () =>
+    {
+        // The hidden field owns the caret and selection; the component mirrors them and draws
+        // the caret and a highlight from `selectionStart`/`selectionEnd`. Pointer presses on
+        // the canvas are mapped back onto the field with setSelectionRange.
+        const startEditing = (input: Input, value?: string) =>
+        {
+            if (value !== undefined) input.value = value;
+            (input as any)._startEditing();
+
+            return (input as any).input as HTMLInputElement;
+        };
+
+        // What a browser does for arrows, Home/End and Shift-selection: it moves the field's
+        // selection, and the component picks it up on its next tick.
+        const moveSelection = (input: Input, start: number, end = start, direction = 'none') =>
+        {
+            ((input as any).input as HTMLInputElement).setSelectionRange(start, end, direction as any);
+            (input as any).update(1);
+        };
+
+        // A pointer event at a fraction of the drawn text's width.
+        const pointerAt = (input: Input, fraction: number, extra: Record<string, unknown> = {}) =>
+        {
+            const field = (input as any).inputField;
+            const x = (input as any).textLeft + (field.width * fraction);
+            const global = input.toGlobal(new Point(x, field.y));
+
+            return { global, detail: 1, shiftKey: false, nativeEvent: { preventDefault: jest.fn() }, ...extra } as any;
+        };
+
+        const caretX = (input: Input) => (input as any)._cursor.x as number;
+        const selection = (input: Input) => [(input as any).selectionStart, (input as any).selectionEnd];
+
+        it('should start with the caret at the end of the value', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello' });
+
+            startEditing(input);
+
+            expect(selection(input)).toEqual([5, 5]);
+        });
+
+        it('should move the drawn caret with the native caret', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello' });
+
+            startEditing(input);
+
+            const atEnd = caretX(input);
+
+            moveSelection(input, 0);
+            const atStart = caretX(input);
+
+            moveSelection(input, 2);
+            const inside = caretX(input);
+
+            expect(atStart).toBeLessThan(inside);
+            expect(inside).toBeLessThan(atEnd);
+            expect(atStart).toBeCloseTo((input as any).textLeft);
+        });
+
+        it('should keep the caret at the left edge of the text for every alignment', () =>
+        {
+            for (const align of ['left', 'center', 'right'] as const)
+            {
+                const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello', align });
+
+                startEditing(input);
+                moveSelection(input, 0);
+
+                expect(caretX(input)).toBeCloseTo((input as any).textLeft);
+            }
+        });
+
+        it('should mirror a Shift-extended selection and draw a highlight', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+            moveSelection(input, 6, 11, 'forward');
+
+            expect(selection(input)).toEqual([6, 11]);
+
+            const bounds = (input as any)._selection.getLocalBounds();
+
+            expect(bounds.width).toBeGreaterThan(0);
+            expect(bounds.x).toBeCloseTo((input as any).textLeft + (input as any).offsetAt(6));
+        });
+
+        it('should put the caret at the focus end of a backward selection', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello' });
+
+            startEditing(input);
+            moveSelection(input, 1, 4, 'backward');
+
+            expect(caretX(input)).toBeCloseTo((input as any).textLeft + (input as any).offsetAt(1));
+        });
+
+        it('should hide the blinking caret while a range is selected', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello' });
+
+            startEditing(input);
+            moveSelection(input, 0, 5);
+            (input as any).update(1);
+
+            expect((input as any)._cursor.alpha).toBe(0);
+
+            moveSelection(input, 5, 5);
+            (input as any).update(1);
+
+            expect((input as any)._cursor.alpha).toBe(1);
+        });
+
+        it('should clear the highlight when editing stops', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello' });
+
+            startEditing(input);
+            moveSelection(input, 0, 5);
+            (input as any).stopEditing();
+
+            expect((input as any)._selection.getLocalBounds().width).toBe(0);
+            expect(selection(input)).toEqual([5, 5]);
+        });
+
+        it('should place the caret where the pointer is pressed', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+
+            expect(selection(input)).toEqual([4, 4]);
+
+            (input as any).onPointerDown(pointerAt(input, 0));
+            expect(selection(input)).toEqual([0, 0]);
+
+            (input as any).onPointerDown(pointerAt(input, 1));
+            expect(selection(input)).toEqual([8, 8]);
+        });
+
+        it('should keep focus in the hidden field when pressed while editing', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+            const event = pointerAt(input, 0.5);
+
+            (input as any).onPointerDown(event);
+
+            expect(event.nativeEvent.preventDefault).toHaveBeenCalled();
+            expect((input as any).input).toBe(native);
+            expect((input as any).editing).toBe(true);
+        });
+
+        it('should select by dragging', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).onPointerDown(pointerAt(input, 0.25));
+            (input as any).onPointerMove(pointerAt(input, 0.75));
+
+            expect(selection(input)).toEqual([2, 6]);
+            expect((input as any).selectionDirection).toBe('forward');
+
+            // Dragging back past the anchor flips the direction.
+            (input as any).onPointerMove(pointerAt(input, 0));
+
+            expect(selection(input)).toEqual([0, 2]);
+            expect((input as any).selectionDirection).toBe('backward');
+
+            (input as any).onPointerUp();
+            (input as any).onPointerMove(pointerAt(input, 1));
+
+            expect(selection(input)).toEqual([0, 2]);
+        });
+
+        it('should extend the selection on Shift+click', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).onPointerDown(pointerAt(input, 0.25));
+            (input as any).onPointerDown(pointerAt(input, 1, { shiftKey: true }));
+
+            expect(selection(input)).toEqual([2, 8]);
+        });
+
+        it('should select a word on double click', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'one two three' });
+
+            startEditing(input);
+            // 'two' spans indices 4-7 of a 13-character string.
+            (input as any).onPointerTap(pointerAt(input, 5.5 / 13, { detail: 2 }));
+
+            expect(selection(input)).toEqual([4, 7]);
+            expect(input.value.substring(4, 7)).toBe('two');
+        });
+
+        it('should select the word before the caret when double clicking just past it', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'one two' });
+
+            startEditing(input);
+            (input as any).selectWordAt(3);
+
+            expect(selection(input)).toEqual([0, 3]);
+        });
+
+        it('should treat punctuation as its own run when selecting a word', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello... world' });
+
+            startEditing(input);
+            (input as any).selectWordAt(6);
+
+            expect(selection(input)).toEqual([5, 8]);
+
+            (input as any).selectWordAt(2);
+
+            expect(selection(input)).toEqual([0, 5]);
+        });
+
+        it('should select everything on triple click', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'one two' });
+
+            startEditing(input);
+            (input as any).onPointerTap(pointerAt(input, 0.1, { detail: 3 }));
+
+            expect(selection(input)).toEqual([0, 7]);
+        });
+
+        it('should expose selectAll', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abc' });
+
+            startEditing(input);
+            input.selectAll();
+
+            expect(selection(input)).toEqual([0, 3]);
+        });
+
+        it('should place the caret where an idle input was pressed once editing starts', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+
+            expect((input as any).pendingSelection).toEqual([4, 4]);
+
+            startEditing(input);
+
+            expect(selection(input)).toEqual([4, 4]);
+            expect((input as any).pendingSelection).toBeUndefined();
+        });
+
+        it('should snap pointer positions to grapheme boundaries', () =>
+        {
+            // Each flag is a surrogate pair: four code units, two graphemes.
+            const input = new Input({ bg: createTestGraphics(200, 50), value: '😀😀' });
+
+            startEditing(input);
+
+            for (const fraction of [0, 0.3, 0.5, 0.7, 1])
+            {
+                (input as any).onPointerDown(pointerAt(input, fraction));
+
+                expect([0, 2, 4]).toContain((input as any).selectionStart);
+            }
+        });
+
+        it('should keep the selection inside the text after a maxLength truncation', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), maxLength: 3 });
+            const native = startEditing(input);
+
+            native.value = 'abcdef';
+            native.setSelectionRange(6, 6);
+            native.dispatchEvent(new InputEvent('input', { inputType: 'insertFromPaste' }));
+
+            expect(input.value).toBe('abc');
+            expect(native.selectionStart).toBe(3);
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should clamp the mirrored selection when the value is set programmatically', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdef' });
+
+            startEditing(input);
+            moveSelection(input, 2, 6);
+            input.value = 'ab';
+
+            expect(selection(input)).toEqual([2, 2]);
+        });
+
+        it('should write programmatic edits back into the hidden field', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'ab' });
+            const native = startEditing(input);
+
+            (input as any)._add('c');
+
+            expect(native.value).toBe('abc');
+            expect(native.selectionStart).toBe(3);
+
+            (input as any)._delete();
+
+            expect(native.value).toBe('ab');
+            expect(native.selectionStart).toBe(2);
+        });
+
+        it('should use a password field when secure', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), secure: true });
+            const native = startEditing(input);
+
+            expect(native.type).toBe('password');
+
+            input.secure = false;
+            expect(native.type).toBe('text');
+
+            input.secure = true;
+            expect(native.type).toBe('password');
+        });
+
+        it('should position the caret over the mask characters when secure', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd', secure: true });
+
+            startEditing(input);
+            moveSelection(input, 2);
+
+            expect(caretX(input)).toBeCloseTo((input as any).textLeft + ((input as any).inputField.width / 2));
+        });
+
+        it('should not re-activate from a tap made during the session', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abc' });
+
+            startEditing(input);
+            // A click inside the field while editing, then a click elsewhere on the page.
+            input.emit('pointertap', pointerAt(input, 0.5));
+            (input as any).stopEditing();
+            (input as any).handleActivation();
+
+            expect((input as any).editing).toBe(false);
+        });
+
+        it('should mask the highlight along with the text', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), addMask: true });
+
+            expect((input as any)._selection.mask).toBe((input as any).inputMask);
         });
     });
 });

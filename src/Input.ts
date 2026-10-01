@@ -1,8 +1,13 @@
 import {
+    BitmapFontManager,
+    BitmapText,
+    CanvasTextMetrics,
     Color,
+    ColorSource,
     Container,
     ContainerOptions,
     DestroyOptions,
+    FederatedPointerEvent,
     Graphics,
     isMobile,
     NineSliceSprite,
@@ -10,6 +15,7 @@ import {
     Size,
     Sprite,
     Text,
+    TextStyle,
     Texture,
     Ticker,
 } from 'pixi.js';
@@ -38,6 +44,9 @@ export type InputOptions = {
 } & ContainerOptions;
 
 const SECURE_CHARACTER = '*';
+const SELECTION_ALPHA = 0.35;
+
+type SelectionDirection = 'forward' | 'backward' | 'none';
 
 /**
  * Container-based component that creates an input to read the user's text.
@@ -58,13 +67,31 @@ export class Input extends Container
     protected _bg?: Container | NineSliceSprite | Graphics;
     protected inputMask: Container | NineSliceSprite | Graphics | undefined;
     protected _cursor: Sprite | undefined;
+    protected _selection: Graphics | undefined;
     protected _value: string = '';
     protected _secure: boolean = false;
     protected inputField: PixiText | undefined;
     protected placeholder: PixiText | undefined;
     protected editing = false;
     protected tick = 0;
-    protected lastInputData: string = '';
+    protected textColor: ColorSource = 0x000000;
+
+    /**
+     * Mirror of the hidden field's selection, in UTF-16 code units of {@link Input.value}.
+     * Collapsed (start === end) when there is just a caret.
+     */
+    protected selectionStart = 0;
+    protected selectionEnd = 0;
+    protected selectionDirection: SelectionDirection = 'none';
+
+    /** Selection to apply once the hidden field exists, set by a pointer press before editing began. */
+    protected pendingSelection: [number, number] | undefined;
+
+    /** Index the pointer went down on while editing; set while a drag-selection is in progress. */
+    protected dragAnchor: number | undefined;
+
+    /** True from a press on the component until its release, so a blur it causes can be told apart. */
+    protected pressed = false;
 
     protected activation = false;
     protected readonly options: InputOptions;
@@ -72,7 +99,7 @@ export class Input extends Container
 
     protected handleActivationBinding = this.handleActivation.bind(this);
     protected onKeyDownBinding = this.onKeyDown.bind(this);
-    protected stopEditingBinding = this.stopEditing.bind(this);
+    protected onBlurBinding = this.onBlur.bind(this);
     protected onInputBinding = this.onInput.bind(this);
 
     /**
@@ -168,8 +195,21 @@ export class Input extends Container
         this.cursor = 'text';
         this.interactive = true;
 
-        this.on('pointertap', () =>
+        this.on('pointerdown', this.onPointerDown, this);
+        this.on('globalpointermove', this.onPointerMove, this);
+        this.on('pointerup', this.onPointerUp, this);
+        this.on('pointerupoutside', this.onPointerUp, this);
+        this.on('pointertap', (e: FederatedPointerEvent) =>
         {
+            // A tap during a session is a caret or selection gesture, not an activation; leaving
+            // `activation` set here would restart editing on the very click that ends it.
+            if (this.editing)
+            {
+                this.onPointerTap(e);
+
+                return;
+            }
+
             this.activation = true;
             isMobile.any && this.handleActivation(); // handleActivation always call before this function called.
         });
@@ -196,12 +236,9 @@ export class Input extends Container
      * actually is. Reconstructing it from `keydown` cannot work on mobile: on-screen
      * keyboards report `Unidentified` there and only send the real characters on `input`,
      * and composition, autocorrect and suggestions have no `keydown` representation at all.
-     * @param e - the native input event.
      */
-    protected onInput(e: InputEvent)
+    protected onInput()
     {
-        this.lastInputData = e.data ?? '';
-
         if (!this.input) return;
 
         if (!this.editing)
@@ -216,15 +253,287 @@ export class Input extends Container
 
         if (maxLength && text.length > maxLength)
         {
+            // Native maxLength does not apply to pastes, suggestions or an over-long seed.
+            const { selectionStart, selectionEnd, selectionDirection } = this.input;
+
             text = text.substring(0, maxLength);
             this.input.value = text;
+            this.input.setSelectionRange(
+                Math.min(selectionStart ?? maxLength, maxLength),
+                Math.min(selectionEnd ?? maxLength, maxLength),
+                selectionDirection ?? 'none',
+            );
         }
 
-        if (text === this.value) return;
+        if (text !== this.value)
+        {
+            this.value = text;
 
-        this.value = text;
+            this.onChange.emit(this.value);
+        }
 
-        this.onChange.emit(this.value);
+        this.syncSelection();
+    }
+
+    /**
+     * Copies the hidden field's selection into the component and moves the drawn caret and
+     * selection highlight to match. The browser owns caret movement — arrows, Home/End,
+     * Shift-selection, word jumps — so this is read back rather than reimplemented.
+     */
+    protected syncSelection(): void
+    {
+        if (!this.input) return;
+
+        const length = this.value.length;
+        const start = Math.min(this.input.selectionStart ?? length, length);
+        const end = Math.min(this.input.selectionEnd ?? length, length);
+        const direction = this.input.selectionDirection ?? 'none';
+
+        if (start === this.selectionStart && end === this.selectionEnd && direction === this.selectionDirection)
+        {
+            return;
+        }
+
+        this.selectionStart = start;
+        this.selectionEnd = end;
+        this.selectionDirection = direction;
+
+        // Keep the caret solid while it is being moved, as native fields do.
+        this.tick = 0;
+
+        this.align();
+    }
+
+    /**
+     * Sets the selection on the hidden field and mirrors it back.
+     * @param start - first selected index.
+     * @param end - index after the last selected one; equal to `start` for a plain caret.
+     * @param direction - which end holds the caret, for Shift-extension.
+     */
+    protected setSelection(start: number, end: number, direction: SelectionDirection = 'none'): void
+    {
+        if (!this.input) return;
+
+        this.input.setSelectionRange(start, end, direction);
+        this.syncSelection();
+    }
+
+    /** Selects the whole value. */
+    selectAll(): void
+    {
+        this.setSelection(0, this.value.length);
+    }
+
+    /**
+     * Selects the run of like characters (word, whitespace or punctuation) around an index,
+     * as a double click does in a native field.
+     * @param index - position in {@link Input.value} to expand from.
+     */
+    protected selectWordAt(index: number): void
+    {
+        const text = this.displayText;
+
+        if (!text.length) return;
+
+        const kind = (ch: string) =>
+        {
+            if ((/[\p{L}\p{N}_]/u).test(ch)) return 'word';
+
+            return (/\s/).test(ch) ? 'space' : 'other';
+        };
+
+        let pivot = Math.min(index, text.length - 1);
+
+        // A click just past a word belongs to that word, not to the gap after it.
+        if (pivot > 0 && kind(text[pivot]) === 'space' && kind(text[pivot - 1]) !== 'space')
+        {
+            pivot--;
+        }
+
+        const target = kind(text[pivot]);
+        let start = pivot;
+        let end = pivot + 1;
+
+        while (start > 0 && kind(text[start - 1]) === target) start--;
+        while (end < text.length && kind(text[end]) === target) end++;
+
+        this.setSelection(start, end);
+    }
+
+    protected onPointerDown(e: FederatedPointerEvent): void
+    {
+        const index = this.indexAt(e);
+
+        if (!this.editing || !this.input)
+        {
+            // Editing starts on the following tap; place the caret where the press landed.
+            this.pendingSelection = [index, index];
+
+            return;
+        }
+
+        // Cancelling pointerdown drops the compatibility mouse events, but browsers still move
+        // focus to the canvas; onBlur uses `pressed` to hand it straight back to the field.
+        (e.nativeEvent as Event | undefined)?.preventDefault?.();
+        this.pressed = true;
+
+        if (e.shiftKey)
+        {
+            const anchor = this.selectionDirection === 'backward' ? this.selectionEnd : this.selectionStart;
+
+            this.dragAnchor = anchor;
+            this.setSelection(Math.min(anchor, index), Math.max(anchor, index), index < anchor ? 'backward' : 'forward');
+        }
+        else
+        {
+            this.dragAnchor = index;
+            this.setSelection(index, index);
+        }
+    }
+
+    protected onPointerMove(e: FederatedPointerEvent): void
+    {
+        if (this.dragAnchor === undefined || !this.editing) return;
+
+        const anchor = this.dragAnchor;
+        const index = this.indexAt(e);
+
+        this.setSelection(Math.min(anchor, index), Math.max(anchor, index), index < anchor ? 'backward' : 'forward');
+    }
+
+    protected onPointerUp(): void
+    {
+        this.dragAnchor = undefined;
+        this.pressed = false;
+    }
+
+    /**
+     * Ends the session when focus genuinely leaves — a click elsewhere, Tab, a dismissed keyboard.
+     * A press on the component itself also blurs the hidden field, because the canvas takes
+     * focus; that would end and restart editing on every caret move, losing the selection and
+     * emitting onEnter, so focus is handed back instead.
+     */
+    protected onBlur(): void
+    {
+        const input = this.input;
+
+        if (!this.pressed || !input)
+        {
+            this.stopEditing();
+
+            return;
+        }
+
+        const { selectionStart, selectionEnd, selectionDirection } = input;
+        const restore = () =>
+        {
+            input.focus();
+            input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? 'none');
+        };
+
+        // Synchronously keeps this inside the user gesture, which on-screen keyboards require;
+        // if the browser has not finished moving focus yet, try again once it has.
+        restore();
+
+        if (document.activeElement !== input)
+        {
+            setTimeout(restore, 0);
+        }
+    }
+
+    protected onPointerTap(e: FederatedPointerEvent): void
+    {
+        // `detail` is the click count: 2 selects a word, 3 the whole value.
+        const clicks = e.detail ?? 1;
+
+        if (clicks === 2)
+        {
+            this.selectWordAt(this.indexAt(e));
+        }
+        else if (clicks >= 3)
+        {
+            this.selectAll();
+        }
+    }
+
+    /** What is drawn: the value itself, or one mask character per code unit when secure. */
+    protected get displayText(): string
+    {
+        return this._secure ? SECURE_CHARACTER.repeat(this._value.length) : this._value;
+    }
+
+    /**
+     * Width of a string in the text field's style. Only ever used as a ratio against the full
+     * string, so the unit does not matter — which also keeps bitmap and canvas text on one path.
+     * @param text - string to measure.
+     */
+    protected measureText(text: string): number
+    {
+        if (!this.inputField || !text.length) return 0;
+
+        const style = this.inputField.style as TextStyle;
+
+        if (this.inputField instanceof BitmapText)
+        {
+            return BitmapFontManager.measureText(text, style).width;
+        }
+
+        return CanvasTextMetrics.measureText(text, style).width;
+    }
+
+    /** Left edge of the drawn text in local coordinates, whatever its anchor. */
+    protected get textLeft(): number
+    {
+        if (!this.inputField) return 0;
+
+        return this.inputField.x - (this.inputField.anchor.x * this.inputField.width);
+    }
+
+    /**
+     * Horizontal offset from {@link Input.textLeft} to the caret position before `index`.
+     * @param index - position in the displayed text.
+     * @param total - measured width of the whole displayed text, if already known.
+     */
+    protected offsetAt(index: number, total = this.measureText(this.displayText)): number
+    {
+        if (!this.inputField || total === 0) return 0;
+
+        const prefix = this.measureText(this.displayText.substring(0, index));
+
+        return this.inputField.width * (prefix / total);
+    }
+
+    /**
+     * The caret index nearest to a pointer, snapped to grapheme boundaries so a click can
+     * never land inside a surrogate pair or combining sequence.
+     * @param e - pointer event in global coordinates.
+     */
+    protected indexAt(e: FederatedPointerEvent): number
+    {
+        if (!this.inputField) return 0;
+
+        const text = this.displayText;
+        const x = this.toLocal(e.global).x - this.textLeft;
+        const total = this.measureText(text);
+
+        let best = 0;
+        let bestDistance = Math.abs(x);
+        let index = 0;
+
+        for (const grapheme of CanvasTextMetrics.graphemeSegmenter(text))
+        {
+            index += grapheme.length;
+
+            const distance = Math.abs(x - this.offsetAt(index, total));
+
+            if (distance < bestDistance)
+            {
+                best = index;
+                bestDistance = distance;
+            }
+        }
+
+        return best;
     }
 
     /**
@@ -254,6 +563,8 @@ export class Input extends Container
             ? textStyle.fill
             : 0x000000;
 
+        this.textColor = colorSource;
+
         this.inputField = new TextClass({
             text: '',
             style: textStyle,
@@ -267,13 +578,16 @@ export class Input extends Container
         this._cursor.height = this.inputField.height * 0.8;
         this._cursor.alpha = 0;
 
+        this._selection = new Graphics();
+
         this.placeholder = new TextClass({
             text: placeholder,
             style: textStyle,
         });
         this.placeholder.visible = !!placeholder;
 
-        this.addChild(this.inputField, this.placeholder, this._cursor);
+        // The highlight sits under the text so the glyphs stay legible over it.
+        this.addChild(this._selection, this.inputField, this.placeholder, this._cursor);
 
         this.value = this.options.value ?? '';
 
@@ -368,6 +682,7 @@ export class Input extends Container
         }
 
         this.value = this.value + addition;
+        this.writeToField();
 
         this.onChange.emit(this.value);
     }
@@ -379,8 +694,18 @@ export class Input extends Container
         if (!this.editing || length === 0) return;
 
         this.value = this.value.substring(0, length - 1);
+        this.writeToField();
 
         this.onChange.emit(this.value);
+    }
+
+    /** Pushes a programmatic edit into the hidden field, so it does not overwrite the change on the next `input`. */
+    protected writeToField(): void
+    {
+        if (!this.input) return;
+
+        this.input.value = this.value;
+        this.setSelection(this.value.length, this.value.length);
     }
 
     protected _startEditing(): void
@@ -423,6 +748,12 @@ export class Input extends Container
         input.style.border = 'none';
         input.style.outline = 'none';
         input.style.background = 'white';
+        // The field overlays the component; presses must reach the canvas, where the drawn text
+        // is, so the caret lands by what the user sees rather than by the invisible field's layout.
+        input.style.pointerEvents = 'none';
+
+        // A password field keeps on-screen keyboards from suggesting, or learning, the value.
+        input.type = this._secure ? 'password' : 'text';
 
         // Seed the field with the current text so the browser edits the real string:
         // backspace, caret movement, autocorrect and suggestions all need it to be there.
@@ -433,26 +764,35 @@ export class Input extends Container
             input.maxLength = this.options.maxLength;
         }
 
-        // This hack fixes instant hiding keyboard on mobile after showing it
-        if (isMobile.android.device)
-        {
-            setTimeout(() =>
-            {
-                input.focus();
-                input.click();
-            }, 100);
-        }
-        else
+        const length = this.value.length;
+        const [start, end] = this.pendingSelection ?? [length, length];
+
+        this.pendingSelection = undefined;
+
+        const focus = () =>
         {
             input.focus();
             input.click();
-        }
+            // After focus: some browsers reset the selection when a field gains focus.
+            input.setSelectionRange(Math.min(start, length), Math.min(end, length));
+            this.syncSelection();
+        };
 
-        input.addEventListener('blur', this.stopEditingBinding);
+        input.addEventListener('blur', this.onBlurBinding);
         input.addEventListener('keydown', this.onKeyDownBinding);
         input.addEventListener('input', this.onInputBinding as EventListener);
 
         this.input = input;
+
+        // This hack fixes instant hiding keyboard on mobile after showing it
+        if (isMobile.android.device)
+        {
+            setTimeout(focus, 100);
+        }
+        else
+        {
+            focus();
+        }
 
         this.align();
     }
@@ -480,15 +820,19 @@ export class Input extends Container
             this._cursor.alpha = 0;
         }
         this.editing = false;
+        this.dragAnchor = undefined;
+        this.pressed = false;
 
         if (this.placeholder && this.value.length === 0)
         {
             this.placeholder.visible = true;
         }
 
-        this.input?.blur();
-        this.input?.remove();
-        this.input = undefined;
+        this.removeInputField();
+
+        // Park the caret at the end so the next session, and the idle caret, start from there.
+        this.selectionStart = this.selectionEnd = this.value.length;
+        this.selectionDirection = 'none';
 
         this.align();
 
@@ -498,10 +842,17 @@ export class Input extends Container
     protected update(dt: number): void
     {
         if (!this.editing) return;
+
+        // Caret movement has no event of its own on every browser, so poll it with the blink.
+        this.syncSelection();
+
         this.tick += dt * 0.1;
         if (this._cursor)
         {
-            this._cursor.alpha = Math.round((Math.sin(this.tick) * 0.5) + 0.5);
+            // Native fields hide the caret while a range is selected.
+            this._cursor.alpha = this.selectionStart === this.selectionEnd
+                ? Math.round((Math.sin(this.tick) * 0.5) + 0.5)
+                : 0;
         }
     }
 
@@ -532,6 +883,27 @@ export class Input extends Container
             this._cursor.x = this.getCursorPosX();
             this._cursor.y = this.inputField.y;
         }
+
+        this.drawSelection();
+    }
+
+    /** Redraws the selection highlight behind the selected range, or clears it when collapsed. */
+    protected drawSelection(): void
+    {
+        if (!this._selection || !this.inputField || !this._cursor) return;
+
+        this._selection.clear();
+
+        if (!this.editing || this.selectionStart === this.selectionEnd) return;
+
+        const total = this.measureText(this.displayText);
+        const from = this.offsetAt(this.selectionStart, total);
+        const to = this.offsetAt(this.selectionEnd, total);
+        const height = this._cursor.height;
+
+        this._selection
+            .rect(this.textLeft + from, this.inputField.y - (height / 2), to - from, height)
+            .fill({ color: this.textColor, alpha: SELECTION_ALPHA });
     }
 
     protected getAlign(): 0 | 1 | 0.5
@@ -559,23 +931,14 @@ export class Input extends Container
         }
     }
 
+    /** X of the drawn caret: the focus end of the selection, measured along the displayed text. */
     protected getCursorPosX()
     {
         if (!this.inputField) return 0;
 
-        const align = this.getAlign();
+        const caret = this.selectionDirection === 'backward' ? this.selectionStart : this.selectionEnd;
 
-        switch (align)
-        {
-            case 0:
-                return this.inputField.x + this.inputField.width;
-            case 0.5:
-                return this.inputField.x + (this.inputField.width * 0.5);
-            case 1:
-                return this.inputField.x;
-            default:
-                return 0;
-        }
+        return this.textLeft + this.offsetAt(Math.min(caret, this.displayText.length));
     }
 
     /** Sets the input text. */
@@ -586,9 +949,13 @@ export class Input extends Container
 
         this._value = value;
 
+        // A programmatic set has no selection of its own; keep the caret inside the new text.
+        this.selectionStart = Math.min(this.selectionStart, textLength);
+        this.selectionEnd = Math.min(this.selectionEnd, textLength);
+
         if (this.inputField)
         {
-            this.inputField.text = this.secure ? SECURE_CHARACTER.repeat(textLength) : value;
+            this.inputField.text = this.displayText;
         }
 
         if (this.placeholder)
@@ -608,6 +975,11 @@ export class Input extends Container
     set secure(val: boolean)
     {
         this._secure = val;
+
+        if (this.input)
+        {
+            this.input.type = val ? 'password' : 'text';
+        }
 
         // Update text based on secure state (useful for show/hide password implementations)
         this.value = this._value;
@@ -665,6 +1037,10 @@ export class Input extends Container
     override destroy(options?: DestroyOptions | boolean)
     {
         this.off('pointertap');
+        this.off('pointerdown', this.onPointerDown, this);
+        this.off('globalpointermove', this.onPointerMove, this);
+        this.off('pointerup', this.onPointerUp, this);
+        this.off('pointerupoutside', this.onPointerUp, this);
 
         window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
@@ -680,7 +1056,7 @@ export class Input extends Container
     {
         if (!this.input) return;
 
-        this.input.removeEventListener('blur', this.stopEditingBinding);
+        this.input.removeEventListener('blur', this.onBlurBinding);
         this.input.removeEventListener('keydown', this.onKeyDownBinding);
         this.input.removeEventListener('input', this.onInputBinding as EventListener);
 
@@ -781,6 +1157,10 @@ export class Input extends Container
             {
                 this._cursor.mask = null; // PixiJS API expects null
             }
+            if (this._selection)
+            {
+                this._selection.mask = null; // PixiJS API expects null
+            }
             this.inputMask.destroy();
         }
 
@@ -815,6 +1195,11 @@ export class Input extends Container
         if (this._cursor)
         {
             this._cursor.mask = this.inputMask;
+        }
+
+        if (this._selection)
+        {
+            this._selection.mask = this.inputMask;
         }
 
         this.updateInputMaskSize();
