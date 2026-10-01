@@ -92,6 +92,7 @@ export class ScrollBox extends Container
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: PointData | undefined;
     protected isOver = false;
+    protected scrollListenersAttached = false;
 
     protected proximityRange: number = 0;
     protected proximityStatusCache: boolean[] = [];
@@ -386,6 +387,11 @@ export class ScrollBox extends Container
                 disableEasing: this.options.disableEasing,
             });
         }
+
+        // init() can be called again; without this the handlers below stack up.
+        if (this.scrollListenersAttached) return;
+
+        this.scrollListenersAttached = true;
 
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
@@ -954,6 +960,9 @@ export class ScrollBox extends Container
         this.ticker.remove(this.update, this);
 
         document.removeEventListener('wheel', this.onMouseScrollBinding, true);
+
+        clearTimeout(this.stopRenderHiddenItemsTimeout);
+        this.stopRenderHiddenItemsTimeout = undefined;
 
         this.background?.destroy();
         this.list?.destroy();

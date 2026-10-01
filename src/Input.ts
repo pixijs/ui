@@ -76,6 +76,12 @@ export class Input extends Container
     protected onInputBinding = this.onInput.bind(this);
     protected onPasteBinding = this.onPaste.bind(this);
 
+    /**
+     * Kept as a field so destroy() can detach it from the shared ticker.
+     * @param ticker - shared ticker, supplying the delta that drives the cursor blink.
+     */
+    protected readonly tickerUpdate = (ticker: Ticker) => this.update(ticker.deltaTime);
+
     /** Fires when input loses focus. */
     onEnter: Signal<(text: string) => void>;
 
@@ -174,7 +180,7 @@ export class Input extends Container
         this.onEnter = new Signal();
         this.onChange = new Signal();
 
-        Ticker.shared.add((ticker) => this.update(ticker.deltaTime));
+        Ticker.shared.add(this.tickerUpdate);
 
         if (bg)
         {
@@ -398,17 +404,7 @@ export class Input extends Container
 
     protected createInputField()
     {
-        if (this.input)
-        {
-            this.input.removeEventListener('blur', this.stopEditingBinding);
-            this.input.removeEventListener('keydown', this.onKeyUpBinding);
-            this.input.removeEventListener('input', this.onInputBinding as EventListener);
-            this.input.removeEventListener('paste', this.onPasteBinding);
-
-            this.input?.blur();
-            this.input?.remove();
-            this.input = undefined;
-        }
+        this.removeInputField();
 
         const input: HTMLInputElement = document.createElement('input');
 
@@ -660,7 +656,26 @@ export class Input extends Container
 
         window.removeEventListener(isMobile.any ? 'touchstart' : 'click', this.handleActivationBinding);
 
+        Ticker.shared.remove(this.tickerUpdate);
+
+        this.removeInputField();
+
         super.destroy(options);
+    }
+
+    /** Detaches and removes the hidden DOM input, if one is currently mounted. */
+    protected removeInputField()
+    {
+        if (!this.input) return;
+
+        this.input.removeEventListener('blur', this.stopEditingBinding);
+        this.input.removeEventListener('keydown', this.onKeyUpBinding);
+        this.input.removeEventListener('input', this.onInputBinding as EventListener);
+        this.input.removeEventListener('paste', this.onPasteBinding);
+
+        this.input.blur();
+        this.input.remove();
+        this.input = undefined;
     }
 
     /**
