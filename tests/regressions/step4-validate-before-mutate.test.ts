@@ -11,7 +11,7 @@ import { Graphics, Sprite, Texture } from 'pixi.js';
 import { CheckBox } from '../../src/CheckBox';
 import { DoubleSlider } from '../../src/DoubleSlider';
 import { FancyButton } from '../../src/FancyButton';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 import { ProgressBar } from '../../src/ProgressBar';
 import { Switcher } from '../../src/Switcher';
 

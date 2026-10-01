@@ -10,7 +10,7 @@ import { Graphics, Sprite, Texture } from 'pixi.js';
 import { Button } from '../../src/Button';
 import { CheckBox } from '../../src/CheckBox';
 import { Dialog } from '../../src/Dialog';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 import { RadioGroup } from '../../src/RadioGroup';
 import { ScrollBox } from '../../src/ScrollBox';
 import { Select } from '../../src/Select';

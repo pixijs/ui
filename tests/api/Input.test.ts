@@ -1,5 +1,5 @@
 import { Graphics, NineSliceSprite, Sprite, Texture } from 'pixi.js';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 
 const g = (w = 200, h = 40) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 const slice = [2, 2, 2, 2] as [number, number, number, number];

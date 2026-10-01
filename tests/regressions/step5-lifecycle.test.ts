@@ -9,7 +9,7 @@ import { Graphics, Ticker } from 'pixi.js';
 import { CheckBox } from '../../src/CheckBox';
 import { Dialog } from '../../src/Dialog';
 import { FancyButton } from '../../src/FancyButton';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 import { RadioGroup } from '../../src/RadioGroup';
 import { ScrollBox } from '../../src/ScrollBox';
 

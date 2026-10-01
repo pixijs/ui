@@ -1,5 +1,5 @@
 import { PixiStory } from '@pixi/storybook-renderer';
-import { Input } from '../../Input';
+import { Input } from '../../input';
 import { List } from '../../List';
 import { centerElement } from '../../utils/helpers/resize';
 import { colors } from '../../utils/helpers/styles';
@@ -9,7 +9,7 @@ import { preload } from '../utils/loader';
 import { action } from '@storybook/addon-actions';
 
 import type { StoryContext } from '@pixi/storybook-renderer';
-import type { InputAlign } from '../../Input';
+import type { InputAlign } from '../../input';
 
 const args = {
     text: '',

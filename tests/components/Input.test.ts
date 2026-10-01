@@ -1,8 +1,8 @@
 import { Graphics, Point, Texture } from 'pixi.js';
-import { Input } from '../../src/Input';
+import { Input } from '../../src/input';
 import { cleanup, createTestGraphics, testStateChange } from '../utils/components';
 
-import type { InputAlign } from '../../src/Input';
+import type { InputAlign } from '../../src/input';
 
 describe('Input Component', () =>
 {
