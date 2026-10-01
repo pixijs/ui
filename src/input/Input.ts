@@ -5,11 +5,9 @@ import {
     Ticker,
 } from 'pixi.js';
 import { Signal } from 'typed-signals';
-import {
-    DEFAULT_INPUT_ATTRIBUTES,
-    PRESS_BLUR_GRACE,
-} from './constants';
-import { InputSelection } from './InputSelection';
+import { PRESS_BLUR_GRACE } from './constants';
+import { createHiddenField } from './hiddenField';
+import { InputTouch } from './InputTouch';
 import { clampLength } from './text';
 
 import type { InputOptions } from './types';
@@ -19,8 +17,10 @@ import type { InputOptions } from './types';
  *
  * The text, caret and selection live in a hidden native `<input>`, so typing, composition,
  * autocorrect, suggestions and paste work as the platform does them; the component draws what
- * that field holds. It is built in layers: {@link InputView} draws, {@link InputSelection} handles
- * the caret, selection and pointer gestures, and this class runs the editing session.
+ * that field holds. It is built in layers: {@link InputView} holds the state, background and
+ * sizing, {@link InputText} creates, measures and lays out the text, {@link InputSelection} handles
+ * the caret, selection and pointer gestures on the canvas, {@link InputTouch} the gestures on the
+ * hidden field on touch devices, and this class runs the editing session.
  * @example
  * new Input({
  *     bg: Sprite.from('input.png'),
@@ -33,7 +33,7 @@ import type { InputOptions } from './types';
  *     } // alternatively you can use [11, 11, 11, 11] or [11, 11] or just 11
  * });
  */
-export class Input extends InputSelection
+export class Input extends InputTouch
 {
     /**
      * Creates an input.
@@ -367,59 +367,31 @@ export class Input extends InputSelection
     {
         this.removeInputField();
 
-        const input: HTMLInputElement = document.createElement('input');
+        const { x, y } = this.getGlobalPosition();
+        const takesPointer = this.fieldTakesPointer;
+        const input = createHiddenField({
+            x,
+            y,
+            width: this._bg?.width ?? 100,
+            height: this._bg?.height ?? 30,
+            // Seed the field with the current text so the browser edits the real string:
+            // backspace, caret movement, autocorrect and suggestions all need it to be there.
+            value: this.value,
+            secure: this._secure,
+            maxLength: this.options.maxLength,
+            attributes: this.options.inputAttributes,
+            takesPointer,
+        });
 
-        document.body.appendChild(input);
-
-        input.style.position = 'fixed';
-        input.style.left = `${this.getGlobalPosition().x}px`;
-        input.style.top = `${this.getGlobalPosition().y}px`;
-        input.style.opacity = '0.0000001';
-        // iOS Safari zooms the page in to any focused field whose font is smaller than 16px, which
-        // moves the invisible field out from under the finger and scales the canvas with it.
-        input.style.fontSize = '16px';
-        input.style.width = `${this._bg?.width ?? 100}px`;
-        input.style.height = `${this._bg?.height ?? 30}px`;
-        input.style.border = 'none';
-        input.style.outline = 'none';
-        input.style.background = 'white';
-        // The field overlays the component; presses must reach the canvas, where the drawn text
-        // is, so the caret lands by what the user sees rather than by the invisible field's layout.
-        // Touch devices keep the field as the target, for its paste callout, and map taps instead.
-        if (this.fieldTakesPointer)
+        // Touch devices keep the field as the press target, for its paste callout, and map its
+        // taps and drags onto the drawn text instead.
+        if (takesPointer)
         {
             input.addEventListener('click', this.onFieldClickBinding);
             input.addEventListener('pointerdown', this.onFieldPointerDownBinding);
             input.addEventListener('pointermove', this.onFieldPointerMoveBinding);
             input.addEventListener('pointerup', this.onFieldPointerUpBinding);
             input.addEventListener('pointercancel', this.onFieldPointerUpBinding);
-            // A drag across the field must reach pointermove rather than scroll the page.
-            input.style.touchAction = 'none';
-        }
-        else
-        {
-            input.style.pointerEvents = 'none';
-        }
-
-        // A password field keeps on-screen keyboards from suggesting, or learning, the value.
-        input.type = this._secure ? 'password' : 'text';
-
-        // Keyboards would otherwise capitalise, correct and learn what is typed, and password
-        // managers would offer to fill or save it.
-        const attributes = { ...DEFAULT_INPUT_ATTRIBUTES, ...this.options.inputAttributes };
-
-        for (const [name, value] of Object.entries(attributes))
-        {
-            input.setAttribute(name, value);
-        }
-
-        // Seed the field with the current text so the browser edits the real string:
-        // backspace, caret movement, autocorrect and suggestions all need it to be there.
-        input.value = this.value;
-
-        if (this.options.maxLength)
-        {
-            input.maxLength = this.options.maxLength;
         }
 
         const length = this.value.length;

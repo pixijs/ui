@@ -1,27 +1,18 @@
-import {
-    FederatedPointerEvent,
-    isMobile,
-} from 'pixi.js';
-import {
-    AUTO_SCROLL_FRAMES,
-    DRAG_THRESHOLD,
-    MULTI_TAP_DISTANCE,
-    MULTI_TAP_DISTANCE_TOUCH,
-    MULTI_TAP_INTERVAL,
-    MULTI_TAP_INTERVAL_TOUCH,
-} from './constants';
-import { InputView } from './InputView';
+import { FederatedPointerEvent } from 'pixi.js';
+import { AUTO_SCROLL_FRAMES } from './constants';
+import { InputText } from './InputText';
+import { TapCounter } from './TapCounter';
 import { wordRangeAt } from './text';
 
 import type { InputOptions, SelectionDirection } from './types';
 
 /**
- * Second layer of {@link Input}: the caret and selection, mirrored from the hidden field, and the
- * pointer gestures that set them — presses, drags with auto-scroll, multi-clicks and the context
- * menu, on the canvas and, on touch devices, on the hidden field itself. Not meant to be used on
- * its own; {@link Input} is the component.
+ * Third layer of {@link Input}: the caret and selection, mirrored from the hidden field, and the
+ * pointer gestures on the canvas that set them — presses, drags with auto-scroll, multi-clicks and
+ * the context menu. The gestures on the hidden field, on touch devices, are in {@link InputTouch}.
+ * Not meant to be used on its own; {@link Input} is the component.
  */
-export class InputSelection extends InputView
+export class InputSelection extends InputText
 {
     /**
      * @param options - options of the input, see {@link Input}.
@@ -48,17 +39,8 @@ export class InputSelection extends InputView
      */
     protected lastPressTime = -Infinity;
 
-    /** The component's own multi-tap count: Pixi counts per pointer id, and touch pointers change ids. */
-    protected tapCount = 0;
-
-    protected lastTapTime = -Infinity;
-
-    protected lastTapX = 0;
-
-    protected lastTapY = 0;
-
-    /** Set around the synthetic `click()` on focus so it is not mistaken for a tap on the field. */
-    protected clickingField = false;
+    /** Multi-click counting; see {@link TapCounter}. */
+    protected readonly tapCounter = new TapCounter();
 
     /** Selection a right-button press settled on, to put back after the context-menu request collapses it. */
     protected contextSelection: [number, number, SelectionDirection] | undefined;
@@ -68,24 +50,6 @@ export class InputSelection extends InputView
 
     /** Frames since the drag-selection last auto-scrolled. */
     protected autoScrollElapsed = 0;
-
-    protected onFieldClickBinding = this.onFieldClick.bind(this);
-
-    protected onFieldPointerDownBinding = this.onFieldPointerDown.bind(this);
-
-    protected onFieldPointerMoveBinding = this.onFieldPointerMove.bind(this);
-
-    protected onFieldPointerUpBinding = this.onFieldPointerUp.bind(this);
-
-    /** Index a press on the hidden field went down on, while a drag-selection on it is possible. */
-    protected fieldDragAnchor: number | undefined;
-
-    /** True once a press on the hidden field has dragged, so the click that ends it is not taken as a tap. */
-    protected fieldDragged = false;
-
-    protected fieldPressX = 0;
-
-    protected fieldPressY = 0;
 
     protected onContextMenuBinding = this.onContextMenu.bind(this);
 
@@ -248,13 +212,22 @@ export class InputSelection extends InputView
     }
 
     /**
+     * Anchor of the drag-selection in progress, if any. A drag on the canvas here;
+     * {@link InputTouch} adds the one on the hidden field.
+     */
+    protected get activeDragAnchor(): number | undefined
+    {
+        return this.dragAnchor;
+    }
+
+    /**
      * Keeps a drag-selection held past an edge of overflowing text moving, one character every
      * few frames, as a native field auto-scrolls; the text follows the focus end.
      * @param dt - ticker delta, in frames.
      */
     protected autoScrollDrag(dt: number): void
     {
-        const anchor = this.dragAnchor ?? (this.fieldDragged ? this.fieldDragAnchor : undefined);
+        const anchor = this.activeDragAnchor;
         const x = this.dragLocalX;
         let direction = 0;
 
@@ -329,17 +302,7 @@ export class InputSelection extends InputView
      */
     protected countTapAt(x: number, y: number, touch = false): number
     {
-        const now = performance.now();
-        const distance = touch ? MULTI_TAP_DISTANCE_TOUCH : MULTI_TAP_DISTANCE;
-        const interval = touch ? MULTI_TAP_INTERVAL_TOUCH : MULTI_TAP_INTERVAL;
-        const near = Math.hypot(x - this.lastTapX, y - this.lastTapY) <= distance;
-
-        this.tapCount = near && now - this.lastTapTime <= interval ? this.tapCount + 1 : 1;
-        this.lastTapTime = now;
-        this.lastTapX = x;
-        this.lastTapY = y;
-
-        return this.tapCount;
+        return this.tapCounter.next(x, y, touch);
     }
 
     /**
@@ -366,121 +329,5 @@ export class InputSelection extends InputView
     protected indexAt(e: FederatedPointerEvent): number
     {
         return this.indexAtLocalX(this.toLocal(e.global).x);
-    }
-
-    /**
-     * Whether presses should land on the hidden field itself rather than on the canvas. On touch
-     * devices the field has to stay the touch target: its long-press callout is the only paste
-     * path on iOS. Taps on it are mapped onto the drawn text by {@link Input.onFieldClick}.
-     */
-    protected get fieldTakesPointer(): boolean
-    {
-        return isMobile.any;
-    }
-
-    /**
-     * A tap on the hidden field placed the native caret by the field's own layout, which never
-     * matches the canvas; move it to where the tap landed on the drawn text instead.
-     * @param e - the click on the field.
-     */
-    protected onFieldClick(e: MouseEvent): void
-    {
-        const input = this.input;
-
-        if (!input || !this.editing || this.clickingField) return;
-
-        // The press dragged, so the selection is already where the drag left it.
-        if (this.fieldDragged)
-        {
-            this.fieldDragged = false;
-
-            return;
-        }
-
-        // The field's own double tap would select by its invisible layout, so taps are counted
-        // here and resolved against the drawn text, as on the canvas.
-        const index = this.indexAtClient(e.clientX, e.clientY);
-        // The field only takes presses on touch devices, so these are taps.
-        const clicks = this.countTapAt(e.clientX, e.clientY, true);
-
-        if (clicks >= 3)
-        {
-            this.selectAll();
-        }
-        else if (clicks === 2)
-        {
-            this.selectWordAt(index);
-        }
-        else
-        {
-            this.setSelection(index, index);
-        }
-    }
-
-    /**
-     * A press on the hidden field may become a drag-selection; the field's own drag would
-     * select nothing on touch devices, or select by its invisible layout.
-     * @param e - the press on the field.
-     */
-    protected onFieldPointerDown(e: PointerEvent): void
-    {
-        if (!this.input || !this.editing || e.isPrimary === false) return;
-
-        this.fieldDragAnchor = this.indexAtClient(e.clientX, e.clientY);
-        this.fieldDragged = false;
-        this.fieldPressX = e.clientX;
-        this.fieldPressY = e.clientY;
-    }
-
-    protected onFieldPointerMove(e: PointerEvent): void
-    {
-        const anchor = this.fieldDragAnchor;
-
-        if (anchor === undefined || !this.editing || e.isPrimary === false) return;
-
-        if (!this.fieldDragged
-            && Math.hypot(e.clientX - this.fieldPressX, e.clientY - this.fieldPressY) < DRAG_THRESHOLD)
-        {
-            return;
-        }
-
-        this.fieldDragged = true;
-
-        const localX = this.localXAtClient(e.clientX, e.clientY);
-
-        this.dragLocalX = localX;
-        this.extendDragTo(anchor, this.indexAtLocalX(this.clampToView(localX)));
-    }
-
-    protected onFieldPointerUp(): void
-    {
-        this.fieldDragAnchor = undefined;
-        this.dragLocalX = undefined;
-    }
-
-    /**
-     * The caret index nearest to a point on the hidden field. The field sits at the component's
-     * global position, so an offset into it is an offset in global space.
-     * @param clientX - horizontal position in the viewport.
-     * @param clientY - vertical position in the viewport.
-     */
-    protected indexAtClient(clientX: number, clientY: number): number
-    {
-        return this.indexAtLocalX(this.localXAtClient(clientX, clientY));
-    }
-
-    /**
-     * The local x of a point on the hidden field; see {@link Input.indexAtClient}.
-     * @param clientX - horizontal position in the viewport.
-     * @param clientY - vertical position in the viewport.
-     */
-    protected localXAtClient(clientX: number, clientY: number): number
-    {
-        if (!this.input) return 0;
-
-        const rect = this.input.getBoundingClientRect();
-        const origin = this.getGlobalPosition();
-
-        return this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) }).x;
     }
 }
