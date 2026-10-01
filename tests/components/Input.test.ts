@@ -1123,6 +1123,58 @@ describe('Input Component', () =>
             expect((input as any).editing).toBe(false);
         });
 
+        it('should end editing on a press elsewhere even when the browser never blurs the field', () =>
+        {
+            // iOS Safari keeps a field focused when non-interactive content is tapped.
+            jest.useFakeTimers();
+
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const onEnter = jest.fn();
+
+            input.onEnter.connect(onEnter);
+            startEditing(input);
+
+            window.dispatchEvent(new Event('pointerdown'));
+            jest.runAllTimers();
+
+            expect((input as any).editing).toBe(false);
+            expect(onEnter).toHaveBeenCalledTimes(1);
+
+            jest.useRealTimers();
+        });
+
+        it('should keep editing on a press that lands on the component or on the hidden field', () =>
+        {
+            jest.useFakeTimers();
+
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            // On the canvas: the window listener runs first, then the component marks the press.
+            window.dispatchEvent(new Event('pointerdown'));
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            jest.runAllTimers();
+
+            expect((input as any).editing).toBe(true);
+
+            // On the hidden field itself, which takes presses on touch devices.
+            native.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+            jest.runAllTimers();
+
+            expect((input as any).editing).toBe(true);
+
+            // A second finger anywhere is not a press elsewhere.
+            const second = new Event('pointerdown');
+
+            Object.defineProperty(second, 'isPrimary', { value: false });
+            window.dispatchEvent(second);
+            jest.runAllTimers();
+
+            expect((input as any).editing).toBe(true);
+
+            jest.useRealTimers();
+        });
+
         it('should still recognise its own press after a press elsewhere', () =>
         {
             const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
@@ -1257,6 +1309,8 @@ describe('Input Component', () =>
             expect(native.getAttribute('autocorrect')).toBe('off');
             expect(native.getAttribute('spellcheck')).toBe('false');
             expect(native.getAttribute('data-1p-ignore')).toBe('true');
+            // Anything smaller makes iOS Safari zoom the page in on focus, moving the field from under the finger.
+            expect(native.style.fontSize).toBe('16px');
 
             const custom = new Input({
                 bg: createTestGraphics(200, 50),
@@ -1448,16 +1502,101 @@ describe('Input Component', () =>
                 expect(native.selectionStart).toBe(4);
             });
 
-            it('should keep a range the native field selected on a multi-tap', () =>
+            const pointAt = (input: Input, fraction: number) =>
+            {
+                const field = (input as any).inputField;
+                const x = (input as any).textLeft + (field.width * fraction);
+                const { x: clientX, y: clientY } = input.toGlobal(new Point(x, field.y));
+
+                return { clientX, clientY };
+            };
+
+            const press = (native: HTMLInputElement, type: string, at: { clientX: number; clientY: number }) =>
+            {
+                native.getBoundingClientRect = () => ({ left: 0, top: 0 } as DOMRect);
+                native.dispatchEvent(new MouseEvent(type, at));
+            };
+
+            it('should select a word on a double tap on the field', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'hello world' });
+                const native = startEditing(input);
+
+                clickAt(input, native, 0.2);
+                now.mockReturnValue(1150);
+                clickAt(input, native, 0.2);
+
+                expect(selection(input)).toEqual([0, 5]);
+            });
+
+            it('should select everything on a triple tap on the field', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'hello world' });
+                const native = startEditing(input);
+
+                clickAt(input, native, 0.2);
+                now.mockReturnValue(1150);
+                clickAt(input, native, 0.2);
+                now.mockReturnValue(1300);
+                clickAt(input, native, 0.2);
+
+                expect(selection(input)).toEqual([0, 11]);
+            });
+
+            it('should select by dragging across the field', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+                // jsdom measures text as a few pixels wide; scale up so the drag clears the threshold.
+                input.scale.set(20);
+
+                const native = startEditing(input);
+
+                press(native, 'pointerdown', pointAt(input, 0.25));
+                press(native, 'pointermove', pointAt(input, 0.75));
+
+                expect(selection(input)).toEqual([2, 6]);
+                expect((input as any).selectionDirection).toBe('forward');
+
+                // Dragging back past the anchor flips the direction.
+                press(native, 'pointermove', pointAt(input, 0));
+
+                expect(selection(input)).toEqual([0, 2]);
+                expect((input as any).selectionDirection).toBe('backward');
+
+                // The click that ends the press is not a tap; the drag's selection stays.
+                press(native, 'pointerup', pointAt(input, 0));
+                press(native, 'click', pointAt(input, 0));
+
+                expect(selection(input)).toEqual([0, 2]);
+
+                // A later tap is a tap again.
+                now.mockReturnValue(5000);
+                press(native, 'click', pointAt(input, 0.5));
+
+                expect(selection(input)).toEqual([4, 4]);
+            });
+
+            it('should not take a press that barely moves for a drag', () =>
             {
                 const input = new TouchInput({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
                 const native = startEditing(input);
+                const at = pointAt(input, 0.5);
 
-                native.setSelectionRange(0, 3);
-                clickAt(input, native, 0.5);
+                press(native, 'pointerdown', at);
+                press(native, 'pointermove', { clientX: at.clientX + 2, clientY: at.clientY + 1 });
+                press(native, 'pointerup', at);
+                press(native, 'click', at);
 
-                expect(native.selectionStart).toBe(0);
-                expect(native.selectionEnd).toBe(3);
+                expect(selection(input)).toEqual([4, 4]);
+            });
+
+            it('should let a drag reach the field rather than scroll the page', () =>
+            {
+                const input = new TouchInput({ bg: createTestGraphics(200, 50) });
+                const native = startEditing(input);
+
+                expect(native.style.touchAction).toBe('none');
             });
         });
     });

@@ -74,6 +74,9 @@ const PRESS_BLUR_GRACE = 500;
 const MULTI_TAP_INTERVAL = 350;
 const MULTI_TAP_DISTANCE = 12;
 
+/** A press on the hidden field that moves further than this, in CSS pixels, is a drag-selection rather than a tap. */
+const DRAG_THRESHOLD = 6;
+
 type SelectionDirection = 'forward' | 'backward' | 'none';
 
 /**
@@ -169,6 +172,17 @@ export class Input extends Container
     protected onCompositionStartBinding = this.onCompositionStart.bind(this);
     protected onCompositionEndBinding = this.onCompositionEnd.bind(this);
     protected onFieldClickBinding = this.onFieldClick.bind(this);
+    protected onFieldPointerDownBinding = this.onFieldPointerDown.bind(this);
+    protected onFieldPointerMoveBinding = this.onFieldPointerMove.bind(this);
+    protected onFieldPointerUpBinding = this.onFieldPointerUp.bind(this);
+
+    /** Index a press on the hidden field went down on, while a drag-selection on it is possible. */
+    protected fieldDragAnchor: number | undefined;
+
+    /** True once a press on the hidden field has dragged, so the click that ends it is not taken as a tap. */
+    protected fieldDragged = false;
+    protected fieldPressX = 0;
+    protected fieldPressY = 0;
     protected onAnyPointerDownBinding = this.onAnyPointerDown.bind(this);
     protected onContextMenuBinding = this.onContextMenu.bind(this);
 
@@ -545,10 +559,26 @@ export class Input extends Container
      * Any press anywhere on the page forgets the component's own, so a blur that follows a press
      * elsewhere, however quickly, ends the session. The component's pointerdown runs after this
      * and marks the press again when it was on the component.
+     * @param e - the press, anywhere on the page.
      */
-    protected onAnyPointerDown(): void
+    protected onAnyPointerDown(e: Event): void
     {
+        if ((e as PointerEvent).isPrimary === false) return;
+
         this.lastPressTime = -Infinity;
+
+        // iOS Safari does not blur a field when non-interactive content is tapped, so a press that
+        // turns out not to be on the component ends the session here. Where the browser does blur,
+        // the session is already over by the time this runs.
+        if (!this.editing || e.target === this.input) return;
+
+        setTimeout(() =>
+        {
+            if (this.editing && this.lastPressTime === -Infinity)
+            {
+                this.stopEditing();
+            }
+        }, 0);
     }
 
     /**
@@ -617,8 +647,18 @@ export class Input extends Container
      */
     protected countTap(e: FederatedPointerEvent): number
     {
+        return this.countTapAt(e.global.x, e.global.y);
+    }
+
+    /**
+     * Counts a tap at a position; see {@link Input.countTap}. The canvas path passes global
+     * coordinates and the hidden-field path client coordinates, which never mix on one device.
+     * @param x - horizontal position of the tap.
+     * @param y - vertical position of the tap.
+     */
+    protected countTapAt(x: number, y: number): number
+    {
         const now = performance.now();
-        const { x, y } = e.global;
         const near = Math.hypot(x - this.lastTapX, y - this.lastTapY) <= MULTI_TAP_DISTANCE;
 
         this.tapCount = near && now - this.lastTapTime <= MULTI_TAP_INTERVAL ? this.tapCount + 1 : 1;
@@ -755,16 +795,87 @@ export class Input extends Container
 
         if (!input || !this.editing || this.clickingField) return;
 
-        // A range means a native double or triple tap selected it; keep that.
-        if (input.selectionStart !== input.selectionEnd) return;
+        // The press dragged, so the selection is already where the drag left it.
+        if (this.fieldDragged)
+        {
+            this.fieldDragged = false;
 
-        // The field sits at the component's global position, so an offset into it is a global offset.
-        const rect = input.getBoundingClientRect();
+            return;
+        }
+
+        // The field's own double tap would select by its invisible layout, so taps are counted
+        // here and resolved against the drawn text, as on the canvas.
+        const index = this.indexAtClient(e.clientX, e.clientY);
+        const clicks = this.countTapAt(e.clientX, e.clientY);
+
+        if (clicks >= 3)
+        {
+            this.selectAll();
+        }
+        else if (clicks === 2)
+        {
+            this.selectWordAt(index);
+        }
+        else
+        {
+            this.setSelection(index, index);
+        }
+    }
+
+    /**
+     * A press on the hidden field may become a drag-selection; the field's own drag would
+     * select nothing on touch devices, or select by its invisible layout.
+     * @param e - the press on the field.
+     */
+    protected onFieldPointerDown(e: PointerEvent): void
+    {
+        if (!this.input || !this.editing || e.isPrimary === false) return;
+
+        this.fieldDragAnchor = this.indexAtClient(e.clientX, e.clientY);
+        this.fieldDragged = false;
+        this.fieldPressX = e.clientX;
+        this.fieldPressY = e.clientY;
+    }
+
+    protected onFieldPointerMove(e: PointerEvent): void
+    {
+        const anchor = this.fieldDragAnchor;
+
+        if (anchor === undefined || !this.editing || e.isPrimary === false) return;
+
+        if (!this.fieldDragged
+            && Math.hypot(e.clientX - this.fieldPressX, e.clientY - this.fieldPressY) < DRAG_THRESHOLD)
+        {
+            return;
+        }
+
+        this.fieldDragged = true;
+
+        const index = this.indexAtClient(e.clientX, e.clientY);
+
+        this.setSelection(Math.min(anchor, index), Math.max(anchor, index), index < anchor ? 'backward' : 'forward');
+    }
+
+    protected onFieldPointerUp(): void
+    {
+        this.fieldDragAnchor = undefined;
+    }
+
+    /**
+     * The caret index nearest to a point on the hidden field. The field sits at the component's
+     * global position, so an offset into it is an offset in global space.
+     * @param clientX - horizontal position in the viewport.
+     * @param clientY - vertical position in the viewport.
+     */
+    protected indexAtClient(clientX: number, clientY: number): number
+    {
+        if (!this.input) return 0;
+
+        const rect = this.input.getBoundingClientRect();
         const origin = this.getGlobalPosition();
-        const local = this.toLocal({ x: origin.x + (e.clientX - rect.left), y: origin.y + (e.clientY - rect.top) });
-        const index = this.indexAtLocalX(local.x);
+        const local = this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) });
 
-        this.setSelection(index, index);
+        return this.indexAtLocalX(local.x);
     }
 
     /**
@@ -1013,6 +1124,9 @@ export class Input extends Container
         input.style.left = `${this.getGlobalPosition().x}px`;
         input.style.top = `${this.getGlobalPosition().y}px`;
         input.style.opacity = '0.0000001';
+        // iOS Safari zooms the page in to any focused field whose font is smaller than 16px, which
+        // moves the invisible field out from under the finger and scales the canvas with it.
+        input.style.fontSize = '16px';
         input.style.width = `${this._bg?.width ?? 100}px`;
         input.style.height = `${this._bg?.height ?? 30}px`;
         input.style.border = 'none';
@@ -1024,6 +1138,12 @@ export class Input extends Container
         if (this.fieldTakesPointer)
         {
             input.addEventListener('click', this.onFieldClickBinding);
+            input.addEventListener('pointerdown', this.onFieldPointerDownBinding);
+            input.addEventListener('pointermove', this.onFieldPointerMoveBinding);
+            input.addEventListener('pointerup', this.onFieldPointerUpBinding);
+            input.addEventListener('pointercancel', this.onFieldPointerUpBinding);
+            // A drag across the field must reach pointermove rather than scroll the page.
+            input.style.touchAction = 'none';
         }
         else
         {
@@ -1361,6 +1481,12 @@ export class Input extends Container
         this.input.removeEventListener('compositionstart', this.onCompositionStartBinding);
         this.input.removeEventListener('compositionend', this.onCompositionEndBinding);
         this.input.removeEventListener('click', this.onFieldClickBinding);
+        this.input.removeEventListener('pointerdown', this.onFieldPointerDownBinding);
+        this.input.removeEventListener('pointermove', this.onFieldPointerMoveBinding);
+        this.input.removeEventListener('pointerup', this.onFieldPointerUpBinding);
+        this.input.removeEventListener('pointercancel', this.onFieldPointerUpBinding);
+        this.fieldDragAnchor = undefined;
+        this.fieldDragged = false;
 
         // Empty the field before it leaves the DOM, so a password manager has nothing to offer to save.
         this.input.value = '';
