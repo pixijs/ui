@@ -17,6 +17,7 @@ import { InputView } from './InputView';
  * placeholder, measuring the drawn text, mapping between character indices and positions, and
  * laying it out, including the horizontal scroll that keeps the caret in view. Not meant to be
  * used on its own; {@link Input} is the component.
+ * @ignore
  */
 export class InputText extends InputView
 {

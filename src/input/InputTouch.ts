@@ -7,6 +7,7 @@ import { InputSelection } from './InputSelection';
  * has to stay the touch target there, because its long-press callout is the only way to paste on
  * iOS, so taps, multi-taps and drags arrive on it rather than on the canvas and are mapped onto
  * the drawn text here. Not meant to be used on its own; {@link Input} is the component.
+ * @ignore
  */
 export class InputTouch extends InputSelection
 {

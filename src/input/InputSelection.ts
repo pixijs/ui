@@ -11,6 +11,7 @@ import type { InputOptions, SelectionDirection } from './types';
  * pointer gestures on the canvas that set them — presses, drags with auto-scroll, multi-clicks and
  * the context menu. The gestures on the hidden field, on touch devices, are in {@link InputTouch}.
  * Not meant to be used on its own; {@link Input} is the component.
+ * @ignore
  */
 export class InputSelection extends InputText
 {
