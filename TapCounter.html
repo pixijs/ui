@@ -2053,7 +2053,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="SliderBase.html">Class: SliderBase</h1>
+        <h1 class="page-title" data-filename="TapCounter.html">Class: TapCounter</h1>
         
 
 
@@ -2062,14 +2062,18 @@
 <header>
   <div class="header content-size">
       <h2>
-        SliderBase
+        TapCounter
 
         
       </h2>
 
       
-          <div class="class-description"><p>Hepper class, used as a base for single or double slider creation.</p></div>
       
+          <div class="class-description"><p>Counts presses in a quick sequence at one spot, as a multi-click: the second within the window
+and the distance is a double click, the third a triple click, and anything else starts over.</p>
+<p>The component keeps its own count rather than using Pixi's <code>detail</code>, which counts per pointer
+id — touch browsers issue a new id for every touch, so it stays at 1 there — and counts any
+quick clicks on the component wherever they land.</p></div>
       
   </div>
 </header>
@@ -2077,86 +2081,34 @@
 <article class="content-size">
     <div class="container-overview">
         
-        
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-          
-
-            <li><a href=ProgressBar.html>ProgressBar</a></li>
-          
-        </ul>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
+              
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new TapCounter
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"></span>
             
             
             
             
         </h4>
+
+        
     </div>
 </dt>
 <dd>
     
     
-    <div class="description">
-        <p>Set max value.</p>
-    </div>
+
+    
+
+    
+
     
 
     
@@ -2186,30 +2138,22 @@
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
+            
         
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get max value.</p></p>
-    
-    
 
-    
+        
 <dl class="details">
     
 
@@ -2235,291 +2179,8 @@
 </dl>
 
 
-    
-</dd>
-
         
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
     </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set min value.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get min value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider1">
-            <a class="share-icon" href="#slider1"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider1</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets Slider1 instance.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider1">
-            <a class="share-icon" href="#slider1"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider1</span>
-            <span class="type-signature type">Container | undefined</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get Slider1 instance.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider2">
-            <a class="share-icon" href="#slider2"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider2</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets Slider2 instance.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider2">
-            <a class="share-icon" href="#slider2"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider2</span>
-            <span class="type-signature type">Container | undefined</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get Slider2 instance.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
 
     
 
@@ -2534,278 +2195,9 @@
     
 
     
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="step">
-            <a class="share-icon" href="#step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">step</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set step value.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="step">
-            <a class="share-icon" href="#step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">step</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get step value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_max">
-            <a class="share-icon" href="#_max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_max</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Maximal value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_min">
-            <a class="share-icon" href="#_min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_min</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Minimal value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_step">
-            <a class="share-icon" href="#_step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_step</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Progress value step</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
 
     
-</dd>
 
-        
     
 
     
@@ -2819,19 +2211,17 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="setBackground">
-            <a class="share-icon" href="#setBackground"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="next">
+            <a class="share-icon" href="#next"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  setBackground
+                  next
               
             </span>
-            <span class="signature">(bg)</span><span class="type-signature"></span>
+            <span class="signature">(x, y, touch, now)</span><span class="type-signature"> number</span>
             
             
             
-            
-                <span class="access-signature overrides"><a href="ProgressBar.html#setBackground">overrides</a></span>
             
         </h4>
 
@@ -2842,7 +2232,7 @@
     
     
     <div class="description">
-        <p>Set bg.</p>
+        <p>Records a press and returns its place in the sequence, starting at 1.</p>
     </div>
     
 
@@ -2865,469 +2255,7 @@
         
 
         
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bg</code></td>
-            
-
-            <td class="type">
-            
-                ProgressBarViewType
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="change">
-            <a class="share-icon" href="#change"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  change
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"></span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Called when dragging stopped.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-    
-
-    
-
-    
-        <div>
-    <h3 class="subsection-title">Inherited Properties</h3>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#32">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="32">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="height">
-            <a class="share-icon" href="#height"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">height</span>
-            <span class="type-signature"></span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#height">inherited</a></span>
-            
-            
-                <span class="access-signature overrides"><a href="ProgressBar.html#height">overrides</a></span>
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets height of a ProgressBars background and fill.
-If nineSliceSprite is set, then height will be set to nineSliceSprite.
-If nineSliceSprite is not set, then height will control components height as Container.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="innerView">
-            <a class="share-icon" href="#innerView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">innerView</span>
-            <span class="type-signature type">Container</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#innerView">inherited</a></span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Container, that holds all inner views.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="progress">
-            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progress</span>
-            <span class="type-signature"></span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#progress">inherited</a></span>
-            
-            
-                <span class="access-signature overrides"><a href="ProgressBar.html#progress">overrides</a></span>
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Set current progress percentage value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="width">
-            <a class="share-icon" href="#width"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">width</span>
-            <span class="type-signature"></span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#width">inherited</a></span>
-            
-            
-                <span class="access-signature overrides"><a href="ProgressBar.html#width">overrides</a></span>
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets width of a ProgressBars background and fill.
-If nineSliceSprite is set, then width will be set to nineSliceSprite.
-If nineSliceSprite is not set, then width will control components width as Container.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-            
-        </section>
-    </section>
-</div>
-
-    
-</div>
-
-    
-
-    
-        <div>
-    <h3 class="subsection-title">Inherited Methods</h3>
-
-    
-        
-
-<div class="panel collapsible-group-container">
-    <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#33">
-            <img src="icons/chevron-down.svg" />
-        </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
-    </section>
-    <section class="panel-collapse collapse in" id="33">
-        <section class="panel-body collapsible-group-body">
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="init">
-            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  init
-              
-            </span>
-            <span class="signature">(root0)</span><span class="type-signature"></span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#init">inherited</a></span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Initialize ProgressBar.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
+            <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -3339,234 +2267,25 @@ If nineSliceSprite is not set, then width will control components width as Conta
 
         <tr>
             
-                <td class="name"><code>root0</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
-                ProgressBarOptions
+                number
             
             </td>
 
             
 
             
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.bg</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Background texture.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.fill</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Fill texture.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.fillPaddings</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Fill offset.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.progress</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Initial progress value.</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="setFill">
-            <a class="share-icon" href="#setFill"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  setFill
-              
-            </span>
-            <span class="signature">(fill, fillPadding)</span><span class="type-signature"></span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#setFill">inherited</a></span>
-            
-            
-        </h4>
-
-        
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set fill.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fill</code></td>
-            
-
-            <td class="type">
-            
-                ProgressBarViewType
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
+                <td class="default">
+                    
                 </td>
             
 
-            
-
             <td class="description last">
-                
+                <p>horizontal position of the press; any space, as long as it is the same throughout.</p>
                 
             </td>
         </tr>
@@ -3574,31 +2293,77 @@ If nineSliceSprite is not set, then width will control components width as Conta
 
         <tr>
             
-                <td class="name"><code>fillPadding</code></td>
+                <td class="name"><code>y</code></td>
             
 
             <td class="type">
             
-                FillPaddings
+                number
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
-
-                
+            
+                <td class="default">
+                    
                 </td>
             
 
+            <td class="description last">
+                <p>vertical position of the press.</p>
+                
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>touch</code></td>
+            
+
+            <td class="type">
+            
+                boolean
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                    
+                        false
+                    
+                </td>
             
 
             <td class="description last">
+                <p>whether it is a finger, which gets a wider spot and a shorter window.</p>
                 
+            </td>
+        </tr>
+    
+
+        <tr>
+            
+                <td class="name"><code>now</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                    
+                </td>
+            
+
+            <td class="description last">
+                <p>time of the press, in milliseconds.</p>
                 
             </td>
         </tr>
@@ -3643,17 +2408,45 @@ If nineSliceSprite is not set, then width will control components width as Conta
     
 
     
+      <h5>Returns:</h5>
+      
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    number
+            
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+
+    
 
     
 </dd>
 
-            
-        </section>
-    </section>
-</div>
+        
+    
 
     
-</div>
+
+    
 
     
 

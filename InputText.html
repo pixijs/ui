@@ -2053,7 +2053,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="SliderBase.html">Class: SliderBase</h1>
+        <h1 class="page-title" data-filename="InputText.html">Class: InputText</h1>
         
 
 
@@ -2062,14 +2062,17 @@
 <header>
   <div class="header content-size">
       <h2>
-        SliderBase
+        InputText
 
         
       </h2>
 
       
-          <div class="class-description"><p>Hepper class, used as a base for single or double slider creation.</p></div>
       
+          <div class="class-description"><p>Second layer of <a href=Input.html>Input</a>: the text itself — creating the text, caret, highlight and
+placeholder, measuring the drawn text, mapping between character indices and positions, and
+laying it out, including the horizontal scroll that keeps the caret in view. Not meant to be
+used on its own; <a href=Input.html>Input</a> is the component.</p></div>
       
   </div>
 </header>
@@ -2077,6 +2080,78 @@
 <article class="content-size">
     <div class="container-overview">
         
+              
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constructor">
+            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  new InputText
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"></span>
+            
+            
+            
+            
+                <span class="access-signature overrides"><a href="InputView.html#constructor">overrides</a></span>
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
         
 
         
@@ -2114,7 +2189,7 @@
         <ul>
           
 
-            <li><a href=ProgressBar.html>ProgressBar</a></li>
+            <li><a href=InputView.html>InputView</a></li>
           
         </ul>
     
@@ -2140,64 +2215,12 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="isOverflowing">
+            <a class="share-icon" href="#isOverflowing"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">isOverflowing</span>
+            <span class="type-signature type">boolean</span>
             
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set max value.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="max">
-            <a class="share-icon" href="#max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">max</span>
-            <span class="type-signature type">number</span>
-            
-            
+            <span class="access-signature">protected</span>
             
             
         </h4>
@@ -2205,7 +2228,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Get max value.</p></p>
+      <p class="description"><p>Whether the drawn text is wider than the space it has.</p></p>
     
     
 
@@ -2242,64 +2265,12 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="metricsCache">
+            <a class="share-icon" href="#metricsCache"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">metricsCache</span>
+            <span class="type-signature type">{ key : string, boundaries : number[], widths : number[] } | undefined</span>
             
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set min value.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="min">
-            <a class="share-icon" href="#min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">min</span>
-            <span class="type-signature type">number</span>
-            
-            
+            <span class="access-signature">protected</span>
             
             
         </h4>
@@ -2307,7 +2278,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Get min value.</p></p>
+      <p class="description"><p>Prefix widths of the displayed text at each grapheme boundary, measured once per text and style.</p></p>
     
     
 
@@ -2344,315 +2315,9 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="slider1">
-            <a class="share-icon" href="#slider1"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider1</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets Slider1 instance.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider1">
-            <a class="share-icon" href="#slider1"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider1</span>
-            <span class="type-signature type">Container | undefined</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get Slider1 instance.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider2">
-            <a class="share-icon" href="#slider2"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider2</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets Slider2 instance.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="slider2">
-            <a class="share-icon" href="#slider2"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">slider2</span>
-            <span class="type-signature type">Container | undefined</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get Slider2 instance.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="step">
-            <a class="share-icon" href="#step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">step</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set step value.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="step">
-            <a class="share-icon" href="#step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">step</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Get step value.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_max">
-            <a class="share-icon" href="#_max"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_max</span>
+        <h4 class="name" id="scrollX">
+            <a class="share-icon" href="#scrollX"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">scrollX</span>
             <span class="type-signature type">number</span>
             
             <span class="access-signature">protected</span>
@@ -2663,61 +2328,11 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Maximal value.</p></p>
     
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_min">
-            <a class="share-icon" href="#_min"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_min</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
+    <div class="description">
+        <p>How far the text is shifted left, in local units, so the caret stays inside the visible
+width when the text is wider than it. Zero while the text fits or the input is idle.</p>
     </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Minimal value.</p></p>
-    
     
 
     
@@ -2756,9 +2371,9 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="_step">
-            <a class="share-icon" href="#_step"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_step</span>
+        <h4 class="name" id="textLeft">
+            <a class="share-icon" href="#textLeft"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">textLeft</span>
             <span class="type-signature type">number</span>
             
             <span class="access-signature">protected</span>
@@ -2769,7 +2384,7 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Progress value step</p></p>
+      <p class="description"><p>Left edge of the drawn text in local coordinates, whatever its anchor.</p></p>
     
     
 
@@ -2790,8 +2405,55 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="viewWidth">
+            <a class="share-icon" href="#viewWidth"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">viewWidth</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Width available to the text: the background less the horizontal padding.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     
@@ -2819,19 +2481,161 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="setBackground">
-            <a class="share-icon" href="#setBackground"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="drawSelection">
+            <a class="share-icon" href="#drawSelection"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  setBackground
+                  drawSelection
               
             </span>
-            <span class="signature">(bg)</span><span class="type-signature"></span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
             
             
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Redraws the selection highlight behind the selected range, or clears it when collapsed.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getCursorPosX">
+            <a class="share-icon" href="#getCursorPosX"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  getCursorPosX
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"></span>
+            
+            <span class="access-signature">protected</span>
             
             
-                <span class="access-signature overrides"><a href="ProgressBar.html#setBackground">overrides</a></span>
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>X of the drawn caret: the focus end of the selection, measured along the displayed text.</p></p>
+    
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="indexAtLocalX">
+            <a class="share-icon" href="#indexAtLocalX"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  indexAtLocalX
+              
+            </span>
+            <span class="signature">(localX)</span><span class="type-signature"> number</span>
+            
+            <span class="access-signature">protected</span>
+            
             
         </h4>
 
@@ -2842,7 +2646,7 @@
     
     
     <div class="description">
-        <p>Set bg.</p>
+        <p>The caret index nearest to an x in local coordinates, see <a href=Input.html#indexAt>Input.indexAt</a>.</p>
     </div>
     
 
@@ -2875,12 +2679,12 @@
 
         <tr>
             
-                <td class="name"><code>bg</code></td>
+                <td class="name"><code>localX</code></td>
             
 
             <td class="type">
             
-                ProgressBarViewType
+                number
             
             </td>
 
@@ -2889,7 +2693,7 @@
             
 
             <td class="description last">
-                
+                <p>x in the component's local space.</p>
                 
             </td>
         </tr>
@@ -2934,6 +2738,35 @@
     
 
     
+      <h5>Returns:</h5>
+      
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    number
+            
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+
+    
 
     
 </dd>
@@ -2942,14 +2775,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="change">
-            <a class="share-icon" href="#change"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="measureText">
+            <a class="share-icon" href="#measureText"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  change
+                  measureText
               
             </span>
-            <span class="signature">()</span><span class="type-signature"></span>
+            <span class="signature">(text)</span><span class="type-signature"> number</span>
             
             <span class="access-signature">protected</span>
             
@@ -2961,8 +2794,416 @@
 </dt>
 <dd>
     
-      <p class="description"><p>Called when dragging stopped.</p></p>
     
+    <div class="description">
+        <p>Width of a string in the text field's style. Only ever used as a ratio against the full
+string, so the unit does not matter — which also keeps bitmap and canvas text on one path.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                string
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>string to measure.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+      <h5>Returns:</h5>
+      
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    number
+            
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="offsetAt">
+            <a class="share-icon" href="#offsetAt"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  offsetAt
+              
+            </span>
+            <span class="signature">(index)</span><span class="type-signature"> number</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Horizontal offset from <a href=Input.html#textLeft>Input.textLeft</a> to the caret position before <code>index</code>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+            <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                number
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>position in the displayed text.</p>
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+      <h5>Returns:</h5>
+      
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    number
+            
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="textMetrics">
+            <a class="share-icon" href="#textMetrics"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  textMetrics
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> { boundaries : number[], widths : number[] }</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Widths of every grapheme prefix of the displayed text, in the text's style. Measured once
+per text and style rather than on every pointer move, which would be quadratic in the length.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+      <h5>Returns:</h5>
+      
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    { boundaries : number[], widths : number[] }
+            
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="updateScroll">
+            <a class="share-icon" href="#updateScroll"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+              
+                  updateScroll
+              
+            </span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+
+        
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Shifts overflowing text so the caret stays inside the visible width, scrolling only as far
+as needed in the caret's direction, as a native field does. Idle text shows its start.</p>
+    </div>
     
 
     
@@ -3024,12 +3265,12 @@
 
 <div class="panel collapsible-group-container">
     <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#32">
+        <a class="btn" role="button" data-toggle="collapse" href="#20">
             <img src="icons/chevron-down.svg" />
         </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
+        <h4>From class <a href="InputView.html">InputView</a></h4>
     </section>
-    <section class="panel-collapse collapse in" id="32">
+    <section class="panel-collapse collapse in" id="20">
         <section class="panel-body collapsible-group-body">
             
                 
@@ -3042,10 +3283,10 @@
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#height">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#height">inherited</a></span>
             
             
-                <span class="access-signature overrides"><a href="ProgressBar.html#height">overrides</a></span>
+                <span class="access-signature overrides"><a href="InputView.html#height">overrides</a></span>
             
         </h4>
     </div>
@@ -3054,7 +3295,7 @@
     
     
     <div class="description">
-        <p>Sets height of a ProgressBars background and fill.
+        <p>Sets height of a Input.
 If nineSliceSprite is set, then height will be set to nineSliceSprite.
 If nineSliceSprite is not set, then height will control components height as Container.</p>
     </div>
@@ -3093,14 +3334,14 @@ If nineSliceSprite is not set, then height will control components height as Con
                 
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="innerView">
-            <a class="share-icon" href="#innerView"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">innerView</span>
-            <span class="type-signature type">Container</span>
+        <h4 class="name" id="padding">
+            <a class="share-icon" href="#padding"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">padding</span>
+            <span class="type-signature type">[number, number, number, number]</span>
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#innerView">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#padding">inherited</a></span>
             
             
         </h4>
@@ -3108,8 +3349,10 @@ If nineSliceSprite is not set, then height will control components height as Con
 </dt>
 <dd>
     
-      <p class="description"><p>Container, that holds all inner views.</p></p>
     
+    <div class="description">
+        <p>Set paddings</p>
+    </div>
     
 
     
@@ -3145,24 +3388,244 @@ If nineSliceSprite is not set, then height will control components height as Con
                 
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="progress">
-            <a class="share-icon" href="#progress"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">progress</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="paddingBottom">
+            <a class="share-icon" href="#paddingBottom"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingBottom</span>
+            <span class="type-signature type">number</span>
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#progress">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#paddingBottom">inherited</a></span>
             
-            
-                <span class="access-signature overrides"><a href="ProgressBar.html#progress">overrides</a></span>
             
         </h4>
     </div>
 </dt>
 <dd>
     
-      <p class="description"><p>Set current progress percentage value.</p></p>
+      <p class="description"><p>Bottom side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingLeft">
+            <a class="share-icon" href="#paddingLeft"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingLeft</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="InputView.html#paddingLeft">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Left side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingRight">
+            <a class="share-icon" href="#paddingRight"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingRight</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="InputView.html#paddingRight">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Right side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="paddingTop">
+            <a class="share-icon" href="#paddingTop"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">paddingTop</span>
+            <span class="type-signature type">number</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="InputView.html#paddingTop">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Top side padding</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="value">
+            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">value</span>
+            <span class="type-signature"></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="InputView.html#value">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="InputView.html#value">overrides</a></span>
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>Sets the input text.</p></p>
     
     
 
@@ -3206,10 +3669,10 @@ If nineSliceSprite is not set, then height will control components height as Con
             
             
             
-                <span class="access-signature inherited"><a href="ProgressBar.html#width">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#width">inherited</a></span>
             
             
-                <span class="access-signature overrides"><a href="ProgressBar.html#width">overrides</a></span>
+                <span class="access-signature overrides"><a href="InputView.html#width">overrides</a></span>
             
         </h4>
     </div>
@@ -3218,7 +3681,7 @@ If nineSliceSprite is not set, then height will control components height as Con
     
     
     <div class="description">
-        <p>Sets width of a ProgressBars background and fill.
+        <p>Sets width of a Input.
 If nineSliceSprite is set, then width will be set to nineSliceSprite.
 If nineSliceSprite is not set, then width will control components width as Container.</p>
     </div>
@@ -3254,6 +3717,116 @@ If nineSliceSprite is not set, then width will control components width as Conta
 </dd>
 
             
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="displayText">
+            <a class="share-icon" href="#displayText"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">displayText</span>
+            <span class="type-signature type">string</span>
+            
+            <span class="access-signature">protected</span>
+            
+                <span class="access-signature inherited"><a href="InputView.html#displayText">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+      <p class="description"><p>What is drawn: the value itself, or one mask character per code unit when secure.</p></p>
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selectionStart">
+            <a class="share-icon" href="#selectionStart"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">selectionStart</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span>
+            
+                <span class="access-signature inherited"><a href="InputView.html#selectionStart">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Mirror of the hidden field's selection, in UTF-16 code units of <a href=Input.html#value>Input.value</a>.
+Collapsed (start === end) when there is just a caret.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+</dd>
+
+            
         </section>
     </section>
 </div>
@@ -3272,29 +3845,29 @@ If nineSliceSprite is not set, then width will control components width as Conta
 
 <div class="panel collapsible-group-container">
     <section class="panel-heading collapsible-group-header">
-        <a class="btn" role="button" data-toggle="collapse" href="#33">
+        <a class="btn" role="button" data-toggle="collapse" href="#21">
             <img src="icons/chevron-down.svg" />
         </a>
-        <h4>From class <a href="ProgressBar.html">ProgressBar</a></h4>
+        <h4>From class <a href="InputView.html">InputView</a></h4>
     </section>
-    <section class="panel-collapse collapse in" id="33">
+    <section class="panel-collapse collapse in" id="21">
         <section class="panel-body collapsible-group-body">
             
                 
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="init">
-            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="align">
+            <a class="share-icon" href="#align"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  init
+                  align
               
             </span>
-            <span class="signature">(root0)</span><span class="type-signature"></span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
             
+            <span class="access-signature">abstract</span><span class="access-signature">protected</span>
             
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#init">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#align">inherited</a></span>
             
             
         </h4>
@@ -3304,142 +3877,13 @@ If nineSliceSprite is not set, then width will control components width as Conta
 </dt>
 <dd>
     
+      <p class="description"><p>Lays out the text, caret and highlight; implemented by <a href=InputText.html>InputText</a>.</p></p>
     
-    <div class="description">
-        <p>Initialize ProgressBar.</p>
-    </div>
     
 
     
 
     
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0</code></td>
-            
-
-            <td class="type">
-            
-                ProgressBarOptions
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.bg</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Background texture.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.fill</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Fill texture.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.fillPaddings</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Fill offset.</p>
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>root0.progress</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Initial progress value.</p>
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
 
     
 
@@ -3486,18 +3930,18 @@ If nineSliceSprite is not set, then width will control components width as Conta
                 
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="setFill">
-            <a class="share-icon" href="#setFill"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="init">
+            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  setFill
+                  init
               
             </span>
-            <span class="signature">(fill, fillPadding)</span><span class="type-signature"></span>
+            <span class="signature">()</span><span class="type-signature"> void</span>
             
+            <span class="access-signature">abstract</span><span class="access-signature">protected</span>
             
-            
-                <span class="access-signature inherited"><a href="ProgressBar.html#setFill">inherited</a></span>
+                <span class="access-signature inherited"><a href="InputView.html#init">inherited</a></span>
             
             
         </h4>
@@ -3507,104 +3951,13 @@ If nineSliceSprite is not set, then width will control components width as Conta
 </dt>
 <dd>
     
+      <p class="description"><p>Creates the text, caret, selection highlight and placeholder; implemented by <a href=InputText.html>InputText</a>.</p></p>
     
-    <div class="description">
-        <p>Set fill.</p>
-    </div>
     
 
     
 
     
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-            <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-            <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fill</code></td>
-            
-
-            <td class="type">
-            
-                ProgressBarViewType
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-
-        <tr>
-            
-                <td class="name"><code>fillPadding</code></td>
-            
-
-            <td class="type">
-            
-                FillPaddings
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-    
-    </tbody>
-</table>
 
     
 
