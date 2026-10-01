@@ -1520,6 +1520,178 @@ describe('Input Component', () =>
             expect((input as any).inputField.style.wordWrap).toBe(false);
         });
 
+        it('should not take two quick clicks at different places for a double click', () =>
+        {
+            // Pixi reports detail 2 for any two quick clicks on the component, wherever they land.
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+            (input as any).setSelection(3, 3);
+
+            input.emit('pointertap', pointerAt(input, 0.1, { detail: 1 }));
+            now.mockReturnValue(1100);
+            input.emit('pointertap', pointerAt(input, 0.9, { detail: 2, global: new Point(500, 25) }));
+
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should count a mouse double click within the OS double-click window, but not a slow double tap', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+
+            startEditing(input);
+
+            input.emit('pointertap', pointerAt(input, 0.2, { pointerType: 'mouse' }));
+            now.mockReturnValue(1450);
+            input.emit('pointertap', pointerAt(input, 0.2, { pointerType: 'mouse' }));
+
+            expect(selection(input)).toEqual([0, 5]);
+
+            (input as any).setSelection(3, 3);
+            now.mockReturnValue(5000);
+            input.emit('pointertap', pointerAt(input, 0.2, { pointerType: 'touch' }));
+            now.mockReturnValue(5450);
+            input.emit('pointertap', pointerAt(input, 0.2, { pointerType: 'touch' }));
+
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should keep a drag-selection moving while it is held past an edge of overflowing text', () =>
+        {
+            // jsdom's canvas mock does not measure text, so the drawn width is forced.
+            const input = new Input({ bg: createTestGraphics(100, 40), padding: [0, 10, 0, 10], value: 'abcdefghij' });
+
+            Object.defineProperty((input as any).inputField, 'width', { value: 1000, configurable: true });
+            startEditing(input);
+
+            const field = (input as any).inputField;
+            const at = (localX: number) => ({
+                global: input.toGlobal(new Point(localX, field.y)),
+                detail: 1,
+                shiftKey: false,
+                button: 0,
+                nativeEvent: { preventDefault: jest.fn() },
+            }) as any;
+
+            // Press inside the view, near the right edge, then drag far past the left one.
+            (input as any).onPointerDown(at(85));
+            const anchor = (input as any).dragAnchor;
+
+            (input as any).onPointerMove(at(-500));
+
+            // The move selects up to the edge rather than jumping into the hidden text...
+            const first = (input as any).selectionStart;
+
+            expect(first).toBeGreaterThan(0);
+            expect((input as any).selectionDirection).toBe('backward');
+
+            // ...and holding it there keeps extending, with the text following, until the start.
+            const scrolls: number[] = [];
+
+            for (let frame = 0; frame < 3 * 12; frame++)
+            {
+                (input as any).update(1);
+                scrolls.push((input as any).scrollX);
+            }
+
+            expect((input as any).selectionStart).toBe(0);
+            expect((input as any).selectionEnd).toBe(anchor);
+            expect((input as any).scrollX).toBe(0);
+            expect(scrolls[0]).toBeGreaterThanOrEqual(scrolls[scrolls.length - 1]);
+
+            // Releasing stops it.
+            (input as any).onPointerUp();
+            (input as any).setSelection(5, 5);
+            for (let frame = 0; frame < 9; frame++) (input as any).update(1);
+
+            expect(selection(input)).toEqual([5, 5]);
+        });
+
+        it('should not auto-scroll a drag over text that fits', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcdefgh' });
+
+            startEditing(input);
+            (input as any).onPointerDown(pointerAt(input, 0.5));
+            (input as any).onPointerMove({ ...pointerAt(input, 0), global: new Point(-500, 25) });
+
+            const before = selection(input);
+
+            for (let frame = 0; frame < 9; frame++) (input as any).update(1);
+
+            expect(selection(input)).toEqual(before);
+        });
+
+        it('should push a value set during a session into the hidden field, so typing keeps it', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'the quick brown' });
+            const native = startEditing(input);
+
+            native.setSelectionRange(4, 15);
+            (input as any).update(1);
+
+            input.value = 'abc';
+
+            expect(native.value).toBe('abc');
+            expect([native.selectionStart, native.selectionEnd]).toEqual([3, 3]);
+            expect(selection(input)).toEqual([3, 3]);
+
+            // The next keystroke edits the new value, not the one the field used to hold.
+            native.value = 'abcx';
+            native.setSelectionRange(4, 4);
+            native.dispatchEvent(new InputEvent('input', { data: 'x', inputType: 'insertText' }));
+
+            expect(input.value).toBe('abcx');
+        });
+
+        it('should collapse a selected range when the value is replaced during a session', () =>
+        {
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'hello world' });
+            const native = startEditing(input);
+
+            native.setSelectionRange(0, 5);
+            (input as any).update(1);
+            input.value = 'abc';
+
+            expect([native.selectionStart, native.selectionEnd]).toEqual([3, 3]);
+            expect(selection(input)).toEqual([3, 3]);
+        });
+
+        it('should leave the hidden field alone when the value set is what it already holds', () =>
+        {
+            // That is the field reporting its own edit, which may be mid-composition.
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'abcd' });
+            const native = startEditing(input);
+
+            native.setSelectionRange(1, 2);
+            input.value = 'abcd';
+
+            expect([native.selectionStart, native.selectionEnd]).toEqual([1, 2]);
+        });
+
+        it('should snap presses to the characters of a masked value, not to the mask', () =>
+        {
+            // The mask is one character per code unit, so an emoji draws as two; the caret must
+            // still never land between them.
+            const input = new Input({ bg: createTestGraphics(200, 50), value: 'a\u{1F600}b', secure: true });
+
+            startEditing(input);
+
+            for (const fraction of [0, 0.2, 0.4, 0.5, 0.6, 0.8, 1])
+            {
+                (input as any).onPointerDown(pointerAt(input, fraction));
+                (input as any).onPointerUp();
+
+                expect([0, 1, 3, 4]).toContain((input as any).selectionStart);
+            }
+
+            // Two masked values of one length draw the same but have different boundaries.
+            input.value = 'abcd';
+            expect((input as any).textMetrics().boundaries).toEqual([0, 1, 2, 3, 4]);
+            input.value = 'a\u{1F600}b';
+            expect((input as any).textMetrics().boundaries).toEqual([0, 1, 3, 4]);
+        });
+
         describe('on touch devices', () =>
         {
             // The field keeps pointer events there, since its long-press callout is the only

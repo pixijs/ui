@@ -71,8 +71,18 @@ const DEFAULT_INPUT_ATTRIBUTES: Record<string, string> = {
 const PRESS_BLUR_GRACE = 500;
 
 /** Taps closer together than this, in time and in distance, count as one multi-tap sequence. */
-const MULTI_TAP_INTERVAL = 350;
+/**
+ * Clicks closer together than this, in time and in distance, count as one multi-click. Mouse
+ * values follow the common OS default for a double click; a finger needs more room to land
+ * twice on the same spot, and touch platforms use a shorter double-tap window.
+ */
+const MULTI_TAP_INTERVAL = 500;
 const MULTI_TAP_DISTANCE = 12;
+const MULTI_TAP_INTERVAL_TOUCH = 350;
+const MULTI_TAP_DISTANCE_TOUCH = 30;
+
+/** While a drag-selection is held past an edge of overflowing text, extend it by one character every this many frames. */
+const AUTO_SCROLL_FRAMES = 3;
 
 /** A press on the hidden field that moves further than this, in CSS pixels, is a drag-selection rather than a tap. */
 const DRAG_THRESHOLD = 6;
@@ -163,6 +173,12 @@ export class Input extends Container
      * width when the text is wider than it. Zero while the text fits or the input is idle.
      */
     protected scrollX = 0;
+
+    /** Local x of the pointer during a drag-selection, on the canvas or the hidden field, for auto-scrolling. */
+    protected dragLocalX: number | undefined;
+
+    /** Frames since the drag-selection last auto-scrolled. */
+    protected autoScrollElapsed = 0;
 
     /** Prefix widths of the displayed text at each grapheme boundary, measured once per text and style. */
     protected metricsCache: { key: string; boundaries: number[]; widths: number[] } | undefined;
@@ -297,7 +313,9 @@ export class Input extends Container
             // Counted before the editing check so a double click on an idle input, which starts
             // editing on its first tap, still selects a word on its second as a native field does.
             // Only the main button selects by multi-click; a right click is a context-menu gesture.
-            const clicks = (e.button ?? 0) === 0 ? Math.max(e.detail ?? 1, this.countTap(e)) : 1;
+            // Pixi's own `detail` counts any quick clicks on the component, wherever they land, so
+            // the component's count, which also checks distance, is the only one used.
+            const clicks = (e.button ?? 0) === 0 ? this.countTap(e) : 1;
 
             // A tap during a session is a caret or selection gesture, not an activation; leaving
             // `activation` set here would restart editing on the very click that ends it.
@@ -545,10 +563,10 @@ export class Input extends Container
 
         this.lastPressTime = performance.now();
 
-        const anchor = this.dragAnchor;
-        const index = this.indexAt(e);
+        const localX = this.toLocal(e.global).x;
 
-        this.setSelection(Math.min(anchor, index), Math.max(anchor, index), index < anchor ? 'backward' : 'forward');
+        this.dragLocalX = localX;
+        this.extendDragTo(this.dragAnchor, this.indexAtLocalX(this.clampToView(localX)));
     }
 
     protected onPointerUp(): void
@@ -559,6 +577,70 @@ export class Input extends Container
         }
 
         this.dragAnchor = undefined;
+        this.dragLocalX = undefined;
+    }
+
+    /**
+     * Sets a drag-selection from its anchor to a focus index, with the direction the drag went.
+     * @param anchor - index the drag started from.
+     * @param focus - index the drag is at now.
+     */
+    protected extendDragTo(anchor: number, focus: number): void
+    {
+        this.setSelection(Math.min(anchor, focus), Math.max(anchor, focus), focus < anchor ? 'backward' : 'forward');
+    }
+
+    /**
+     * Clamps a local x to the visible text area while the text overflows, so a drag past an edge
+     * selects up to the edge and auto-scrolls from there, rather than jumping into the hidden text.
+     * @param localX - x in the component's local space.
+     */
+    protected clampToView(localX: number): number
+    {
+        if (!this.isOverflowing) return localX;
+
+        return Math.max(this.paddingLeft, Math.min(localX, (this._bg?.width ?? 0) - this.paddingRight));
+    }
+
+    /**
+     * Keeps a drag-selection held past an edge of overflowing text moving, one character every
+     * few frames, as a native field auto-scrolls; the text follows the focus end.
+     * @param dt - ticker delta, in frames.
+     */
+    protected autoScrollDrag(dt: number): void
+    {
+        const anchor = this.dragAnchor ?? (this.fieldDragged ? this.fieldDragAnchor : undefined);
+        const x = this.dragLocalX;
+        let direction = 0;
+
+        if (x !== undefined && this.isOverflowing)
+        {
+            if (x < this.paddingLeft) direction = -1;
+            else if (x > (this._bg?.width ?? 0) - this.paddingRight) direction = 1;
+        }
+
+        if (anchor === undefined || !direction)
+        {
+            this.autoScrollElapsed = 0;
+
+            return;
+        }
+
+        this.autoScrollElapsed += dt;
+
+        if (this.autoScrollElapsed < AUTO_SCROLL_FRAMES) return;
+
+        this.autoScrollElapsed = 0;
+
+        const focus = this.selectionDirection === 'backward' ? this.selectionStart : this.selectionEnd;
+        const { boundaries } = this.textMetrics();
+        const next = direction < 0
+            ? [...boundaries].reverse().find((b) => b < focus)
+            : boundaries.find((b) => b > focus);
+
+        if (next === undefined) return;
+
+        this.extendDragTo(anchor, next);
     }
 
     /**
@@ -653,7 +735,7 @@ export class Input extends Container
      */
     protected countTap(e: FederatedPointerEvent): number
     {
-        return this.countTapAt(e.global.x, e.global.y);
+        return this.countTapAt(e.global.x, e.global.y, e.pointerType === 'touch');
     }
 
     /**
@@ -661,13 +743,16 @@ export class Input extends Container
      * coordinates and the hidden-field path client coordinates, which never mix on one device.
      * @param x - horizontal position of the tap.
      * @param y - vertical position of the tap.
+     * @param touch - whether it is a finger, which gets a wider spot and a shorter window.
      */
-    protected countTapAt(x: number, y: number): number
+    protected countTapAt(x: number, y: number, touch = false): number
     {
         const now = performance.now();
-        const near = Math.hypot(x - this.lastTapX, y - this.lastTapY) <= MULTI_TAP_DISTANCE;
+        const distance = touch ? MULTI_TAP_DISTANCE_TOUCH : MULTI_TAP_DISTANCE;
+        const interval = touch ? MULTI_TAP_INTERVAL_TOUCH : MULTI_TAP_INTERVAL;
+        const near = Math.hypot(x - this.lastTapX, y - this.lastTapY) <= distance;
 
-        this.tapCount = near && now - this.lastTapTime <= MULTI_TAP_INTERVAL ? this.tapCount + 1 : 1;
+        this.tapCount = near && now - this.lastTapTime <= interval ? this.tapCount + 1 : 1;
         this.lastTapTime = now;
         this.lastTapX = x;
         this.lastTapY = y;
@@ -750,7 +835,9 @@ export class Input extends Container
     {
         const text = this.displayText;
         const style = this.inputField?.style as TextStyle | undefined;
-        const key = `${style?.styleKey ?? ''}\u0000${text}`;
+        // Keyed on the value, not the drawn text: masked values of one length draw the same but
+        // have different character boundaries.
+        const key = `${style?.styleKey ?? ''}\u0000${this._secure ? 1 : 0}\u0000${this._value}`;
 
         if (this.metricsCache?.key === key) return this.metricsCache;
 
@@ -758,7 +845,10 @@ export class Input extends Container
         const widths = [0];
         let index = 0;
 
-        for (const grapheme of CanvasTextMetrics.graphemeSegmenter(text))
+        // Boundaries are those of the value, so a press can never land inside a surrogate pair or
+        // combining sequence even when it is masked. The mask has one character per code unit, so
+        // the same index measures the drawn prefix.
+        for (const grapheme of CanvasTextMetrics.graphemeSegmenter(this._value))
         {
             index += grapheme.length;
             boundaries.push(index);
@@ -812,7 +902,8 @@ export class Input extends Container
         // The field's own double tap would select by its invisible layout, so taps are counted
         // here and resolved against the drawn text, as on the canvas.
         const index = this.indexAtClient(e.clientX, e.clientY);
-        const clicks = this.countTapAt(e.clientX, e.clientY);
+        // The field only takes presses on touch devices, so these are taps.
+        const clicks = this.countTapAt(e.clientX, e.clientY, true);
 
         if (clicks >= 3)
         {
@@ -857,14 +948,16 @@ export class Input extends Container
 
         this.fieldDragged = true;
 
-        const index = this.indexAtClient(e.clientX, e.clientY);
+        const localX = this.localXAtClient(e.clientX, e.clientY);
 
-        this.setSelection(Math.min(anchor, index), Math.max(anchor, index), index < anchor ? 'backward' : 'forward');
+        this.dragLocalX = localX;
+        this.extendDragTo(anchor, this.indexAtLocalX(this.clampToView(localX)));
     }
 
     protected onFieldPointerUp(): void
     {
         this.fieldDragAnchor = undefined;
+        this.dragLocalX = undefined;
     }
 
     /**
@@ -875,13 +968,22 @@ export class Input extends Container
      */
     protected indexAtClient(clientX: number, clientY: number): number
     {
+        return this.indexAtLocalX(this.localXAtClient(clientX, clientY));
+    }
+
+    /**
+     * The local x of a point on the hidden field; see {@link Input.indexAtClient}.
+     * @param clientX - horizontal position in the viewport.
+     * @param clientY - vertical position in the viewport.
+     */
+    protected localXAtClient(clientX: number, clientY: number): number
+    {
         if (!this.input) return 0;
 
         const rect = this.input.getBoundingClientRect();
         const origin = this.getGlobalPosition();
-        const local = this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) });
 
-        return this.indexAtLocalX(local.x);
+        return this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) }).x;
     }
 
     /**
@@ -1239,6 +1341,7 @@ export class Input extends Container
         }
         this.editing = false;
         this.dragAnchor = undefined;
+        this.dragLocalX = undefined;
         this.composing = false;
 
         if (this.placeholder && this.value.length === 0)
@@ -1263,6 +1366,7 @@ export class Input extends Container
 
         // Caret movement has no event of its own on every browser, so poll it with the blink.
         this.syncSelection();
+        this.autoScrollDrag(dt);
 
         this.tick += dt * 0.1;
         if (this._cursor)
@@ -1409,6 +1513,19 @@ export class Input extends Container
         // A programmatic set has no selection of its own; keep the caret inside the new text.
         this.selectionStart = Math.min(this.selectionStart, textLength);
         this.selectionEnd = Math.min(this.selectionEnd, textLength);
+
+        // During a session the hidden field is what the next keystroke edits, so a value set from
+        // outside has to reach it, or that keystroke would bring the old text back. Equal values
+        // are left alone: that is the field reporting its own edit, possibly mid-composition.
+        if (this.editing && this.input && this.input.value !== value)
+        {
+            // A range over text that has been replaced means nothing, so it collapses to its end,
+            // where a native field would put the caret; a plain caret stays where it was.
+            this.selectionStart = this.selectionEnd;
+            this.selectionDirection = 'none';
+            this.input.value = value;
+            this.input.setSelectionRange(this.selectionEnd, this.selectionEnd);
+        }
 
         if (this.inputField)
         {
