@@ -94,9 +94,13 @@ export const UseGraphics = {
                         addMask,
                     });
 
-                    input.onEnter.connect((val) =>
+                    input.onChange.connect((val) =>
                     {
                         onChange(`Input ${i + 1} (${val})`);
+                    });
+                    input.onEnter.connect((val) =>
+                    {
+                        action('onEnter')(`Input ${i + 1} (${val})`);
                     });
 
                     list.addChild(input);

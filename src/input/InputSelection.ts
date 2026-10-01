@@ -96,7 +96,7 @@ export class InputSelection extends InputText
         this.syncSelection();
     }
 
-    /** Selects the whole value. */
+    /** Selects the whole value. Only takes effect while the input is being edited. */
     selectAll(): void
     {
         this.setSelection(0, this.value.length);
@@ -306,8 +306,9 @@ export class InputSelection extends InputText
     }
 
     /**
+     * Handles a tap during editing: a double click selects a word, a triple click the whole value.
      * @param e - the tap.
-     * @param clicks - click count: 2 selects a word, 3 the whole value.
+     * @param clicks - click count from {@link TapCounter}: 2 selects a word, 3 the whole value.
      */
     protected onPointerTap(e: FederatedPointerEvent, clicks = e.detail ?? 1): void
     {

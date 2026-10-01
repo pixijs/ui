@@ -26,7 +26,6 @@ const args = {
     paddingLeft: 0,
     amount: 1,
     addMask: false,
-    maxTextLength: 10,
     onChange: action('Input'),
 };
 
