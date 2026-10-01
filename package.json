@@ -69,7 +69,7 @@
         "docsDescription": "API Documentation for UI components made with PixiJS",
         "docsKeyword": "PixiJS, UI, components",
         "globals": {
-            "tweedle.js": "Tweedle"
+            "tweedle.js": "tweedle_js"
         }
     },
     "peerDependencies": {

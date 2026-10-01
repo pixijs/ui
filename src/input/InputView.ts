@@ -21,6 +21,7 @@ import type { InputOptions, SelectionDirection, ViewType } from './types';
  * flag, selection and paddings — and the background, mask and sizing. It calls into
  * {@link InputText} to create and lay out the text. Not meant to be used on its own; {@link Input}
  * is the component.
+ * @ignore
  */
 export abstract class InputView extends Container
 {
