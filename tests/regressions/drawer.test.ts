@@ -1,9 +1,9 @@
 /**
  * Drawer regressions.
  *
- * These assert the CORRECT behaviour. While the defect is present they are
- * marked `it.failing`, which passes only until it is fixed; the fix PR flips
- * them to `it` without editing a single assertion.
+ * These assert the CORRECT behaviour. They were written against the unfixed
+ * component and marked `it.failing`, which passes only while the bug is still
+ * present; the fix flipped them to `it` without editing a single assertion.
  *
  * Drawer was developed in parallel with the #265-#270 audit, so it reintroduces
  * two defect shapes that series fixed elsewhere.
@@ -15,7 +15,7 @@ const g = (w = 400, h = 300) => new Graphics().rect(0, 0, w, h).fill(0xffffff);
 
 describe('Drawer releases what it acquires', () =>
 {
-    it.failing('removes its shared-ticker callbacks on destroy', () =>
+    it('removes its shared-ticker callbacks on destroy', () =>
     {
         const before = Ticker.shared.count;
         const drawer = new Drawer({ background: g() });
@@ -28,7 +28,7 @@ describe('Drawer releases what it acquires', () =>
 
 describe('Drawer background validation', () =>
 {
-    it.failing('reports a clear error when constructed without a background', () =>
+    it('reports a clear error when constructed without a background', () =>
     {
         expect(() => new Drawer({} as any)).toThrow(/background/i);
     });
@@ -36,7 +36,7 @@ describe('Drawer background validation', () =>
 
 describe('Drawer setScreenSize while open', () =>
 {
-    it.failing('re-anchors an open drawer to the new screen edge', () =>
+    it('re-anchors an open drawer to the new screen edge', () =>
     {
         const drawer = new Drawer({ background: g(), width: 400, height: 300 });
 
