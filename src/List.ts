@@ -322,42 +322,66 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         this.children.forEach((child, id) =>
         {
+            // An anchored sprite or a pivoted container is positioned by a point inside
+            // itself, not by its top left corner, so its position has to be offset by
+            // where its bounds actually start. Without this an anchor of 0.5 places the
+            // child half its size up and to the left of where it belongs.
+            const offset = this.getChildOffset(child);
+
             switch (this.type)
             {
                 case 'vertical':
-                    child.y = y;
-                    child.x = x;
+                    child.y = y - offset.y;
+                    child.x = x - offset.x;
 
                     y += elementsMargin + child.height;
                     break;
 
                 case 'horizontal':
-                    child.x = x;
-                    child.y = y;
+                    child.x = x - offset.x;
+                    child.y = y - offset.y;
 
                     x += elementsMargin + child.width;
                     break;
 
                 case 'bidirectional':
                 default:
-                    child.x = x;
-                    child.y = y;
-
-                    if (child.x + child.width > maxWidth && id > 0)
+                    if (x + child.width > maxWidth && id > 0)
                     {
                         y += elementsMargin + maxHeight;
                         x = this.leftPadding;
-
-                        child.x = x;
-                        child.y = y;
                         maxHeight = 0;
                     }
+
+                    child.x = x - offset.x;
+                    child.y = y - offset.y;
 
                     maxHeight = Math.max(maxHeight, child.height);
                     x += elementsMargin + child.width;
                     break;
             }
         });
+    }
+
+    /**
+     * Distance between a child's position and the top left corner of the space it takes up.
+     *
+     * It is zero for a plain container, and non-zero for anything positioned by a point
+     * inside itself - an anchored `Sprite`, or a container with a `pivot`.
+     * @param child - the child to measure.
+     * @returns the offset, in this list's coordinate space.
+     */
+    protected getChildOffset(child: C): { x: number; y: number }
+    {
+        const bounds = child.getLocalBounds();
+
+        // A child renders at `position + (localPoint - pivot) * scale`, so its visual
+        // corner sits this far from its position. `anchor` reaches this through bounds,
+        // which it shifts; `pivot` is applied by the transform and has to be read directly.
+        return {
+            x: (bounds.x - child.pivot.x) * child.scale.x,
+            y: (bounds.y - child.pivot.y) * child.scale.y,
+        };
     }
 
     /**
