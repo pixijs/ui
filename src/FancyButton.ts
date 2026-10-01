@@ -288,7 +288,9 @@ export class FancyButton extends ButtonContainer
      */
     set text(text: AnyText)
     {
-        if (!text || text === 0)
+        // Only an absent or empty label clears the view. A numeric 0 is a
+        // legitimate label, and was previously swallowed by the falsy check.
+        if (text === undefined || text === null || text === '')
         {
             this.removeView('textView');
 

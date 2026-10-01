@@ -543,14 +543,16 @@ export class ScrollBox extends Container
                 || this.lastHeight !== this.listHeight)
         )
         {
+            // Assign, never accumulate: listWidth/listHeight are the current
+            // content extent, so `+=` summed every intermediate measurement.
             if (!this.options.width)
             {
-                this._width += this.listWidth;
+                this._width = this.listWidth;
             }
 
             if (!this.options.height)
             {
-                this._height += this.listHeight;
+                this._height = this.listHeight;
             }
 
             this.borderMask
@@ -831,6 +833,9 @@ export class ScrollBox extends Container
     override set height(value: number)
     {
         this._height = value;
+        // Recorded so resize() treats this as an explicit size and stops
+        // sizing the box to its content.
+        this.options.height = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -845,6 +850,9 @@ export class ScrollBox extends Container
     override set width(value: number)
     {
         this._width = value;
+        // Recorded so resize() treats this as an explicit size and stops
+        // sizing the box to its content.
+        this.options.width = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -864,6 +872,8 @@ export class ScrollBox extends Container
 
         this._width = value;
         this._height = height;
+        this.options.width = value;
+        this.options.height = height;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
