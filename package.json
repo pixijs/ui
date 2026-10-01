@@ -22,12 +22,87 @@
             "import": "./lib/input/Input.mjs",
             "require": "./lib/input/Input.js"
         },
-        "./package.json": "./package.json",
-        "./*": {
-            "types": "./lib/*.d.ts",
-            "import": "./lib/*.mjs",
-            "require": "./lib/*.js"
-        }
+        "./Button": {
+            "types": "./lib/Button.d.ts",
+            "import": "./lib/Button.mjs",
+            "require": "./lib/Button.js"
+        },
+        "./CheckBox": {
+            "types": "./lib/CheckBox.d.ts",
+            "import": "./lib/CheckBox.mjs",
+            "require": "./lib/CheckBox.js"
+        },
+        "./CircularProgressBar": {
+            "types": "./lib/CircularProgressBar.d.ts",
+            "import": "./lib/CircularProgressBar.mjs",
+            "require": "./lib/CircularProgressBar.js"
+        },
+        "./Dialog": {
+            "types": "./lib/Dialog.d.ts",
+            "import": "./lib/Dialog.mjs",
+            "require": "./lib/Dialog.js"
+        },
+        "./DoubleSlider": {
+            "types": "./lib/DoubleSlider.d.ts",
+            "import": "./lib/DoubleSlider.mjs",
+            "require": "./lib/DoubleSlider.js"
+        },
+        "./Drawer": {
+            "types": "./lib/Drawer.d.ts",
+            "import": "./lib/Drawer.mjs",
+            "require": "./lib/Drawer.js"
+        },
+        "./FancyButton": {
+            "types": "./lib/FancyButton.d.ts",
+            "import": "./lib/FancyButton.mjs",
+            "require": "./lib/FancyButton.js"
+        },
+        "./List": {
+            "types": "./lib/List.d.ts",
+            "import": "./lib/List.mjs",
+            "require": "./lib/List.js"
+        },
+        "./MaskedFrame": {
+            "types": "./lib/MaskedFrame.d.ts",
+            "import": "./lib/MaskedFrame.mjs",
+            "require": "./lib/MaskedFrame.js"
+        },
+        "./ProgressBar": {
+            "types": "./lib/ProgressBar.d.ts",
+            "import": "./lib/ProgressBar.mjs",
+            "require": "./lib/ProgressBar.js"
+        },
+        "./RadioGroup": {
+            "types": "./lib/RadioGroup.d.ts",
+            "import": "./lib/RadioGroup.mjs",
+            "require": "./lib/RadioGroup.js"
+        },
+        "./ScrollBox": {
+            "types": "./lib/ScrollBox.d.ts",
+            "import": "./lib/ScrollBox.mjs",
+            "require": "./lib/ScrollBox.js"
+        },
+        "./Select": {
+            "types": "./lib/Select.d.ts",
+            "import": "./lib/Select.mjs",
+            "require": "./lib/Select.js"
+        },
+        "./Slider": {
+            "types": "./lib/Slider.d.ts",
+            "import": "./lib/Slider.mjs",
+            "require": "./lib/Slider.js"
+        },
+        "./Switcher": {
+            "types": "./lib/Switcher.d.ts",
+            "import": "./lib/Switcher.mjs",
+            "require": "./lib/Switcher.js"
+        },
+        "./utils/Signal": {
+            "types": "./lib/utils/Signal.d.ts",
+            "import": "./lib/utils/Signal.mjs",
+            "require": "./lib/utils/Signal.js"
+        },
+        "./package.json": "./package.json"
     },
     "main": "lib/index.js",
     "module": "lib/index.mjs",
