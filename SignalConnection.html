@@ -2102,7 +2102,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="InputView.html">Class: InputView</h1>
+        <h1 class="page-title" data-filename="SignalConnection.html">Interface: SignalConnection</h1>
         
 
 
@@ -2111,17 +2111,14 @@
 <header>
   <div class="header content-size">
       <h2>
-        InputView
+        SignalConnection
 
         
       </h2>
 
       
+          <div class="class-description"><p>A handle to one listener, returned by <a href=Signal.html#connect>Signal.connect</a>.</p></div>
       
-          <div class="class-description"><p>First layer of <a href=Input.html>Input</a>: the state it is drawn from — options, value, secure flag, editing
-flag, selection and paddings — and the background, mask and sizing. It calls into
-<a href=InputText.html>InputText</a> to create and lay out the text. Not meant to be used on its own; <a href=Input.html>Input</a>
-is the component.</p></div>
       
   </div>
 </header>
@@ -2129,132 +2126,66 @@ is the component.</p></div>
 <article class="content-size">
     <div class="container-overview">
         
-              
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="constructor">
-            <a class="share-icon" href="#constructor"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  new InputView
-              
-            </span>
-            <span class="signature">(options)</span><span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
 
         
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Resolves the options and sets up the parts that do not depend on the subclasses' state;
-the background, and with it the text, are created by <a href=Input.html>Input</a>'s constructor.</p>
-    </div>
+<dl class="details">
     
 
-    
+        <h5 class="subsection-title">Properties:</h5>
 
-    
-
-    
         
+        <dl>
 
-<table class="params">
+<table class="properties">
     <thead>
     <tr>
         
             <th>Name</th>
         
 
-        <th>Type</th>
-
+        
+          <th>Type</th>
         
 
+        
+        
         
 
         <th class="last">Description</th>
     </tr>
     </thead>
-
     <tbody>
     
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>enabled</code></td>
             
 
-            <td class="type">
             
-                InputOptions
+                <td class="type">
+                
+                    boolean
+                
+                </td>
             
-            </td>
+
+            
 
             
 
             
 
             <td class="description last">
-                <p>options of the input, see <a href=Input.html>Input</a>.</p>
+                <p>While <code>false</code>, the listener stays connected but is skipped on emit.</p>
+                
                 
             </td>
         </tr>
     
     </tbody>
 </table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 </dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-            
-        
-
-        
-<dl class="details">
     
 
     
@@ -2282,15 +2213,6 @@ the background, and with it the text, are created by <a href=Input.html>Input</a
         
     </div>
 
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-          
-
-            <li>Container</li>
-          
-        </ul>
     
 
     
@@ -2314,10 +2236,10 @@ the background, and with it the text, are created by <a href=Input.html>Input</a
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="height">
-            <a class="share-icon" href="#height"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">height</span>
-            <span class="type-signature"></span>
+        <h4 class="name" id="enabled">
+            <a class="share-icon" href="#enabled"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">enabled</span>
+            <span class="type-signature type">boolean</span>
             
             
             
@@ -2327,61 +2249,7 @@ the background, and with it the text, are created by <a href=Input.html>Input</a
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Sets height of a Input.
-If nineSliceSprite is set, then height will be set to nineSliceSprite.
-If nineSliceSprite is not set, then height will control components height as Container.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="height">
-            <a class="share-icon" href="#height"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">height</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Gets height of Input.</p></p>
+      <p class="description"><p>While <code>false</code>, the listener stays connected but is skipped on emit.</p></p>
     
     
 
@@ -2401,580 +2269,6 @@ If nineSliceSprite is not set, then height will control components height as Con
 
     
 
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="padding">
-            <a class="share-icon" href="#padding"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">padding</span>
-            <span class="type-signature type">[number, number, number, number]</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set paddings</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="paddingBottom">
-            <a class="share-icon" href="#paddingBottom"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">paddingBottom</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Bottom side padding</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="paddingLeft">
-            <a class="share-icon" href="#paddingLeft"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">paddingLeft</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Left side padding</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="paddingRight">
-            <a class="share-icon" href="#paddingRight"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">paddingRight</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Right side padding</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="paddingTop">
-            <a class="share-icon" href="#paddingTop"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">paddingTop</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Top side padding</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Sets the input text.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="value">
-            <a class="share-icon" href="#value"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">value</span>
-            <span class="type-signature type">string</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Return text of the input.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="width">
-            <a class="share-icon" href="#width"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">width</span>
-            <span class="type-signature"></span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets width of a Input.
-If nineSliceSprite is set, then width will be set to nineSliceSprite.
-If nineSliceSprite is not set, then width will control components width as Container.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="width">
-            <a class="share-icon" href="#width"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">width</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Gets width of Input.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="displayText">
-            <a class="share-icon" href="#displayText"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">displayText</span>
-            <span class="type-signature type">string</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>What is drawn: the value itself, or one mask character per code unit when secure.</p></p>
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="selectionStart">
-            <a class="share-icon" href="#selectionStart"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">selectionStart</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span>
-            
-            
-        </h4>
-    </div>
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Mirror of the hidden field's selection, in UTF-16 code units of <a href=Input.html#value>Input.value</a>.
-Collapsed (start === end) when there is just a caret.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -3002,16 +2296,16 @@ Collapsed (start === end) when there is just a caret.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="align">
-            <a class="share-icon" href="#align"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="disconnect">
+            <a class="share-icon" href="#disconnect"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
               
-                  align
+                  disconnect
               
             </span>
-            <span class="signature">()</span><span class="type-signature"> void</span>
+            <span class="signature">()</span><span class="type-signature"> boolean</span>
             
-            <span class="access-signature">abstract</span><span class="access-signature">protected</span>
+            
             
             
         </h4>
@@ -3021,8 +2315,10 @@ Collapsed (start === end) when there is just a caret.</p>
 </dt>
 <dd>
     
-      <p class="description"><p>Lays out the text, caret and highlight; implemented by <a href=InputText.html>InputText</a>.</p></p>
     
+    <div class="description">
+        <p>Removes the listener from its signal.</p>
+    </div>
     
 
     
@@ -3066,76 +2362,33 @@ Collapsed (start === end) when there is just a caret.</p>
     
 
     
+      <h5>Returns:</h5>
+      
 
-    
-</dd>
 
+<table class="params">
+    <thead>
+    <tr>
         
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
             
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="init">
-            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-              
-                  init
-              
-            </span>
-            <span class="signature">()</span><span class="type-signature"> void</span>
+            <td class="type">
             
-            <span class="access-signature">abstract</span><span class="access-signature">protected</span>
+                    boolean
             
-            
-        </h4>
+            </td>
+            <td class="description last"><code>false</code> if it was already removed.</td>
+        </tr>
+    
+    </tbody>
+</table>
 
-        
-    </div>
-</dt>
-<dd>
-    
-      <p class="description"><p>Creates the text, caret, selection highlight and placeholder; implemented by <a href=InputText.html>InputText</a>.</p></p>
-    
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
 
     
 
