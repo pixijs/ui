@@ -44,3 +44,4 @@ pnpm-lock.yaml
 .cache
 docs/
 example.api.json*
+qa/results/
