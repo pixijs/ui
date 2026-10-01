@@ -39,6 +39,21 @@ const button = new Button();
 button.onPress.connect(() => console.log('Button pressed!'));
 ```
 
+### Importing a single component
+
+The package is side-effect free (`"sideEffects": false`), so a bundler only includes the components you
+actually import from `@pixi/ui`. You can also import a component from its own entry point:
+
+```js
+import { Button } from '@pixi/ui/Button';
+import { ScrollBox } from '@pixi/ui/ScrollBox';
+import { Input } from '@pixi/ui/input';
+import { Signal } from '@pixi/ui/utils/Signal';
+```
+
+Subpath imports need a module resolution that understands package `exports` (`node16`, `nodenext` or `bundler`
+in TypeScript). With the legacy `node` (`node10`) resolution, import from `@pixi/ui` instead.
+
 To use any of the components you can go to it's page in the [sandbox](https://pixijs.io/ui/storybook/),
 and copy/paste the example code to your project (check the `Code` tab):
 

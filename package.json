@@ -16,6 +16,17 @@
             "types": "./lib/index.d.ts",
             "import": "./lib/index.mjs",
             "require": "./lib/index.js"
+        },
+        "./input": {
+            "types": "./lib/input/index.d.ts",
+            "import": "./lib/input/Input.mjs",
+            "require": "./lib/input/Input.js"
+        },
+        "./package.json": "./package.json",
+        "./*": {
+            "types": "./lib/*.d.ts",
+            "import": "./lib/*.mjs",
+            "require": "./lib/*.js"
         }
     },
     "main": "lib/index.js",
@@ -27,14 +38,14 @@
     ],
     "scripts": {
         "start": "npm i && npm run storybook",
-        "build": "xs build",
+        "build": "xs build && node scripts/build-umd.mjs",
         "clean": "xs clean",
         "deploy": "xs deploy",
         "docs": "xs docs && npm run storybook:build",
         "lint": "xs lint --max-warnings 0",
         "lint:fix": "xs lint --fix",
         "prepare": "husky install",
-        "release": "npm i && xs bump,build,docs,publish,git-push",
+        "release": "npm i && xs bump && npm run build && xs docs,publish,git-push",
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
