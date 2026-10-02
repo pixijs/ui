@@ -43,6 +43,43 @@ const button = new Button();
 button.onPress.connect(() => console.log('Button pressed!'));
 ```
 
+### Importing a single component
+
+The package is side-effect free (`"sideEffects": false`), so a bundler only includes the components you
+actually import from `@pixi/ui`. You can also import a component from its own entry point:
+
+```js
+import { Button } from '@pixi/ui/Button';
+import { ScrollBox } from '@pixi/ui/ScrollBox';
+import { Input } from '@pixi/ui/input';
+import { Signal } from '@pixi/ui/utils/Signal';
+```
+
+Subpath imports need a module resolution that understands package `exports` (`node16`, `nodenext` or `bundler`
+in TypeScript). With the legacy `node` (`node10`) resolution, import from `@pixi/ui` instead.
+
+### Without a bundler
+
+Every component is a separate ES module, so a browser can load just the ones you need with an
+[import map](https://developer.mozilla.org/docs/Web/HTML/Element/script/type/importmap):
+
+```html
+<script type="importmap">
+    {
+        "imports": {
+            "pixi.js": "https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.mjs",
+            "tweedle.js": "https://cdn.jsdelivr.net/npm/tweedle.js@2/dist/tweedle.es.js",
+            "@pixi/ui/": "https://cdn.jsdelivr.net/npm/@pixi/ui@2/lib/"
+        }
+    }
+</script>
+<script type="module">
+    import { Input } from '@pixi/ui/input/Input.mjs';
+</script>
+```
+
+For a classic `<script>` tag, `dist/pixi-ui.js` contains the whole library and only needs the `PIXI` global.
+
 To use any of the components you can go to it's page in the [sandbox](https://pixijs.io/ui/storybook/),
 and copy/paste the example code to your project (check the `Code` tab):
 

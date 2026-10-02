@@ -1,4 +1,4 @@
-import { ColorSource, Container, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
+import { ColorSource, Container, ContainerOptions, DEG_TO_RAD, Graphics, LineCap } from 'pixi.js';
 
 export type MaskedProgressBarOptions = {
     backgroundColor?: ColorSource;
@@ -9,7 +9,7 @@ export type MaskedProgressBarOptions = {
     backgroundAlpha?: number;
     fillAlpha?: number;
     cap?: LineCap;
-};
+} & ContainerOptions;
 
 /**
  * Creates a Circular ProgressBar.
@@ -51,9 +51,23 @@ export class CircularProgressBar extends Container
      */
     constructor(options?: MaskedProgressBarOptions)
     {
-        super();
+        options ??= {};
 
-        this.options = options ?? {};
+        const {
+            backgroundColor: _0,
+            fillColor: _1,
+            lineWidth: _2,
+            radius: _3,
+            value,
+            backgroundAlpha: _4,
+            fillAlpha: _5,
+            cap: _6,
+            ...rest
+        } = options;
+
+        super(rest);
+
+        this.options = options;
 
         this.addChild(this.innerView);
 
@@ -61,9 +75,10 @@ export class CircularProgressBar extends Container
 
         this.addBackground();
 
-        if (options?.value)
+        // `!== undefined`, not a falsy check: 0 is a legitimate progress value.
+        if (value !== undefined)
         {
-            this.progress = options.value;
+            this.progress = value;
         }
     }
 
@@ -85,7 +100,9 @@ export class CircularProgressBar extends Container
 
         this.bgCircle.circle(0, 0, radius).stroke({
             width: lineWidth,
-            color: backgroundColor,
+            // A colour is always required; `alpha` above is what hides the
+            // background when the caller did not ask for one.
+            color: backgroundColor ?? 0x000000,
             alpha,
         });
     }
@@ -96,6 +113,11 @@ export class CircularProgressBar extends Container
      */
     set progress(value: number)
     {
+        if (Number.isNaN(value))
+        {
+            value = 0;
+        }
+
         if (value > 100)
         {
             value = 100;

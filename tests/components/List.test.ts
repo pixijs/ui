@@ -1,3 +1,4 @@
+import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 import { List, ListType } from '../../src/List';
 import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
@@ -666,6 +667,156 @@ describe('List Component', () =>
                 expect(list.leftPadding).toBe(14);
                 expect(list.rightPadding).toBe(16);
             }).not.toThrow();
+        });
+    });
+
+    describe('List Child Anchors', () =>
+    {
+        // Regression tests for #225: children were positioned by their origin, which for an
+        // anchored sprite or a pivoted container is a point inside the child rather than its
+        // top left corner. An anchor of 0.5 therefore placed the child half its size up and
+        // to the left of where it belonged.
+
+        // Top left corner of the space a child actually occupies, in list coordinates.
+        const corner = (child: Container) =>
+        {
+            const bounds = child.getLocalBounds();
+
+            return {
+                x: child.x + ((bounds.x - child.pivot.x) * child.scale.x),
+                y: child.y + ((bounds.y - child.pivot.y) * child.scale.y),
+            };
+        };
+
+        const makeSprite = (anchor = 0) =>
+        {
+            const sprite = new Sprite(Texture.WHITE);
+
+            sprite.setSize(50, 50);
+            sprite.anchor.set(anchor);
+
+            return sprite;
+        };
+
+        it('should place an anchored sprite by its visual corner', () =>
+        {
+            const list = new List({ type: 'vertical', padding: 10 });
+            const sprite = makeSprite(0.5);
+
+            list.addChild(sprite);
+
+            expect(corner(sprite)).toEqual({ x: 10, y: 10 });
+        });
+
+        it('should place anchored and unanchored children identically', () =>
+        {
+            const anchored = new List({ type: 'vertical', padding: 8, elementsMargin: 4 });
+            const plain = new List({ type: 'vertical', padding: 8, elementsMargin: 4 });
+
+            anchored.addChild(makeSprite(0.5), makeSprite(0.5), makeSprite(0.5));
+            plain.addChild(makeSprite(), makeSprite(), makeSprite());
+
+            expect(anchored.children.map(corner)).toEqual(plain.children.map(corner));
+        });
+
+        it('should stack anchored children without overlapping', () =>
+        {
+            const list = new List({ type: 'vertical', padding: 0, elementsMargin: 10 });
+
+            list.addChild(makeSprite(0.5), makeSprite(0.5));
+
+            expect(corner(list.children[0]).y).toBe(0);
+            expect(corner(list.children[1]).y).toBe(60);
+        });
+
+        it('should respect anchors in a horizontal list', () =>
+        {
+            const list = new List({ type: 'horizontal', padding: 10, elementsMargin: 5 });
+
+            list.addChild(makeSprite(0.5), makeSprite(0.5));
+
+            expect(corner(list.children[0]).x).toBe(10);
+            expect(corner(list.children[1]).x).toBe(65);
+        });
+
+        it('should respect a container pivot', () =>
+        {
+            const list = new List({ type: 'vertical', padding: 10 });
+            const container = new Container();
+
+            container.addChild(new Graphics().rect(0, 0, 40, 40).fill(0xFFFFFF));
+            container.pivot.set(20, 20);
+
+            list.addChild(container);
+
+            expect(corner(container)).toEqual({ x: 10, y: 10 });
+        });
+
+        it('should account for scale when offsetting', () =>
+        {
+            const list = new List({ type: 'vertical', padding: 10 });
+            const sprite = makeSprite(0.5);
+
+            sprite.scale.set(2);
+            list.addChild(sprite);
+
+            expect(corner(sprite)).toEqual({ x: 10, y: 10 });
+        });
+
+        it('should leave unanchored children where they were', () =>
+        {
+            const list = new List({ type: 'vertical', padding: 10, elementsMargin: 5 });
+
+            list.addChild(makeSprite(), makeSprite());
+
+            expect(list.children[0].y).toBe(10);
+            expect(list.children[1].y).toBe(65);
+            expect(list.children.every((child) => child.x === 10)).toBe(true);
+        });
+    });
+
+    describe('List Bulk Adding', () =>
+    {
+        it('should arrange once for the whole batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+            const arrangeSpy = jest.spyOn(list, 'arrangeChildren');
+
+            list.addItems(createTestItems(25, 40));
+
+            expect(arrangeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should arrange items the same as adding them one by one', () =>
+        {
+            const batched = new List({ type: 'vertical', elementsMargin: 5 });
+            const individual = new List({ type: 'vertical', elementsMargin: 5 });
+
+            batched.addItems(createTestItems(10, 40));
+            createTestItems(10, 40).forEach((item) => individual.addChild(item));
+
+            expect(batched.children.map((child) => child.y)).toEqual(individual.children.map((child) => child.y));
+        });
+
+        it('should ignore an empty batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+
+            expect(() => list.addItems([])).not.toThrow();
+            expect(list.children.length).toBe(0);
+        });
+
+        it('should resume arranging after a batch', () =>
+        {
+            const list = new List({ type: 'vertical' });
+
+            list.addItems(createTestItems(5, 40));
+
+            const arrangeSpy = jest.spyOn(list, 'arrangeChildren');
+
+            list.addChild(createTestItems(1, 40)[0]);
+
+            expect(arrangeSpy).toHaveBeenCalled();
         });
     });
 });

@@ -1,6 +1,6 @@
 import { Container, FederatedPointerEvent, Optional, Size, Texture } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { DoubleSliderOptions, SliderBase } from './SliderBase';
+import { Signal } from './utils/Signal';
 
 import type { DragObject } from './utils/HelpTypes';
 
@@ -53,8 +53,18 @@ export class DoubleSlider extends SliderBase
 
     protected updateProgress(value1 = this.value1, value2 = this.value2)
     {
-        this.progressStart = ((value1 - this.min) / (this.max - this.min)) * 100;
-        this.progress = ((value2 - this.min) / (this.max - this.min)) * 100;
+        const range = this.max - this.min;
+
+        if (range === 0)
+        {
+            this.progressStart = 0;
+            this.progress = 0;
+
+            return;
+        }
+
+        this.progressStart = ((value1 - this.min) / range) * 100;
+        this.progress = ((value2 - this.min) / range) * 100;
     }
 
     protected validateValues()
@@ -62,40 +72,18 @@ export class DoubleSlider extends SliderBase
         const min = this.sliderOptions.min ?? this.min;
         const max = this.sliderOptions.max ?? this.max;
 
-        // Initialize missing values with safe defaults
-        if (!this.sliderOptions.value1)
-        {
-            this.sliderOptions.value1 = min;
-        }
-
-        if (!this.sliderOptions.value2)
-        {
-            this.sliderOptions.value2 = max;
-        }
-
+        // `??`, not a falsy check: 0 is a legitimate value.
         let value1 = this.sliderOptions.value1 ?? min;
         let value2 = this.sliderOptions.value2 ?? max;
 
-        // Ensure value2 is not less than value1
+        // Clamp into range BEFORE restoring the ordering, so the result always
+        // satisfies min <= value1 <= value2 <= max.
+        value1 = Math.min(Math.max(value1, min), max);
+        value2 = Math.min(Math.max(value2, min), max);
+
         if (value2 < value1)
         {
             value2 = value1;
-        }
-
-        // Clamp values to min/max bounds
-        if (value1 < min)
-        {
-            value1 = min;
-        }
-
-        if (value1 > max)
-        {
-            value1 = max;
-        }
-
-        if (value2 > max)
-        {
-            value2 = max;
         }
 
         this.sliderOptions.value1 = value1;
@@ -172,7 +160,7 @@ export class DoubleSlider extends SliderBase
             }
         }
 
-        const progress = this.validate((x / this.bg?.width) * 100);
+        const progress = this.validate((x / (this.bg?.width || 1)) * 100);
 
         if (this.activeValue === 'value1')
         {

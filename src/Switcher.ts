@@ -1,7 +1,7 @@
-import { Container } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Container, ContainerOptions } from 'pixi.js';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 import { ButtonEvent } from './utils/HelpTypes';
+import { Signal } from './utils/Signal';
 
 /**
  * Container based component that switches visibility of a given containers by any of the interaction events.
@@ -35,14 +35,16 @@ export class Switcher extends Container
      * @param {Array<Container | string>} views - Array of views or textures that will be switching.
      * @param triggerEvents - Button events, to switch views (can be one event or an array of events).
      * @param activeViewID - The id of the view, visible by default.
+     * @param options - The container options.
      */
     constructor(
         views?: Array<Container | string>,
         triggerEvents?: ButtonEvent | ButtonEvent[],
         activeViewID?: number,
+        options?: ContainerOptions
     )
     {
-        super();
+        super(options);
 
         this.innerView = new Container();
         this.addChild(this.innerView);
@@ -90,6 +92,8 @@ export class Switcher extends Container
     /** Sets the list of instances for switching. */
     set views(views: Array<Container | string>)
     {
+        if (!views) return;
+
         this.innerView.removeChildren();
         views.forEach((stateView) => this.add(stateView));
     }
@@ -106,6 +110,8 @@ export class Switcher extends Container
      */
     add(view: GetViewSettings): void
     {
+        if (!view) return;
+
         const viewInstance = getView(view);
 
         this.innerView.addChild(viewInstance);
@@ -176,14 +182,14 @@ export class Switcher extends Container
     {
         if (id !== undefined && id === this.active) return;
 
-        if (this.activeView)
-        {
-            this.activeView.visible = false;
-        }
-
         if (id !== undefined && !this.views[id])
         {
             throw new Error(`View with id ${id} does not exist.`);
+        }
+
+        if (this.activeView)
+        {
+            this.activeView.visible = false;
         }
 
         this._active = id === undefined ? this.nextActive : id;

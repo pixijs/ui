@@ -1,9 +1,9 @@
-import { Container, FillStyleInputs, Graphics, Text } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Container, ContainerOptions, FillStyleInputs, Graphics, Text } from 'pixi.js';
 import { FancyButton } from './FancyButton';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 const defaultVisibleItems = 5;
 
@@ -43,7 +43,7 @@ export type SelectOptions = {
     scrollBox?: ScrollBoxOptions & {
         offset?: Offset;
     };
-};
+} & ContainerOptions;
 
 /**
  * Container-based component that gives us a selection dropdown.
@@ -85,7 +85,31 @@ export class Select extends Container
 
     constructor(options?: SelectOptions)
     {
-        super();
+        if (options)
+        {
+            const {
+                closedBG: _0,
+                openBG: _1,
+                textStyle: _2,
+                TextClass: _3,
+                selected: _4,
+                selectedTextOffset: _5,
+                items: _6,
+                scrollBoxOffset: _7,
+                scrollBoxWidth: _8,
+                scrollBoxHeight: _9,
+                scrollBoxRadius: _10,
+                visibleItems: _11,
+                scrollBox: _12,
+                ...rest
+            } = options;
+
+            super(rest);
+        }
+        else
+        {
+            super();
+        }
 
         this.addChild(this.view);
         this.onSelect = new Signal();
@@ -230,6 +254,8 @@ export class Select extends Container
      */
     addItems(items: SelectItemsOptions, selected = 0)
     {
+        if (!items?.items?.length) return;
+
         this.convertItemsToButtons(items).forEach((button, id) =>
         {
             const text = button.text;
@@ -264,9 +290,20 @@ export class Select extends Container
         this.scrollBox.removeItem(itemID);
     }
 
+    /** Throws if the component is used before {@link Select.init} has run. */
+    protected assertInitiated()
+    {
+        if (!this.openButton)
+        {
+            throw new Error('Select has not been initiated!');
+        }
+    }
+
     /** Toggle the select state (open if closed, closes - id open). */
     toggle()
     {
+        this.assertInitiated();
+
         this.view.visible = !this.view.visible;
         this.openButton.visible = !this.openButton.visible;
     }
@@ -274,6 +311,8 @@ export class Select extends Container
     /** Show dropdown. */
     open()
     {
+        this.assertInitiated();
+
         this.view.visible = true;
         this.openButton.visible = false;
     }
@@ -281,6 +320,8 @@ export class Select extends Container
     /** Hide dropdown. */
     close()
     {
+        this.assertInitiated();
+
         this.view.visible = false;
         this.openButton.visible = true;
     }

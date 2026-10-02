@@ -51,7 +51,7 @@ export function centerView(view: Container)
 {
     const canvas = document.getElementById('storybook-root');
 
-    if (!canvas) return;
+    if (!canvas || !view) return;
 
     view.x = canvas.offsetWidth / 2;
     view.y = canvas.offsetHeight / 2;

@@ -1,9 +1,9 @@
-import { Text } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { ContainerOptions, Text } from 'pixi.js';
 import { Switcher } from './Switcher';
 import { cleanup } from './utils/helpers/cleanup';
 import { PixiText, PixiTextClass, PixiTextStyle } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 type CheckBoxStyle = {
     checked: GetViewSettings;
@@ -20,7 +20,7 @@ export type CheckBoxOptions = {
     text?: string;
     TextClass?: PixiTextClass;
     checked?: boolean;
-};
+} & ContainerOptions;
 
 /**
  * Creates a container-based checkbox element.
@@ -45,14 +45,22 @@ export class CheckBox extends Switcher
 
     constructor(options: CheckBoxOptions)
     {
-        super();
+        const {
+            style,
+            text,
+            TextClass,
+            checked,
+            ...rest
+        } = options;
 
-        this._textClass = options.TextClass ?? Text;
-        this.text = options.text ?? '';
+        super(undefined, undefined, undefined, rest);
 
-        this.style = options.style;
+        this._textClass = TextClass ?? Text;
+        this.text = text ?? '';
 
-        this.checked = options.checked ?? false;
+        this.style = style;
+
+        this.checked = checked ?? false;
 
         this.triggerEvents = ['onPress'];
 
@@ -145,8 +153,11 @@ export class CheckBox extends Switcher
         if (this.labelText && style.text)
         {
             this.labelText.style = style.text;
-            this.alignText();
         }
+
+        // Always re-align: the constructor sets `text` before `style`, so the
+        // alignText() inside addLabel() ran while this._style was undefined.
+        this.alignText();
     }
 
     /** Getter, which returns a checkbox style settings. */

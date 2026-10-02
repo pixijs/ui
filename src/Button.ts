@@ -1,6 +1,6 @@
-import { Container, FederatedPointerEvent } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Container, ContainerOptions, FederatedPointerEvent } from 'pixi.js';
 import { ButtonEvents } from './ButtonEvents';
+import { Signal } from './utils/Signal';
 
 /**
  * Adds button events to a given container-based view
@@ -41,9 +41,9 @@ export class Button extends ButtonEvents
     /** Set button view, that all the interaction events are applied to. */
     set view(view: Container)
     {
-        const wasItInitiated = !!this._view;
+        if (!view) return;
 
-        if (wasItInitiated && this._view) this.disconnectEvents(this._view);
+        if (this._view) this.disconnectEvents(this._view);
 
         this._view = view;
         this.connectEvents(this._view);
@@ -109,12 +109,11 @@ export class ButtonContainer extends Container
     onPress: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
     onHover: Signal<(btn?: Button, e?: FederatedPointerEvent) => void>;
 
-    constructor(view?: Container)
+    constructor(view?: Container, options?: ContainerOptions)
     {
-        super();
+        super(options);
 
         this.button = new Button(this);
-
         this.button.enabled = true;
 
         if (view)

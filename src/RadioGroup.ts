@@ -1,14 +1,14 @@
-import { Container } from 'pixi.js';
-import { Signal } from 'typed-signals';
+import { Container, ContainerOptions } from 'pixi.js';
 import { CheckBox } from './CheckBox';
 import { List, ListType } from './List';
+import { Signal, SignalConnection } from './utils/Signal';
 
 export type RadioBoxOptions = {
     items: CheckBox[];
     type: ListType;
     elementsMargin: number;
     selectedItem?: number;
-};
+} & ContainerOptions;
 
 /**
  * Creates a container-based controlling wrapper for checkbox elements,
@@ -46,6 +46,13 @@ export class RadioGroup extends Container
 {
     protected items: CheckBox[] = [];
 
+    /**
+     * This group's own subscriptions to each item, so they can be released
+     * individually. Calling onChange.disconnectAll() on a CheckBox would also
+     * sever the connection it makes to its own onCheck signal.
+     */
+    protected itemConnections: SignalConnection[] = [];
+
     /** {@link List}, that holds and control all inned checkboxes.  */
     innerView: List | undefined;
 
@@ -62,7 +69,22 @@ export class RadioGroup extends Container
 
     constructor(options?: RadioBoxOptions)
     {
-        super();
+        if (options)
+        {
+            const {
+                items: _0,
+                type: _1,
+                elementsMargin: _2,
+                selectedItem: _3,
+                ...rest
+            } = options;
+
+            super(rest);
+        }
+        else
+        {
+            super();
+        }
 
         const defaultOptions: RadioBoxOptions = {
             items: [],
@@ -101,6 +123,7 @@ export class RadioGroup extends Container
             });
         }
 
+        this.resetItems();
         this.addItems(options.items);
 
         this.addChild(this.innerView);
@@ -114,14 +137,29 @@ export class RadioGroup extends Container
      */
     addItems(items: CheckBox[])
     {
-        items.forEach((checkBox, id) =>
+        if (!items?.length) return;
+
+        items.forEach((checkBox) =>
         {
-            checkBox.onChange.connect(() => this.selectItem(id));
+            // Resolved at emit time so it survives a later removeItems splice.
+            this.itemConnections.push(
+                checkBox.onChange.connect(() => this.selectItem(this.items.indexOf(checkBox))),
+            );
 
             this.items.push(checkBox);
 
             this.innerView?.addChild(checkBox);
         });
+    }
+
+    /** Detaches every item, so a repeated init() does not stack duplicates. */
+    protected resetItems()
+    {
+        this.itemConnections.forEach((connection) => connection.disconnect());
+        this.itemConnections.length = 0;
+
+        this.items.forEach((item) => this.innerView?.removeChild(item));
+        this.items.length = 0;
     }
 
     /**
@@ -130,13 +168,15 @@ export class RadioGroup extends Container
      */
     removeItems(ids: number[])
     {
-        ids.forEach((id) =>
+        // Descending, so each splice cannot shift an index that is still pending.
+        [...ids].sort((a, b) => b - a).forEach((id) =>
         {
             const item = this.items[id];
 
             if (!item) return;
 
-            item.onChange.disconnectAll();
+            this.itemConnections[id]?.disconnect();
+            this.itemConnections.splice(id, 1);
 
             this.innerView?.removeChild(item);
 
@@ -150,17 +190,23 @@ export class RadioGroup extends Container
      */
     selectItem(id: number)
     {
+        const target = this.items[id];
+
+        if (!target) return;
+
         this.items.forEach((item, key) =>
         {
             item.forceCheck(key === id);
         });
 
+        const value = target.labelText?.text ?? '';
+
         if (this.selected !== id)
         {
-            this.onChange.emit(id, this.items[id].labelText?.text ?? '');
+            this.onChange.emit(id, value);
         }
 
-        this.value = this.options.items[id].labelText?.text ?? '';
+        this.value = value;
         this.selected = id;
     }
 }

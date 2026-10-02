@@ -12,8 +12,8 @@ import {
     Size,
     Ticker,
 } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { List } from './List';
+import { Signal } from './utils/Signal';
 import { Trackpad } from './utils/trackpad/Trackpad';
 
 import type { ListOptions, ListType } from './List';
@@ -92,6 +92,7 @@ export class ScrollBox extends Container
     protected onMouseScrollBinding = this.onMouseScroll.bind(this);
     protected dragStarTouchPoint: PointData | undefined;
     protected isOver = false;
+    protected scrollListenersAttached = false;
 
     protected proximityRange: number = 0;
     protected proximityStatusCache: boolean[] = [];
@@ -119,11 +120,43 @@ export class ScrollBox extends Container
      */
     constructor(options?: ScrollBoxOptions)
     {
-        super();
-
         if (options)
         {
+            const {
+                width: _0,
+                height: _1,
+                background: _2,
+                type: _3,
+                radius: _4,
+                disableDynamicRendering: _5,
+                disableEasing: _6,
+                dragTrashHold: _7,
+                globalScroll: _8,
+                shiftScroll: _9,
+                proximityRange: _10,
+                proximityDebounce: _11,
+                disableProximityCheck: _12,
+                elementsMargin: _13,
+                padding: _14,
+                vertPadding: _15,
+                horPadding: _16,
+                topPadding: _17,
+                bottomPadding: _18,
+                leftPadding: _19,
+                rightPadding: _20,
+                items: _21,
+                maxWidth: _22,
+                maxHeight: _23,
+                ...rest
+            } = options;
+
+            super(rest);
+
             this.init(options);
+        }
+        else
+        {
+            super();
         }
 
         this.ticker.add(this.update, this);
@@ -212,7 +245,23 @@ export class ScrollBox extends Container
     {
         if (!items?.length) return;
 
-        items.forEach((item) => this.addItem(item));
+        items.forEach((item) =>
+        {
+            if (!item.width || !item.height)
+            {
+                console.error('ScrollBox item should have size');
+            }
+
+            item.eventMode = 'static';
+            this.proximityStatusCache.push(false);
+        });
+
+        // Added and arranged in one pass, then measured once. Adding them one at a time
+        // re-arranged the whole list and re-measured the ScrollBox for every item, which
+        // made filling a large list quadratic.
+        this.list?.addItems(items);
+
+        this.resize();
     }
 
     /** Remove all items from a scrollable list. */
@@ -220,6 +269,7 @@ export class ScrollBox extends Container
     {
         this.proximityStatusCache.length = 0;
         this.list?.removeChildren();
+        this.resize();
     }
 
     /**
@@ -228,31 +278,7 @@ export class ScrollBox extends Container
      */
     addItem<T extends Container[]>(...items: T): T[0]
     {
-        if (items.length > 1)
-        {
-            items.forEach((item) => this.addItem(item));
-        }
-        else
-        {
-            const child = items[0];
-
-            if (!child.width || !child.height)
-            {
-                console.error('ScrollBox item should have size');
-            }
-
-            child.eventMode = 'static';
-
-            this.list?.addChild(child);
-            this.proximityStatusCache.push(false);
-
-            if (!this.options.disableDynamicRendering)
-            {
-                child.renderable = this.isItemVisible(child);
-            }
-        }
-
-        this.resize();
+        this.addItems(items);
 
         return items[0];
     }
@@ -284,7 +310,7 @@ export class ScrollBox extends Container
         {
             const posY = item.y + list.y;
 
-            if (posY + item.height >= -padding && posY <= (this.options.height ?? this._height) + padding)
+            if (posY + item.height >= -padding && posY <= this._height + padding)
             {
                 isVisible = true;
             }
@@ -294,7 +320,7 @@ export class ScrollBox extends Container
         {
             const posX = item.x + list.x;
 
-            if (posX + item.width >= -padding && posX <= (this.options.width ?? this._width) + padding)
+            if (posX + item.width >= -padding && posX <= this._width + padding)
             {
                 isVisible = true;
             }
@@ -352,6 +378,11 @@ export class ScrollBox extends Container
                 disableEasing: this.options.disableEasing,
             });
         }
+
+        // init() can be called again; without this the handlers below stack up.
+        if (this.scrollListenersAttached) return;
+
+        this.scrollListenersAttached = true;
 
         this.on('pointerdown', (e: FederatedPointerEvent) =>
         {
@@ -503,14 +534,16 @@ export class ScrollBox extends Container
                 || this.lastHeight !== this.listHeight)
         )
         {
+            // Assign, never accumulate: listWidth/listHeight are the current
+            // content extent, so `+=` summed every intermediate measurement.
             if (!this.options.width)
             {
-                this._width += this.listWidth;
+                this._width = this.listWidth;
             }
 
             if (!this.options.height)
             {
-                this._height += this.listHeight;
+                this._height = this.listHeight;
             }
 
             this.borderMask
@@ -548,32 +581,26 @@ export class ScrollBox extends Container
             this.lastHeight = this.listHeight;
         }
 
-        if (this._trackpad && this.borderMask)
+        if (this._trackpad)
         {
-            const maxWidth
-                = this.borderMask.width
-                - (this.list?.width ?? 0)
-                - (this.list?.leftPadding ?? 0)
-                - (this.list?.rightPadding ?? 0);
-
-            const maxHeight
-                = this.borderMask.height
-                - (this.list?.height ?? 0)
-                - (this.list?.topPadding ?? 0)
-                - (this.list?.bottomPadding ?? 0);
+            // Derived from the same values the wheel handler clamps against, so dragging
+            // and scrolling share one definition of the scrollable range. Content that
+            // fits inside the view has a range of 0, which prevents dragging it out of view.
+            const maxWidth = Math.min(0, this._width - this.listWidth);
+            const maxHeight = Math.min(0, this._height - this.listHeight);
 
             if (this.isBidirectional)
             {
-                this._trackpad.yAxis.max = -Math.abs(maxHeight);
-                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+                this._trackpad.yAxis.max = maxHeight;
+                this._trackpad.xAxis.max = maxWidth;
             }
             else if (this.isVertical)
             {
-                this._trackpad.yAxis.max = -Math.abs(maxHeight);
+                this._trackpad.yAxis.max = maxHeight;
             }
             else if (this.isHorizontal)
             {
-                this._trackpad.xAxis.max = -Math.abs(maxWidth);
+                this._trackpad.xAxis.max = maxWidth;
             }
         }
 
@@ -721,9 +748,15 @@ export class ScrollBox extends Container
     {
         this.visibleItems.length = 0;
 
+        const dynamicRendering = !this.options.disableDynamicRendering;
+
         this.items.forEach((child) =>
         {
-            child.renderable = this.isItemVisible(child);
+            if (dynamicRendering)
+            {
+                child.renderable = this.isItemVisible(child);
+            }
+
             this.visibleItems.push(child);
         });
     }
@@ -785,6 +818,9 @@ export class ScrollBox extends Container
     override set height(value: number)
     {
         this._height = value;
+        // Recorded so resize() treats this as an explicit size and stops
+        // sizing the box to its content.
+        this.options.height = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -799,6 +835,9 @@ export class ScrollBox extends Container
     override set width(value: number)
     {
         this._width = value;
+        // Recorded so resize() treats this as an explicit size and stops
+        // sizing the box to its content.
+        this.options.width = value;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -818,6 +857,8 @@ export class ScrollBox extends Container
 
         this._width = value;
         this._height = height;
+        this.options.width = value;
+        this.options.height = height;
         this._dimensionChanged = true;
         this.resize();
         this.scrollTop();
@@ -914,6 +955,9 @@ export class ScrollBox extends Container
         this.ticker.remove(this.update, this);
 
         document.removeEventListener('wheel', this.onMouseScrollBinding, true);
+
+        clearTimeout(this.stopRenderHiddenItemsTimeout);
+        this.stopRenderHiddenItemsTimeout = undefined;
 
         this.background?.destroy();
         this.list?.destroy();

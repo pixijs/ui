@@ -430,17 +430,19 @@ describe('Button Component', () =>
 
             expect(button.view).toBe(buttonView);
 
-            // Button implementation cannot handle null/undefined views safely
-            // Setting null/undefined view will cause errors when trying to set up events
+            // An empty view assignment is ignored and the current view is kept,
+            // matching the guard the SliderBase slider1/slider2 setters already use.
             expect(() =>
             {
                 button.view = null as any;
-            }).toThrow();
+            }).not.toThrow();
+            expect(button.view).toBe(buttonView);
 
             expect(() =>
             {
                 button.view = undefined as any;
-            }).toThrow();
+            }).not.toThrow();
+            expect(button.view).toBe(buttonView);
         });
 
         it('should handle rapid state changes without errors', () =>

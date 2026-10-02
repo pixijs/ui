@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import {
     Container,
+    DestroyOptions,
     isMobile,
     NineSliceSprite,
     ObservablePoint,
@@ -14,7 +15,7 @@ import { fitToView } from './utils/helpers/fit';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
 
-import type { Optional, Size, Sprite } from 'pixi.js';
+import type { ContainerOptions, Optional, Size, Sprite } from 'pixi.js';
 
 type State = 'default' | 'hover' | 'pressed' | 'disabled';
 type Pos = { x?: number; y?: number };
@@ -86,7 +87,7 @@ export type ButtonOptions = ViewsInput & {
 
     /** @deprecated refer to contentFittingMode instead */
     ignoreRefitting?: boolean;
-};
+} & Omit<ContainerOptions, 'scale'>;
 
 /**
  * Button component with a lot of tweaks.
@@ -131,6 +132,9 @@ export class FancyButton extends ButtonContainer
     protected animations!: StateAnimations;
     protected originalInnerViewState!: AnimationData;
     protected defaultDuration = 100;
+
+    /** Kept as a field so destroy() can detach it from the shared ticker. */
+    protected readonly updateAnimations = () => Group.shared.update();
 
     /** FancyButton options. */
     protected readonly options: ButtonOptions;
@@ -207,9 +211,7 @@ export class FancyButton extends ButtonContainer
      */
     constructor(options?: ButtonOptions)
     {
-        super();
-
-        this.options = options ?? {};
+        options ??= {};
 
         const {
             defaultView,
@@ -221,17 +223,25 @@ export class FancyButton extends ButtonContainer
             offset,
             textOffset,
             iconOffset,
-            defaultTextScale: textScale,
-            defaultIconScale: iconScale,
-            defaultTextAnchor: textAnchor,
-            defaultIconAnchor: iconAnchor,
+            defaultTextScale,
+            defaultIconScale,
+            defaultTextAnchor,
+            defaultIconAnchor,
             scale,
             anchor,
             anchorX,
             anchorY,
             icon,
             animations,
-        } = options ?? {};
+            nineSliceSprite: _0,
+            contentFittingMode: _1,
+            ignoreRefitting: _2,
+            ...rest
+        } = options;
+
+        super(undefined, rest);
+
+        this.options = options;
 
         this.addChild(this.innerView);
 
@@ -244,17 +254,17 @@ export class FancyButton extends ButtonContainer
         this.offset = offset ?? {};
         this.textOffset = textOffset ?? {};
         this.iconOffset = iconOffset ?? {};
-        this.defaultTextScale = textScale ?? { x: 1, y: 1 };
-        this.defaultIconScale = iconScale ?? { x: 1, y: 1 };
-        this.defaultTextAnchor = textAnchor ?? { x: 0.5, y: 0.5 };
-        this.defaultIconAnchor = iconAnchor ?? { x: 0.5, y: 0.5 };
+        this.defaultTextScale = defaultTextScale ?? { x: 1, y: 1 };
+        this.defaultIconScale = defaultIconScale ?? { x: 1, y: 1 };
+        this.defaultTextAnchor = defaultTextAnchor ?? { x: 0.5, y: 0.5 };
+        this.defaultIconAnchor = defaultIconAnchor ?? { x: 0.5, y: 0.5 };
         this.scale.set(scale ?? 1);
 
         if (animations)
         {
             this.animations = animations;
             this.setOriginalInnerViewState();
-            Ticker.shared.add(() => Group.shared.update());
+            Ticker.shared.add(this.updateAnimations);
         }
 
         this.setState('default');
@@ -278,7 +288,9 @@ export class FancyButton extends ButtonContainer
      */
     set text(text: AnyText)
     {
-        if (!text || text === 0)
+        // Only an absent or empty label clears the view. A numeric 0 is a
+        // legitimate label, and was previously swallowed by the falsy check.
+        if (text === undefined || text === null || text === '')
         {
             this.removeView('textView');
 
@@ -468,8 +480,12 @@ export class FancyButton extends ButtonContainer
 
                 const availableWidth = activeView.width - (this.padding * 2);
                 const availableHeight = activeView.height - (this.padding * 2);
-                const targetScaleX = availableWidth / this._views.textView.width;
-                const targetScaleY = availableHeight / this._views.textView.height;
+                const targetScaleX = this._views.textView.width > 0
+                    ? availableWidth / this._views.textView.width
+                    : 1;
+                const targetScaleY = this._views.textView.height > 0
+                    ? availableHeight / this._views.textView.height
+                    : 1;
                 const scale = Math.min(targetScaleX, targetScaleY);
 
                 this._views.textView.scale.set(
@@ -521,8 +537,12 @@ export class FancyButton extends ButtonContainer
 
             const availableWidth = activeView.width - (this.padding * 2);
             const availableHeight = activeView.height - (this.padding * 2);
-            const targetScaleX = availableWidth / this._views.iconView.width;
-            const targetScaleY = availableHeight / this._views.iconView.height;
+            const targetScaleX = this._views.iconView.width > 0
+                ? availableWidth / this._views.iconView.width
+                : 1;
+            const targetScaleY = this._views.iconView.height > 0
+                ? availableHeight / this._views.iconView.height
+                : 1;
             const scale = Math.min(targetScaleX, targetScaleY);
 
             this._views.iconView.scale.set(
@@ -687,6 +707,8 @@ export class FancyButton extends ButtonContainer
         if (view === undefined) return;
 
         this.removeView(viewType);
+
+        if (view === null) return;
 
         if (this.options?.nineSliceSprite)
         {
@@ -993,7 +1015,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the text view base scale. */
     get defaultTextScale(): Pos
     {
-        return this.defaultTextScale;
+        return this._defaultTextScale;
     }
 
     /**
@@ -1015,7 +1037,7 @@ export class FancyButton extends ButtonContainer
     /** Returns the icon view base scale. */
     get defaultIconScale(): Pos
     {
-        return this.defaultIconScale;
+        return this._defaultIconScale;
     }
 
     /**
@@ -1029,15 +1051,15 @@ export class FancyButton extends ButtonContainer
         this.options.defaultTextAnchor = anchor;
         const isNumber = typeof anchor === 'number';
 
-        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 1;
-        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this._defaultTextAnchor.x = isNumber ? anchor : anchor.x ?? 0.5;
+        this._defaultTextAnchor.y = isNumber ? anchor : anchor.y ?? 0.5;
         this.adjustTextView(this.state);
     }
 
     /** Returns the text view base anchor. */
     get defaultTextAnchor(): Pos
     {
-        return this.defaultTextAnchor;
+        return this._defaultTextAnchor;
     }
 
     /**
@@ -1051,15 +1073,15 @@ export class FancyButton extends ButtonContainer
         this.options.defaultIconAnchor = anchor;
         const isNumber = typeof anchor === 'number';
 
-        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 1;
-        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 1;
+        this._defaultIconAnchor.x = isNumber ? anchor : anchor.x ?? 0.5;
+        this._defaultIconAnchor.y = isNumber ? anchor : anchor.y ?? 0.5;
         this.adjustIconView(this.state);
     }
 
     /** Returns the icon view base anchor. */
     get defaultIconAnchor(): Pos
     {
-        return this.defaultIconAnchor;
+        return this._defaultIconAnchor;
     }
 
     /**
@@ -1146,6 +1168,17 @@ export class FancyButton extends ButtonContainer
     override get height(): number
     {
         return super.height;
+    }
+
+    /**
+     * Destroys the component, detaching it from the shared ticker.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
+     */
+    override destroy(options?: DestroyOptions | boolean)
+    {
+        Ticker.shared.remove(this.updateAnimations);
+
+        super.destroy(options);
     }
 
     override setSize(value: number | Optional<Size, 'height'>, height?: number): void

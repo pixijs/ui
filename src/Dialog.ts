@@ -1,12 +1,22 @@
-import { Container, Graphics, NineSliceSprite, ObservablePoint, Sprite, Texture, Ticker } from 'pixi.js';
+import {
+    Container,
+    ContainerOptions,
+    DestroyOptions,
+    Graphics,
+    NineSliceSprite,
+    ObservablePoint,
+    Sprite,
+    Texture,
+    Ticker,
+} from 'pixi.js';
 import { Group, Tween } from 'tweedle.js';
-import { Signal } from 'typed-signals';
 import { Button } from './Button';
 import { type ButtonOptions, FancyButton } from './FancyButton';
 import { List, type ListOptions } from './List';
 import { ScrollBox, ScrollBoxOptions } from './ScrollBox';
 import { AnyText, getTextView, PixiText } from './utils/helpers/text';
 import { getView, type GetViewSettings } from './utils/helpers/view';
+import { Signal } from './utils/Signal';
 
 type Animation = {
     props: Record<string, any>;
@@ -32,7 +42,7 @@ export type DialogOptions = {
     };
     closeOnBackdropClick?: boolean;
     nineSliceSprite?: [number, number, number, number];
-};
+} & ContainerOptions;
 
 /**
  * Modal dialog component for asking users questions.
@@ -65,6 +75,9 @@ export class Dialog extends Container
 
     protected _isOpen: boolean = false;
 
+    /** Kept as a field so destroy() can detach it from the shared ticker. */
+    protected readonly updateAnimations = () => Group.shared.update();
+
     /** Signal emitted when a button is selected. */
     onSelect: Signal<(buttonIndex: number, buttonText: string) => void>;
     /** Signal emitted when the dialog is closed. */
@@ -96,7 +109,26 @@ export class Dialog extends Container
      */
     constructor(options: DialogOptions)
     {
-        super();
+        const {
+            backdrop: _0,
+            backdropColor: _1,
+            backdropAlpha: _2,
+            background: _3,
+            title: _4,
+            content: _5,
+            width,
+            height,
+            padding: _6,
+            buttons: _7,
+            buttonList,
+            scrollBox: _8,
+            animations: _9,
+            closeOnBackdropClick: _10,
+            nineSliceSprite: _11,
+            ...rest
+        } = options;
+
+        super(rest);
 
         this.options = options;
         this.onSelect = new Signal();
@@ -107,7 +139,7 @@ export class Dialog extends Container
         this.buttonContainer = new List({
             type: 'horizontal',
             elementsMargin: 10,
-            ...options.buttonList,
+            ...buttonList,
         });
 
         this.initBackdrop();
@@ -116,16 +148,15 @@ export class Dialog extends Container
         this.initButtons();
 
         const offset = this.dialogPadding;
-        const { width } = this.options;
-        let { height } = this.options;
+        let computedHeight = height;
 
-        if (height)
+        if (computedHeight)
         {
-            height = height - (offset * 2) - this.buttonContainer.height;
+            computedHeight = computedHeight - (offset * 2) - this.buttonContainer.height;
 
             if (this.titleText?.height)
             {
-                height -= this.titleText.height;
+                computedHeight -= this.titleText.height;
             }
         }
 
@@ -137,7 +168,7 @@ export class Dialog extends Container
             padding: 10,
             ...this.options.scrollBox,
             width: width ? width - (offset * 2) : 0,
-            height,
+            height: computedHeight,
         });
 
         this.innerView?.addChild(this.scrollBox);
@@ -147,7 +178,22 @@ export class Dialog extends Container
         this.initContent();
 
         // Setup ticker for tween animations
-        Ticker.shared.add(() => Group.shared.update());
+        Ticker.shared.add(this.updateAnimations);
+    }
+
+    /**
+     * Destroys the component, detaching it from the shared ticker.
+     * @param {boolean | DestroyOptions} [options] - Options parameter.
+     */
+    override destroy(options?: DestroyOptions | boolean)
+    {
+        Ticker.shared.remove(this.updateAnimations);
+
+        // Dialog constructs this ScrollBox itself, and ScrollBox.destroy is what
+        // releases its ticker callback and document wheel listener.
+        this.scrollBox?.destroy();
+
+        super.destroy(options);
     }
 
     /** Gets the dialog width from options or innerView. */
@@ -208,6 +254,11 @@ export class Dialog extends Container
     protected initInnerView(): void
     {
         const { background, nineSliceSprite } = this.options;
+
+        if (!background)
+        {
+            throw new Error('Dialog background is not defined. Please provide options.background.');
+        }
 
         if (nineSliceSprite)
         {

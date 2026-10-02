@@ -1,6 +1,6 @@
 import { Container, FederatedPointerEvent, Optional, Size } from 'pixi.js';
-import { Signal } from 'typed-signals';
 import { BaseSliderOptions, SliderBase } from './SliderBase';
+import { Signal } from './utils/Signal';
 
 import type { DragObject } from './utils/HelpTypes';
 
@@ -38,16 +38,23 @@ export class Slider extends SliderBase
 
     constructor(options: SliderOptions)
     {
+        const {
+            slider,
+            value,
+            step,
+            ...rest
+        } = options;
+
         super({
-            slider1: options.slider,
-            value1: options.value,
-            ...options,
+            slider1: slider,
+            value1: value,
+            ...rest,
         });
 
         this.sliderOptions = options;
 
         // Avoid zero value
-        this.step = options.step || 1;
+        this.step = step || 1;
 
         this.value = options.value ?? this.min;
         this.updateSlider();
@@ -139,7 +146,9 @@ export class Slider extends SliderBase
     {
         if (!this._slider1) return;
 
-        this.progress = (((this.value ?? this.min) - this.min) / (this.max - this.min)) * 100;
+        const range = this.max - this.min;
+
+        this.progress = range === 0 ? 0 : (((this.value ?? this.min) - this.min) / range) * 100;
 
         this._slider1.x = ((this.bg?.width ?? 0) / 100 * this.progress) - (this._slider1.width / 2);
         this._slider1.y = (this.bg?.height ?? 0) / 2;

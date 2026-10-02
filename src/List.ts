@@ -1,4 +1,4 @@
-import { Container, ContainerChild } from 'pixi.js';
+import { Container, ContainerChild, ContainerOptions } from 'pixi.js';
 import { LIST_TYPE } from './utils/HelpTypes';
 
 export type ListType = (typeof LIST_TYPE)[number];
@@ -16,7 +16,7 @@ export type ListOptions<C extends ContainerChild = ContainerChild> = {
     items?: C[];
     maxWidth?: number;
     maxHeight?: number;
-};
+} & ContainerOptions;
 
 /**
  * Container-based component for arranging Pixi containers one after another based on their sizes.
@@ -50,27 +50,75 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
     /** Width of area to fit elements when arrange. (If not set parent width will be used). */
     protected _maxWidth: number = 0;
 
+    /** Set while a batch of children is being added, so the list is arranged once at the end. */
+    protected arrangeSuspended = false;
+
     /** Returns all arranged elements. */
     override readonly children: C[] = [];
 
     constructor(options?: { type?: ListType } & ListOptions<C>)
     {
-        super();
-
         if (options)
         {
+            const {
+                elementsMargin: _0,
+                children: _1,
+                padding: _2,
+                vertPadding: _3,
+                horPadding: _4,
+                topPadding: _5,
+                bottomPadding: _6,
+                leftPadding: _7,
+                rightPadding: _8,
+                items: _9,
+                maxWidth: _10,
+                maxHeight: _11,
+                ...rest
+            } = options;
+
+            super(rest);
+
             if (options.maxWidth)
             {
                 this._maxWidth = options.maxWidth;
             }
 
             this.init(options);
+
+            options.items?.forEach((item) => this.addChild(item));
+        }
+        else
+        {
+            super();
         }
 
-        options?.items?.forEach((item) => this.addChild(item));
+        this.on('added', () => this.arrangeIfNeeded());
+        this.on('childAdded', () => this.arrangeIfNeeded());
+    }
 
-        this.on('added', () => this.arrangeChildren());
-        this.on('childAdded', () => this.arrangeChildren());
+    /**
+     * Adds items to the list, arranging them once instead of once per item.
+     *
+     * `childAdded` arranges the whole list on every single `addChild`, which makes adding
+     * items one by one quadratic. Use this when adding more than one.
+     * @param items - items to add.
+     */
+    addItems(items: C[])
+    {
+        if (!items?.length) return;
+
+        this.arrangeSuspended = true;
+
+        try
+        {
+            items.forEach((item) => this.addChild(item));
+        }
+        finally
+        {
+            this.arrangeSuspended = false;
+        }
+
+        this.arrangeChildren();
     }
 
     /**
@@ -282,6 +330,14 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         return this.options?.bottomPadding ?? this.vertPadding;
     }
 
+    /** Arranges children unless a batch add is in progress, which arranges once at the end. */
+    protected arrangeIfNeeded()
+    {
+        if (this.arrangeSuspended) return;
+
+        this.arrangeChildren();
+    }
+
     /**
      * Arrange all elements basing in their sizes and component options.
      * Can be arranged vertically, horizontally or bidirectional.
@@ -293,7 +349,7 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
         let y = this.topPadding;
 
         const elementsMargin = this.options?.elementsMargin ?? 0;
-        let maxWidth = this.maxWidth || this.parent?.width;
+        let maxWidth = this.maxWidth || this.parent?.width || Infinity;
 
         if (this.rightPadding)
         {
@@ -302,42 +358,66 @@ export class List<C extends ContainerChild = ContainerChild> extends Container<C
 
         this.children.forEach((child, id) =>
         {
+            // An anchored sprite or a pivoted container is positioned by a point inside
+            // itself, not by its top left corner, so its position has to be offset by
+            // where its bounds actually start. Without this an anchor of 0.5 places the
+            // child half its size up and to the left of where it belongs.
+            const offset = this.getChildOffset(child);
+
             switch (this.type)
             {
                 case 'vertical':
-                    child.y = y;
-                    child.x = x;
+                    child.y = y - offset.y;
+                    child.x = x - offset.x;
 
                     y += elementsMargin + child.height;
                     break;
 
                 case 'horizontal':
-                    child.x = x;
-                    child.y = y;
+                    child.x = x - offset.x;
+                    child.y = y - offset.y;
 
                     x += elementsMargin + child.width;
                     break;
 
                 case 'bidirectional':
                 default:
-                    child.x = x;
-                    child.y = y;
-
-                    if (child.x + child.width > maxWidth && id > 0)
+                    if (x + child.width > maxWidth && id > 0)
                     {
                         y += elementsMargin + maxHeight;
                         x = this.leftPadding;
-
-                        child.x = x;
-                        child.y = y;
                         maxHeight = 0;
                     }
+
+                    child.x = x - offset.x;
+                    child.y = y - offset.y;
 
                     maxHeight = Math.max(maxHeight, child.height);
                     x += elementsMargin + child.width;
                     break;
             }
         });
+    }
+
+    /**
+     * Distance between a child's position and the top left corner of the space it takes up.
+     *
+     * It is zero for a plain container, and non-zero for anything positioned by a point
+     * inside itself - an anchored `Sprite`, or a container with a `pivot`.
+     * @param child - the child to measure.
+     * @returns the offset, in this list's coordinate space.
+     */
+    protected getChildOffset(child: C): { x: number; y: number }
+    {
+        const bounds = child.getLocalBounds();
+
+        // A child renders at `position + (localPoint - pivot) * scale`, so its visual
+        // corner sits this far from its position. `anchor` reaches this through bounds,
+        // which it shifts; `pivot` is applied by the transform and has to be read directly.
+        return {
+            x: (bounds.x - child.pivot.x) * child.scale.x,
+            y: (bounds.y - child.pivot.y) * child.scale.y,
+        };
     }
 
     /**

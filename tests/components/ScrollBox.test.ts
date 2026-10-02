@@ -1,3 +1,4 @@
+import { Container } from 'pixi.js';
 import { ScrollBox } from '../../src/ScrollBox';
 import { cleanup, createTestItems, testStateChange } from '../utils/components';
 
@@ -573,6 +574,176 @@ describe('ScrollBox Component', () =>
                 expect(scrollBox.height).toBe(300);
                 expect(scrollBox.list?.children.length).toBe(25);
             }).not.toThrow();
+        });
+    });
+
+    describe('ScrollBox Visibility After Resize', () =>
+    {
+        // Regression tests for #227, #226 and #241: visibility and scroll limits used to be
+        // measured against the options passed to the constructor, which setSize() and the
+        // width/height setters never update. Anything below the original height was culled.
+        const makeScrollBox = () => new ScrollBox({
+            width: 200,
+            height: 100,
+            items: createTestItems(10, 40),
+        });
+
+        it('should treat items below the original height as visible after setSize', () =>
+        {
+            const scrollBox = makeScrollBox();
+            // The 4th item sits at y=120, outside the initial 100px height.
+            const item = scrollBox.items[3];
+
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+
+            scrollBox.setSize(200, 500);
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should treat items below the original height as visible after setting height', () =>
+        {
+            const scrollBox = makeScrollBox();
+            const item = scrollBox.items[3];
+
+            scrollBox.height = 500;
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should cull items again when the height shrinks', () =>
+        {
+            const scrollBox = makeScrollBox();
+            const item = scrollBox.items[3];
+
+            scrollBox.setSize(200, 500);
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+
+            scrollBox.setSize(200, 100);
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+        });
+
+        it('should respect the current width on the horizontal axis', () =>
+        {
+            const scrollBox = new ScrollBox({
+                width: 100,
+                height: 200,
+                type: 'horizontal',
+                items: createTestItems(10, 40),
+            });
+            const item = scrollBox.items[3];
+
+            expect(scrollBox.isItemVisible(item)).toBe(false);
+
+            scrollBox.setSize(2000, 200);
+
+            expect(scrollBox.isItemVisible(item)).toBe(true);
+        });
+
+        it('should not allow dragging content that fits inside the view', () =>
+        {
+            // Content shorter than the view has no scrollable range. The limit used to be
+            // negated unconditionally, which let a drag pull the content out of view.
+            const scrollBox = new ScrollBox({
+                width: 200,
+                height: 500,
+                items: createTestItems(2, 40),
+            });
+
+            expect((scrollBox as any)._trackpad.yAxis.max).toBe(0);
+        });
+
+        it('should expose a scrollable range that matches the current height', () =>
+        {
+            const scrollBox = makeScrollBox();
+
+            scrollBox.setSize(200, 300);
+
+            // 10 items of 40px = 400px of content inside a 300px view.
+            expect((scrollBox as any)._trackpad.yAxis.max).toBe(300 - scrollBox.scrollHeight);
+        });
+    });
+
+    describe('ScrollBox Bulk Item Adding', () =>
+    {
+        // Regression tests for #244: addItems() delegated to addItem() per item, and each
+        // call re-arranged the whole list and re-measured the ScrollBox, so filling a list
+        // was quadratic in the number of items.
+        it('should arrange the list once for the whole batch', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const arrangeSpy = jest.spyOn(scrollBox.list as any, 'arrangeChildren');
+
+            scrollBox.addItems(createTestItems(50, 40));
+
+            expect(arrangeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should resize once for the whole batch', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const resizeSpy = jest.spyOn(scrollBox, 'resize');
+
+            scrollBox.addItems(createTestItems(50, 40));
+
+            expect(resizeSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should lay items out the same as adding them one by one', () =>
+        {
+            const options = { width: 200, height: 300, elementsMargin: 5 };
+            const batched = new ScrollBox(options);
+            const individual = new ScrollBox(options);
+
+            batched.addItems(createTestItems(10, 40));
+            createTestItems(10, 40).forEach((item) => individual.addItem(item));
+
+            expect(batched.items.map((item) => item.y)).toEqual(individual.items.map((item) => item.y));
+            expect(batched.scrollHeight).toBe(individual.scrollHeight);
+        });
+
+        it('should keep the proximity cache in step with the items', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+
+            scrollBox.addItems(createTestItems(10, 40));
+
+            expect((scrollBox as any).proximityStatusCache.length).toBe(scrollBox.items.length);
+        });
+
+        it('should still report items without a size', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const error = jest.spyOn(console, 'error').mockImplementation(() => { /* silence */ });
+
+            scrollBox.addItems([new Container()]);
+
+            expect(error).toHaveBeenCalledWith('ScrollBox item should have size');
+            error.mockRestore();
+        });
+
+        it('should remeasure after removing every item', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+
+            scrollBox.addItems(createTestItems(10, 40));
+
+            const resizeSpy = jest.spyOn(scrollBox, 'resize');
+
+            scrollBox.removeItems();
+
+            expect(resizeSpy).toHaveBeenCalled();
+            expect((scrollBox as any).proximityStatusCache.length).toBe(0);
+        });
+
+        it('should still add a single item through addItem', () =>
+        {
+            const scrollBox = new ScrollBox({ width: 200, height: 300 });
+            const [item] = createTestItems(1, 40);
+
+            expect(scrollBox.addItem(item)).toBe(item);
+            expect(scrollBox.items.length).toBe(1);
+            expect(item.eventMode).toBe('static');
         });
     });
 });
