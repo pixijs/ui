@@ -4,7 +4,13 @@
 // no ambient `@types` packages, under TypeScript 7. Anything those declarations
 // lean on but never declare - Node globals, for instance - fails here instead of
 // in someone else's project.
+//
+// The root entry re-exports every module, so naming it is enough to pull the whole
+// declaration output into the program. check.mjs separately walks the `exports` map
+// to confirm each subpath's `types` target is actually on disk.
 import * as UI from '@pixi/ui';
+import { Button } from '@pixi/ui/Button';
+import { Signal } from '@pixi/ui/utils/Signal';
 
 import type { Container } from 'pixi.js';
 
@@ -15,6 +21,7 @@ export type Components = [
     UI.CircularProgressBar,
     UI.Dialog,
     UI.DoubleSlider,
+    UI.Drawer,
     UI.FancyButton,
     UI.Input,
     UI.List,
@@ -32,6 +39,8 @@ export type Types = [
     UI.CheckBoxOptions,
     UI.ContentFittingMode,
     UI.DialogOptions,
+    UI.DrawerOptions,
+    UI.DrawerPosition,
     UI.InputAlign,
     UI.InputOptions,
     UI.ListOptions,
@@ -46,8 +55,13 @@ export type Types = [
     UI.ScrollBoxOptions,
     UI.SelectItemsOptions,
     UI.SelectOptions,
+    UI.SignalConnection,
     UI.SliderOptions,
 ];
+
+// A subpath import has to yield the same declaration the root entry does.
+export type SameButton = Button extends UI.Button ? (UI.Button extends Button ? true : never) : never;
+export type SameSignal = Signal<() => void> extends UI.Signal<() => void> ? true : never;
 
 // The components have to line up with the pixi.js copy the consumer resolves,
 // not a second one bundled inside our own declarations.

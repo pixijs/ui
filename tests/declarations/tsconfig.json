@@ -12,7 +12,12 @@
         "strict": true,
         "noEmit": true,
         // Point at the declarations `xs build` emits, so this has to run after a build.
-        "paths": { "@pixi/ui": ["../../lib/index.d.ts"] }
+        // The wildcard mirrors how the `exports` map resolves subpaths - `./Button` to
+        // `lib/Button.d.ts`, `./input` to `lib/input/index.d.ts`.
+        "paths": {
+            "@pixi/ui": ["../../lib/index.d.ts"],
+            "@pixi/ui/*": ["../../lib/*.d.ts", "../../lib/*/index.d.ts"]
+        }
     },
     "include": ["./consumer.ts"]
 }

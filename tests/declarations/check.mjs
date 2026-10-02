@@ -12,7 +12,7 @@
 
 /* eslint-disable no-console -- this is a CLI reporter; the console is its output. */
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -24,6 +24,23 @@ const project = path.join(root, 'tests', 'declarations', 'tsconfig.json');
 if (!existsSync(path.join(root, 'lib', 'index.d.ts')))
 {
     console.error('No declarations to check. Run `npm run build` first.');
+    process.exit(1);
+}
+
+// Every subpath in the `exports` map promises a `types` target. consumer.ts pulls the
+// declaration *content* in through the root entry, which re-exports everything, so what
+// is left to check is that each entry points at a file that exists - a subpath whose
+// `types` is a typo resolves to nothing and the import silently falls back to `any`.
+const { exports: exportsMap } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
+const missing = Object.entries(exportsMap)
+    .filter(([, entry]) => entry?.types)
+    .filter(([, entry]) => !existsSync(path.join(root, entry.types)))
+    .map(([subpath, entry]) => `  ${subpath} -> ${entry.types}`);
+
+if (missing.length > 0)
+{
+    console.error('These `exports` entries point at declarations that were not built:\n');
+    missing.forEach((line) => console.error(line));
     process.exit(1);
 }
 
@@ -73,5 +90,8 @@ child.on('close', (code) =>
 
     const upstream = diagnostics.length - ours.length;
 
-    console.log(`lib/ type-checks under TypeScript 7 (ignored ${upstream} diagnostic(s) from dependencies).`);
+    const subpaths = Object.keys(exportsMap).filter((key) => exportsMap[key]?.types).length;
+
+    console.log(`lib/ type-checks under TypeScript 7 across ${subpaths} \`exports\` entries`
+        + ` (ignored ${upstream} diagnostic(s) from dependencies).`);
 });
