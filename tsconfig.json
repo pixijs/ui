@@ -6,7 +6,8 @@
         "strict": true,
         "esModuleInterop": true,
         "allowJs": true,
-        "moduleResolution": "node",
+        // "node" (node10) was removed in TypeScript 7; the sources are bundled by rollup.
+        "moduleResolution": "bundler",
         "sourceMap": false,
         "declaration": true,
         "declarationMap": true,

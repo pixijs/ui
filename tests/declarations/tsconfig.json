@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ESNext", "DOM"],
+        // A consumer's ambient types are their own business, so assume none. And unlike
+        // the build tsconfig, check the declarations instead of skipping them - see the
+        // note in check.mjs, which is what filters the resulting upstream noise.
+        "types": [],
+        "skipLibCheck": false,
+        "strict": true,
+        "noEmit": true,
+        // Point at the declarations `xs build` emits, so this has to run after a build.
+        // The wildcard mirrors how the `exports` map resolves subpaths - `./Button` to
+        // `lib/Button.d.ts`, `./input` to `lib/input/index.d.ts`.
+        "paths": {
+            "@pixi/ui": ["../../lib/index.d.ts"],
+            "@pixi/ui/*": ["../../lib/*.d.ts", "../../lib/*/index.d.ts"]
+        }
+    },
+    "include": ["./consumer.ts"]
+}

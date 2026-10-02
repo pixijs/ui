@@ -19,3 +19,4 @@ jobs:
                   CI: true
             - run: npm run docs
             - run: npm run build
+            - run: npm run types:dist

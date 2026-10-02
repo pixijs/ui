@@ -120,13 +120,15 @@
         "lint": "xs lint --max-warnings 0",
         "lint:fix": "xs lint --fix",
         "prepare": "husky install",
-        "release": "npm i && xs bump && npm run build && xs docs,publish,git-push",
+        "release": "npm i && xs bump && npm run build && npm run types:dist && xs docs,publish,git-push",
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
         "test": "npx jest --silent --passWithNoTests",
         "test:coverage": "npx jest --coverage",
-        "types": "xs types",
+        "types": "xs types && npm run types:ts7",
+        "types:ts7": "node node_modules/typescript-7/bin/tsc -p tsconfig.json --noEmit",
+        "types:dist": "node tests/declarations/check.mjs",
         "watch": "xs watch"
     },
     "husky": {
@@ -191,7 +193,8 @@
         "pixi.js": "^8.6.2",
         "storybook": "^8.6.14",
         "ts-jest": "^29.4.1",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "typescript-7": "npm:typescript@^7.0.2"
     },
     "publishConfig": {
         "access": "public"
