@@ -77,5 +77,15 @@
         "jsdoc/require-returns-description": 1,
         "jsdoc/tag-lines": 1,
         "jsdoc/valid-types": 1
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "scripts/**"
+            ],
+            "rules": {
+                "no-console": "off"
+            }
+        }
+    ]
 }
