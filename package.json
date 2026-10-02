@@ -120,7 +120,7 @@
         "lint": "xs lint --max-warnings 0",
         "lint:fix": "xs lint --fix",
         "prepare": "husky install",
-        "release": "npm i && xs bump && npm run build && xs docs,publish,git-push",
+        "release": "npm i && xs bump && npm run build && npm run types:dist && xs docs,publish,git-push",
         "serve": "xs serve",
         "storybook": "storybook dev -p 6006",
         "storybook:build": "storybook build --output-dir docs/storybook",
