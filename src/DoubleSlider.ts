@@ -139,7 +139,11 @@ export class DoubleSlider extends SliderBase
         if (!this.dragging) return;
 
         const obj = event.currentTarget as DragObject;
-        const { x } = obj.parent.worldTransform.applyInverse(event.global);
+        const { parent } = obj;
+
+        if (!parent) return;
+
+        const { x } = parent.worldTransform.applyInverse(event.global);
 
         const slider1Dist = this._slider1 ? Math.abs(x - this._slider1.x - this._slider1.width) : Infinity;
         const slider2Dist = this._slider2 ? Math.abs(x - this._slider2.x) : Infinity;

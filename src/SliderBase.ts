@@ -233,11 +233,16 @@ export class SliderBase extends ProgressBar
 
     protected startUpdate(event: FederatedPointerEvent)
     {
+        const obj = event.currentTarget as DragObject;
+        const { parent } = obj;
+
+        // A target that is not on the stage has no coordinate space to map the
+        // pointer into, so there is nothing to drag against.
+        if (!parent) return;
+
         this.dragging = 1;
 
-        const obj = event.currentTarget as DragObject;
-
-        this.startX = obj.parent.worldTransform.applyInverse(event.global).x;
+        this.startX = parent.worldTransform.applyInverse(event.global).x;
 
         this.startUpdateValue1 = this._value1;
         this.startUpdateValue2 = this._value2;
@@ -271,8 +276,11 @@ export class SliderBase extends ProgressBar
     protected update(_event: FederatedPointerEvent)
     {
         const obj = _event.currentTarget as DragObject;
+        const { parent } = obj;
 
-        const { x } = obj.parent.worldTransform.applyInverse(_event.global);
+        if (!parent) return;
+
+        const { x } = parent.worldTransform.applyInverse(_event.global);
 
         if (x !== this.startX)
         {

@@ -373,3 +373,37 @@ describe('DoubleSlider', () =>
         expect(() => slider.setSize(150, 25)).not.toThrow();
     });
 });
+
+describe('Sliders with a detached drag target', () =>
+{
+    it('does not start dragging when the target is off the stage', () =>
+    {
+        const slider = makeSlider();
+
+        (slider as any).startUpdate(event(g(20, 20), 100));
+
+        expect((slider as any).dragging).toBe(0);
+        expect(slider.value).toBe(50);
+    });
+
+    it('leaves a Slider value untouched while dragging an off-stage target', () =>
+    {
+        const slider = makeSlider();
+
+        (slider as any).dragging = 1;
+        (slider as any).update(event(g(20, 20), 100));
+
+        expect(slider.value).toBe(50);
+    });
+
+    it('leaves DoubleSlider values untouched while dragging an off-stage target', () =>
+    {
+        const slider = makeDouble({ value1: 20, value2: 80 });
+
+        (slider as any).dragging = 1;
+        (slider as any).update(event(g(10, 10), 100));
+
+        expect(slider.value1).toBe(20);
+        expect(slider.value2).toBe(80);
+    });
+});
