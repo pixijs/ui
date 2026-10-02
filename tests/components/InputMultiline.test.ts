@@ -1,3 +1,4 @@
+import { Point } from 'pixi.js';
 import { Input } from '../../src/input';
 import { cleanup, createTestGraphics } from '../utils/components';
 
@@ -122,6 +123,28 @@ describe('Input multiline', () =>
         expect((input as any).indexAtLocalX(14, 25)).toBe(4);
         expect((input as any).indexAtLocalX(500, 25)).toBe(5);
         expect((input as any).indexAtLocalX(0, 500)).toBe(3);
+    });
+
+    it('places the caret on the line that was pressed, and a press without movement selects nothing', () =>
+    {
+        const input = create('ab\ncd\nef');
+        const native = start(input);
+        // A pointer event over the second line, 14 right of the text start.
+        const event = (x: number, y: number) => ({
+            global: input.toGlobal(new Point(x, y)),
+            detail: 1,
+            shiftKey: false,
+            nativeEvent: { preventDefault: jest.fn() },
+        }) as any;
+        const line2 = (input as any).inputField.y + 30;
+        const x = (input as any).textLeft + 14;
+
+        (input as any).onPointerDown(event(x, line2));
+        expect([native.selectionStart, native.selectionEnd]).toEqual([4, 4]);
+
+        // The pointer reports a move in place, as browsers do around a click.
+        (input as any).onPointerMove(event(x, line2));
+        expect([native.selectionStart, native.selectionEnd]).toEqual([4, 4]);
     });
 
     it('moves the caret by visual lines with Up and Down, keeping its column', () =>

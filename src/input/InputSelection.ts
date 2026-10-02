@@ -447,6 +447,8 @@ export class InputSelection extends InputText
      */
     protected indexAt(e: FederatedPointerEvent): number
     {
-        return this.indexAtLocalX(this.toLocal(e.global).x);
+        const local = this.toLocal(e.global);
+
+        return this.indexAtLocalX(local.x, local.y);
     }
 }
