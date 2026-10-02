@@ -54,5 +54,5 @@ await bundle.write({
 });
 await bundle.close();
 
-// eslint-disable-next-line no-console
+// eslint-disable-next-line no-console -- build scripts report on stdout.
 console.log(`[build-umd] ${file} bundles tweedle.js; only the PIXI global is required`);
