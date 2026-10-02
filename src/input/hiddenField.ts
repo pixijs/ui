@@ -12,6 +12,8 @@ export type HiddenFieldOptions = {
     value: string;
     /** A password field keeps on-screen keyboards from suggesting, or learning, the value. */
     secure: boolean;
+    /** Create a `<textarea>` rather than an `<input>`, so the text can hold line breaks. */
+    multiline?: boolean;
     maxLength?: number;
     /** Merged over {@link DEFAULT_INPUT_ATTRIBUTES}. */
     attributes?: Record<string, string>;
@@ -25,11 +27,13 @@ export type HiddenFieldOptions = {
 /**
  * Creates the invisible native `<input>` that holds the text, caret and selection while an
  * {@link Input} is being edited, and adds it to the document. Listeners are the caller's.
- * @param options - where to put it and what it holds.
+ * @param options - where to put it and what it holds. A multiline field is a `<textarea>`,
+ * typed as the input it stands in for.
  */
 export function createHiddenField(options: HiddenFieldOptions): HTMLInputElement
 {
-    const input = document.createElement('input');
+    // A textarea has the value, selection, maxLength and events used here, so one type covers both.
+    const input = document.createElement(options.multiline ? 'textarea' : 'input') as HTMLInputElement;
 
     document.body.appendChild(input);
 
@@ -58,7 +62,18 @@ export function createHiddenField(options: HiddenFieldOptions): HTMLInputElement
         input.style.pointerEvents = 'none';
     }
 
-    input.type = options.secure ? 'password' : 'text';
+    if (options.multiline)
+    {
+        // Lines are wrapped by the component, not the browser; the field only needs the hard breaks.
+        input.setAttribute('wrap', 'off');
+        input.style.resize = 'none';
+        input.style.overflow = 'hidden';
+        input.style.padding = '0';
+    }
+    else
+    {
+        input.type = options.secure ? 'password' : 'text';
+    }
 
     // Keyboards would otherwise capitalise, correct and learn what is typed, and password
     // managers would offer to fill or save it.

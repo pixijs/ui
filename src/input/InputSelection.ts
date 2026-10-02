@@ -49,6 +49,15 @@ export class InputSelection extends InputText
     /** Local x of the pointer during a drag-selection, on the canvas or the hidden field, for auto-scrolling. */
     protected dragLocalX: number | undefined;
 
+    /** Local y of the pointer during a drag-selection, for auto-scrolling a multiline text. */
+    protected dragLocalY: number | undefined;
+
+    /** X a run of Up/Down presses keeps aiming for, as native fields do across lines of different lengths. */
+    protected caretGoalX: number | undefined;
+
+    /** Set while a key moves the caret vertically, so the goal x outlives that move. */
+    protected keepGoalX = false;
+
     /** Frames since the drag-selection last auto-scrolled. */
     protected autoScrollElapsed = 0;
 
@@ -76,6 +85,8 @@ export class InputSelection extends InputText
         this.selectionStart = start;
         this.selectionEnd = end;
         this.selectionDirection = direction;
+
+        if (!this.keepGoalX) this.caretGoalX = undefined;
 
         // Keep the caret solid while it is being moved, as native fields do.
         this.tick = 0;
@@ -173,10 +184,11 @@ export class InputSelection extends InputText
 
         this.lastPressTime = performance.now();
 
-        const localX = this.toLocal(e.global).x;
+        const local = this.toLocal(e.global);
 
-        this.dragLocalX = localX;
-        this.extendDragTo(this.dragAnchor, this.indexAtLocalX(this.clampToView(localX)));
+        this.dragLocalX = local.x;
+        this.dragLocalY = local.y;
+        this.extendDragTo(this.dragAnchor, this.indexAtLocal(this.clampToView(local.x), this.clampToViewY(local.y)));
     }
 
     protected onPointerUp(): void
@@ -188,6 +200,7 @@ export class InputSelection extends InputText
 
         this.dragAnchor = undefined;
         this.dragLocalX = undefined;
+        this.dragLocalY = undefined;
     }
 
     /**
@@ -213,6 +226,18 @@ export class InputSelection extends InputText
     }
 
     /**
+     * Clamps a local y to the visible text area of a multiline text, as {@link Input.clampToView}
+     * does for x, so a drag below the box selects the last visible line and scrolls from there.
+     * @param localY - y in the component's local space.
+     */
+    protected clampToViewY(localY: number): number
+    {
+        if (!this.multiline) return localY;
+
+        return Math.max(this.paddingTop, Math.min(localY, (this._bg?.height ?? 0) - this.paddingBottom));
+    }
+
+    /**
      * Anchor of the drag-selection in progress, if any. A drag on the canvas here;
      * {@link InputTouch} adds the one on the hidden field.
      */
@@ -232,7 +257,17 @@ export class InputSelection extends InputText
         const x = this.dragLocalX;
         let direction = 0;
 
-        if (x !== undefined && this.isOverflowing)
+        if (this.multiline)
+        {
+            const y = this.dragLocalY;
+
+            if (y !== undefined && this.isOverflowingY)
+            {
+                if (y < this.paddingTop) direction = -1;
+                else if (y > (this._bg?.height ?? 0) - this.paddingBottom) direction = 1;
+            }
+        }
+        else if (x !== undefined && this.isOverflowing)
         {
             if (x < this.paddingLeft) direction = -1;
             else if (x > (this._bg?.width ?? 0) - this.paddingRight) direction = 1;
@@ -252,6 +287,14 @@ export class InputSelection extends InputText
         this.autoScrollElapsed = 0;
 
         const focus = this.selectionDirection === 'backward' ? this.selectionStart : this.selectionEnd;
+
+        if (this.multiline)
+        {
+            this.extendDragTo(anchor, this.indexOnAdjacentLine(focus, direction, x ?? 0));
+
+            return;
+        }
+
         const { boundaries } = this.textMetrics();
         const next = direction < 0
             ? [...boundaries].reverse().find((b) => b < focus)
@@ -260,6 +303,80 @@ export class InputSelection extends InputText
         if (next === undefined) return;
 
         this.extendDragTo(anchor, next);
+    }
+
+    /**
+     * The caret index one line up or down from an index, nearest to an x; the start of the text
+     * above the first line and the end of it below the last, as native fields do.
+     * @param index - position to move from.
+     * @param direction - -1 for the line above, 1 for the line below.
+     * @param x - local x to aim for.
+     */
+    protected indexOnAdjacentLine(index: number, direction: number, x: number): number
+    {
+        const { lines } = this.layoutLines();
+        const row = this.lineIndexOf(index) + direction;
+
+        if (row < 0) return 0;
+        if (row >= lines.length) return this.value.length;
+
+        return this.indexInLine(row, x - this.textLeft);
+    }
+
+    /**
+     * Moves the caret by lines in a multiline text, which the hidden field cannot do, as it does
+     * not know how the component wrapped them: Up, Down, Home and End, with Shift to extend.
+     * @param e - the key press.
+     * @returns whether the key was handled.
+     */
+    protected moveCaretByLines(e: KeyboardEvent): boolean
+    {
+        const { key } = e;
+
+        if (!this.multiline || !this.input || e.altKey) return false;
+        if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'Home' && key !== 'End') return false;
+
+        const focus = this.caretIndex;
+        const row = this.lineIndexOf(focus);
+        let target: number;
+
+        if (key === 'Home')
+        {
+            target = this.layoutLines().lines[row].start;
+        }
+        else if (key === 'End')
+        {
+            const { line, boundaries } = this.lineMetrics(row);
+            const wrapped = this.layoutLines().lines[row + 1]?.start === line.end;
+
+            // The end of a wrapped line is drawn on the next one; stay on this line, before its last character.
+            target = line.start + boundaries[wrapped ? boundaries.length - 2 : boundaries.length - 1];
+        }
+        else
+        {
+            const goal = this.caretGoalX ?? this.offsetInLine(row, focus);
+
+            this.caretGoalX = goal;
+            target = this.indexOnAdjacentLine(focus, key === 'ArrowUp' ? -1 : 1, this.textLeft + goal);
+        }
+
+        e.preventDefault();
+        this.keepGoalX = key === 'ArrowUp' || key === 'ArrowDown';
+
+        if (e.shiftKey)
+        {
+            const anchor = this.selectionDirection === 'backward' ? this.selectionEnd : this.selectionStart;
+
+            this.setSelection(Math.min(anchor, target), Math.max(anchor, target), target < anchor ? 'backward' : 'forward');
+        }
+        else
+        {
+            this.setSelection(target, target);
+        }
+
+        this.keepGoalX = false;
+
+        return true;
     }
 
     /**
@@ -330,6 +447,8 @@ export class InputSelection extends InputText
      */
     protected indexAt(e: FederatedPointerEvent): number
     {
-        return this.indexAtLocalX(this.toLocal(e.global).x);
+        const local = this.toLocal(e.global);
+
+        return this.indexAtLocal(local.x, local.y);
     }
 }

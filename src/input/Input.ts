@@ -1,6 +1,7 @@
 import {
     DestroyOptions,
     FederatedPointerEvent,
+    FederatedWheelEvent,
     isMobile,
     Ticker,
 } from 'pixi.js';
@@ -48,6 +49,9 @@ export class Input extends InputTouch
      * @param { PixiTextClass } [options.TextClass=Text] - Class used to draw the text and the placeholder,
      * e.g. `BitmapText` or `HTMLText`.
      * @param { string } options.value - Value of the Input.
+     * @param { boolean } [options.multiline=false] - Turns the Input into a text area: Enter starts a new line,
+     * long lines wrap to the width and the text scrolls vertically behind the caret. `align` is ignored and
+     * the text is always clipped to the Input.
      * @param { number } options.maxLength - Max length of the Input, in UTF-16 code units.
      * Also applied to pasted text and keyboard suggestions, which the native limit does not cover.
      * @param { boolean } [options.secure=false] - Draws each character as `*` and makes the hidden field
@@ -63,6 +67,10 @@ export class Input extends InputTouch
      * merged over the defaults that turn off autocomplete, autocapitalize, autocorrect and spellcheck and
      * tell password managers to ignore the field. Use it for `inputmode` or `enterkeyhint` as well.
      * @param { boolean } [options.addMask=false] - Add mask to the Input text, so it is cut off when it does not fit.
+     * @param { Padding } [options.maskPadding] - Padding of the mask, when it should differ from `padding`, which
+     * the text is laid out by. Takes the same forms. Defaults to `padding`.
+     * @param { number } [options.maskRadius] - Corner radius of the mask. Without it the mask is a copy of the
+     * background stretched to fit, which distorts its corners.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg ([left, top, right, bottom]).
      * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */
@@ -96,6 +104,9 @@ export class Input extends InputTouch
         // Capture phase: runs before the component's own pointerdown, which re-marks the press if it was on it.
         window.addEventListener('pointerdown', this.onAnyPointerDownBinding, true);
         window.addEventListener('contextmenu', this.onContextMenuBinding, true);
+
+        // A text area scrolls with the wheel too; the page keeps it when there is nothing to scroll.
+        this.on('wheel', this.onWheel, this);
 
         this.onEnter = new Signal();
         this.onChange = new Signal();
@@ -212,6 +223,25 @@ export class Input extends InputTouch
         this.syncSelection();
     }
 
+    /**
+     * Scrolls a multiline text that is taller than its box.
+     * @param e - the wheel event over the component.
+     */
+    protected onWheel(e: FederatedWheelEvent): void
+    {
+        if (!this.multiline || !this.editing || !this.isOverflowingY) return;
+
+        const max = (this.layoutLines().lines.length * this.textProbe().pitch) - this.viewHeight;
+        const next = Math.max(0, Math.min(this.scrollY + e.deltaY, max));
+
+        // At an end of the text the wheel goes on to scroll the page.
+        if (next === this.scrollY) return;
+
+        e.preventDefault?.();
+        this.scrollY = next;
+        this.align();
+    }
+
     protected onCompositionStart(): void
     {
         this.composing = true;
@@ -300,7 +330,11 @@ export class Input extends InputTouch
         // key with `isComposing` set, Chrome reports 'Process' with keyCode 229.
         if (e.isComposing || e.keyCode === 229) return;
 
-        if (e.key === 'Escape' || e.key === 'Enter')
+        // Caret movement by line needs the layout the component drew, which the field does not have.
+        if (this.moveCaretByLines(e)) return;
+
+        // In a text area Enter is a line break, which the field inserts itself.
+        if (e.key === 'Escape' || (e.key === 'Enter' && !this.multiline))
         {
             this.stopEditing();
         }
@@ -395,6 +429,7 @@ export class Input extends InputTouch
             // backspace, caret movement, autocorrect and suggestions all need it to be there.
             value: this.value,
             secure: this._secure,
+            multiline: this.multiline,
             maxLength: this.options.maxLength,
             attributes: this.options.inputAttributes,
             takesPointer,
@@ -474,6 +509,8 @@ export class Input extends InputTouch
         this.editing = false;
         this.dragAnchor = undefined;
         this.dragLocalX = undefined;
+        this.dragLocalY = undefined;
+        this.caretGoalX = undefined;
         this.composing = false;
 
         if (this.placeholder && this.value.length === 0)
@@ -513,6 +550,7 @@ export class Input extends InputTouch
     override destroy(options?: DestroyOptions | boolean)
     {
         this.off('pointertap');
+        this.off('wheel', this.onWheel, this);
         this.off('pointerdown', this.onPointerDown, this);
         this.off('globalpointermove', this.onPointerMove, this);
         this.off('pointerup', this.onPointerUp, this);

@@ -15,11 +15,27 @@ export type InputOptions = {
     value?: string;
     maxLength?: number;
     secure?: boolean;
+    /**
+     * Turns the Input into a text area: Enter starts a new line, long lines wrap to the width, and the
+     * text scrolls vertically behind the caret. `align` is ignored, and the text is always masked to
+     * the Input's bounds.
+     */
+    multiline?: boolean;
     align?: InputAlign;
     padding?: Padding;
     cleanOnFocus?: boolean;
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
+    /**
+     * Padding of the mask added by `addMask` (or `multiline`), when it should differ from `padding`, which
+     * the text is laid out by. Takes the same forms. Defaults to `padding`.
+     */
+    maskPadding?: Padding;
+    /**
+     * Corner radius of the mask. By default the mask is a copy of the background stretched to fit,
+     * which distorts its corners; with a radius it is a rounded rectangle of its own.
+     */
+    maskRadius?: number;
     /**
      * Attributes set on the hidden native field, merged over the defaults: `autocomplete`,
      * `autocapitalize` and `autocorrect` off and `spellcheck` false, so keyboards neither
