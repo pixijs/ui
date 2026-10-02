@@ -14,7 +14,6 @@ module.exports = {
         '@storybook/addon-storysource',
     ],
     core: {
-        channelOptions: { allowFunction: false, maxDepth: 10 },
         disableTelemetry: true,
     },
     features: {
