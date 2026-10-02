@@ -16,6 +16,31 @@ import type { PixiText } from '../utils/helpers/text';
 import type { Padding } from '../utils/HelpTypes';
 import type { InputOptions, SelectionDirection, ViewType } from './types';
 
+type PaddingBox = [number, number, number, number];
+
+/**
+ * Resolves any form of {@link Padding} to [top, right, bottom, left].
+ * @param value - number, array of up to 4 numbers or object with keys top, right, bottom, left.
+ */
+function toPaddingBox(value: Padding): PaddingBox | undefined
+{
+    if (typeof value === 'number') return [value, value, value, value];
+
+    if (Array.isArray(value))
+    {
+        return [
+            value[0] ?? 0,
+            value[1] ?? value[0] ?? 0,
+            value[2] ?? value[0] ?? 0,
+            value[3] ?? value[1] ?? value[0] ?? 0,
+        ];
+    }
+
+    if (value && typeof value === 'object') return [value.top ?? 0, value.right ?? 0, value.bottom ?? 0, value.left ?? 0];
+
+    return undefined;
+}
+
 /**
  * First layer of {@link Input}: the state it is drawn from — options, value, secure flag, editing
  * flag, selection and paddings — and the background, mask and sizing. It calls into
@@ -47,6 +72,8 @@ export abstract class InputView extends Container
             nineSliceSprite: _9,
             addMask: _10,
             inputAttributes: _11,
+            maskPadding: _13,
+            maskRadius: _14,
             ...rest
         } = options;
 
@@ -77,6 +104,9 @@ export abstract class InputView extends Container
         this.padding = this.options.padding ?? 0;
         this._secure = this.options.secure ?? false;
 
+        if (this.options.maskPadding !== undefined) this.maskPadding = this.options.maskPadding;
+        this._maskRadius = this.options.maskRadius;
+
         this.cursor = 'text';
         this.interactive = true;
     }
@@ -90,6 +120,14 @@ export abstract class InputView extends Container
     protected _bg?: Container | NineSliceSprite | Graphics;
 
     protected inputMask: Container | NineSliceSprite | Graphics | undefined;
+
+    /** The background the mask was last made from, so it can be made again when the radius changes. */
+    protected maskSource: ViewType | undefined;
+
+    /** Padding of the mask when it differs from the text's; `undefined` follows {@link InputView#padding}. */
+    protected _maskPadding: PaddingBox | undefined;
+
+    protected _maskRadius: number | undefined;
 
     protected _cursor: Sprite | undefined;
 
@@ -313,34 +351,57 @@ export abstract class InputView extends Container
      */
     set padding(value: Padding)
     {
-        if (typeof value === 'number')
-        {
-            this.paddingTop = value;
-            this.paddingRight = value;
-            this.paddingBottom = value;
-            this.paddingLeft = value;
-        }
+        const box = toPaddingBox(value);
 
-        if (Array.isArray(value))
-        {
-            this.paddingTop = value[0] ?? 0;
-            this.paddingRight = value[1] ?? value[0] ?? 0;
-            this.paddingBottom = value[2] ?? value[0] ?? 0;
-            this.paddingLeft = value[3] ?? value[1] ?? value[0] ?? 0;
-        }
-        else if (typeof value === 'object')
-        {
-            this.paddingTop = value.top ?? 0;
-            this.paddingRight = value.right ?? 0;
-            this.paddingBottom = value.bottom ?? 0;
-            this.paddingLeft = value.left ?? 0;
-        }
+        if (!box) return;
+
+        [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft] = box;
+
+        // A mask that follows the padding has to follow it when it changes.
+        this.updateInputMaskSize();
     }
 
     /** Paddings as [top, right, bottom, left]. */
     get padding(): [number, number, number, number]
     {
         return [this.paddingTop, this.paddingRight, this.paddingBottom, this.paddingLeft];
+    }
+
+    /**
+     * Padding of the mask that clips the text, when it has to differ from {@link Input#padding}, which
+     * the text is laid out by; the mask follows `padding` until this is set. Takes the same forms.
+     * Only has an effect with `addMask` or `multiline`. Set to `undefined` to follow `padding` again.
+     */
+    set maskPadding(value: Padding | undefined)
+    {
+        this._maskPadding = value === undefined ? undefined : toPaddingBox(value);
+        this.updateInputMaskSize();
+    }
+
+    /** Padding of the mask as [top, right, bottom, left]. */
+    get maskPadding(): [number, number, number, number]
+    {
+        return this._maskPadding ?? this.padding;
+    }
+
+    /**
+     * Corner radius of the mask that clips the text. Without it the mask is a copy of the background
+     * stretched to the mask's size, which distorts the background's own corners. Set to `undefined`
+     * to go back to that. Only has an effect with `addMask` or `multiline`.
+     */
+    set maskRadius(value: number | undefined)
+    {
+        this._maskRadius = value;
+
+        if (this.inputMask && this.maskSource !== undefined)
+        {
+            this.createInputMask(this.maskSource);
+        }
+    }
+
+    get maskRadius(): number | undefined
+    {
+        return this._maskRadius;
     }
 
     /**
@@ -425,6 +486,8 @@ export abstract class InputView extends Container
 
     protected createInputMask(bg: ViewType)
     {
+        this.maskSource = bg;
+
         if (this.inputMask)
         {
             if (this.inputField)
@@ -442,7 +505,12 @@ export abstract class InputView extends Container
             this.inputMask.destroy();
         }
 
-        if (this.options?.nineSliceSprite && typeof bg === 'string')
+        if (this._maskRadius !== undefined)
+        {
+            // Drawn to size by updateInputMaskSize, so its corners keep the radius.
+            this.inputMask = new Graphics();
+        }
+        else if (this.options?.nineSliceSprite && typeof bg === 'string')
         {
             this.inputMask = new NineSliceSprite({
                 texture: Texture.from(bg),
@@ -489,11 +557,19 @@ export abstract class InputView extends Container
     {
         if (!this.inputMask || !this._bg) return;
 
-        this.inputMask.setSize(
-            this._bg.width - this.paddingLeft - this.paddingRight,
-            this._bg.height - this.paddingTop - this.paddingBottom,
-        );
+        const [top, right, bottom, left] = this.maskPadding;
+        const width = Math.max(0, this._bg.width - left - right);
+        const height = Math.max(0, this._bg.height - top - bottom);
 
-        this.inputMask.position.set(this.paddingLeft, this.paddingTop);
+        if (this._maskRadius !== undefined && this.inputMask instanceof Graphics)
+        {
+            this.inputMask.clear().roundRect(0, 0, width, height, this._maskRadius).fill(0xFFFFFF);
+        }
+        else
+        {
+            this.inputMask.setSize(width, height);
+        }
+
+        this.inputMask.position.set(left, top);
     }
 }

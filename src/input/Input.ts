@@ -67,6 +67,10 @@ export class Input extends InputTouch
      * merged over the defaults that turn off autocomplete, autocapitalize, autocorrect and spellcheck and
      * tell password managers to ignore the field. Use it for `inputmode` or `enterkeyhint` as well.
      * @param { boolean } [options.addMask=false] - Add mask to the Input text, so it is cut off when it does not fit.
+     * @param { Padding } [options.maskPadding] - Padding of the mask, when it should differ from `padding`, which
+     * the text is laid out by. Takes the same forms. Defaults to `padding`.
+     * @param { number } [options.maskRadius] - Corner radius of the mask. Without it the mask is a copy of the
+     * background stretched to fit, which distorts its corners.
      * @param { Array } options.nineSliceSprite - NineSliceSprite values for bg ([left, top, right, bottom]).
      * <br> <b>!!! IMPORTANT:</b> To make it work, you have to pass a texture name or texture instance as a bg parameter.
      */

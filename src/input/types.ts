@@ -27,6 +27,16 @@ export type InputOptions = {
     nineSliceSprite?: [number, number, number, number];
     addMask?: boolean;
     /**
+     * Padding of the mask added by `addMask` (or `multiline`), when it should differ from `padding`, which
+     * the text is laid out by. Takes the same forms. Defaults to `padding`.
+     */
+    maskPadding?: Padding;
+    /**
+     * Corner radius of the mask. By default the mask is a copy of the background stretched to fit,
+     * which distorts its corners; with a radius it is a rounded rectangle of its own.
+     */
+    maskRadius?: number;
+    /**
      * Attributes set on the hidden native field, merged over the defaults: `autocomplete`,
      * `autocapitalize` and `autocorrect` off and `spellcheck` false, so keyboards neither
      * rewrite nor remember what is typed. Pass `inputmode` or `enterkeyhint` here as well.

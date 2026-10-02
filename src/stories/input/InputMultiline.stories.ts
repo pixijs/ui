@@ -23,6 +23,11 @@ const args = {
     paddingRight: 15,
     paddingBottom: 15,
     paddingLeft: 15,
+    maskPaddingTop: 8,
+    maskPaddingRight: 8,
+    maskPaddingBottom: 8,
+    maskPaddingLeft: 8,
+    maskRadius: 6,
     onChange: action('Change'),
 };
 
@@ -49,6 +54,11 @@ export const Multiline = {
                     paddingRight,
                     paddingBottom,
                     paddingLeft,
+                    maskPaddingTop,
+                    maskPaddingRight,
+                    maskPaddingBottom,
+                    maskPaddingLeft,
+                    maskRadius,
                     onChange,
                 } = args;
 
@@ -69,6 +79,8 @@ export const Multiline = {
                     padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                     multiline: true,
                     addMask: true,
+                    maskPadding: [maskPaddingTop, maskPaddingRight, maskPaddingBottom, maskPaddingLeft],
+                    maskRadius,
                     cleanOnFocus: false,
                 });
 

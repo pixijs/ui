@@ -227,3 +227,78 @@ describe('Input multiline', () =>
         expect(input.value).toBe('ab\ncd');
     });
 });
+
+describe('Input mask', () =>
+{
+    afterEach(() => cleanup());
+
+    const create = (options: Record<string, unknown> = {}) =>
+        new Input({ bg: createTestGraphics(100, 60), addMask: true, padding: 10, ...options });
+    const maskBox = (input: Input) =>
+    {
+        const mask = (input as any).inputMask;
+
+        return [mask.x, mask.y, mask.width, mask.height];
+    };
+
+    it('follows the padding unless a mask padding is given', () =>
+    {
+        const input = create();
+
+        expect(maskBox(input)).toEqual([10, 10, 80, 40]);
+
+        input.padding = 20;
+        expect(maskBox(input)).toEqual([20, 20, 60, 20]);
+    });
+
+    it('takes its own padding, in every form padding does', () =>
+    {
+        const input = create({ maskPadding: [2, 4] });
+
+        expect(input.maskPadding).toEqual([2, 4, 2, 4]);
+        expect(maskBox(input)).toEqual([4, 2, 92, 56]);
+        // The text keeps its own padding.
+        expect(input.padding).toEqual([10, 10, 10, 10]);
+
+        input.maskPadding = { top: 1, right: 2, bottom: 3, left: 4 };
+        expect(maskBox(input)).toEqual([4, 1, 94, 56]);
+
+        input.maskPadding = undefined;
+        expect(maskBox(input)).toEqual([10, 10, 80, 40]);
+    });
+
+    it('draws a rounded rectangle of its own when a radius is given', () =>
+    {
+        const input = create({ maskRadius: 6 });
+        const mask = (input as any).inputMask;
+        const bounds = mask.getLocalBounds();
+
+        expect(mask.constructor.name).toBe('Graphics');
+        expect([bounds.width, bounds.height]).toEqual([80, 40]);
+        expect(input.maskRadius).toBe(6);
+    });
+
+    it('applies a radius set later, and goes back to the copy of the background without it', () =>
+    {
+        const input = create();
+
+        const copy = (input as any).inputMask;
+
+        input.maskRadius = 4;
+        expect((input as any).inputMask).not.toBe(copy);
+        expect((input as any).inputField.mask).toBe((input as any).inputMask);
+
+        input.maskRadius = undefined;
+        expect((input as any).inputField.mask).toBe((input as any).inputMask);
+        expect(maskBox(input)).toEqual([10, 10, 80, 40]);
+    });
+
+    it('does not break a multiline input, which is always masked', () =>
+    {
+        const input = new Input({
+            bg: createTestGraphics(100, 60), multiline: true, padding: 10, maskPadding: 2, maskRadius: 3,
+        });
+
+        expect(maskBox(input)).toEqual([2, 2, 96, 56]);
+    });
+});
