@@ -79,7 +79,7 @@ This content is released under the (http://opensource.org/licenses/MIT) MIT Lice
 This library requires Pixi `v7.1.1` or higher as this is when the `globalpointermove` event was added
 See [here](https://github.com/pixijs/pixijs/pull/9067) for details
 
-On TypeScript 7 with `skipLibCheck` turned off, `pixi.js` v8 reports `Duplicate identifier 'GPU...'`
-errors: it references `@webgpu/types`, which collides with the WebGPU types now built into
-TypeScript's own `lib.dom.d.ts`. That comes from `pixi.js` rather than from this package, so leave
-`skipLibCheck` on until it is fixed upstream.
+On TypeScript 7 with `skipLibCheck` turned off, `pixi.js` below `v8.21.0` reports a few hundred
+`Duplicate identifier 'GPU...'` errors: those versions reference `@webgpu/types`, which collides
+with the WebGPU types now built into TypeScript's own `lib.dom.d.ts`. `pixi.js` `v8.21.0` dropped
+that reference, so updating it clears them - or leave `skipLibCheck` on, which hides them either way.

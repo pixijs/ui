@@ -4,11 +4,11 @@
 //
 // `skipLibCheck` is off, which is what gives this teeth - a bad type on a `protected`
 // member only ever surfaces as a diagnostic inside a `.d.ts` file. The cost is that
-// pixi.js's declarations get checked too, and on TypeScript 7 they are not clean:
-// pixi.js pulls in `@webgpu/types`, which collides with the WebGPU types now built
-// into `lib.dom.d.ts`. That is upstream of us and a pixi.js user hits it with or
-// without this package, so diagnostics from outside this repo are reported as a
-// count but do not fail the check.
+// our dependencies' declarations get checked too, and we cannot fix those: pixi.js
+// below v8.21.0, for one, referenced `@webgpu/types` and collides in the hundreds
+// with the WebGPU types now built into `lib.dom.d.ts`. So diagnostics from outside
+// this repo are reported as a count but do not fail the check - an upstream
+// regression should not be able to block a release here.
 
 /* eslint-disable no-console -- this is a CLI reporter; the console is its output. */
 import { spawn } from 'node:child_process';
