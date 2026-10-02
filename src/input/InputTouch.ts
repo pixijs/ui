@@ -110,16 +110,18 @@ export class InputTouch extends InputSelection
 
         this.fieldDragged = true;
 
-        const localX = this.localXAtClient(e.clientX, e.clientY);
+        const local = this.localAtClient(e.clientX, e.clientY);
 
-        this.dragLocalX = localX;
-        this.extendDragTo(anchor, this.indexAtLocalX(this.clampToView(localX)));
+        this.dragLocalX = local.x;
+        this.dragLocalY = local.y;
+        this.extendDragTo(anchor, this.indexAtLocalX(this.clampToView(local.x), this.clampToViewY(local.y)));
     }
 
     protected onFieldPointerUp(): void
     {
         this.fieldDragAnchor = undefined;
         this.dragLocalX = undefined;
+        this.dragLocalY = undefined;
     }
 
     /**
@@ -130,7 +132,9 @@ export class InputTouch extends InputSelection
      */
     protected indexAtClient(clientX: number, clientY: number): number
     {
-        return this.indexAtLocalX(this.localXAtClient(clientX, clientY));
+        const local = this.localAtClient(clientX, clientY);
+
+        return this.indexAtLocalX(local.x, local.y);
     }
 
     /**
@@ -140,12 +144,22 @@ export class InputTouch extends InputSelection
      */
     protected localXAtClient(clientX: number, clientY: number): number
     {
-        if (!this.input) return 0;
+        return this.localAtClient(clientX, clientY).x;
+    }
+
+    /**
+     * The local position of a point on the hidden field; see {@link Input.indexAtClient}.
+     * @param clientX - horizontal position in the viewport.
+     * @param clientY - vertical position in the viewport.
+     */
+    protected localAtClient(clientX: number, clientY: number): { x: number; y: number }
+    {
+        if (!this.input) return { x: 0, y: 0 };
 
         const rect = this.input.getBoundingClientRect();
         const origin = this.getGlobalPosition();
 
-        return this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) }).x;
+        return this.toLocal({ x: origin.x + (clientX - rect.left), y: origin.y + (clientY - rect.top) });
     }
 
     /** A drag on the hidden field counts once it has moved past the threshold. */

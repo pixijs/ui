@@ -32,6 +32,7 @@ const args = {
     paddingLeft: 7,
     cleanOnFocus: true,
     addMask: false,
+    multiline: false,
     onChange: action('Change'),
 };
 
@@ -67,6 +68,7 @@ export const UseGraphics = {
                     onChange,
                     cleanOnFocus,
                     addMask,
+                    multiline,
                 } = args;
                 const list = new List({ type: 'vertical', elementsMargin: 10 });
 
@@ -92,6 +94,7 @@ export const UseGraphics = {
                         padding: [paddingTop, paddingRight, paddingBottom, paddingLeft],
                         cleanOnFocus,
                         addMask,
+                        multiline,
                     });
 
                     input.onChange.connect((val) =>

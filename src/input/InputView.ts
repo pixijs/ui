@@ -40,6 +40,7 @@ export abstract class InputView extends Container
             value: _3,
             maxLength: _4,
             secure: _5,
+            multiline: _12,
             align: _6,
             padding: _7,
             cleanOnFocus: _8,
@@ -68,6 +69,7 @@ export abstract class InputView extends Container
             padding: 0,
             cleanOnFocus: false,
             addMask: false,
+            multiline: false,
         };
 
         this.options = { ...defaultOptions, ...options };
@@ -138,7 +140,18 @@ export abstract class InputView extends Container
     /** What is drawn: the value itself, or one mask character per code unit when secure. */
     protected get displayText(): string
     {
-        return this._secure ? SECURE_CHARACTER.repeat(this._value.length) : this._value;
+        if (!this._secure) return this._value;
+
+        // Line breaks stay visible in a masked text area.
+        return this.options.multiline
+            ? this._value.replace(/[^\n]/g, SECURE_CHARACTER)
+            : SECURE_CHARACTER.repeat(this._value.length);
+    }
+
+    /** What the text object is given: {@link InputView#displayText}, wrapped into lines when multiline. */
+    protected get drawnText(): string
+    {
+        return this.displayText;
     }
 
     /**
@@ -200,7 +213,8 @@ export abstract class InputView extends Container
             this.init();
         }
 
-        if (this.options.addMask)
+        // Multiline text runs past the bounds vertically, so it is always clipped.
+        if (this.options.addMask || this.options.multiline)
         {
             this.createInputMask(bg);
         }
@@ -215,7 +229,7 @@ export abstract class InputView extends Container
     /** Sets the input text. */
     set value(text: string)
     {
-        const value = text ?? '';
+        const value = this.options.multiline ? (text ?? '').replace(/\r\n?/g, '\n') : (text ?? '');
         const textLength = value.length;
 
         this._value = value;
@@ -239,7 +253,7 @@ export abstract class InputView extends Container
 
         if (this.inputField)
         {
-            this.inputField.text = this.displayText;
+            this.inputField.text = this.drawnText;
         }
 
         if (this.placeholder)
@@ -266,7 +280,7 @@ export abstract class InputView extends Container
 
         const type = val ? 'password' : 'text';
 
-        if (this.input && this.input.type !== type)
+        if (this.input && !this.options.multiline && this.input.type !== type)
         {
             // Changing the type resets the selection in some browsers; keep the caret where it was.
             const { selectionStart, selectionEnd, selectionDirection } = this.input;

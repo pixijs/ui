@@ -15,6 +15,12 @@ export type InputOptions = {
     value?: string;
     maxLength?: number;
     secure?: boolean;
+    /**
+     * Turns the Input into a text area: Enter starts a new line, long lines wrap to the width, and the
+     * text scrolls vertically behind the caret. `align` is ignored, and the text is always masked to
+     * the Input's bounds.
+     */
+    multiline?: boolean;
     align?: InputAlign;
     padding?: Padding;
     cleanOnFocus?: boolean;
