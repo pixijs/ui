@@ -119,10 +119,10 @@ describe('Input multiline', () =>
         const input = create('ab\ncd');
 
         expect(input.value).toBe('ab\ncd');
-        expect((input as any).indexAtLocalX(14, 5)).toBe(1);
-        expect((input as any).indexAtLocalX(14, 25)).toBe(4);
-        expect((input as any).indexAtLocalX(500, 25)).toBe(5);
-        expect((input as any).indexAtLocalX(0, 500)).toBe(3);
+        expect((input as any).indexAtLocal(14, 5)).toBe(1);
+        expect((input as any).indexAtLocal(14, 25)).toBe(4);
+        expect((input as any).indexAtLocal(500, 25)).toBe(5);
+        expect((input as any).indexAtLocal(0, 500)).toBe(3);
     });
 
     it('places the caret on the line that was pressed, and a press without movement selects nothing', () =>

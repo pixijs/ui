@@ -139,11 +139,21 @@ export class InputText extends InputView
     }
 
     /**
-     * The caret index nearest to an x in local coordinates, see {@link Input.indexAt}.
+     * The caret index nearest to an x in local coordinates, on the first line.
+     * @deprecated Use {@link Input.indexAtLocal}, which also takes the y that picks the line of a multiline text.
+     * @param localX - x in the component's local space.
+     */
+    protected indexAtLocalX(localX: number): number
+    {
+        return this.indexAtLocal(localX, 0);
+    }
+
+    /**
+     * The caret index nearest to a point in local coordinates, see {@link Input.indexAt}.
      * @param localX - x in the component's local space.
      * @param localY - y in the component's local space; only a multiline text has more than one line to pick.
      */
-    protected indexAtLocalX(localX: number, localY = 0): number
+    protected indexAtLocal(localX: number, localY = 0): number
     {
         if (!this.inputField) return 0;
 

@@ -114,7 +114,7 @@ export class InputTouch extends InputSelection
 
         this.dragLocalX = local.x;
         this.dragLocalY = local.y;
-        this.extendDragTo(anchor, this.indexAtLocalX(this.clampToView(local.x), this.clampToViewY(local.y)));
+        this.extendDragTo(anchor, this.indexAtLocal(this.clampToView(local.x), this.clampToViewY(local.y)));
     }
 
     protected onFieldPointerUp(): void
@@ -134,7 +134,7 @@ export class InputTouch extends InputSelection
     {
         const local = this.localAtClient(clientX, clientY);
 
-        return this.indexAtLocalX(local.x, local.y);
+        return this.indexAtLocal(local.x, local.y);
     }
 
     /**

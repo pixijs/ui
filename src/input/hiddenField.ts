@@ -33,9 +33,7 @@ export type HiddenFieldOptions = {
 export function createHiddenField(options: HiddenFieldOptions): HTMLInputElement
 {
     // A textarea has the value, selection, maxLength and events used here, so one type covers both.
-    const input = (options.multiline
-        ? document.createElement('textarea')
-        : document.createElement('input')) as HTMLInputElement;
+    const input = document.createElement(options.multiline ? 'textarea' : 'input') as HTMLInputElement;
 
     document.body.appendChild(input);
 

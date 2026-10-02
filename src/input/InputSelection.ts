@@ -188,7 +188,7 @@ export class InputSelection extends InputText
 
         this.dragLocalX = local.x;
         this.dragLocalY = local.y;
-        this.extendDragTo(this.dragAnchor, this.indexAtLocalX(this.clampToView(local.x), this.clampToViewY(local.y)));
+        this.extendDragTo(this.dragAnchor, this.indexAtLocal(this.clampToView(local.x), this.clampToViewY(local.y)));
     }
 
     protected onPointerUp(): void
@@ -449,6 +449,6 @@ export class InputSelection extends InputText
     {
         const local = this.toLocal(e.global);
 
-        return this.indexAtLocalX(local.x, local.y);
+        return this.indexAtLocal(local.x, local.y);
     }
 }
